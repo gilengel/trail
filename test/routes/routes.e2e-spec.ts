@@ -5,6 +5,7 @@ import { RoutesModule } from '../../src/route/routes.module';
 import { PrismaService } from '../../src/prisma.service';
 import * as testData from '../data';
 import { DbRouteDto } from '../../src/route/dto/route.dto';
+import { json } from 'express';
 
 describe('RoutesController (e2e)', () => {
   let app: INestApplication;
@@ -12,16 +13,19 @@ describe('RoutesController (e2e)', () => {
 
   let route: DbRouteDto;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RoutesModule],
     }).compile();
 
     app = module.createNestApplication();
+    app.use(json({ limit: '50mb' }));
     await app.init();
 
     prisma = module.get<PrismaService>(PrismaService);
+  });
 
+  beforeEach(async () => {
     await prisma.$executeRaw`
       INSERT INTO "Route" (name, coordinates) 
       VALUES ('e2e_test_route', ST_GeomFromText('LINESTRING(-71.160281 42.258729,-71.160837 42.259113,-71.161144 42.25932)', 4326))`;
@@ -62,6 +66,41 @@ describe('RoutesController (e2e)', () => {
       );
   });
 
+  it('/routes/ (POST) fails with less than two coordinates', () => {
+    return request(app.getHttpServer())
+      .post(`/routes`)
+      .send({
+        name: testData,
+        coordinates: [[0, 0]],
+      })
+      .expect(400);
+  });
+
+  it('/routes/ (POST) fails with more than 1.000.000 coordinates', () => {
+    const coordinates = Array.from({ length: 1000001 }, (_, i) => [i, i]);
+
+    return request(app.getHttpServer())
+      .post(`/routes`)
+      .send({
+        name: testData,
+        coordinates,
+      })
+      .expect(400);
+  });
+
+  it('/routes/ (POST) fails with mixed dimension coordinates', () => {
+    return request(app.getHttpServer())
+      .post(`/routes`)
+      .send({
+        name: testData,
+        coordinates: [
+          [0, 0],
+          [10, 10, 10],
+        ],
+      })
+      .expect(400);
+  });
+
   it('/routes/ (PATCH)', () => {
     return request(app.getHttpServer())
       .patch(`/routes/${route.id}`)
@@ -82,14 +121,14 @@ describe('RoutesController (e2e)', () => {
       });
   });
 
-  it('/routes/ (PATCH) fail with invalid data', () => {
+  it('/routes/ (PATCH) fails with invalid data', () => {
     return request(app.getHttpServer())
       .patch(`/routes/${route.id}`)
       .send({})
       .expect(400);
   });
 
-  it('/routes/ (PATCH) fail with invalid id', () => {
+  it('/routes/ (PATCH) fails with invalid id', () => {
     return request(app.getHttpServer())
       .patch(`/routes/12345678`)
       .send({ name: 'name_only_test_route' })

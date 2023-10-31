@@ -1,6 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as testData from '../../test/data';
-import { RoutesService } from './routes.service';
+import {
+  MixDimensionalityError,
+  NotEnoughCoordinatesError,
+  RoutesService,
+  TooManyCoordinatesError,
+} from './routes.service';
 import { PrismaService } from '../prisma.service';
 
 import * as conversion from '../conversion';
@@ -151,11 +156,35 @@ describe('RoutesService', () => {
     });
   });
 
-  it('should do reject trying to change a route without providing any values to change', async () => {
+  it('should reject trying to change a route with less then two coordinates', async () => {
+    await expect(service.updateRoute(0, { coordinates: [] })).rejects.toThrow(
+      new NotEnoughCoordinatesError(),
+    );
+  });
+
+  it('should reject trying to change a route with more then 1.000.000 coordinates', async () => {
+    const coordinates = Array.from({ length: 1000001 }, (_, i) => [i, i]);
+    await expect(service.updateRoute(0, { coordinates })).rejects.toThrow(
+      new TooManyCoordinatesError(),
+    );
+  });
+
+  it('should reject trying to change a route with mixed dimensions', async () => {
+    await expect(
+      service.updateRoute(0, {
+        coordinates: [
+          [0, 0],
+          [10, 10, 10],
+        ],
+      }),
+    ).rejects.toThrow(new MixDimensionalityError());
+  });
+
+  it('should reject trying to change a route without providing any values to change', async () => {
     await expect(service.updateRoute(0, {})).rejects.toThrow();
   });
 
-  it('should do reject changing a non existing route', async () => {
+  it('should reject changing a non existing route', async () => {
     jest.spyOn(prisma, '$queryRaw').mockResolvedValue(0);
 
     const result = service.updateRoute(0, {
@@ -165,7 +194,7 @@ describe('RoutesService', () => {
     expect(result).rejects.toThrow();
   });
 
-  it('should do delete a route from the db and return it', async () => {
+  it('should delete a route from the db and return it', async () => {
     jest.spyOn(prisma, '$queryRaw').mockResolvedValue(1);
 
     const result = await service.deleteRoute(0);

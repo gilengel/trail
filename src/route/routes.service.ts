@@ -8,10 +8,61 @@ import * as conversion from '../conversion';
 
 export class NoAttributesProvidedError extends Error {}
 
+// If the client tries to create/update routes with less then two coordinates
+export class NotEnoughCoordinatesError extends Error {
+  constructor() {
+    super(
+      'Minimum number of coordinates for a route is two which was not met.',
+    );
+  }
+}
+
+// If the client tries to create/update routes with more than one million points
+export class TooManyCoordinatesError extends Error {
+  constructor() {
+    super(
+      `Maximum number of coordinates for a route is 1'000'000 which was exceed.`,
+    );
+  }
+}
+
+export class MixDimensionalityError extends Error {
+  constructor() {
+    super('Not all provided coordinates have the same dimensionality.');
+  }
+}
+
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
 @Injectable()
 export class RoutesService {
   constructor(private prisma: PrismaService) {}
+
+  /**
+   * Validates an array of coordinates to ensure they meet specific criteria.
+   *
+   * @param coordinates - An array of arrays representing coordinates.
+   *
+   * @throws {NotEnoughCoordinatesError} - If the array contains fewer than 2 coordinate sets.
+   * @throws {TooManyCoordinatesError} - If the array contains more than 1,000,000 coordinate sets.
+   * @throws {MixDimensionalityError} - If the array contains a mix of 2D and non-2D (3D or more) coordinates.
+   */
+  validateCoordinates(coordinates: Array<Array<number>>): void {
+    // Check if there are at least 2 coordinates.
+    if (coordinates.length < 2) {
+      throw new NotEnoughCoordinatesError();
+    }
+
+    // Check if the array contains an excessive number of coordinates.
+    if (coordinates.length > 1000000) {
+      throw new TooManyCoordinatesError();
+    }
+
+    // Check if there is a mix of 2D and non-2D coordinates.
+    const len2dCoordinates = coordinates.filter((e) => e.length === 2).length;
+    if (len2dCoordinates !== 0 && len2dCoordinates !== coordinates.length) {
+      throw new MixDimensionalityError();
+    }
+  }
 
   /**
    * Retrieve a route by its ID.
@@ -48,6 +99,8 @@ export class RoutesService {
    * @returns A Promise that resolves to a RouteDto object.
    */
   async createRoute(data: CreateRouteDto): Promise<RouteDto> {
+    this.validateCoordinates(data.coordinates);
+
     const routeString = conversion.numberArray2Wkt(data.coordinates);
 
     const routes: DbRouteDto = await this.prisma.$queryRaw`
@@ -81,6 +134,8 @@ export class RoutesService {
     }
 
     if (!data.name && data.coordinates) {
+      this.validateCoordinates(data.coordinates);
+
       result = await this.prisma.$queryRaw`
       UPDATE "Route" 
       SET coordinates = ${conversion.numberArray2Wkt(data.coordinates)}
@@ -89,6 +144,8 @@ export class RoutesService {
     }
 
     if (data.name && data.coordinates) {
+      this.validateCoordinates(data.coordinates);
+
       result = await this.prisma.$queryRaw`
       UPDATE "Route" 
       SET name = ${data.name}, coordinates = ${conversion.numberArray2Wkt(

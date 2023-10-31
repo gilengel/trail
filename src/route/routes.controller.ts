@@ -32,7 +32,14 @@ export class RoutesController {
 
   @Post()
   async create(@Body() createRouteDto: CreateRouteDto): Promise<RouteDto> {
-    return this.routeService.createRoute(createRouteDto);
+    try {
+      const route = await this.routeService.createRoute(createRouteDto);
+
+      return Promise.resolve(route);
+    } catch (e) {
+      // < 2 coordinates, > 1.000.000 coordinates or mixed dimension coordinates
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Patch(':id')
