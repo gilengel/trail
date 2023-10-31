@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoutesController } from './routes.controller';
-import { NoAttributesProvidedError, RoutesService } from './routes.service';
+import {
+  NoAttributesProvidedError,
+  NotEnoughCoordinatesError,
+  RoutesService,
+} from './routes.service';
 import { PrismaService } from '../prisma.service';
 import * as testData from '../../test/data';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -41,6 +45,23 @@ describe('RoutesController', () => {
       .mockReturnValue(Promise.resolve(testData.route));
 
     expect(await controller.create(testData.route)).toBe(testData.route);
+  });
+
+  it('should throw "bad request" trying to create a route if coordinates are wrong', async () => {
+    jest.spyOn(service, 'createRoute').mockImplementation(() => {
+      throw new NotEnoughCoordinatesError();
+    });
+
+    const result = controller.create({
+      name: 'invalid_route',
+      coordinates: [[0, 0]],
+    });
+    await expect(result).rejects.toThrow(
+      new HttpException(
+        'Minimum number of coordinates for a route is two which was not met.',
+        HttpStatus.BAD_REQUEST,
+      ),
+    );
   });
 
   it('should update a route and return its dto', async () => {

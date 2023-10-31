@@ -39,3 +39,6 @@ coverage-*
 
 # Act
 bin
+
+# Database for testing
+db

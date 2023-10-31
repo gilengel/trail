@@ -1,15 +1,12 @@
 # docker-compose build
 version: '3.9'
-volumes:
-  dbbackups:
-  postgis-data:
 
 services:
 
   db:
     image: postgis/postgis:latest
     volumes:
-      - postgis-data:/var/lib/postgresql
+      - ./db/postgresql:/var/lib/postgresql/data
     environment:
       # If you need to create multiple database you can add coma separated databases eg gis,data
       - POSTGRES_DB=gis
