@@ -1,12 +1,9 @@
-CREATE EXTENSION postgis;
-
 -- CreateTable
 CREATE TABLE "Location" (
     "id" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "coords" geometry(Point, 4326) NOT NULL,
-
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
 
@@ -15,7 +12,6 @@ CREATE TABLE "Route" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "coordinates" geometry(Linestring, 4326) NOT NULL,
-
     CONSTRAINT "Route_pkey" PRIMARY KEY ("id")
 );
 

@@ -56,7 +56,11 @@ jobs:
         run: npm run test:unit:cov
 
       - name: Prepare database schema for e2e test
-        run: npx prisma migrate dev
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
 
       - name: Run the e2e tests
         run: npm run test:e2e:cov
+        env:
+          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
