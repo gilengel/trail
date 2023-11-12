@@ -11,7 +11,9 @@
     "main.ts",
     ".module.ts",
     ".dto.ts",
-    "prisma.service.ts"
+    "test.helper.ts",
+    "prisma.service.ts",
+    "images.upload.intercepter.ts"
   ],
   "coverageDirectory": "./coverage-unit",
 

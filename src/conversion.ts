@@ -1,5 +1,17 @@
+import { DbImageDto, ImageDto } from './images/dto/image.dto';
 import { DbRouteDto, RouteDto } from './route/dto/route.dto';
 
+export function point2wkt(points: Array<number>) {
+  return `POINT(${points.join(' ')})`;
+}
+
+export function wkt2point(wkt: string): Array<number> {
+  return wkt
+    .replace('POINT(', '')
+    .replace(')', '')
+    .split(' ')
+    .map((value) => parseFloat(value));
+}
 /**
  * Takes a LineString in Well-Known Text (WKT) format and transforms it into an array of arrays of floats.
  *
@@ -22,7 +34,7 @@ export function wkt2numberArray(wkt: string): Array<Array<number>> {
  * @param array - An array of arrays of numbers. Each inner array represents a point.
  * @returns A string in WKT format representing the LineString.
  */
-export function numberArray2Wkt(array: Array<Array<number>>): string {
+export function numberArray2wkt(array: Array<Array<number>>): string {
   const routePointsString = array.map((point) => point.join(' ')).join(',');
 
   return `LINESTRING(${routePointsString})`;
@@ -50,4 +62,15 @@ export function dbRoute2dto(route: DbRouteDto): RouteDto {
  */
 export function dbRoutes2dto(routes: DbRouteDto[]): RouteDto[] {
   return routes.map((x) => dbRoute2dto(x));
+}
+
+export function dbimage2dto(image: DbImageDto): ImageDto {
+  return {
+    uuid: image.uuid,
+    name: 'not_implemented',
+    coordinates: wkt2point(image.coordinates)
+  };
+}
+export function dbimages2dto(images: DbImageDto[]): ImageDto[] {
+  return images.map((image) => dbimage2dto(image));
 }

@@ -30,7 +30,7 @@ describe('conversion', () => {
     });
 
     it('should convert 2D number array into a wkt string', () => {
-      const result = conversion.numberArray2Wkt(testData.coordinates);
+      const result = conversion.numberArray2wkt(testData.coordinates);
 
       expect(result).toStrictEqual(testData.wkt);
     });

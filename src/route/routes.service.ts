@@ -101,7 +101,7 @@ export class RoutesService {
   async createRoute(data: CreateRouteDto): Promise<RouteDto> {
     this.validateCoordinates(data.coordinates);
 
-    const routeString = conversion.numberArray2Wkt(data.coordinates);
+    const routeString = conversion.numberArray2wkt(data.coordinates);
 
     const routes: DbRouteDto = await this.prisma.$queryRaw`
         INSERT INTO "Route" (name, coordinates) 
@@ -138,7 +138,7 @@ export class RoutesService {
 
       result = await this.prisma.$queryRaw`
       UPDATE "Route" 
-      SET coordinates = ${conversion.numberArray2Wkt(data.coordinates)}
+      SET coordinates = ${conversion.numberArray2wkt(data.coordinates)}
       WHERE id = ${id}::int
       RETURNING id, name, ST_AsText(coordinates) AS coordinates;`;
     }
@@ -148,7 +148,7 @@ export class RoutesService {
 
       result = await this.prisma.$queryRaw`
       UPDATE "Route" 
-      SET name = ${data.name}, coordinates = ${conversion.numberArray2Wkt(
+      SET name = ${data.name}, coordinates = ${conversion.numberArray2wkt(
         data.coordinates,
       )}
       WHERE id = ${id}::int

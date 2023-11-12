@@ -11,8 +11,8 @@ generator class_validator {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
 }
 
 model Location {
@@ -28,9 +28,18 @@ model Location {
 }
 
 model Route {
-  id          Int                                 @id @default(autoincrement())
+  id          Int                                       @id @default(autoincrement())
   name        String
   coordinates Unsupported("geometry(Linestring, 4326)")
 
   @@index([coordinates], name: "route_idx", type: Gist)
+}
+
+model Image {
+  id          String                                  @id @default(uuid())
+  name        String
+  coordinates Unsupported("geometry(Point, 4326)")
+
+  // the index for that column
+  @@index([coordinates], name: "image_idx", type: Gist)
 }
