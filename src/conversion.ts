@@ -1,7 +1,7 @@
 import { DbImageDto, ImageDto } from './images/dto/image.dto';
-import { DbRouteDto, RouteDto } from './route/dto/route.dto';
+import { DbRouteDto, RouteDto } from './routes/dto/route.dto';
 
-export function point2wkt(points: Array<number>) {
+export function point2wkt(points: Array<number>): string {
   return `POINT(${points.join(' ')})`;
 }
 
@@ -68,7 +68,7 @@ export function dbimage2dto(image: DbImageDto): ImageDto {
   return {
     uuid: image.uuid,
     name: 'not_implemented',
-    coordinates: wkt2point(image.coordinates)
+    coordinates: wkt2point(image.coordinates),
   };
 }
 export function dbimages2dto(images: DbImageDto[]): ImageDto[] {

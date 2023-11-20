@@ -8,6 +8,8 @@ import {
 import { PrismaService } from '../prisma.service';
 import * as testData from '../../test/data';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { mockImageFromBuffer } from '../images/test/test.helper';
 
 describe('RoutesController', () => {
   let controller: RoutesController;
@@ -47,7 +49,32 @@ describe('RoutesController', () => {
     expect(await controller.create(testData.route)).toBe(testData.route);
   });
 
-  it('should throw "bad request" trying to create a route if coordinates are wrong', async () => {
+  it('should create a new route based on a gpx file and return its dto', async () => {
+    jest
+      .spyOn(service, 'createRouteFromGPX')
+      .mockReturnValue(Promise.resolve(testData.route));
+
+    const buffer = readFileSync(`src/routes/test/activity_11982912017.gpx`);
+
+    expect(await controller.createFromGPX(mockImageFromBuffer(buffer))).toBe(
+      testData.route,
+    );
+  });
+
+  it('should fail to create a new route from a gpx file if the file is invalid', async () => {
+    jest.spyOn(service, 'createRouteFromGPX').mockImplementation(() => {
+      throw new Error();
+    });
+
+    const buffer = readFileSync(`src/routes/test/invalid.gpx`);
+
+    const result = controller.createFromGPX(mockImageFromBuffer(buffer));
+    await expect(result).rejects.toThrow(
+      new HttpException('', HttpStatus.BAD_REQUEST),
+    );
+  });
+
+  it('should throw "BadRequest" trying to create a route if coordinates are wrong', async () => {
     jest.spyOn(service, 'createRoute').mockImplementation(() => {
       throw new NotEnoughCoordinatesError();
     });
@@ -82,7 +109,7 @@ describe('RoutesController', () => {
     });
   });
 
-  it('should throw "bad request" if no attributes to be changed are provided', async () => {
+  it('should throw "BadRequest" if no attributes to be changed are provided', async () => {
     jest.spyOn(service, 'updateRoute').mockImplementation(() => {
       throw new NoAttributesProvidedError();
     });
@@ -96,7 +123,7 @@ describe('RoutesController', () => {
     );
   });
 
-  it('should throw "not found" if the route does not exist in the db', async () => {
+  it('should throw "NotFound" if the route does not exist in the db', async () => {
     jest.spyOn(service, 'updateRoute').mockImplementation(() => {
       throw new Error();
     });

@@ -1,6 +1,6 @@
 import { DbImageDto, ImageDto } from '../src/images/dto/image.dto';
-import { CreateRouteDto } from '../src/route/dto/create.route.dto';
-import { DbRouteDto, RouteDto } from '../src/route/dto/route.dto';
+import { CreateRouteDto } from '../src/routes/dto/create.route.dto';
+import { DbRouteDto, RouteDto } from '../src/routes/dto/route.dto';
 import { v4 as uuidv4 } from 'uuid';
 
 export const wkt = 'LINESTRING(30 10,10 30,40 40)';
@@ -77,6 +77,6 @@ export const images: ImageDto[] = [
   {
     uuid,
     name: 'not_implemented',
-    coordinates: [47.17970059972222, 10.893711999999999]
-  }
-]
+    coordinates: [47.17970059972222, 10.893711999999999],
+  },
+];

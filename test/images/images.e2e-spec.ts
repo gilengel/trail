@@ -21,7 +21,7 @@ describe('ImagesController (e2e)', () => {
           provide: APP_INTERCEPTOR,
           useClass: ErrorsInterceptor,
         },
-      ]
+      ],
     }).compile();
 
     app = module.createNestApplication();
@@ -38,7 +38,6 @@ describe('ImagesController (e2e)', () => {
     await prisma.$executeRaw`
       INSERT INTO "Image" (id, name, coordinates) 
       VALUES (${id}, 'test_image', ST_GeomFromText('POINT(1024 1024)', 4326))`;
-
   });
 
   afterEach(async () => {
@@ -73,24 +72,23 @@ describe('ImagesController (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/images?lon=1024&lat=1024&maxOffset=10`)
       .expect(200);
-      
   });
 
   it('/images/ (GET) fails with wrong offset', () => {
     return request(app.getHttpServer())
       .get(`/images?lon=1024&lat=1024&maxOffset=-10`)
-      .expect(400); 
+      .expect(400);
   });
 
   it('/images/ (GET) returns "NotFound" if no images are found near a coordinate', () => {
     return request(app.getHttpServer())
       .get(`/images?lon=0&lat=0&maxOffset=1`)
-      .expect(404); 
+      .expect(404);
   });
 
   it('/images/ (GET) returns "BadRequest" with invalid location', () => {
     return request(app.getHttpServer())
       .get(`/images?lon=0&maxOffset=1`)
-      .expect(400); 
+      .expect(400);
   });
 });

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RoutesModule } from './route/routes.module';
+import { RoutesModule } from './routes/routes.module';
 import { PrismaService } from './prisma.service';
 import { ImagesModule } from './images/images.module';
 import { ErrorsInterceptor } from './interceptors/errors.interceptor';

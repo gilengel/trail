@@ -8,11 +8,14 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateRouteDto } from './dto/create.route.dto';
 import { NoAttributesProvidedError, RoutesService } from './routes.service';
 import { RouteDto } from './dto/route.dto';
 import { UpdateRouteDto } from './dto/update.route.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('routes')
 export class RoutesController {
@@ -38,6 +41,21 @@ export class RoutesController {
       return Promise.resolve(route);
     } catch (e) {
       // < 2 coordinates, > 1.000.000 coordinates or mixed dimension coordinates
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('gpx')
+  //@UseInterceptors(GPXUploadInterceptor)
+  @UseInterceptors(FileInterceptor('file'))
+  async createFromGPX(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<RouteDto> {
+    try {
+      const route = await this.routeService.createRouteFromGPX(file.buffer);
+
+      return Promise.resolve(route);
+    } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }

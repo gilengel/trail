@@ -1,9 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ImagesService, InvalidCoordinates, InvalidOffsetError, NoOrWrongGeoInformationError } from './images.service';
+import {
+  ImagesService,
+  InvalidCoordinates,
+  InvalidOffsetError,
+  NoOrWrongGeoInformationError,
+} from './images.service';
 import { PrismaService } from '../prisma.service';
 import { readFileSync } from 'fs';
 import * as testData from '../../test/data';
-import { ensureExistanceOfStorageDirectory, mockImageFromBuffer } from './test/test.helper';
+import {
+  ensureExistanceOfStorageDirectory,
+  mockImageFromBuffer,
+} from './test/test.helper';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn().mockResolvedValue([]);
@@ -17,11 +25,10 @@ jest.mock('@prisma/client', () => {
     // necessary as we use sql to convert the image coordinates to postgis see image.service.ts
     Prisma: {
       sql: () => '',
-      join: () => ''
+      join: () => '',
     },
   };
 });
-
 
 describe('ImageService', () => {
   let service: ImagesService;
@@ -29,7 +36,7 @@ describe('ImageService', () => {
 
   beforeAll(() => {
     ensureExistanceOfStorageDirectory();
-  })
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -50,14 +57,12 @@ describe('ImageService', () => {
   });
 
   it('should fail to retrieve images if the offset is < 0', async () => {
-
-    await expect(
-      service.getImagesNearCoordinate(0, 0, -1),
-    ).rejects.toThrow(new InvalidOffsetError(-1));
+    await expect(service.getImagesNearCoordinate(0, 0, -1)).rejects.toThrow(
+      new InvalidOffsetError(-1),
+    );
   });
 
   it('should fail to retrieve images if longitude or latitude are undefined', async () => {
-
     await expect(
       service.getImagesNearCoordinate(undefined, 0, -1),
     ).rejects.toThrow(new InvalidCoordinates());
@@ -73,7 +78,7 @@ describe('ImageService', () => {
     ).rejects.toThrow(new NoOrWrongGeoInformationError());
   });
 
-  it('should get all images near a coordinate', async() => {
+  it('should get all images near a coordinate', async () => {
     jest.spyOn(prisma, '$queryRaw').mockResolvedValue(testData.dbImages);
 
     const result = await service.getImagesNearCoordinate(1024, 1024, 10);

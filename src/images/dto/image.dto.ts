@@ -1,4 +1,3 @@
-
 export interface DbImageDto {
   uuid: string;
   timestamp: Date;

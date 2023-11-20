@@ -5,6 +5,7 @@ import { DbRouteDto, RouteDto } from './dto/route.dto';
 import { UpdateRouteDto } from './dto/update.route.dto';
 
 import * as conversion from '../conversion';
+import { XMLParser } from 'fast-xml-parser';
 
 export class NoAttributesProvidedError extends Error {}
 
@@ -110,6 +111,24 @@ export class RoutesService {
 
     const route = routes[0];
     return Promise.resolve(conversion.dbRoute2dto(route));
+  }
+
+  /**
+   * Creates a new route in the database based on a gpx file.
+   *
+   * @param data - The content of the gpx file.
+   * @returns A Promise that resolves to a RouteDto object.
+   */
+  async createRouteFromGPX(data: string | Buffer): Promise<RouteDto> {
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+    });
+    const obj = parser.parse(data);
+
+    const coordinates = obj.gpx.trk.trkseg.trkpt.map(
+      (point): Array<number> => [point['@_lat'], point['@_lon']],
+    );
+    return this.createRoute({ name: 'new_test_route', coordinates });
   }
 
   /**

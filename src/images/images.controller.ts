@@ -8,11 +8,9 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ImagesService,
-} from './images.service';
+import { ImagesService } from './images.service';
 import { dbimages2dto } from '../conversion';
-import ImagesUploadInterceptor from './helper/images.upload.intercepter';
+import ImagesUploadInterceptor from './helper/images.upload.interceptor';
 import { ImageDto } from './dto/image.dto';
 
 @Controller('images')
@@ -21,7 +19,9 @@ export class ImagesController {
 
   @Post()
   @UseInterceptors(ImagesUploadInterceptor)
-  async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+  async uploadFile(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ): Promise<Array<ImageDto>> {
     try {
       const images = await this.imagesService.saveImages(files);
       return Promise.resolve(dbimages2dto(images));

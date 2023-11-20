@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { RoutesModule } from '../../src/route/routes.module';
+import { RoutesModule } from '../../src/routes/routes.module';
 import { PrismaService } from '../../src/prisma.service';
 import * as testData from '../data';
-import { DbRouteDto } from '../../src/route/dto/route.dto';
+import { DbRouteDto } from '../../src/routes/dto/route.dto';
 import { json } from 'express';
 
 describe('RoutesController (e2e)', () => {
@@ -64,6 +64,25 @@ describe('RoutesController (e2e)', () => {
       .expect((res) =>
         expect(res.body).toHaveProperty('name', 'new_test_route'),
       );
+  });
+
+  it('/routes/gpx (POST)', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/gpx`)
+      .set('Content-Type', 'multipart/form-data')
+      .attach('file', 'src/routes/test/activity_11982912017.gpx')
+      .expect(201)
+      .expect((res) =>
+        expect(res.body).toHaveProperty('name', 'new_test_route'),
+      );
+  });
+
+  it('/routes/gpx (POST) fails with less than two coordinates', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/gpx`)
+      .set('Content-Type', 'multipart/form-data')
+      .attach('file', 'src/routes/test/empty.gpx')
+      .expect(400);
   });
 
   it('/routes/ (POST) fails with less than two coordinates', () => {

@@ -16,7 +16,7 @@ describe('ErrorsInterceptor', () => {
     interceptor = new ErrorsInterceptor();
   });
 
-  it('should intercept an error that is not of type HttpException and transform them into a "bad request" ', async () => {
+  it('should intercept an error that is not of type HttpException and transform them into a "BadRequest" ', async () => {
     const context = createMock<ExecutionContext>();
     const handler = createMock<CallHandler>({
       handle: () => throwError(() => new Error()),
@@ -31,12 +31,13 @@ describe('ErrorsInterceptor', () => {
   it('should do nothing if an error is of type HttpException', async () => {
     const context = createMock<ExecutionContext>();
     const handler = createMock<CallHandler>({
-      handle: () => throwError(() => new HttpException('', HttpStatus.FORBIDDEN)),
+      handle: () =>
+        throwError(() => new HttpException('', HttpStatus.FORBIDDEN)),
     });
 
     const userObservable = interceptor.intercept(context, handler);
     await expect(lastValueFrom(userObservable)).rejects.toThrow(
       new HttpException('', HttpStatus.FORBIDDEN),
-    );    
-  })
+    );
+  });
 });

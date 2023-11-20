@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as testData from '../../test/data';
+import * as fs from 'fs';
 import {
   MixDimensionalityError,
   NotEnoughCoordinatesError,
@@ -84,6 +85,34 @@ describe('RoutesService', () => {
     const result = await service.createRoute(testData.route);
 
     expect(result).toStrictEqual(testData.route);
+  });
+
+  it('should store a route from a gpx file in the database and return it', async () => {
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValue([
+      {
+        id: 0,
+        name: testData.name,
+        coordinates:
+          'LINESTRING(' +
+          '47.3875638283789157867431640625 10.93997175805270671844482421875,' +
+          '47.38756508566439151763916015625 10.9399969875812530517578125,' +
+          '47.38756240345537662506103515625 10.94002456404268741607666015625)',
+      },
+    ]);
+
+    const data = fs.readFileSync('src/routes/test/short.gpx');
+
+    const result = await service.createRouteFromGPX(data);
+
+    expect(result).toStrictEqual({
+      id: 0,
+      name: testData.name,
+      coordinates: [
+        [47.3875638283789157867431640625, 10.93997175805270671844482421875],
+        [47.38756508566439151763916015625, 10.9399969875812530517578125],
+        [47.38756240345537662506103515625, 10.94002456404268741607666015625],
+      ],
+    });
   });
 
   it('should fail to create a new route if the db query does not return the newly created entity', async () => {

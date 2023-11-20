@@ -13,7 +13,9 @@
     ".dto.ts",
     "test.helper.ts",
     "prisma.service.ts",
-    "images.upload.intercepter.ts"
+    "images.upload.interceptor.ts",
+    "gpx.upload.interceptor.ts"
+
   ],
   "coverageDirectory": "./coverage-unit",
 

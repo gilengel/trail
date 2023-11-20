@@ -35,7 +35,7 @@ describe('ImageController', () => {
 
     const result = await controller.uploadFile([mockImageFromBuffer(buffer)]);
     expect(result).toStrictEqual(testData.images);
-  })
+  });
 
   it('should fail to save an image without geo information (exif)', async () => {
     jest
@@ -60,7 +60,7 @@ describe('ImageController', () => {
 
     const result = await controller.getImages(1024, 1024, 0);
     expect(result).toStrictEqual(testData.images);
-  })
+  });
 
   it('should fail with a "BadRequest" if parameters are invalid', async () => {
     jest
@@ -68,27 +68,19 @@ describe('ImageController', () => {
       .mockRejectedValue(new Error());
 
     const result = controller.getImages(1024, 1024, -1);
-      
+
     await expect(result).rejects.toThrow(
-      new HttpException(
-        '',
-        HttpStatus.BAD_REQUEST,
-      ),
+      new HttpException('', HttpStatus.BAD_REQUEST),
     );
   });
 
   it('should fail with a "NotFound" if no images are near a point', async () => {
-    jest
-      .spyOn(service, 'getImagesNearCoordinate')
-      .mockResolvedValue([])
+    jest.spyOn(service, 'getImagesNearCoordinate').mockResolvedValue([]);
 
     const result = controller.getImages(1024, 1024, 0);
-      
+
     await expect(result).rejects.toThrow(
-      new HttpException(
-        '',
-        HttpStatus.NOT_FOUND,
-      ),
+      new HttpException('', HttpStatus.NOT_FOUND),
     );
   });
 });
