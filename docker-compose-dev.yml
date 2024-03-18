@@ -1,0 +1,61 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  server:
+    build:
+      context: ./trail-backend
+    develop:
+      watch:
+        - action: sync
+          path: ./trail-backend
+          target: /usr/src/app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./trail-backend/package.json
+    environment:
+      - DATABASE_URL=postgres://docker:docker@muu/postgis:25432/gis?schema=public
+    ports:
+      - 3000:3000
+    links:
+      - db
+        
+  db:
+    container_name: muu
+    image: postgis/postgis:latest
+    volumes:
+      - ./db/postgresql:/var/lib/postgresql/data
+    environment:
+      # If you need to create multiple database you can add coma separated databases eg gis,data
+      - POSTGRES_DB=gis
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    ports:
+      - "25432:5432"
+    restart: on-failure
+    healthcheck:
+      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis"
+
+  frontend:
+    build:
+      context: ./trail-frontend
+    develop:
+      watch:
+        - action: sync
+          path: ./trail-frontend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./trail-frontend/package.json
+    ports:
+      - '8081:8080'
+
