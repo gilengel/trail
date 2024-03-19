@@ -1,0 +1,706 @@
+{
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/components/TripUpload.vue": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/components/TripUpload.vue",
+    "statementMap": {
+      "0": {
+        "start": {
+          "line": 4,
+          "column": 34
+        },
+        "end": {
+          "line": 34,
+          "column": 2
+        }
+      },
+      "1": {
+        "start": {
+          "line": 7,
+          "column": 4
+        },
+        "end": {
+          "line": 7,
+          "column": 15
+        }
+      },
+      "2": {
+        "start": {
+          "line": 8,
+          "column": 22
+        },
+        "end": {
+          "line": 8,
+          "column": 27
+        }
+      },
+      "3": {
+        "start": {
+          "line": 9,
+          "column": 18
+        },
+        "end": {
+          "line": 9,
+          "column": 23
+        }
+      },
+      "4": {
+        "start": {
+          "line": 11,
+          "column": 23
+        },
+        "end": {
+          "line": 11,
+          "column": 37
+        }
+      },
+      "5": {
+        "start": {
+          "line": 12,
+          "column": 6
+        },
+        "end": {
+          "line": 14,
+          "column": 7
+        }
+      },
+      "6": {
+        "start": {
+          "line": 13,
+          "column": 8
+        },
+        "end": {
+          "line": 13,
+          "column": 40
+        }
+      },
+      "7": {
+        "start": {
+          "line": 15,
+          "column": 6
+        },
+        "end": {
+          "line": 19,
+          "column": 9
+        }
+      },
+      "8": {
+        "start": {
+          "line": 22,
+          "column": 6
+        },
+        "end": {
+          "line": 24,
+          "column": 7
+        }
+      },
+      "9": {
+        "start": {
+          "line": 23,
+          "column": 8
+        },
+        "end": {
+          "line": 23,
+          "column": 15
+        }
+      },
+      "10": {
+        "start": {
+          "line": 25,
+          "column": 6
+        },
+        "end": {
+          "line": 25,
+          "column": 31
+        }
+      },
+      "11": {
+        "start": {
+          "line": 28,
+          "column": 6
+        },
+        "end": {
+          "line": 28,
+          "column": 43
+        }
+      },
+      "12": {
+        "start": {
+          "line": 30,
+          "column": 25
+        },
+        "end": {
+          "line": 30,
+          "column": 89
+        }
+      },
+      "13": {
+        "start": {
+          "line": 31,
+          "column": 4
+        },
+        "end": {
+          "line": 31,
+          "column": 95
+        }
+      },
+      "14": {
+        "start": {
+          "line": 32,
+          "column": 4
+        },
+        "end": {
+          "line": 32,
+          "column": 24
+        }
+      },
+      "15": {
+        "start": {
+          "line": 37,
+          "column": 2
+        },
+        "end": {
+          "line": 54,
+          "column": 5
+        }
+      },
+      "16": {
+        "start": {
+          "line": 4,
+          "column": 34
+        },
+        "end": {
+          "line": 44,
+          "column": 2
+        }
+      },
+      "17": {
+        "start": {
+          "line": 15,
+          "column": 6
+        },
+        "end": {
+          "line": 24,
+          "column": 23
+        }
+      },
+      "18": {
+        "start": {
+          "line": 25,
+          "column": 6
+        },
+        "end": {
+          "line": 29,
+          "column": 9
+        }
+      },
+      "19": {
+        "start": {
+          "line": 32,
+          "column": 6
+        },
+        "end": {
+          "line": 34,
+          "column": 7
+        }
+      },
+      "20": {
+        "start": {
+          "line": 33,
+          "column": 8
+        },
+        "end": {
+          "line": 33,
+          "column": 15
+        }
+      },
+      "21": {
+        "start": {
+          "line": 35,
+          "column": 6
+        },
+        "end": {
+          "line": 35,
+          "column": 31
+        }
+      },
+      "22": {
+        "start": {
+          "line": 38,
+          "column": 6
+        },
+        "end": {
+          "line": 38,
+          "column": 43
+        }
+      },
+      "23": {
+        "start": {
+          "line": 40,
+          "column": 25
+        },
+        "end": {
+          "line": 40,
+          "column": 89
+        }
+      },
+      "24": {
+        "start": {
+          "line": 41,
+          "column": 4
+        },
+        "end": {
+          "line": 41,
+          "column": 95
+        }
+      },
+      "25": {
+        "start": {
+          "line": 42,
+          "column": 4
+        },
+        "end": {
+          "line": 42,
+          "column": 24
+        }
+      },
+      "26": {
+        "start": {
+          "line": 47,
+          "column": 2
+        },
+        "end": {
+          "line": 64,
+          "column": 5
+        }
+      }
+    },
+    "fnMap": {
+      "0": {
+        "name": "(anonymous_0)",
+        "decl": {
+          "start": {
+            "line": 6,
+            "column": 2
+          },
+          "end": {
+            "line": 6,
+            "column": 3
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 6,
+            "column": 39
+          },
+          "end": {
+            "line": 33,
+            "column": 3
+          }
+        },
+        "line": 6
+      },
+      "1": {
+        "name": "uploadTrips",
+        "decl": {
+          "start": {
+            "line": 10,
+            "column": 13
+          },
+          "end": {
+            "line": 10,
+            "column": 24
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 10,
+            "column": 32
+          },
+          "end": {
+            "line": 20,
+            "column": 5
+          }
+        },
+        "line": 10
+      },
+      "2": {
+        "name": "onFilesUpload",
+        "decl": {
+          "start": {
+            "line": 21,
+            "column": 13
+          },
+          "end": {
+            "line": 21,
+            "column": 26
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 21,
+            "column": 29
+          },
+          "end": {
+            "line": 26,
+            "column": 5
+          }
+        },
+        "line": 21
+      },
+      "3": {
+        "name": "onFilesChanged",
+        "decl": {
+          "start": {
+            "line": 27,
+            "column": 13
+          },
+          "end": {
+            "line": 27,
+            "column": 27
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 27,
+            "column": 30
+          },
+          "end": {
+            "line": 29,
+            "column": 5
+          }
+        },
+        "line": 27
+      },
+      "4": {
+        "name": "_sfc_render",
+        "decl": {
+          "start": {
+            "line": 36,
+            "column": 9
+          },
+          "end": {
+            "line": 36,
+            "column": 20
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 36,
+            "column": 68
+          },
+          "end": {
+            "line": 55,
+            "column": 1
+          }
+        },
+        "line": 36
+      },
+      "5": {
+        "name": "(anonymous_0)",
+        "decl": {
+          "start": {
+            "line": 6,
+            "column": 2
+          },
+          "end": {
+            "line": 6,
+            "column": 3
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 6,
+            "column": 39
+          },
+          "end": {
+            "line": 43,
+            "column": 3
+          }
+        },
+        "line": 6
+      },
+      "6": {
+        "name": "uploadTrips",
+        "decl": {
+          "start": {
+            "line": 10,
+            "column": 13
+          },
+          "end": {
+            "line": 10,
+            "column": 24
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 10,
+            "column": 32
+          },
+          "end": {
+            "line": 30,
+            "column": 5
+          }
+        },
+        "line": 10
+      },
+      "7": {
+        "name": "onFilesUpload",
+        "decl": {
+          "start": {
+            "line": 31,
+            "column": 13
+          },
+          "end": {
+            "line": 31,
+            "column": 26
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 31,
+            "column": 29
+          },
+          "end": {
+            "line": 36,
+            "column": 5
+          }
+        },
+        "line": 31
+      },
+      "8": {
+        "name": "onFilesChanged",
+        "decl": {
+          "start": {
+            "line": 37,
+            "column": 13
+          },
+          "end": {
+            "line": 37,
+            "column": 27
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 37,
+            "column": 30
+          },
+          "end": {
+            "line": 39,
+            "column": 5
+          }
+        },
+        "line": 37
+      },
+      "9": {
+        "name": "_sfc_render",
+        "decl": {
+          "start": {
+            "line": 46,
+            "column": 9
+          },
+          "end": {
+            "line": 46,
+            "column": 20
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 46,
+            "column": 68
+          },
+          "end": {
+            "line": 65,
+            "column": 1
+          }
+        },
+        "line": 46
+      }
+    },
+    "branchMap": {
+      "0": {
+        "loc": {
+          "start": {
+            "line": 22,
+            "column": 6
+          },
+          "end": {
+            "line": 24,
+            "column": 7
+          }
+        },
+        "type": "if",
+        "locations": [
+          {
+            "start": {
+              "line": 22,
+              "column": 6
+            },
+            "end": {
+              "line": 24,
+              "column": 7
+            }
+          },
+          {
+            "start": {},
+            "end": {}
+          }
+        ],
+        "line": 22
+      },
+      "1": {
+        "loc": {
+          "start": {
+            "line": 32,
+            "column": 6
+          },
+          "end": {
+            "line": 34,
+            "column": 7
+          }
+        },
+        "type": "if",
+        "locations": [
+          {
+            "start": {
+              "line": 32,
+              "column": 6
+            },
+            "end": {
+              "line": 34,
+              "column": 7
+            }
+          },
+          {
+            "start": {},
+            "end": {}
+          }
+        ],
+        "line": 32
+      }
+    },
+    "s": {
+      "0": 25,
+      "1": 41,
+      "2": 41,
+      "3": 41,
+      "4": 6,
+      "5": 6,
+      "6": 6,
+      "7": 6,
+      "8": 9,
+      "9": 5,
+      "10": 4,
+      "11": 6,
+      "12": 36,
+      "13": 36,
+      "14": 36,
+      "15": 32,
+      "16": 4,
+      "17": 23,
+      "18": 21,
+      "19": 5,
+      "20": 24,
+      "21": 2,
+      "22": 34,
+      "23": 41,
+      "24": 41,
+      "25": 41,
+      "26": 9
+    },
+    "f": {
+      "0": 41,
+      "1": 6,
+      "2": 9,
+      "3": 8,
+      "4": 32,
+      "5": 9,
+      "6": 34,
+      "7": 5,
+      "8": 34,
+      "9": 9
+    },
+    "b": {
+      "0": [
+        3,
+        4
+      ],
+      "1": [
+        3,
+        2
+      ]
+    },
+    "inputSourceMap": {
+      "version": 3,
+      "mappings": ";AAQA,SAAS,WAAW;AACpB,OAAO,WAAW;;;;;AAGlB,UAAM,YAAY,IAA6B;AAC/C,UAAM,QAAQ,IAAqB;AAGnC,aAAS,YAAY,OAAiB;AACpC,YAAM,WAAW,IAAI,SAAS;AAE9B,iBAAW,QAAQ,OAAO;AACxB,iBAAS,OAAO,UAAU,IAAI;AAAA,MAChC;AAEA,YAAM,KAAK,oCAAoC,UAAU;AAAA,QACvD,SAAS;AAAA,UACP,gBAAgB;AAAA,QAClB;AAAA,MACF,CAAC;AAAA,IACH;AAGA,aAAS,gBAAgB;AACrB,UAAG,CAAC,MAAM,OACV;AACI;AAAA,MACJ;AAEA,kBAAY,MAAM,KAAK;AAAA,IAC3B;AAEA,aAAS,iBAAiB;AACtB,YAAM,QAAQ,UAAU,OAAO;AAAA,IACnC;;;;;;;;uBAzCI,oBAGO;AAAA,IAFH;AAAA,MAAyF;AAAA;AAAA,QAAlF,aAAU;AAAA,QAAiB,KAAI;AAAA,QAAY,MAAK;AAAA,QAAQ,UAAQ;AAAA;;;;;IACvE,oBAA0E;AAAA,MAAlE,aAAU;AAAA,MAAc,SAAO;AAAA,OAAe,aAAW;AAAA",
+      "names": [],
+      "sources": [
+        "/home/IBEO.AS/gien/projects/trail-frontend/src/components/TripUpload.vue"
+      ],
+      "file": "/home/IBEO.AS/gien/projects/trail-frontend/src/components/TripUpload.vue"
+    },
+    "_coverageSchema": "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    "hash": "4131d68ca7088d17b529d074642395b675111bca"
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/main.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/main.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/components/upload.spec2.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/components/upload.spec2.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/components/upload.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/components/upload.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/router/index.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/router/index.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/stores/counter.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/stores/counter.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/components/__tests__/HelloWorld.spec.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/components/__tests__/HelloWorld.spec.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  },
+  "/home/IBEO.AS/gien/projects/trail-frontend/src/components/__tests__/TripUpload.spec.ts": {
+    "path": "/home/IBEO.AS/gien/projects/trail-frontend/src/components/__tests__/TripUpload.spec.ts",
+    "statementMap": {},
+    "fnMap": {},
+    "branchMap": {},
+    "s": {},
+    "f": {},
+    "b": {}
+  }
+}
