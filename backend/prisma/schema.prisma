@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+generator class_validator {
+  provider = "prisma-class-validator-generator"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+}
+
+model Location {
+  id        Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // the geometry column itself
+  coords Unsupported("geometry(Point, 4326)")
+
+  // the index for that column
+  @@index([coords], name: "location_idx", type: Gist)
+}
+
+model Route {
+  id          Int                                    @id @default(autoincrement())
+  name        String
+
+  segments    RouteSegment[]
+}
+
+model RouteSegment {
+  id          Int                                    @id @default(autoincrement())
+  route       Route                                  @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  routeId     Int
+  name        String
+  coordinates Unsupported("geometry(Linestring, 4326)")
+
+  @@index([coordinates], name: "route_segment_idx", type: Gist)
+}
+
+model Image {
+  id          String                                  @id @default(uuid())
+  name        String
+  coordinates Unsupported("geometry(Point, 4326)")
+
+  // the index for that column
+  @@index([coordinates], name: "image_idx", type: Gist)
+}
