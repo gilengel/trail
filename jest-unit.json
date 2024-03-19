@@ -1,0 +1,31 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testMatch": ["<rootDir>/src/**/*.spec.{ts,js}"],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["src/**/*.{ts,jxs}"],
+  "coveragePathIgnorePatterns": [
+    "main.ts",
+    ".module.ts",
+    ".dto.ts",
+    "test.helper.ts",
+    "prisma.service.ts",
+    "entity",
+    "images.upload.interceptor.ts",
+    "gpx.upload.interceptor.ts"
+
+  ],
+  "coverageDirectory": "./coverage-unit",
+
+  "coverageThreshold": {
+    "global": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  }
+}

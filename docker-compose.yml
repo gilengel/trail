@@ -1,0 +1,20 @@
+# docker-compose build
+version: '3.9'
+
+services:
+
+  db:
+    image: postgis/postgis:latest
+    volumes:
+      - ./db/postgresql:/var/lib/postgresql/data
+    environment:
+      # If you need to create multiple database you can add coma separated databases eg gis,data
+      - POSTGRES_DB=gis
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    ports:
+      - "25432:5432"
+    restart: on-failure
+    healthcheck:
+      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis"
