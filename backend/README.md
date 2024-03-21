@@ -30,4 +30,4 @@ Now, here's the catch, though it's a small one: We uphold the integrity of our c
 
 
 # Development
-TBD
+Forward: We want to encourage and enable everybode to participate in trails development. It can be frustrating and scary for new developers to join an existing project with a huge codebase and years of development. To ease the burden and lower the entry bar we try to document as much and as detailled as possible. Also we believe in strong CI that help to ensure a certain degree on quality without manual checks.

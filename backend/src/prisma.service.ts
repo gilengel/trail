@@ -1,3 +1,6 @@
+/**
+ * @file Provides a service to deal with the database in the background.
+ */
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 

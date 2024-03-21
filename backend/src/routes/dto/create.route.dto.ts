@@ -1,3 +1,6 @@
+/**
+ * @file DTO specification for creating a route.
+ */
 import { ApiProperty } from '@nestjs/swagger';
 import { ConcealedCreateRouteSegmentDto } from '../../routes.segments/dto/create-route.segment.dto';
 

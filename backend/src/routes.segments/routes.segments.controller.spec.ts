@@ -1,3 +1,6 @@
+/**
+ * @file Public API for route segment unit test cases.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoutesSegmentsController } from './routes.segments.controller';
 import {

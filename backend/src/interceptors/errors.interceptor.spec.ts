@@ -1,3 +1,6 @@
+/**
+ * @file Provides functionality to create, read, update and delete images.
+ */
 import { throwError, lastValueFrom } from 'rxjs';
 import { ErrorsInterceptor } from './errors.interceptor';
 import {

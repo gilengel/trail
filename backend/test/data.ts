@@ -1,3 +1,6 @@
+/**
+ * @file Data that is used for unit tests.
+ */
 import { RouteSegmentDto } from '../src/routes.segments/dto/route.segment.dto';
 import { DbImageDto, ImageDto } from '../src/images/dto/image.dto';
 import { CreateRouteDto } from '../src/routes/dto/create.route.dto';
@@ -6,6 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateRouteSegmentDto } from '../src/routes.segments/dto/create-route.segment.dto';
 import { Route } from '../src/routes/entity/route';
 import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
+
+export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
 export const wkt = 'LINESTRING(30 10,10 30,40 40)';
 export const updatedWkt = 'LINESTRING(30 10,10 30)';
@@ -131,7 +136,7 @@ const uuid = uuidv4();
 export const dbImages: DbImageDto[] = [
   {
     uuid,
-    timestamp: new Date(),
+    timestamp: date,
     coordinates: 'POINT(47.17970059972222 10.893711999999999)',
   },
 ];
@@ -140,6 +145,7 @@ export const images: ImageDto[] = [
   {
     uuid,
     name: 'not_implemented',
+    timestamp: date,
     coordinates: [47.17970059972222, 10.893711999999999],
   },
 ];

@@ -1,3 +1,6 @@
+/**
+ * @file Provides an utility interceptor that catches unhandled exceptions and throws a "BadRequest" back to the client.
+ */
 import {
   Injectable,
   NestInterceptor,

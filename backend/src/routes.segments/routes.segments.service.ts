@@ -1,3 +1,7 @@
+/**
+ * @file Service that provides all related functionality regarding route segment like creating, updating, deleting, accessing.
+ * Also it provides functions for different calculations like the length of a segment.
+ */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRouteSegmentDto } from './dto/create-route.segment.dto';
 import { UpdateRouteSegmentDto } from './dto/update-route.segment.dto';
@@ -36,9 +40,9 @@ export class MixDimensionalityError extends Error {
 export class RoutesSegmentsService {
   constructor(private prisma: PrismaService) {}
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Create a new route in the database.
-   *
    * @param createRouteSegmentDto - The data for creating the new route.
    * @returns A Promise that resolves to a RouteDto object.
    */
@@ -75,10 +79,11 @@ export class RoutesSegmentsService {
     return Promise.resolve(segments);
   }
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Retrieve a route segment by its ID.
-   *
    * @param id - The ID of the route segment to retrieve.
+   * @throws {HttpException} 404 if a route segment with the requested id could not be found in the database.
    * @returns A Promise that resolves to a RouteSegmentDto object or null if not found.
    */
   async findOne(id: number): Promise<RouteSegmentDto | null> {
@@ -98,14 +103,29 @@ export class RoutesSegmentsService {
     return Promise.resolve(conversion.dbRouteSegment2dto(routeSegment[0]));
   }
 
+  // eslint-disable-next-line jsdoc/require-example
+  /**
+   * Calculates the length (2d) of a segment and returns it
+   * @param id - The ID of the route segment to retrieve.
+   * @throws {HttpException} 404 if a route segment with the requested id could not be found in the database.
+   * @returns A Promise that resolves to a RouteSegmentDto object or null if not found.
+   */
+  async length(id: number): Promise<number> {
+    const segmentLength = await this.prisma.$queryRaw<number[]>`
+      SELECT ST_Length(coordinates) 
+      FROM "RouteSegment" 
+      WHERE id = ${id}::int`;
+
+    return Promise.resolve(segmentLength[0]);
+  }
+
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Updates an existing route segment in the database.
-   *
-   * @param id The ID of the route segment to be updated.
-   * @param data The data that will be changed. Only name and coordinates can be changed
-   *
+   * @param id - The ID of the route segment to be updated.
+   * @param updateRouteSegmentDto - The data that will be changed. Only name and coordinates can be changed.
    * @returns A promise that resolves to the route segment with updated data.
-   * @throws NoAttributesProvidedError if neither name nor coordinates are within the data
+   * @throws NoAttributesProvidedError if neither name nor coordinates are within the data.
    */
   async update(
     id: number,
@@ -153,11 +173,10 @@ export class RoutesSegmentsService {
     return Promise.resolve(conversion.dbRouteSegment2dto(result[0]));
   }
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Validates an array of coordinates to ensure they meet specific criteria.
-   *
    * @param coordinates - An array of arrays representing coordinates.
-   *
    * @throws {NotEnoughCoordinatesError} - If the array contains fewer than 2 coordinate sets.
    * @throws {TooManyCoordinatesError} - If the array contains more than 1,000,000 coordinate sets.
    * @throws {MixDimensionalityError} - If the array contains a mix of 2D and non-2D (3D or more) coordinates.

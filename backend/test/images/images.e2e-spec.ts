@@ -1,3 +1,6 @@
+/**
+ * @file Images e2e tests.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -13,8 +16,6 @@ import { json } from 'express';
 import { RouteDto } from 'src/routes/dto/route.dto';
 import * as async from 'async';
 import { ImageDto } from 'src/images/dto/image.dto';
-//import { RoutesSegmentsModule } from '../../src/routes.segments/routes.segments.module';
-//import { RoutesSegmentsModule } from '../../src/routes.segments/routes.segments.module';
 
 describe('ImagesController (e2e)', () => {
   let app: INestApplication;

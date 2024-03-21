@@ -1,3 +1,6 @@
+/**
+ * @file Global backend module that defines all dependencies and modules that are available in this backend.
+ */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';

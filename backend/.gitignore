@@ -44,7 +44,10 @@ bin
 db
 
 # folder where test store uploaded images
-images/**
+images
 
 # stryker temp files
 .stryker-tmp
+
+# jsdoc
+out

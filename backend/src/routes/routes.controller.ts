@@ -1,3 +1,6 @@
+/**
+ * @file Public API for routes.
+ */
 import {
   Body,
   Controller,

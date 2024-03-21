@@ -1,3 +1,6 @@
+/**
+ * @file Public API for images.
+ */
 import {
   Controller,
   Get,

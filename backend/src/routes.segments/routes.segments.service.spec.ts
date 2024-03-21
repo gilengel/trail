@@ -1,3 +1,6 @@
+/**
+ * @file Route segments unit tests.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   MixDimensionalityError,
@@ -52,6 +55,26 @@ describe('RoutesSegmentsService', () => {
     expect(result).toStrictEqual(expected);
   });
 
+  it('should return the length of a route segment stored in the database by id', async () => {
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([100]);
+
+    const result: number = await service.length(0);
+    const expected: number = 100;
+
+    expect(result).toBe(expected);
+  });
+
+  it('should throw 404 if length of a route segment was requested that is not stored in the database', async () => {
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([]);
+
+    const result = service.findOne(0);
+    await expect(result).rejects.toThrow(
+      new HttpException(
+        `Route segment with id 0 does not exist.`,
+        HttpStatus.NOT_FOUND,
+      ),
+    );
+  });
   it('should throw 404 if a route segment was requested that does not exist', async () => {
     jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([]);
 

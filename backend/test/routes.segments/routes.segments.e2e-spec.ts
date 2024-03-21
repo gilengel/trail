@@ -1,3 +1,6 @@
+/**
+ * @file Route segments e2e tests.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { json } from 'express';
