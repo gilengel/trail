@@ -59,6 +59,21 @@ export class RoutesService {
     return Promise.resolve(conversion.dbRoute2dto(result));
   }
 
+  async length(id: number): Promise<number> {
+    const length = await this.prisma.$queryRaw<
+      number[]
+    >`SELECT SUM(ST_LENGTH(coordinates)) FROM "RouteSegment" WHERE "routeId"=${id}`;
+
+    if (!length || length.length == 0) {
+      throw new HttpException(
+        `Route with id ${id} does not exist.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return Promise.resolve(length[0]);
+  }
+
   /**
    * Retrieve a list of routes based on provided parameters.
    *

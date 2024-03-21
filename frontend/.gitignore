@@ -29,6 +29,8 @@ coverage
 
 *.tsbuildinfo
 
+.nyc_output
+
 test-results/
 playwright-report/
 e2e-coverage

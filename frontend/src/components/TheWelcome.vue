@@ -1,36 +1,28 @@
 <script setup lang="ts">
 import TripUpload from './TripUpload.vue'
+import TripOverview from './TripOverview.vue'
+import TripDetails from './TripDetails.vue'
 
-import { ref } from 'vue';
+import { ref, type Ref } from 'vue'
 
-const selectedRoute = ref(null);
+const selectedRouteId: Ref<number | null> = ref(null)
 
-const routes = ref(null);
+const routes = ref(null)
 fetch('http://localhost:3000/routes')
-  .then(response => response.json())
-  .then(data => routes.value = data);
-
+  .then((response) => response.json())
+  .then((data) => (routes.value = data))
 </script>
 
 <template>
   <div class="container">
     <div>
-      <h1>Trip Overview</h1>
-      <ul>
-        <!--
-        <li v-for="(route, i) in routes" :key="i" @click="selectedRoute = route.coordinates">
-          {{ route.name }}
-        </li>
-      -->
-      </ul>
-      <h1 data-testid="upload">Trip Upload</h1>
       <TripUpload></TripUpload>
+      <TripOverview @selectedTripChanged="(id) => (selectedRouteId = id)"></TripOverview>
     </div>
     <div>
-      <h1>World View</h1>
+      <TripDetails :route-id="selectedRouteId"></TripDetails>
+      <RouterLink data-testid="link-to-about" to="/about">Go to About</RouterLink>
     </div>
-
-
   </div>
 </template>
 

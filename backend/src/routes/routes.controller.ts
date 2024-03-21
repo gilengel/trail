@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Patch,
   Post,
@@ -20,6 +21,8 @@ import { GPXRoute, extractCoordinatesFromGPX } from './routes.parser';
 
 @Controller('routes')
 export class RoutesController {
+  private readonly logger = new Logger(RoutesController.name);
+
   constructor(private routeService: RoutesService) {}
 
   @Get()
@@ -34,6 +37,11 @@ export class RoutesController {
     return this.routeService.route(params.id);
   }
 
+  @Get('length/:id')
+  async length(@Param() params: { id: number }): Promise<number> {
+    return this.routeService.length(params.id);
+  }
+
   @Post()
   async create(@Body() createRouteDto: CreateRouteDto): Promise<RouteDto> {
     try {
@@ -41,6 +49,7 @@ export class RoutesController {
 
       return Promise.resolve(route);
     } catch (e) {
+      this.logger.log(e.message);
       // < 2 coordinates, > 1.000.000 coordinates or mixed dimension coordinates
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -57,6 +66,9 @@ export class RoutesController {
 
       return Promise.resolve(routeDto);
     } catch (e) {
+      this.logger.log(':(');
+      this.logger.log(e.message);
+
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
@@ -73,6 +85,8 @@ export class RoutesController {
       );
       return updatedRow;
     } catch (e) {
+      this.logger.log(e.message);
+
       // special case, inform that the error is on client side
       if (e instanceof NoAttributesProvidedError) {
         throw new HttpException(

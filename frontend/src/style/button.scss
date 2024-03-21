@@ -1,0 +1,49 @@
+@import 'colors';
+@import 'font';
+
+$primary: #90a17d;
+$light: #f5ebe0;
+
+@mixin font {
+  font-family: 'Amatic SC', cursive;
+  font-size: 2em;
+}
+
+.btn {
+  border-radius: 2em;
+  border: none;
+  padding: 0.25em;
+  padding-left: 1em;
+  padding-right: 1em;
+  min-width: 244px;
+  font-weight: bold;
+  margin-top: 2em;
+
+  @include font;
+
+  border: solid 1px $light;
+}
+
+@mixin trail-button {
+  & {
+    @include trail-border;
+    color: $text;
+
+    padding: 0.5em;
+
+    background-color: transparent;
+  }
+
+  &:hover {
+    color: black;
+    /*
+    @include trail-border;
+    color: $dark-bg;
+
+    padding: 0.5em;
+
+    background-color: $border-color;
+    border: solid transparent calc($border-size * 1px);
+    */
+  }
+}

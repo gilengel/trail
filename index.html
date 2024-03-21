@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail Backend</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Fira+Mono:wght@400;500;700&display=swap');
+
+        :root { 
+            --dark-bg: #282828;
+            --bg3: #665c54;
+
+            --fg4: #a89984;
+            --fg3: #bdae93;
+            --fg2: #d5c4a1;
+            --fg1: #ebdbb2;
+            --fg0: #fbf1c7;
+
+            --red: #cc241d;
+            --green: #98971a;
+            --yellow: #d79921;
+            --blue: #458588;
+            --purple: #b16286;
+            --aqua: #689d6a;
+            --gray: #a89984;
+            --orange: #d65d0e;
+
+            --diamond-height: 100;
+            --diamond-width: calc(var(--diamond-height) * 0.75);
+
+            --border-size: 8;
+        }        
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--fg4);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 100vh;
+        }
+        h1 {
+            font-family: "Fira Mono", monospace;
+            font-weight: 400;
+            font-style: normal; 
+            
+            font-size: 8vh;
+
+        }
+        h2 {
+            font-family: "Fira Mono", monospace;
+            font-weight: 400;
+            font-style: normal; 
+            
+            font-size: 8vh;
+            color: var(--bg3)
+        }
+
+
+        div {
+          position: relative;
+
+          width: calc(var(--diamond-width) * 1px);
+          height: calc(var(--diamond-height) * 1px);
+          margin: 1em;
+
+        }
+        div::before{
+          content: ' ';
+          position: absolute;
+          top: 0%;
+
+          width: calc((var(--diamond-width) - var(--border-size)) * 1px);
+          height: calc((var(--diamond-width) - var(--border-size)) * 1px);
+      
+          border-left: solid calc(var(--border-size) * 1px) var(--orange);
+          border-top: solid calc(var(--border-size) * 1px) var(--orange);
+
+          transform: translateY(calc(var(--diamond-height) / 7 * 1px)) scaleX(0.7125) rotate(45deg);
+        }
+        div::after{
+          content: ' ';
+          position: absolute;
+          top: 0%;
+
+          width: calc((var(--diamond-width) - var(--border-size)) * 1px);
+          height: calc((var(--diamond-width) - var(--border-size)) * 1px);
+      
+          border-left: solid calc(var(--border-size) * 1px) var(--orange);
+          border-top: solid calc(var(--border-size) * 1px) var(--orange);
+
+          transform: translateY(calc(var(--diamond-height) / 7 * 1px)) scaleX(0.7125) rotate(225deg);
+        }
+
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <h1>Trail</h1>
+    <h2>Backend</h2>
+  </body>
+</html>
