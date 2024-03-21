@@ -1,3 +1,6 @@
+/**
+ * @file DTO specification for creating a route segment.
+ */
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ConcealedCreateRouteSegmentDto {
@@ -5,11 +8,11 @@ export class ConcealedCreateRouteSegmentDto {
   name: string;
 
   /**
-   * limits:
+   * Limits:
    * minimum: two coordinates 2d or 3d
-   * maximum: one million coordinates 2d or 3d (although we highly recommend to not store such long routes as querying them will be slow)
+   * maximum: one million coordinates 2d or 3d (although we highly recommend to not store such long routes as querying them will be slow).
    *
-   * all coordinates must be either 2d or 3d - mixing is not allowed and shall return an error by the backend
+   * All coordinates must be either 2d or 3d - mixing is not allowed and shall return an error by the backend.
    */
   @ApiProperty()
   coordinates: number[][];

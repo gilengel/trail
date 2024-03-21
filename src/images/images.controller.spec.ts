@@ -1,3 +1,6 @@
+/**
+ * @file Public API for images unit test cases.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { readFileSync } from 'fs';

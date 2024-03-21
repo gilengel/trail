@@ -1,3 +1,6 @@
+/**
+ * @file Contains functionality to parse gpx files into typescript objects.
+ */
 import { XMLParser } from 'fast-xml-parser';
 import { NotEnoughCoordinatesError } from '../routes.segments/routes.segments.service';
 
@@ -11,11 +14,12 @@ export interface GPXRouteSegment {
   coordinates: number[][];
 }
 
+// eslint-disable-next-line jsdoc/require-example
 /**
  * Creates a new route in the database based on a gpx file.
- *
  * @param data - The content of the gpx file.
  * @returns A Promise that resolves to a RouteDto object.
+ * @throws {NotEnoughCoordinatesError} If there are no coordinates within the gpx file.
  */
 export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
   const parser = new XMLParser({

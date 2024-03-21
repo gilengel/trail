@@ -1,3 +1,6 @@
+/**
+ * @file Provides functionality to create, read, update and delete images.
+ */
 import { Injectable } from '@nestjs/common';
 import { DbImageDto, ImageDto } from './dto/image.dto';
 

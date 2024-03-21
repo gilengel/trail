@@ -1,3 +1,6 @@
+/**
+ * @file Dto definitions for images, both api and database (internal).
+ */
 import { ApiProperty } from '@nestjs/swagger';
 
 export class DbImageDto {
@@ -14,6 +17,9 @@ export class DbImageDto {
 export class ImageDto {
   @ApiProperty()
   uuid: string;
+
+  @ApiProperty()
+  timestamp: Date;
 
   @ApiProperty()
   name: string;

@@ -1,3 +1,6 @@
+/**
+ * @file Global backend controller that takes care of unspecific tasks.
+ */
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 

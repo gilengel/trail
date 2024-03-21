@@ -1,3 +1,6 @@
+/**
+ * @file DTO specification for a db route segment.
+ */
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RouteSegment {

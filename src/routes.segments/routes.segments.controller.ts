@@ -1,3 +1,6 @@
+/**
+ * @file Public API for route segments.
+ */
 import {
   Controller,
   Get,

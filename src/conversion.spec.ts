@@ -1,3 +1,6 @@
+/**
+ * @file Conversion unit test cases.
+ */
 import { dbimage2dto, dbimages2dto, point2wkt, wkt2point } from './conversion';
 import { DbImageDto, ImageDto } from './images/dto/image.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,6 +38,7 @@ describe('Conversion', () => {
     const expected: ImageDto = {
       uuid: uuid,
       name: 'not_implemented',
+      timestamp: undefined,
       coordinates: [1024, 1024],
     };
 
@@ -54,6 +58,7 @@ describe('Conversion', () => {
       {
         uuid: uuid,
         name: 'not_implemented',
+        timestamp: undefined,
         coordinates: [1024, 1024],
       },
     ];

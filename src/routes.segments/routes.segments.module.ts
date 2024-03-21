@@ -1,3 +1,6 @@
+/**
+ * @file Module for route segments.
+ */
 import { Module } from '@nestjs/common';
 import { RoutesSegmentsService } from './routes.segments.service';
 import { RoutesSegmentsController } from './routes.segments.controller';

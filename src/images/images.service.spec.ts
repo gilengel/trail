@@ -1,3 +1,6 @@
+/**
+ * @file Image service unit tests.
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   ImagesService,

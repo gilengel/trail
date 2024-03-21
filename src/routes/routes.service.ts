@@ -1,3 +1,6 @@
+/**
+ * @file Provides functionality to create, read, update and delete routes.
+ */
 import {
   HttpException,
   HttpStatus,
@@ -31,9 +34,9 @@ export class RoutesService {
     private segments: RoutesSegmentsService,
   ) {}
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Retrieve a route by its ID.
-   *
    * @param id - The ID of the route to retrieve.
    * @returns A Promise that resolves to a RouteDto object or null if not found.
    */
@@ -59,10 +62,9 @@ export class RoutesService {
     return Promise.resolve(conversion.dbRoute2dto(result));
   }
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
-   * Retrieve a list of routes based on provided parameters.
-   *
-   * @param params - An object containing query parameters (skip, take, cursor, where, orderBy).
+   * Get all stored routes from the database.
    * @returns A Promise that resolves to an array of RouteDto objects.
    */
   async routes(): Promise<RouteWithoutSegmentsDto[]> {
@@ -73,9 +75,9 @@ export class RoutesService {
     return Promise.resolve(routes);
   }
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Create a new route in the database.
-   *
    * @param routeDto - The data for creating the new route.
    * @returns A Promise that resolves to a RouteDto object.
    */
@@ -151,12 +153,11 @@ export class RoutesService {
     });
   }
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Update an existing route in the database.
-   *
    * @param id - The ID of the route to update.
    * @param data - The data for updating the route.
-   *
    * @returns A Promise that resolves to the updated route.
    */
   async updateRoute(id: number, data: UpdateRouteDto): Promise<RouteDto> {
@@ -180,9 +181,9 @@ export class RoutesService {
     return Promise.resolve(conversion.dbRoute2dto(result));
   }
 
+  // eslint-disable-next-line jsdoc/require-example
   /**
    * Delete a route from the database.
-   *
    * @param id - The ID of the route to delete.
    * @returns A Promise that resolves to a RouteDto object representing the deleted route.
    */

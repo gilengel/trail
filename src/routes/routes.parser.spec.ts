@@ -1,3 +1,6 @@
+/**
+ * @file Routes parser unit test cases.
+ */
 import * as fs from 'fs';
 
 import { extractCoordinatesFromGPX } from './routes.parser';
