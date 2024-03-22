@@ -13,6 +13,7 @@ generator class_validator {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
+  extensions = [postgis]
 }
 
 model Location {
