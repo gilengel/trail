@@ -1,4 +1,5 @@
-CREATE EXTENSION postgis;
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "postgis";
 
 -- CreateTable
 CREATE TABLE "Location" (
@@ -14,14 +15,23 @@ CREATE TABLE "Location" (
 CREATE TABLE "Route" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "coordinates" geometry(Linestring, 4326) NOT NULL,
 
     CONSTRAINT "Route_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Image" (
+CREATE TABLE "RouteSegment" (
     "id" SERIAL NOT NULL,
+    "routeId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "coordinates" geometry(Linestring, 4326) NOT NULL,
+
+    CONSTRAINT "RouteSegment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Image" (
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "coordinates" geometry(Point, 4326) NOT NULL,
 
@@ -32,7 +42,10 @@ CREATE TABLE "Image" (
 CREATE INDEX "location_idx" ON "Location" USING GIST ("coords");
 
 -- CreateIndex
-CREATE INDEX "route_idx" ON "Route" USING GIST ("coordinates");
+CREATE INDEX "route_segment_idx" ON "RouteSegment" USING GIST ("coordinates");
 
 -- CreateIndex
 CREATE INDEX "image_idx" ON "Image" USING GIST ("coordinates");
+
+-- AddForeignKey
+ALTER TABLE "RouteSegment" ADD CONSTRAINT "RouteSegment_routeId_fkey" FOREIGN KEY ("routeId") REFERENCES "Route"("id") ON DELETE CASCADE ON UPDATE CASCADE;
