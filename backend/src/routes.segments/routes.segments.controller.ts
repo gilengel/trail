@@ -42,6 +42,11 @@ export class RoutesSegmentsController {
     return this.routesSegmentsService.findOne(id);
   }
 
+  @Get('length/:id')
+  async length(@Param() params: { id: number }): Promise<number> {
+    return this.routesSegmentsService.length(params.id);
+  }
+
   @Patch(':id')
   async update(
     @Param('id') id: number,

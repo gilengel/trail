@@ -48,12 +48,16 @@ const props = withDefaults(defineProps<DropZoneProps>(), {
   allowedFileExtensions: () => []
 })
 
+const emit = defineEmits<{
+  (e: 'onFilesChanged', files: File[]): void
+}>()
+
 const isDragging: Ref<boolean> = ref(false)
 const isWrongFileType: Ref<boolean> = ref(false)
 const files: Ref<File[]> = ref([])
 
 function onChange() {
-  console.log(files)
+  emit('onFilesChanged', files.value)
   //files.value.push(...this.$refs.file.files)
 }
 

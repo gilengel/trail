@@ -2,7 +2,7 @@
   <Tile>
     <h1 data-testid="upload">Trip Upload</h1>
 
-    <DropZone :allowed-file-extensions="['svg']"></DropZone>
+    <DropZone :allowed-file-extensions="['gpx']" @onFilesChanged="onFilesChanged"></DropZone>
 
     <AnimatedButton title="Upload Trip" />
   </Tile>
@@ -16,9 +16,8 @@ import { ref } from 'vue'
 import axios from 'axios'
 
 const fileInput = ref<HTMLInputElement | null>()
-const files = ref<FileList | null>()
 
-function uploadTrips(trips: FileList) {
+function uploadTrips(trips: File[]) {
   const formData = new FormData()
 
   for (var i = 0; i < trips.length; ++i) {
@@ -35,16 +34,8 @@ function uploadTrips(trips: FileList) {
     .catch((error) => console.log(':)'))
 }
 
-function onFilesUpload() {
-  if (!files.value) {
-    return
-  }
-
-  uploadTrips(files.value)
-}
-
-function onFilesChanged() {
-  files.value = fileInput.value?.files
+function onFilesChanged(trips: File[]) {
+  uploadTrips(trips)
 }
 </script>
 

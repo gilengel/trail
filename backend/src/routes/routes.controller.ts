@@ -40,11 +40,6 @@ export class RoutesController {
     return this.routeService.route(params.id);
   }
 
-  @Get('length/:id')
-  async length(@Param() params: { id: number }): Promise<number> {
-    return this.routeService.length(params.id);
-  }
-
   @Post()
   async create(@Body() createRouteDto: CreateRouteDto): Promise<RouteDto> {
     try {

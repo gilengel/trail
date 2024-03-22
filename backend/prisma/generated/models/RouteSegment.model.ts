@@ -7,13 +7,13 @@ export class RouteSegment {
     id!: number;
 
     @IsDefined()
-    route!: Route;
-
-    @IsDefined()
     @IsInt()
     routeId!: number;
 
     @IsDefined()
     @IsString()
     name!: string;
+
+    @IsDefined()
+    route!: Route;
 }

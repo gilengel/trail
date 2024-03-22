@@ -44,10 +44,11 @@ export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
   const convertedSegments: GPXRouteSegment[] = segments.map((segment, i) => {
     const name = names[i];
 
-    const coordinates = segment.trkpt.map((point): number[] => [
-      point['@_lat'],
-      point['@_lon'],
-    ]);
+    const coordinates = segment.trkpt.map((point): number[] => {
+      const elevation = point.ele ? point.ele : 0;
+
+      return [point['@_lat'], point['@_lon'], elevation];
+    });
 
     return {
       name,

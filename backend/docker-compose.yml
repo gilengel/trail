@@ -2,7 +2,6 @@
 version: '3.9'
 
 services:
-
   db:
     image: postgis/postgis:latest
     volumes:
@@ -14,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=docker
       - ALLOW_IP_RANGE=0.0.0.0/0
     ports:
-      - "25432:5432"
+      - '5432:5432'
     restart: on-failure
     healthcheck:
-      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis"
+      test: 'PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis'
