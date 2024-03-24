@@ -8,7 +8,8 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  backend:
+  server:
+    container_name: trail-backend
     build:
       context: ./backend
     develop:
@@ -19,42 +20,42 @@ services:
           ignore:
             - node_modules/
         - action: rebuild
-          path: ./backend/package.json
+          path: ./trail-backend/package.json
     environment:
-      - DATABASE_URL=postgres://docker:docker@muu/postgis:25432/gis?schema=public
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - 3000:3000
     links:
       - db
 
   db:
-    container_name: muu
+    container_name: trail-db
     image: postgis/postgis:latest
     volumes:
       - ./db/postgresql:/var/lib/postgresql/data
     environment:
       # If you need to create multiple database you can add coma separated databases eg gis,data
-      - POSTGRES_DB=gis
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - ALLOW_IP_RANGE=0.0.0.0/0
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     restart: on-failure
     healthcheck:
-      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis"
-
-  #frontend:
-  #  build:
-  #    context: ./frontend
-  #  develop:
-  #    watch:
-  #      - action: sync
-  #        path: ./frontend
-  #        target: /app
-  #        ignore:
-  #          - node_modules/
-  #      - action: rebuild
-  #        path: ./frontend/package.json
-  #  ports:
-  #    - "8081:8080"
+      test: "PGPASSWORD=${DB_PASSWORD} pg_isready -h 127.0.0.1 -U ${DB_USER} -d gis"
+#  frontend:
+#    container_name: trail-frontend
+#    build:
+#      context: ./frontend
+#    develop:
+#      watch:
+#        - action: sync
+#          path: ./frontend
+#          target: /app
+#          ignore:
+#            - node_modules/
+#        - action: rebuild
+#          path: ./frontend/package.json
+#    ports:
+#      - "${FRONTEND_PORT}:8080"

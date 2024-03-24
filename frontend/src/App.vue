@@ -6,8 +6,9 @@ import { RouterView } from 'vue-router'
   <RouterView />
 </template>
 
-<style>
+<style lang="scss">
 body {
   background: #90a17d;
+  background: white;
 }
 </style>

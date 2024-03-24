@@ -21,6 +21,7 @@ function uploadTrips(trips: File[]) {
   const formData = new FormData()
 
   for (var i = 0; i < trips.length; ++i) {
+    console.log(trips[i])
     formData.append(`file`, trips[i])
   }
 

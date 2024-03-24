@@ -6,7 +6,7 @@ CREATE TABLE "Location" (
     "id" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "coords" geometry(Point, 4326) NOT NULL,
+    "coords" geometry NOT NULL,
 
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
@@ -24,7 +24,7 @@ CREATE TABLE "RouteSegment" (
     "id" SERIAL NOT NULL,
     "routeId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
-    "coordinates" geometry(Linestring, 4326) NOT NULL,
+    "coordinates" geometry NOT NULL,
 
     CONSTRAINT "RouteSegment_pkey" PRIMARY KEY ("id")
 );
@@ -33,7 +33,7 @@ CREATE TABLE "RouteSegment" (
 CREATE TABLE "Image" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "coordinates" geometry(Point, 4326) NOT NULL,
+    "coordinates" geometry NOT NULL,
 
     CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
 );
