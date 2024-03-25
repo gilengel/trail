@@ -4,7 +4,7 @@
       <h1>Trip Details</h1>
       <span class="fi fi-no"></span> <span class="fi fi-se"></span>
       {{ trip?.name }}
-
+      {{ tripLength }}km
       <ul>
         <li class="segment" v-for="item in trip?.segments" :key="item.id">
           <div :style="{ 'background-color': item.color }"></div>
@@ -18,10 +18,11 @@
     <div class="overview">
       <div class="map" id="map" />
       <ul>
-        <li class="segment" v-for="item in trip?.segments" :key="item.id">
-          <div :style="{ 'background-color': item.color }"></div>
+        <li class="segment" v-for="segment in tripSegments" :key="segment.id" @click="zoomToSegment(segment)">
+          <div :style="{ 'background-color': segment.color }"></div>
           <span>
-            {{ item.name }}
+            {{ segment.name }}
+            {{ Math.round(segment.length) }}km
           </span>
         </li>
       </ul>
@@ -30,13 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import Tile from './Tile.vue'
 import 'leaflet/dist/leaflet.css'
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'flag-icons/css/flag-icons.min.css'
 
-import { onMounted, ref, watch, type Ref } from 'vue'
+import { onMounted, ref, watch, type Ref, computed } from 'vue'
 import axios from 'axios'
 
 const props = defineProps(['routeId'])
@@ -57,27 +57,53 @@ function randomColor() {
 
   return `rgb(${r}, ${g}, ${b})`
 }
-function createSegment(coordinates: L.LatLng[], color: string) {
+
+function zoomToSegment(segment: LeafletSegment) {
   if (!mapElement.value) {
-    return
+    return null
   }
-  console.log(coordinates)
+
+  segment.route.options.weight = 10
+  mapElement.value.fitBounds(segment.route.getBounds(), { animate: true })
+  mapElement.value.panTo(segment.route.getBounds().getCenter(), { animate: true })
+
+  //mapElement.value.fly(segment.route.getBounds());
+}
+function createSegment(dtoSegment: RouteSegmentDto): LeafletSegment | null {
+  if (!mapElement.value) {
+    return null
+  }
+
+  let result: number[][] = dtoSegment.coordinates.filter(
+    (coordinateTuple) => coordinateTuple.length == 3
+  )
+  const coordinates = result.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1]))
+
+  let distance = 0;
+  for(let i=0; i<coordinates.length-1; i++)
+  {
+    distance += coordinates[i].distanceTo(coordinates[i+1]);
+  }
 
   const start = coordinates.slice(-1)[0]
   const startMarker = L.marker(start).addTo(mapElement.value)
   const endMarker = L.marker(coordinates[0]).addTo(mapElement.value)
 
-  const line = L.polyline(coordinates, {
-    color: color,
+  const route = L.polyline(coordinates, {
+    color: dtoSegment.color,
     weight: 3,
     opacity: 1,
     smoothFactor: 1
   }).addTo(mapElement.value)
 
   return {
-    startMarker,
-    endMarker,
-    line
+    id: dtoSegment.id,
+    name: dtoSegment.name,
+    color: dtoSegment.color,
+    start: startMarker,
+    end: endMarker,
+    route,
+    length: distance / 1000
   }
 }
 function updateTrip(data: any) {
@@ -91,15 +117,14 @@ function updateTrip(data: any) {
   console.log(data)
 
   tripLayer.value.clearLayers()
+  tripSegments.value.splice(0, tripSegments.value.length)
+
   for (const segment of trip.value.segments) {
     segment.color = randomColor()
-    let result: number[][] = segment.coordinates.filter(
-      (coordinateTuple) => coordinateTuple.length == 3
-    )
-    const coordinates = result.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1]))
 
-    const leafletSegment = createSegment(coordinates, segment.color)
-    tripLayer.value.addLayer(leafletSegment?.startMarker as L.Layer)
+    const leafletSegment = createSegment(segment) as LeafletSegment
+    tripSegments.value.push(leafletSegment)
+    tripLayer.value.addLayer(leafletSegment?.start as L.Layer)
   }
 
   mapElement.value.panTo(tripLayer.value.getBounds().getCenter(), { animate: true })
@@ -130,13 +155,25 @@ interface RouteSegmentDto {
   color: string
 }
 
-let trip: Ref<RouteDto | null> = ref(null)
+interface LeafletSegment {
+  id: number,
+  name: string,
+  color: string,
+  start: L.Marker,
+  end: L.Marker,
+  route: L.Polyline
+  length: number
+}
 
-let zoom = ref(9)
-let center = ref([47.41322, -1.219482])
+let trip: Ref<RouteDto | null> = ref(null)
 
 const mapElement: Ref<L.Map | null> = ref(null)
 const tripLayer: Ref<L.FeatureGroup | null> = ref(null)
+const tripSegments: Ref<LeafletSegment[]> = ref([])
+
+const tripLength = computed(() => {
+  return tripSegments.value.reduce((partialSum, a) => partialSum + a.length, 0)
+})
 </script>
 
 <style lang="scss">
@@ -200,6 +237,7 @@ const tripLayer: Ref<L.FeatureGroup | null> = ref(null)
     min-width: 600px; // TODO: not use pixels
 
     padding: 1em;
+
     .map {
       aspect-ratio: 1/1;
       width: 100%;
@@ -234,6 +272,7 @@ const tripLayer: Ref<L.FeatureGroup | null> = ref(null)
     margin-right: 10px;
     margin-left: 10px;
   }
+
   .fi::before {
     border: solid 1px rgb(230, 230, 230);
     content: ' ';
