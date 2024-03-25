@@ -1,6 +1,10 @@
 <template>
   <div class="trip-details">
+    <div class="toolbar"></div>
     <div class="main">
+      <div class="top-bar">
+        <SingleLineText />
+      </div>
       <h1>Trip Details</h1>
       <span class="fi fi-no"></span> <span class="fi fi-se"></span>
       {{ trip?.name }}
@@ -18,7 +22,12 @@
     <div class="overview">
       <div class="map" id="map" />
       <ul>
-        <li class="segment" v-for="segment in tripSegments" :key="segment.id" @click="zoomToSegment(segment)">
+        <li
+          class="segment"
+          v-for="segment in tripSegments"
+          :key="segment.id"
+          @click="zoomToSegment(segment)"
+        >
           <div :style="{ 'background-color': segment.color }"></div>
           <span>
             {{ segment.name }}
@@ -31,6 +40,8 @@
 </template>
 
 <script setup lang="ts">
+import SingleLineText from './SingleLineText.vue'
+
 import 'leaflet/dist/leaflet.css'
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -79,10 +90,9 @@ function createSegment(dtoSegment: RouteSegmentDto): LeafletSegment | null {
   )
   const coordinates = result.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1]))
 
-  let distance = 0;
-  for(let i=0; i<coordinates.length-1; i++)
-  {
-    distance += coordinates[i].distanceTo(coordinates[i+1]);
+  let distance = 0
+  for (let i = 0; i < coordinates.length - 1; i++) {
+    distance += coordinates[i].distanceTo(coordinates[i + 1])
   }
 
   const start = coordinates.slice(-1)[0]
@@ -156,11 +166,11 @@ interface RouteSegmentDto {
 }
 
 interface LeafletSegment {
-  id: number,
-  name: string,
-  color: string,
-  start: L.Marker,
-  end: L.Marker,
+  id: number
+  name: string
+  color: string
+  start: L.Marker
+  end: L.Marker
   route: L.Polyline
   length: number
 }
@@ -187,6 +197,11 @@ const tripLength = computed(() => {
   color: black;
 
   display: flex;
+
+  .toolbar {
+    width: 64px;
+    border-right: rgb(230, 230, 230) 1px solid;
+  }
 
   .main {
     border-right: rgb(230, 230, 230) 1px solid;
