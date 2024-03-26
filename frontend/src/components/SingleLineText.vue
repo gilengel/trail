@@ -9,17 +9,24 @@
 <style scoped lang="scss">
 @import '../style/colors.scss';
 
+$height: 2em;
 div {
   border: solid calc($border-size * 1px) $border-color;
-  border-radius: 2em;
+  border-radius: $height;
+  min-width: 40em;
 
+  display: flex;
+
+  $margin: $height / 0.75;
   input {
     position: relative;
-    line-height: 2em;
-    margin-left: 1em;
+    line-height: $height;
+    margin-left: $margin;
 
     outline: none;
     border: none;
+
+    width: calc(100% - $margin * 2);
   }
 }
 </style>

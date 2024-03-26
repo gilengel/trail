@@ -4,8 +4,30 @@
     <div class="main">
       <div class="top-bar">
         <SingleLineText />
+        <Button title="Edit" />
       </div>
+
       <h1>Trip Details</h1>
+      <div class="bar">
+        <TripAspect icon="multiple_stop" />
+        <TripAspect icon="nordic_walking" />
+        <TripAspect icon="elevation" />
+        <TripAspect icon="cell_tower" />
+        <TripAspect icon="sunny" />
+      </div>
+
+      <h1>Description</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+        laborum.
+      </p>
+
+      <h1>Feed</h1>
+      <TripFeedItem />
+
       <span class="fi fi-no"></span> <span class="fi fi-se"></span>
       {{ trip?.name }}
       {{ tripLength }}km
@@ -19,15 +41,11 @@
       </ul>
     </div>
 
+    <!--
     <div class="overview">
       <div class="map" id="map" />
       <ul>
-        <li
-          class="segment"
-          v-for="segment in tripSegments"
-          :key="segment.id"
-          @click="zoomToSegment(segment)"
-        >
+        <li class="segment" v-for="segment in tripSegments" :key="segment.id" @click="zoomToSegment(segment)">
           <div :style="{ 'background-color': segment.color }"></div>
           <span>
             {{ segment.name }}
@@ -36,11 +54,15 @@
         </li>
       </ul>
     </div>
+  -->
   </div>
 </template>
 
 <script setup lang="ts">
 import SingleLineText from './SingleLineText.vue'
+import Button from './Button.vue'
+import TripAspect from './TripAspect.vue'
+import TripFeedItem from './TripFeedItem.vue'
 
 import 'leaflet/dist/leaflet.css'
 import * as L from 'leaflet'
@@ -198,6 +220,15 @@ const tripLength = computed(() => {
 
   display: flex;
 
+  h1 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+
+    font-family: 'Amatic SC', cursive;
+  font-size: 3em;
+  }
+
+  // left side
   .toolbar {
     width: 64px;
     border-right: rgb(230, 230, 230) 1px solid;
@@ -206,6 +237,18 @@ const tripLength = computed(() => {
   .main {
     border-right: rgb(230, 230, 230) 1px solid;
     flex-grow: 2;
+    padding: 4em;
+
+    .bar {
+      display: flex;
+      gap: 1em;
+    }
+
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+    }
 
     ul {
       position: relative;

@@ -32,6 +32,7 @@ const isHovered = ref(false)
 .animated_btn {
   position: relative;
   background-color: $light;
+  margin-top: 2em;
 
   > svg {
     position: absolute;
