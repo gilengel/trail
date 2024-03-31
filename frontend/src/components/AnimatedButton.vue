@@ -5,8 +5,9 @@
     @mouseleave="isHovered = false"
     @focusin="isHovered = true"
     @focusout="isHovered = false"
+    data-cy="animated-btn"
   >
-    <SVGTree :animation-in="!isHovered" />
+    <SVGTree data-cy="svg-tree" :animation-in="!isHovered" />
     <SVGTree :animation-in="!isHovered" />
     <SVGTree :animation-in="!isHovered" />
     <span>{{ title }}</span>

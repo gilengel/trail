@@ -48,6 +48,7 @@ export class ImagesController {
       images = await this.imagesService.getImagesNearCoordinate(
         longitude,
         latitude,
+        0,
         offset,
       );
     } catch (e) {
@@ -70,6 +71,14 @@ export class ImagesController {
       throw new HttpException('Invalid Index', HttpStatus.BAD_REQUEST);
     }
 
+    // integer limit of postgis
+    if (routeSegmentId > 2147483647) {
+      throw new HttpException(
+        'Invalid route segment id',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     let images: Array<ImageDto> = [];
     try {
       const routeSegment =
@@ -79,11 +88,7 @@ export class ImagesController {
         offset,
       );
     } catch (e) {
-      if (e instanceof HttpException) {
-        throw e;
-      }
-
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+      throw e;
     }
 
     if (images.length == 0) {

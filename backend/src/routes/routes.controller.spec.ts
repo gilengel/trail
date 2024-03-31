@@ -111,7 +111,7 @@ describe('RoutesController', () => {
       segments: [
         {
           name: 'invalid_segment',
-          coordinates: [[0, 0]],
+          coordinates: [[0, 0, 0]],
         },
       ],
     });

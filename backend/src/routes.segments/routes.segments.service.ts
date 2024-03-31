@@ -30,12 +30,6 @@ export class TooManyCoordinatesError extends Error {
   }
 }
 
-export class MixDimensionalityError extends Error {
-  constructor() {
-    super('Not all provided coordinates have the same dimensionality.');
-  }
-}
-
 @Injectable()
 export class RoutesSegmentsService {
   constructor(private prisma: PrismaService) {}
@@ -111,12 +105,15 @@ export class RoutesSegmentsService {
    * @returns A Promise that resolves to a RouteSegmentDto object or null if not found.
    */
   async length(id: number): Promise<number> {
-    const segmentLength = await this.prisma.$queryRaw<number[]>`
+    interface PostgisLength {
+      st_length: number;
+    }
+    const segmentLength = await this.prisma.$queryRaw<PostgisLength[]>`
       SELECT ST_Length(coordinates) 
       FROM "RouteSegment" 
       WHERE id = ${id}::int`;
 
-    return Promise.resolve(segmentLength[0]);
+    return Promise.resolve(segmentLength[0].st_length);
   }
 
   // eslint-disable-next-line jsdoc/require-example
@@ -179,9 +176,8 @@ export class RoutesSegmentsService {
    * @param coordinates - An array of arrays representing coordinates.
    * @throws {NotEnoughCoordinatesError} - If the array contains fewer than 2 coordinate sets.
    * @throws {TooManyCoordinatesError} - If the array contains more than 1,000,000 coordinate sets.
-   * @throws {MixDimensionalityError} - If the array contains a mix of 2D and non-2D (3D or more) coordinates.
    */
-  validateCoordinates(coordinates: Array<Array<number>>): void {
+  validateCoordinates(coordinates: Array<[number, number, number]>): void {
     // Check if there are at least 2 coordinates.
     if (coordinates.length < 2) {
       throw new NotEnoughCoordinatesError();
@@ -190,12 +186,6 @@ export class RoutesSegmentsService {
     // Check if the array contains an excessive number of coordinates.
     if (coordinates.length > 1000000) {
       throw new TooManyCoordinatesError();
-    }
-
-    // Check if there is a mix of 2D and non-2D coordinates.
-    const len2dCoordinates = coordinates.filter((e) => e.length === 2).length;
-    if (len2dCoordinates !== 0 && len2dCoordinates !== coordinates.length) {
-      throw new MixDimensionalityError();
     }
   }
 }

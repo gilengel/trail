@@ -1,21 +1,23 @@
 <template>
   <div class="main">
+    {{ allowedFileExtensions }}
     <div
       class="dropzone-container"
       :class="{ dragging: isDragging === true }"
       @dragover="dragover"
       @dragleave="dragleave"
       @drop="drop"
+      data-cy="drop-zone"
     >
       <input type="file" multiple name="file" id="fileInput" @change="onChange" ref="file" />
 
       <label for="fileInput" class="file-label">
-        <div v-if="isDragging">Release to drop files here.</div>
-        <div v-else>Drop files here or <u>click here</u> to upload.</div>
+        <div data-cy="release-msg" v-if="isDragging">Release to drop files here.</div>
+        <div data-cy="drop-msg" v-else>Drop files here or <u>click here</u> to upload.</div>
       </label>
 
-      <p v-if="isWrongFileType">File has wrong type.</p>
-      <div class="preview-container mt-4" v-if="files.length">
+      <p data-cy="wrong-file-extension" v-if="isWrongFileType">File has wrong type.</p>
+      <div data-cy="preview-container" class="preview-container mt-4" v-if="files.length">
         <div
           v-for="(file, index) in files"
           :key="file.name"
@@ -28,7 +30,7 @@
           </p>
 
           <div>
-            <SVGTrash @click="remove(index)" />
+            <SVGTrash data-cy="delete-btn" @click="remove(index)" />
           </div>
         </div>
       </div>

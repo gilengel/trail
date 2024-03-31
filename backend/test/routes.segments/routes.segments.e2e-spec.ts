@@ -39,9 +39,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       INSERT INTO "RouteSegment" (name, "routeId", coordinates) 
       VALUES ('e2e_test_route_segment', 
                ${routeId}, 
-               ST_GeomFromText('LINESTRING(-71.160281 42.258729,
-                                           -71.160837 42.259113,
-                                           -71.161144 42.25932)', 4326)
+               ST_GeomFromText('LINESTRING Z(-71.160281 42.258729 0, -71.160837 42.259113 0,  -71.161144 42.25932 0)', 4326)
                ) RETURNING id`;
     routeSegmentId = segmentResult[0].id;
 
@@ -65,10 +63,19 @@ describe('RoutesSegmentsController (e2e)', () => {
       .expect((res) => {
         expect(res.body).toHaveProperty('name', 'e2e_test_route_segment');
         expect(res.body).toHaveProperty('coordinates', [
-          [-71.160281, 42.258729],
-          [-71.160837, 42.259113],
-          [-71.161144, 42.25932],
+          [-71.160281, 42.258729, 0],
+          [-71.160837, 42.259113, 0],
+          [-71.161144, 42.25932, 0],
         ]);
+      });
+  });
+
+  it('/routes/segment (GET) return the segment length', () => {
+    return request(app.getHttpServer())
+      .get(`/routes/segment/length/${routeSegmentId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toStrictEqual({ length: 0.001045983387526644 });
       });
   });
 
@@ -93,12 +100,13 @@ describe('RoutesSegmentsController (e2e)', () => {
         name: testData.name,
         routeId,
         coordinates: [
-          [0, 0],
-          [42, 42],
+          [0, 0, 0],
+          [42, 42, 0],
         ],
       })
       .expect(201);
   });
+
   it('/routes/segment (POST) fails with more than 1.000.000 coordinates', () => {
     const coordinates = Array.from({ length: 1000001 }, (_, i) => [i, i]);
 
@@ -132,16 +140,16 @@ describe('RoutesSegmentsController (e2e)', () => {
       .send({
         name: 'updated_test_route',
         coordinates: [
-          [30, 10],
-          [10, 30],
+          [30, 10, 0],
+          [10, 30, 0],
         ],
       })
       .expect(200)
       .expect((res) => {
         expect(res.body).toHaveProperty('name', 'updated_test_route');
         expect(res.body).toHaveProperty('coordinates', [
-          [30, 10],
-          [10, 30],
+          [30, 10, 0],
+          [10, 30, 0],
         ]);
       });
   });
@@ -175,15 +183,15 @@ describe('RoutesSegmentsController (e2e)', () => {
       .patch(`/routes/segment/${routeSegmentId}`)
       .send({
         coordinates: [
-          [30, 10],
-          [10, 30],
+          [30, 10, 0],
+          [10, 30, 0],
         ],
       })
       .expect(200)
       .expect((res) => {
         expect(res.body).toHaveProperty('coordinates', [
-          [30, 10],
-          [10, 30],
+          [30, 10, 0],
+          [10, 30, 0],
         ]);
       });
   });

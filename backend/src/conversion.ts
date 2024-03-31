@@ -1,3 +1,4 @@
+import { coordinates } from './../test/data';
 /**
  * @file Provides functionality to convert geo data structures from and related dtos.
  */
@@ -36,6 +37,7 @@ export function wkt2point(wkt: string): Array<number> {
     .split(' ')
     .map((value) => parseFloat(value));
 }
+
 /**
  * Takes a LineString in Well-Known Text (WKT) format and transforms it into an array of arrays of floats.
  * @param wkt - A string representing a LineString in 2D or 3D space.
@@ -44,14 +46,18 @@ export function wkt2point(wkt: string): Array<number> {
  * // returns [[30, 10], [10, 30], [40, 40]]
  * wkt2numberArray('LINESTRING (30 10, 10 30, 40 40)')
  */
-export function wkt2numberArray(wkt: string): Array<Array<number>> {
+export function wkt2numberArray(wkt: string): Array<[number, number, number]> {
   return wkt
-    .replace('LINESTRING(', '')
+    .replace(/LINESTRING Z[ ]?\(/, '')
     .replace(')', '')
     .split(',')
-    .map((point) =>
-      point.split(' ').map((coordinate) => parseFloat(coordinate)),
-    );
+    .map((point) => {
+      const coordinates = point
+        .split(' ')
+        .map((coordinate) => parseFloat(coordinate));
+
+      return [coordinates[0], coordinates[1], coordinates[2]];
+    });
 }
 
 /**
@@ -62,10 +68,12 @@ export function wkt2numberArray(wkt: string): Array<Array<number>> {
  * // returns 'LINESTRING (30 10, 10 30, 40 40)'
  * numberArray2wkt([[30, 10], [10, 30], [40, 40]]
  */
-export function numberArray2wkt(array: Array<Array<number>>): string {
+export function numberArray2wkt(
+  array: Array<[number, number, number]>,
+): string {
   const routePointsString = array.map((point) => point.join(' ')).join(',');
 
-  return `LINESTRING(${routePointsString})`;
+  return `LINESTRING Z(${routePointsString})`;
 }
 
 /**

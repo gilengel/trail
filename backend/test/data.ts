@@ -12,8 +12,8 @@ import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
 
 export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
-export const wkt = 'LINESTRING(30 10,10 30,40 40)';
-export const updatedWkt = 'LINESTRING(30 10,10 30)';
+export const wkt = 'LINESTRING Z(30 10 0,10 30 0,40 40 0)';
+export const updatedWkt = 'LINESTRING Z(30 10 0,10 30 0)';
 
 export const routeId = 0;
 export const name = 'test_route';
@@ -22,10 +22,10 @@ export const segmentName = 'test_route_segment';
 export const updatedSegmentName = 'updated_test_route_segment';
 export const updatedName = 'updated_test_route';
 
-export const coordinates = [
-  [30, 10],
-  [10, 30],
-  [40, 40],
+export const coordinates: Array<[number, number, number]> = [
+  [30, 10, 0],
+  [10, 30, 0],
+  [40, 40, 0],
 ];
 
 export const segments: RouteSegmentDto[] = [
@@ -36,9 +36,9 @@ export const segments: RouteSegmentDto[] = [
   },
 ];
 
-export const updatedCoordinates = [
-  [30, 10],
-  [10, 30],
+export const updatedCoordinates: Array<[number, number, number]> = [
+  [30, 10, 0],
+  [10, 30, 0],
 ];
 
 export const route: RouteDto = {
@@ -68,16 +68,6 @@ export const newRouteSegment: CreateRouteSegmentDto = {
   routeId: routeId,
   name: segmentName,
   coordinates,
-};
-
-export const newRouteWithNotEnoughCoordinates: CreateRouteDto = {
-  name: 'invalid_test_route',
-  segments: [
-    {
-      name: 'invalid_segment',
-      coordinates: [[0]],
-    },
-  ],
 };
 
 export const routeWithEmptyName: RouteDto = {

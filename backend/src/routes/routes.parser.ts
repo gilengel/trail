@@ -11,7 +11,7 @@ export interface GPXRoute {
 
 export interface GPXRouteSegment {
   name: string;
-  coordinates: number[][];
+  coordinates: Array<[number, number, number]>;
 }
 
 // eslint-disable-next-line jsdoc/require-example
@@ -45,7 +45,7 @@ export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
     const name = names[i];
 
     const coordinates = segment.trkpt.map((point): number[] => {
-      const elevation = point.ele ? point.ele : 0;
+      const elevation = point.ele ? `${point.ele}` : '0';
 
       return [point['@_lat'], point['@_lon'], elevation];
     });

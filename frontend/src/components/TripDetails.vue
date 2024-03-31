@@ -1,16 +1,23 @@
 <template>
-  <div class="trip-details">
-    <div class="toolbar"></div>
+  <div data-cy="trip-details" class="trip-details">
+    <!--
+
+    -->
     <div class="main">
       <div class="top-bar">
         <SingleLineText />
         <Button title="Edit" />
       </div>
 
-      <h1>Trip Details</h1>
+      <h1>{{ trip?.name }}</h1>
       <div class="bar">
-        <TripAspect icon="multiple_stop" />
-        <TripAspect icon="nordic_walking" />
+        <TripAspect :icon="tripIsALoop ? 'update' : 'multiple_stop'">
+          <span data-cy="trip-loop-indicator" v-if="tripIsALoop">Loop</span>
+          <span data-cy="trip-route-indicator" v-else>Route</span>
+        </TripAspect>
+        <TripAspect icon="nordic_walking">
+          <span>{{ Math.round(tripLength) }}km</span>
+        </TripAspect>
         <TripAspect icon="elevation" />
         <TripAspect icon="cell_tower" />
         <TripAspect icon="sunny" />
@@ -18,34 +25,28 @@
 
       <h1>Description</h1>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </p>
 
       <h1>Feed</h1>
       <TripFeedItem />
-
-      <span class="fi fi-no"></span> <span class="fi fi-se"></span>
-      {{ trip?.name }}
-      {{ tripLength }}km
-      <ul>
-        <li class="segment" v-for="item in trip?.segments" :key="item.id">
-          <div :style="{ 'background-color': item.color }"></div>
-          <span>
-            {{ item.name }}
-          </span>
-        </li>
-      </ul>
     </div>
 
-    <!--
     <div class="overview">
-      <div class="map" id="map" />
+      <Map data-cy="map-component" ref="map" />
+
       <ul>
-        <li class="segment" v-for="segment in tripSegments" :key="segment.id" @click="zoomToSegment(segment)">
+        <li
+          data-cy="trip-segment"
+          class="segment"
+          v-for="segment in tripSegments"
+          :key="segment.id"
+          @click="map?.zoomToSegment(segment)"
+        >
           <div :style="{ 'background-color': segment.color }"></div>
           <span>
             {{ segment.name }}
@@ -54,7 +55,6 @@
         </li>
       </ul>
     </div>
-  -->
   </div>
 </template>
 
@@ -64,115 +64,16 @@ import Button from './Button.vue'
 import TripAspect from './TripAspect.vue'
 import TripFeedItem from './TripFeedItem.vue'
 
+import Map from './map/Map.vue'
+import { type LeafletSegment } from './map/map'
+
 import 'leaflet/dist/leaflet.css'
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'flag-icons/css/flag-icons.min.css'
 
-import { onMounted, ref, watch, type Ref, computed } from 'vue'
+import { ref, type Ref, computed, onMounted } from 'vue'
 import axios from 'axios'
-
-const props = defineProps(['routeId'])
-
-onMounted(() => {
-  mapElement.value = L.map('map').setView([23.8041, 90.4152], 6)
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(mapElement.value)
-  tripLayer.value = L.featureGroup().addTo(mapElement.value)
-})
-
-function randomColor() {
-  const r = Math.floor(Math.random() * 255)
-  const g = Math.floor(Math.random() * 255)
-  const b = Math.floor(Math.random() * 255)
-
-  return `rgb(${r}, ${g}, ${b})`
-}
-
-function zoomToSegment(segment: LeafletSegment) {
-  if (!mapElement.value) {
-    return null
-  }
-
-  segment.route.options.weight = 10
-  mapElement.value.fitBounds(segment.route.getBounds(), { animate: true })
-  mapElement.value.panTo(segment.route.getBounds().getCenter(), { animate: true })
-
-  //mapElement.value.fly(segment.route.getBounds());
-}
-function createSegment(dtoSegment: RouteSegmentDto): LeafletSegment | null {
-  if (!mapElement.value) {
-    return null
-  }
-
-  let result: number[][] = dtoSegment.coordinates.filter(
-    (coordinateTuple) => coordinateTuple.length == 3
-  )
-  const coordinates = result.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1]))
-
-  let distance = 0
-  for (let i = 0; i < coordinates.length - 1; i++) {
-    distance += coordinates[i].distanceTo(coordinates[i + 1])
-  }
-
-  const start = coordinates.slice(-1)[0]
-  const startMarker = L.marker(start).addTo(mapElement.value)
-  const endMarker = L.marker(coordinates[0]).addTo(mapElement.value)
-
-  const route = L.polyline(coordinates, {
-    color: dtoSegment.color,
-    weight: 3,
-    opacity: 1,
-    smoothFactor: 1
-  }).addTo(mapElement.value)
-
-  return {
-    id: dtoSegment.id,
-    name: dtoSegment.name,
-    color: dtoSegment.color,
-    start: startMarker,
-    end: endMarker,
-    route,
-    length: distance / 1000
-  }
-}
-function updateTrip(data: any) {
-  trip.value = data
-
-  // TODO: this is not necessary as at this point we can be sure that the trip returned from the backend is valid -> for the moment we need it due to the any type
-  if (!trip.value || !mapElement.value || !tripLayer.value) {
-    return
-  }
-
-  console.log(data)
-
-  tripLayer.value.clearLayers()
-  tripSegments.value.splice(0, tripSegments.value.length)
-
-  for (const segment of trip.value.segments) {
-    segment.color = randomColor()
-
-    const leafletSegment = createSegment(segment) as LeafletSegment
-    tripSegments.value.push(leafletSegment)
-    tripLayer.value.addLayer(leafletSegment?.start as L.Layer)
-  }
-
-  mapElement.value.panTo(tripLayer.value.getBounds().getCenter(), { animate: true })
-
-  //mapElement.value.fitBounds(tripLayer.getBounds())
-}
-
-watch(
-  () => props.routeId,
-  (newRouteId) => {
-    axios
-      .get(`/api/routes/${newRouteId}`)
-      .then((response) => updateTrip(response.data))
-      .catch((error) => console.log(error))
-  }
-)
 
 interface RouteDto {
   id: number
@@ -187,24 +88,99 @@ interface RouteSegmentDto {
   color: string
 }
 
-interface LeafletSegment {
-  id: number
-  name: string
-  color: string
-  start: L.Marker
-  end: L.Marker
-  route: L.Polyline
-  length: number
+export interface TripDetailsProps {
+  routeId: number
+}
+const props = withDefaults(defineProps<TripDetailsProps>(), {
+  routeId: undefined
+})
+
+function randomColor() {
+  const r = Math.floor(Math.random() * 255)
+  const g = Math.floor(Math.random() * 255)
+  const b = Math.floor(Math.random() * 255)
+
+  return `rgb(${r}, ${g}, ${b})`
 }
 
+function createSegment(dtoSegment: RouteSegmentDto): LeafletSegment | null {
+  let result: number[][] = dtoSegment.coordinates.filter(
+    (coordinateTuple) => coordinateTuple.length == 3
+  )
+  const coordinates = result.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1]))
+
+  let distance = 0
+  for (let i = 0; i < coordinates.length - 1; i++) {
+    distance += coordinates[i].distanceTo(coordinates[i + 1])
+  }
+
+  const start = coordinates.slice(-1)[0]
+  const startMarker = L.marker(start)
+  map.value?.add(startMarker)
+
+  const endMarker = L.marker(coordinates[0])
+  map.value?.add(endMarker)
+
+  const route = L.polyline(coordinates, {
+    color: dtoSegment.color,
+    weight: 3,
+    opacity: 1,
+    smoothFactor: 1
+  })
+  map.value?.add(route)
+
+  return {
+    id: dtoSegment.id,
+    name: dtoSegment.name,
+    color: dtoSegment.color,
+    start: startMarker,
+    end: endMarker,
+    route,
+    length: distance / 1000
+  }
+}
+
+function updateTrip(data: RouteDto) {
+  trip.value = data
+
+  tripSegments.value.splice(0, tripSegments.value.length)
+
+  for (const segment of trip.value.segments) {
+    segment.color = randomColor()
+
+    const leafletSegment = createSegment(segment) as LeafletSegment
+    tripSegments.value.push(leafletSegment)
+  }
+}
+
+function loadTrip(id: number) {
+  if (!id) {
+    return
+  }
+
+  axios.get(`/api/routes/${id}`).then((response) => updateTrip(response.data))
+  //.catch((error) => console.log(error))
+}
+
+onMounted(() => {
+  loadTrip(props.routeId)
+})
+
+let map: Ref<InstanceType<typeof Map> | null> = ref(null)
 let trip: Ref<RouteDto | null> = ref(null)
 
-const mapElement: Ref<L.Map | null> = ref(null)
-const tripLayer: Ref<L.FeatureGroup | null> = ref(null)
 const tripSegments: Ref<LeafletSegment[]> = ref([])
 
 const tripLength = computed(() => {
   return tripSegments.value.reduce((partialSum, a) => partialSum + a.length, 0)
+})
+
+const tripIsALoop = computed(() => {
+  if (tripSegments.value.length == 0) {
+    return false
+  }
+
+  return tripSegments.value[0] == tripSegments.value[tripSegments.value.length - 1]
 })
 </script>
 
@@ -225,14 +201,10 @@ const tripLength = computed(() => {
     margin-bottom: 0.5em;
 
     font-family: 'Amatic SC', cursive;
-  font-size: 3em;
+    font-size: 3em;
   }
 
   // left side
-  .toolbar {
-    width: 64px;
-    border-right: rgb(230, 230, 230) 1px solid;
-  }
 
   .main {
     border-right: rgb(230, 230, 230) 1px solid;
@@ -243,7 +215,6 @@ const tripLength = computed(() => {
       display: flex;
       gap: 1em;
     }
-
 
     .top-bar {
       display: flex;
@@ -295,11 +266,6 @@ const tripLength = computed(() => {
     min-width: 600px; // TODO: not use pixels
 
     padding: 1em;
-
-    .map {
-      aspect-ratio: 1/1;
-      width: 100%;
-    }
 
     ul {
       list-style: none;

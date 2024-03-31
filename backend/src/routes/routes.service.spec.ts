@@ -124,15 +124,15 @@ describe('RoutesService', () => {
         {
           name: 'segment 1',
           coordinates: [
-            [0, 0],
-            [1, 1],
+            [0, 0, 0],
+            [1, 1, 0],
           ],
         },
         {
           name: 'segment 2',
           coordinates: [
-            [2, 2],
-            [3, 3],
+            [2, 2, 0],
+            [3, 3, 0],
           ],
         },
       ],
@@ -153,16 +153,16 @@ describe('RoutesService', () => {
           id: 1,
           name: 'segment 1',
           coordinates: [
-            [0, 0],
-            [1, 1],
+            [0, 0, 0],
+            [1, 1, 0],
           ],
         },
         {
           id: 2,
           name: 'segment 2',
           coordinates: [
-            [2, 2],
-            [3, 3],
+            [2, 2, 0],
+            [3, 3, 0],
           ],
         },
       ],

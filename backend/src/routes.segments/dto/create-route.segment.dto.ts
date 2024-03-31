@@ -15,7 +15,7 @@ export class ConcealedCreateRouteSegmentDto {
    * All coordinates must be either 2d or 3d - mixing is not allowed and shall return an error by the backend.
    */
   @ApiProperty()
-  coordinates: number[][];
+  coordinates: Array<[number, number, number]>;
 }
 
 export class CreateRouteSegmentDto extends ConcealedCreateRouteSegmentDto {

@@ -1,9 +1,9 @@
 <template>
   <Tile>
-    <h1 data-testid="upload">Trip Upload</h1>
+    <h1 data-cy="upload-header">Trip Upload</h1>
 
     <DropZone :allowed-file-extensions="['gpx']" @onFilesChanged="onFilesChanged"></DropZone>
-
+    <span data-cy="status-msg" v-if="status">{{ status }}</span>
     <AnimatedButton title="Upload Trip" />
   </Tile>
 </template>
@@ -12,10 +12,10 @@
 import Tile from './Tile.vue'
 import AnimatedButton from './AnimatedButton.vue'
 import DropZone from './DropZone.vue'
-import { ref } from 'vue'
 import axios from 'axios'
+import { ref, type Ref } from 'vue'
 
-const fileInput = ref<HTMLInputElement | null>()
+const status: Ref<String> = ref('')
 
 function uploadTrips(trips: File[]) {
   const formData = new FormData()
@@ -26,13 +26,13 @@ function uploadTrips(trips: File[]) {
   }
 
   axios
-    .post('api/routes/gpx', formData, {
+    .post('/api/routes/gpx', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
-    .then((response) => console.log(':/'))
-    .catch((error) => console.log(':)'))
+    .then((response) => (status.value = ':)'))
+    .catch((error) => (status.value = ':/'))
 }
 
 function onFilesChanged(trips: File[]) {

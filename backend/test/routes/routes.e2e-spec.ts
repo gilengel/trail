@@ -40,10 +40,8 @@ describe('RoutesController (e2e)', () => {
         WHERE "routeId" = ${routeId}`;
   });
 
-  afterEach(async () => {
-    await prisma.$queryRaw`
-    DELETE FROM "Route" 
-    WHERE id = ${routeId};`;
+  afterAll(async () => {
+    await prisma.route.deleteMany();
   });
 
   it('/routes/ (GET)', () => {
@@ -76,7 +74,15 @@ describe('RoutesController (e2e)', () => {
   it('/routes/ (POST) fails with a track containing invalid (not enough) coordinates', () => {
     return request(app.getHttpServer())
       .post(`/routes`)
-      .send(testData.newRouteWithNotEnoughCoordinates)
+      .send({
+        name: 'invalid_test_route',
+        segments: [
+          {
+            name: 'invalid_segment',
+            coordinates: [[0]],
+          },
+        ],
+      })
       .expect(400);
   });
 
@@ -85,6 +91,17 @@ describe('RoutesController (e2e)', () => {
       .post(`/routes/gpx`)
       .set('Content-Type', 'multipart/form-data')
       .attach('file', 'src/routes/test/short.gpx')
+      .expect(201)
+      .expect((res) =>
+        expect(res.body).toHaveProperty('name', 'Ehrwald Hiking'),
+      );
+  });
+
+  it('/routes/gpx (POST) succeeds with a single segment track without elevation', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/gpx`)
+      .set('Content-Type', 'multipart/form-data')
+      .attach('file', 'src/routes/test/no_elevation.gpx')
       .expect(201)
       .expect((res) =>
         expect(res.body).toHaveProperty('name', 'Ehrwald Hiking'),

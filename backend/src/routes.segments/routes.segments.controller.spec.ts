@@ -34,6 +34,12 @@ describe('RoutesSegmentsController', () => {
     expect(await controller.findOne(0)).toEqual(testData.routeSegment);
   });
 
+  it('should be returning the length of a single route segment', async () => {
+    jest.spyOn(service, 'length').mockReturnValue(Promise.resolve(42));
+
+    expect(await controller.length({ id: 0 })).toEqual({ length: 42 });
+  });
+
   it('should create a new route segment and return its dto', async () => {
     jest
       .spyOn(service, 'create')

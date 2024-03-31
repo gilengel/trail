@@ -60,14 +60,14 @@ describe('ImageService', () => {
   });
 
   it('should fail to retrieve images if the offset is < 0', async () => {
-    await expect(service.getImagesNearCoordinate(0, 0, -1)).rejects.toThrow(
+    await expect(service.getImagesNearCoordinate(0, 0, 0, -1)).rejects.toThrow(
       new InvalidOffsetError(-1),
     );
   });
 
   it('should fail to retrieve images if longitude or latitude are undefined', async () => {
     await expect(
-      service.getImagesNearCoordinate(undefined, 0, -1),
+      service.getImagesNearCoordinate(undefined, 0, 0, -1),
     ).rejects.toThrow(new InvalidCoordinates());
   });
 
@@ -84,7 +84,7 @@ describe('ImageService', () => {
   it('should get all images near a coordinate', async () => {
     jest.spyOn(prisma, '$queryRaw').mockResolvedValue(testData.dbImages);
 
-    const result = await service.getImagesNearCoordinate(1024, 1024, 10);
+    const result = await service.getImagesNearCoordinate(1024, 1024, 0, 10);
 
     expect(result).toStrictEqual(testData.images);
   });

@@ -3,7 +3,6 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import {
-  MixDimensionalityError,
   NotEnoughCoordinatesError,
   RoutesSegmentsService,
   TooManyCoordinatesError,
@@ -56,7 +55,7 @@ describe('RoutesSegmentsService', () => {
   });
 
   it('should return the length of a route segment stored in the database by id', async () => {
-    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([100]);
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([{ st_length: 100 }]);
 
     const result: number = await service.length(0);
     const expected: number = 100;
@@ -122,18 +121,15 @@ describe('RoutesSegmentsService', () => {
       .mockResolvedValue([testData.dbRouteSegmentWithUpdatedCoordinates]);
 
     const result = await service.update(testData.routeId, {
-      coordinates: [
-        [30, 10],
-        [10, 30],
-      ],
+      coordinates: testData.coordinates,
     });
 
     expect(result).toStrictEqual({
       id: testData.segmentId,
       name: testData.segmentName,
       coordinates: [
-        [30, 10],
-        [10, 30],
+        [30, 10, 0],
+        [10, 30, 0],
       ],
     });
   });
@@ -162,21 +158,13 @@ describe('RoutesSegmentsService', () => {
   });
 
   it('should reject trying to change a route segment with more then 1.000.000 coordinates', async () => {
-    const coordinates = Array.from({ length: 1000001 }, (_, i) => [i, i]);
+    const coordinates: Array<[number, number, number]> = Array.from(
+      { length: 1000001 },
+      (_, i) => [i, i, 0],
+    );
     await expect(service.update(0, { coordinates })).rejects.toThrow(
       new TooManyCoordinatesError(),
     );
-  });
-
-  it('should reject trying to change a route segment with mixed dimensions', async () => {
-    await expect(
-      service.update(testData.routeId, {
-        coordinates: [
-          [0, 0],
-          [10, 10, 10],
-        ],
-      }),
-    ).rejects.toThrow(new MixDimensionalityError());
   });
 
   it('should reject trying to change a route segment without providing any values to change', async () => {

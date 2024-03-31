@@ -14,7 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import '@cypress/code-coverage/support';
+import '@cypress/code-coverage/support'
 import './commands'
 
 // Alternatively you can use CommonJS syntax:
@@ -22,7 +22,7 @@ import './commands'
 
 import { mount } from 'cypress/vue'
 // Ensure global styles are loaded
-import '../../src/assets/main.css';
+import '../../src/assets/main.css'
 
 Cypress.Commands.add('mount', mount)
 

@@ -102,7 +102,7 @@ export class ImagesService {
     const result: Array<DbImageDto> = await this.prisma.$queryRaw`
                         SELECT id, name, ST_AsText(coordinates) as coordinates
                         FROM "Image"
-                        WHERE ST_DWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
+                        WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
 
     return Promise.resolve(conversion.dbimages2dto(result));
   }
@@ -110,16 +110,21 @@ export class ImagesService {
   async getImagesNearCoordinate(
     longitude: number,
     latitude: number,
+    altitude: number,
     maxOffsetRadius: number,
   ): Promise<Array<ImageDto>> {
-    if (longitude === undefined || latitude === undefined) {
+    if (
+      longitude === undefined ||
+      latitude === undefined ||
+      altitude === undefined
+    ) {
       throw new InvalidCoordinates();
     }
     if (maxOffsetRadius < 0) {
       throw new InvalidOffsetError(maxOffsetRadius);
     }
 
-    const pointWkt = conversion.point2wkt([longitude, latitude]);
+    const pointWkt = conversion.point2wkt([longitude, latitude, altitude]);
     return this.multipleImagesQuery(pointWkt, maxOffsetRadius);
   }
 

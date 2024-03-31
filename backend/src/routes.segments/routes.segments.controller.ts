@@ -43,8 +43,9 @@ export class RoutesSegmentsController {
   }
 
   @Get('length/:id')
-  async length(@Param() params: { id: number }): Promise<number> {
-    return this.routesSegmentsService.length(params.id);
+  async length(@Param() params: { id: number }): Promise<{ length: number }> {
+    const length = await this.routesSegmentsService.length(params.id);
+    return Promise.resolve({ length });
   }
 
   @Patch(':id')

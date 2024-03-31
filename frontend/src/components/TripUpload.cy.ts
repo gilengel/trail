@@ -1,29 +1,38 @@
+import DropZone from './DropZone.vue'
 import TripUpload from './TripUpload.vue'
+import { mockFile } from './__tests__/util'
 
 describe('Component', () => {
   describe('TripUpload', () => {
-    beforeEach(() => {
+    it('should render the trip upload element', () => {
       cy.mount(TripUpload)
-    })
-    it('should mount with greeting', () => {
-      cy.contains('Upload Trip')
+      cy.get('[data-cy="upload-header"]').should('exist')
     })
 
-    it('should do nothing if clicked on "Upload" if no file was selected to be uploaded', () => {
-      cy.get('[data-test=upload-btn]').click()
+    it('should show a success message if files were changed and uploaded', () => {
+      cy.intercept('POST', '/api/routes/gpx', {
+        statusCode: 200
+      })
+
+      cy.mount(TripUpload).then(({ wrapper, component }) => {
+        const childWrapper = wrapper.getComponent(DropZone)
+        childWrapper.vm.$emit('onFilesChanged', [mockFile('gpx', 1000)])
+
+        cy.get('[data-cy=status-msg]').should('exist').and('have.text', ':)')
+      })
     })
 
-    it('should update a file', () => {
-      cy.intercept(
-        {
-          method: 'POST', // Route all GET requests
-          url: 'http://localhost:3000/routes/gpx' // that have a URL that matches '/users/*'
-        },
-        [] // and force the response to be: []
-      )
+    it("should show an error message if files couldn't be uploaded", () => {
+      cy.intercept('POST', '/api/routes/gpx', {
+        statusCode: 300
+      })
 
-      cy.get('input[type=file]').selectFile('src/components/__tests__/data/short.gpx')
-      cy.get('[data-test=upload-btn]').click()
+      cy.mount(TripUpload).then(({ wrapper, component }) => {
+        const childWrapper = wrapper.getComponent(DropZone)
+        childWrapper.vm.$emit('onFilesChanged', [mockFile('gpx', 1000)])
+
+        cy.get('[data-cy=status-msg]').should('exist').and('have.text', ':/')
+      })
     })
   })
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="slot">
+  <div class="slot" data-cy="tile-slot">
     <slot />
   </div>
 </template>

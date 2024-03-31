@@ -175,4 +175,12 @@ describe('ImageController', () => {
       new HttpException('', HttpStatus.NOT_FOUND),
     );
   });
+
+  it('should fail with a 400 if the requested segment id is greater than the allowed max integer from the database', async () => {
+    const result = controller.getImagesNearRouteSegment(2147483647 + 1, 0);
+
+    await expect(result).rejects.toThrow(
+      new HttpException('Invalid route segment id', HttpStatus.BAD_REQUEST),
+    );
+  });
 });

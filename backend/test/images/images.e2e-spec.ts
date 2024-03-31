@@ -50,6 +50,7 @@ describe('ImagesController (e2e)', () => {
 
   afterEach(async () => {
     await prisma.$queryRaw`TRUNCATE "Image"`;
+    await prisma.route.deleteMany();
   });
 
   it('/images/ (POST)', () => {
@@ -200,9 +201,7 @@ describe('ImagesController (e2e)', () => {
           (results: { body: RouteDto }, callback: request.CallbackHandler) => {
             request(app.getHttpServer())
               .get(
-                `/images/route_segment?routeSegmentId=${
-                  results.body.segments[0].id
-                }&maxOffset=${0}`,
+                `/images/route_segment?routeSegmentId=${results.body.segments[0].id}&maxOffset=0`,
               )
               .expect(404, callback);
           },
