@@ -77,8 +77,8 @@ export class RoutesSegmentsService {
   /**
    * Retrieve a route segment by its ID.
    * @param id - The ID of the route segment to retrieve.
-   * @throws {HttpException} 404 if a route segment with the requested id could not be found in the database.
    * @returns A Promise that resolves to a RouteSegmentDto object or null if not found.
+   * @throws {HttpException} 404 if a route segment with the requested id could not be found in the database.
    */
   async findOne(id: number): Promise<RouteSegmentDto | null> {
     const routeSegment = await this.prisma.$queryRaw<RouteSegment[]>`
@@ -99,10 +99,10 @@ export class RoutesSegmentsService {
 
   // eslint-disable-next-line jsdoc/require-example
   /**
-   * Calculates the length (2d) of a segment and returns it
+   * Calculates the length (2d) of a segment and returns it.
    * @param id - The ID of the route segment to retrieve.
-   * @throws {HttpException} 404 if a route segment with the requested id could not be found in the database.
    * @returns A Promise that resolves to a RouteSegmentDto object or null if not found.
+   * @throws {HttpException} 404 if a route segment with the requested id could not be found in the database.
    */
   async length(id: number): Promise<number> {
     interface PostgisLength {

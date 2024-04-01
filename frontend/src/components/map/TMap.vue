@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import L from 'leaflet'
 import { onMounted, ref, type Ref } from 'vue'
-import { type LeafletSegment } from './map'
+import { LeafletSegment } from '@/stores/route/types'
 
 const mapElement: Ref<L.Map | null> = ref(null)
 
@@ -17,9 +17,9 @@ defineExpose({
 })
 
 function zoomToSegment(segment: LeafletSegment) {
-  segment.route.options.weight = 10
-  fitBounds(segment.route.getBounds())
-  panTo(segment.route.getBounds().getCenter())
+  segment.polyline.options.weight = 10
+  fitBounds(segment.polyline.getBounds())
+  panTo(segment.polyline.getBounds().getCenter())
 }
 
 function panTo(coordinate: L.LatLng) {

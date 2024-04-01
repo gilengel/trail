@@ -14,7 +14,7 @@ describe('Component', () => {
         statusCode: 200
       })
 
-      cy.mount(TripUpload).then(({ wrapper, component }) => {
+      cy.mount(TripUpload).then(({ wrapper }) => {
         const childWrapper = wrapper.getComponent(DropZone)
         childWrapper.vm.$emit('onFilesChanged', [mockFile('gpx', 1000)])
 
@@ -27,7 +27,7 @@ describe('Component', () => {
         statusCode: 300
       })
 
-      cy.mount(TripUpload).then(({ wrapper, component }) => {
+      cy.mount(TripUpload).then(({ wrapper }) => {
         const childWrapper = wrapper.getComponent(DropZone)
         childWrapper.vm.$emit('onFilesChanged', [mockFile('gpx', 1000)])
 

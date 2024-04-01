@@ -1,9 +1,9 @@
-import Tile from './Tile.vue'
+import TTile from './TTile.vue'
 
 describe('Component', () => {
   describe('Tile', () => {
     beforeEach(() => {
-      cy.mount(Tile, {
+      cy.mount(TTile, {
         slots: {
           default: () => 'Hello Tile'
         }

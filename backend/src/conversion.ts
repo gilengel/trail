@@ -1,4 +1,3 @@
-import { coordinates } from './../test/data';
 /**
  * @file Provides functionality to convert geo data structures from and related dtos.
  */

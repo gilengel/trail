@@ -35,3 +35,20 @@
 //     }
 //   }
 // }
+
+import { createPinia, setActivePinia } from 'pinia'
+import { useRouteStore } from '../../src/stores/route'
+
+setActivePinia(createPinia())
+
+const store = useRouteStore()
+
+Cypress.Commands.add('getStore', () => store)
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      getStore()
+    }
+  }
+}

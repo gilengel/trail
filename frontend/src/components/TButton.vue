@@ -1,15 +1,13 @@
 <template>
   <button class="btn">
-    <span data-cy="button-label">{{ title }}</span>
+    <slot />
+    <span data-cy="button-label" v-if="label">{{ label }}</span>
   </button>
 </template>
 
 <script setup lang="ts">
-export interface AnimatedButtonProps {
-  title: string
-}
-withDefaults(defineProps<AnimatedButtonProps>(), {
-  title: 'Animated Button'
+defineProps({
+  label: String
 })
 </script>
 <style scoped lang="scss">

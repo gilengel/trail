@@ -1,8 +1,6 @@
 <template>
   <div>
-    <span class="material-symbols-outlined">
-      {{ icon }}
-    </span>
+    <TIcon :icon />
 
     <span>
       <slot />
@@ -11,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+import TIcon from './TIcon.vue'
+
 export interface TripAspectProps {
   icon: string
 }

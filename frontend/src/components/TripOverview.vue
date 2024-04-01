@@ -1,10 +1,10 @@
 <template>
-  <Tile>
+  <TTile>
     <h1 data-cy="trip-overview-h">Trip Overview</h1>
     <ul>
       <li
         data-cy="trip-entry"
-        v-for="trip in trips"
+        v-for="trip in routeStore.routesWithoutSegments"
         :key="trip.id"
         v-on:click="emit('selectedTripChanged', trip.id)"
       >
@@ -12,39 +12,28 @@
       </li>
     </ul>
 
-    <h2 data-cy="error-empty-text" v-if="!error && trips.length == 0">
+    <h2
+      data-cy="error-empty-text"
+      v-if="!routeStore.networkError && routeStore.routesWithoutSegments?.length == 0"
+    >
       😞 Looks like you don't have any trips stored yet
     </h2>
-    <h2 data-cy="error-network-text" v-if="error">😞 Looks like there was a network problem.</h2>
-  </Tile>
+    <h2 data-cy="error-network-text" v-if="routeStore.networkError">
+      😞 Looks like there was a network problem.
+    </h2>
+  </TTile>
 </template>
 
 <script setup lang="ts">
-import Tile from './Tile.vue'
+import TTile from './TTile.vue'
 
-import { onMounted, ref, type Ref } from 'vue'
-import axios from 'axios'
+import { useRouteStore } from '@/stores/route'
 
-interface RouteDto {
-  id: number
-  name: string
-}
-
-let trips: Ref<RouteDto[]> = ref([])
-let error: Ref<boolean> = ref(false)
+const routeStore = useRouteStore()
 
 const emit = defineEmits<{
   (e: 'selectedTripChanged', id: number): void
 }>()
-
-onMounted(() => {
-  axios
-    .get('/api/routes')
-    .then((response) => {
-      trips.value = response.data
-    })
-    .catch(() => (error.value = true))
-})
 </script>
 
 <style lang="scss" scoped>
