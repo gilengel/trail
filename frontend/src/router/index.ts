@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RouteView from '../views/RouteView.vue'
+import RouteFeedView from '@/views/RouteFeedView.vue'
 import RouteEditView from '@/views/RouteEditView.vue'
 
 const router = createRouter({
@@ -18,7 +19,14 @@ const router = createRouter({
 
       children: [
         {
+          path: 'feed',
+          name: 'route-feed',
+          component: RouteFeedView
+        },
+
+        {
           path: 'edit',
+          name: 'route-edit',
           component: RouteEditView
         }
       ]

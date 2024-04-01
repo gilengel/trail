@@ -1,10 +1,25 @@
 <template>
   <div>
-    <input type="text" />
+    <input
+      type="text"
+      :value="value"
+      @input="(event) => emit('valueChanged', (event as InputFileEvent).target?.value)"
+    />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface InputFileEvent extends Event {
+  target: HTMLInputElement
+}
+defineProps({
+  value: String
+})
+
+const emit = defineEmits<{
+  (e: 'valueChanged', newValue: string): void
+}>()
+</script>
 
 <style scoped lang="scss">
 @import '../style/colors.scss';

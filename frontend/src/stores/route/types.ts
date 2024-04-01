@@ -39,6 +39,10 @@ export class LeafletRoute implements Segment {
     return this._name
   }
 
+  set name(name: string) {
+    this._name = name
+  }
+
   get segments(): LeafletSegment[] {
     return this._segments
   }

@@ -32,27 +32,12 @@ export const useRouteStore = defineStore('route', () => {
     }
   }
 
-  async function addRoute(trips: File[]) {
-    const formData = new FormData()
-
-    for (const i = 0; i < trips.length; ++i) {
-      console.log(trips[i])
-      formData.append(`file`, trips[i])
-    }
-
-    await http.post('/api/routes/gpx', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-  }
-
-  async function getRoute(id: number) {
+  async function getRoute(id: number): Promise<LeafletRoute> {
     const route = routes.value.get(id)
 
     // Route was previously requested and is cached so no need to call the backend
     if (route) {
-      return route
+      return Promise.resolve(route)
     }
 
     try {
@@ -67,20 +52,41 @@ export const useRouteStore = defineStore('route', () => {
         )
       })
 
-      const fetechedRoute = new LeafletRoute(result.data.id, result.data.name, segments)
-      routes.value.set(id, fetechedRoute)
+      const fetchedRoute = new LeafletRoute(result.data.id, result.data.name, segments)
+      routes.value.set(id, fetchedRoute)
 
-      return Promise.resolve()
+      return Promise.resolve(fetchedRoute)
     } catch (error) {
       networkError.value = true
 
-      Promise.reject(error)
+      return Promise.reject(error)
     }
+  }
+
+  async function updateRoute(route: LeafletRoute) {
+    await http.patch(`/api/routes/${route.id}`, {
+      name: route.name
+    })
+  }
+
+  async function addRoute(trips: File[]) {
+    const formData = new FormData()
+
+    for (let i = 0; i < trips.length; ++i) {
+      console.log(trips[i])
+      formData.append(`file`, trips[i])
+    }
+
+    await http.post('/api/routes/gpx', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 
   getRoutes()
     .then((e) => (routesWithoutSegments.value = e))
     .catch(() => (networkError.value = true))
 
-  return { getRoutes, networkError, routesWithoutSegments, addRoute, getRoute }
+  return { getRoutes, networkError, routesWithoutSegments, addRoute, getRoute, updateRoute }
 })

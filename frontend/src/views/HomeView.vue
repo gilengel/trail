@@ -16,7 +16,7 @@ fetch('http://localhost:3000/routes')
       <TripUpload></TripUpload>
     </div>
     <div class="scroll">
-      <TripOverview @selectedTripChanged="(id) => $router.push(`route/${id}`)"></TripOverview>
+      <TripOverview @selectedTripChanged="(id) => $router.push(`route/${id}/feed`)"></TripOverview>
       <RouterLink data-testid="link-to-about" to="/about">Go to About</RouterLink>
     </div>
   </div>
