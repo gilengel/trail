@@ -110,6 +110,7 @@ export function dbRoute2dto(route: Route): RouteDto {
   return {
     id: route.id,
     name: route.name,
+    description: route.description,
     segments: route.segments.map(dbRouteSegment2dto),
   };
 }
@@ -139,6 +140,7 @@ export function dbRouteSegment2dto(
   return {
     id: routeSegment.id,
     name: routeSegment.name,
+    description: routeSegment.description,
     coordinates: wkt2numberArray(routeSegment.coordinates),
   };
 }

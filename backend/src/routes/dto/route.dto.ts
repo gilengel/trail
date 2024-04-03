@@ -10,6 +10,9 @@ export class RouteWithoutSegmentsDto {
 
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  description: string;
 }
 
 export class RouteDto extends RouteWithoutSegmentsDto {

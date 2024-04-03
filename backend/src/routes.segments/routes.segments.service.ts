@@ -49,10 +49,15 @@ export class RoutesSegmentsService {
       createRouteSegmentDto.coordinates,
     );
 
-    const values = Prisma.sql`(${createRouteSegmentDto.name}::text, ${createRouteSegmentDto.routeId}, ST_GeomFromText(${coordinatesString}::text, 4326))`;
+    const values = Prisma.sql`(
+      ${createRouteSegmentDto.routeId}, 
+      ${createRouteSegmentDto.name}::text, 
+      ${createRouteSegmentDto.description}::text, 
+      ST_GeomFromText(${coordinatesString}::text, 4326)
+    )`;
 
     const result = await this.prisma.$queryRaw<[{ id: number }]>`
-      INSERT INTO "RouteSegment" (name, "routeId", coordinates) 
+      INSERT INTO "RouteSegment" ("routeId", name, description, coordinates) 
       VALUES ${values} RETURNING id`;
 
     return Promise.resolve({
@@ -65,7 +70,7 @@ export class RoutesSegmentsService {
   async findAllForRoute(routeId: number): Promise<RouteSegment[] | null> {
     const segments = await this.prisma.$queryRaw<
       RouteSegment[]
-    >`SELECT "RouteSegment".id, "RouteSegment".name, ST_AsText(coordinates) AS coordinates 
+    >`SELECT "RouteSegment".id, "RouteSegment".name, "RouteSegment".description, ST_AsText(coordinates) AS coordinates 
     FROM "RouteSegment" 
     JOIN "Route" ON "RouteSegment"."routeId" = "Route".id
     WHERE "Route".id = ${routeId}::int`;
@@ -82,7 +87,7 @@ export class RoutesSegmentsService {
    */
   async findOne(id: number): Promise<RouteSegmentDto | null> {
     const routeSegment = await this.prisma.$queryRaw<RouteSegment[]>`
-      SELECT "RouteSegment".id, "RouteSegment".name, ST_AsText(coordinates) AS coordinates 
+      SELECT "RouteSegment".id, "RouteSegment".name, "RouteSegment".description, ST_AsText(coordinates) AS coordinates 
       FROM "RouteSegment" 
       WHERE id = ${id}::int`;
 
@@ -128,44 +133,44 @@ export class RoutesSegmentsService {
     id: number,
     updateRouteSegmentDto: UpdateRouteSegmentDto,
   ): Promise<RouteSegmentDto> {
-    if (!updateRouteSegmentDto.name && !updateRouteSegmentDto.coordinates) {
+    // No attributes, invalid use case -> reject with error
+    if (
+      !updateRouteSegmentDto.name &&
+      !updateRouteSegmentDto.coordinates &&
+      !updateRouteSegmentDto.description
+    ) {
       return Promise.reject(new NoAttributesProvidedError());
     }
 
-    let result;
-    if (updateRouteSegmentDto.name && !updateRouteSegmentDto.coordinates) {
-      result = await this.prisma.$queryRaw`
-      UPDATE "RouteSegment" 
-      SET name = ${updateRouteSegmentDto.name}
-      WHERE id = ${id}::int
-      RETURNING id, name, ST_AsText(coordinates) AS coordinates;`;
+    const attributesQueries = [];
+
+    // Name only
+    if (updateRouteSegmentDto.name) {
+      attributesQueries.push(Prisma.sql`name = ${updateRouteSegmentDto.name}`);
     }
 
-    if (!updateRouteSegmentDto.name && updateRouteSegmentDto.coordinates) {
+    // Coordinates only
+    if (updateRouteSegmentDto.coordinates) {
       this.validateCoordinates(updateRouteSegmentDto.coordinates);
-
-      result = await this.prisma.$queryRaw`
-      UPDATE "RouteSegment" 
-      SET coordinates = ${conversion.numberArray2wkt(
+      const coordinates = conversion.numberArray2wkt(
         updateRouteSegmentDto.coordinates,
-      )}
-      WHERE id = ${id}::int
-      RETURNING id, name, ST_AsText(coordinates) AS coordinates;`;
+      );
+
+      attributesQueries.push(Prisma.sql`coordinates = ${coordinates}`);
     }
 
-    if (updateRouteSegmentDto.name && updateRouteSegmentDto.coordinates) {
-      this.validateCoordinates(updateRouteSegmentDto.coordinates);
-
-      result = await this.prisma.$queryRaw`
-      UPDATE "RouteSegment" 
-      SET name = ${
-        updateRouteSegmentDto.name
-      }, coordinates = ${conversion.numberArray2wkt(
-        updateRouteSegmentDto.coordinates,
-      )}
-      WHERE id = ${id}::int
-      RETURNING id, name, ST_AsText(coordinates) AS coordinates;`;
+    // Description only
+    if (updateRouteSegmentDto.description) {
+      const description = updateRouteSegmentDto.description;
+      attributesQueries.push(Prisma.sql`description = ${description}`);
     }
+
+    const query = Prisma.sql`UPDATE "RouteSegment"
+                             SET ${Prisma.join(attributesQueries)} 
+                             WHERE id= ${id}::int 
+                             RETURNING id, name, description, ST_AsText(coordinates) AS coordinates;`;
+
+    const result = await this.prisma.$queryRaw(query);
 
     return Promise.resolve(conversion.dbRouteSegment2dto(result[0]));
   }

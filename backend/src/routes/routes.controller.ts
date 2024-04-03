@@ -75,7 +75,7 @@ export class RoutesController {
   async update(
     @Param('id') id: number,
     @Body() updateRouteDto: UpdateRouteDto,
-  ): Promise<RouteDto> {
+  ): Promise<RouteWithoutSegmentsDto> {
     try {
       const updatedRow = await this.routeService.updateRoute(
         id,

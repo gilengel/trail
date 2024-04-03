@@ -50,7 +50,6 @@ describe('ImagesController (e2e)', () => {
 
   afterEach(async () => {
     await prisma.$queryRaw`TRUNCATE "Image"`;
-    await prisma.route.deleteMany();
   });
 
   it('/images/ (POST)', () => {
@@ -109,118 +108,83 @@ describe('ImagesController (e2e)', () => {
       .expect(400);
   });
 
-  it('/images/route_segment (GET) returns 400 for calling with an invalid (negative) offset', async () => {
-    const wrapper = new Promise((resolve, reject) => {
-      async.waterfall(
-        [
-          (callback: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .post(`/routes/gpx`)
-              .set('Content-Type', 'multipart/form-data')
-              .attach('file', 'src/routes/test/activity_11982912017.gpx')
-              .expect(201, callback);
-          },
-          (results: { body: RouteDto }, callback: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .get(
-                `/images/route_segment?routeSegmentId=${
-                  results.body.id
-                }&maxOffset=${-1}`,
-              )
-              .expect(400, callback);
-          },
-        ],
-        (error: Error, results: ImageDto[]) => {
-          if (error) return reject(error);
-          return resolve(results);
-        },
-      );
+  describe('GET', () => {
+    let route: RouteDto;
+
+    beforeEach(async () => {
+      const result = await request(app.getHttpServer())
+        .post(`/routes/gpx`)
+        .set('Content-Type', 'multipart/form-data')
+        .attach('file', 'src/routes/test/short.gpx');
+
+      route = result.body;
     });
 
-    return wrapper.then((data: ImageDto[]) => {
-      expect(data.length == 0);
-    });
-  });
+    it('/images/route_segment (GET) returns list of images near a route segment', async () => {
+      const wrapper = new Promise((resolve, reject) => {
+        async.waterfall(
+          [
+            (callback: request.CallbackHandler) => {
+              request(app.getHttpServer())
+                .post(`/images`)
+                .set('Content-Type', 'multipart/form-data')
+                .attach('files', `${__dirname}/data/20230909_102937.jpg`)
+                .attach('files', `${__dirname}/data/20230909_102954.jpg`)
+                .attach('files', `${__dirname}/data/20230909_105445.jpg`)
+                .attach('files', `${__dirname}/data/20230909_105508.jpg`)
+                .attach('files', `${__dirname}/data/20230909_105615.jpg`)
+                .attach('files', `${__dirname}/data/20230909_110041.jpg`)
+                .expect(201, callback);
+            },
 
-  it('/images/route_segment (GET) returns list of images near a route segment', async () => {
-    const wrapper = new Promise((resolve, reject) => {
-      async.waterfall(
-        [
-          (cb: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .post(`/images`)
-              .set('Content-Type', 'multipart/form-data')
-              .attach('files', `${__dirname}/data/20230909_102937.jpg`)
-              .attach('files', `${__dirname}/data/20230909_102954.jpg`)
-              .attach('files', `${__dirname}/data/20230909_105445.jpg`)
-              .attach('files', `${__dirname}/data/20230909_105508.jpg`)
-              .attach('files', `${__dirname}/data/20230909_105615.jpg`)
-              .attach('files', `${__dirname}/data/20230909_110041.jpg`)
-              .expect(201, cb);
+            (_: ImageDto[], callback: request.CallbackHandler) => {
+              request(app.getHttpServer())
+                .get(
+                  `/images/route_segment?routeSegmentId=${
+                    route.segments[0].id
+                  }&maxOffset=${500}`,
+                )
+                .expect(200, callback);
+            },
+          ],
+          (err: Error, results: unknown) => {
+            if (err) return reject(err);
+            return resolve(results);
           },
-          (_: Error, cb: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .post(`/routes/gpx`)
-              .set('Content-Type', 'multipart/form-data')
-              .attach('file', 'src/routes/test/activity_11982912017.gpx')
-              .expect(201, cb);
-          },
-          (results: { body: RouteDto }, cb: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .get(
-                `/images/route_segment?routeSegmentId=${
-                  results.body.segments[0].id
-                }&maxOffset=${500}`,
-              )
-              .expect(200, cb);
-          },
-        ],
-        (err: Error, results: unknown) => {
-          if (err) return reject(err);
-          return resolve(results);
-        },
-      );
+        );
+      });
+
+      return wrapper.then((data: ImageDto[]) => {
+        expect(data.length == 6);
+      });
     });
 
-    return wrapper.then((data: ImageDto[]) => {
-      expect(data.length == 6);
-    });
-  });
-
-  it('/images/route_segment (GET) returns "404" if no images are saved for a trip', async () => {
-    const wrapper = new Promise((resolve, reject) => {
-      async.waterfall(
-        [
-          (callback: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .post(`/routes/gpx`)
-              .set('Content-Type', 'multipart/form-data')
-              .attach('file', 'src/routes/test/activity_11982912017.gpx')
-              .expect(201, callback);
-          },
-          (results: { body: RouteDto }, callback: request.CallbackHandler) => {
-            request(app.getHttpServer())
-              .get(
-                `/images/route_segment?routeSegmentId=${results.body.segments[0].id}&maxOffset=0`,
-              )
-              .expect(404, callback);
-          },
-        ],
-        (error: Error, results: ImageDto[]) => {
-          if (error) return reject(error);
-          return resolve(results);
-        },
-      );
+    it('/images/route_segment (GET) returns 400 for calling with an invalid (negative) offset', async () => {
+      return request(app.getHttpServer())
+        .get(
+          `/images/route_segment?routeSegmentId=${
+            route.segments[0].id
+          }&maxOffset=${-1}`,
+        )
+        .expect(400);
     });
 
-    return wrapper.then((data: ImageDto[]) => {
-      expect(data.length == 0);
+    it('/images/route_segment (GET) returns "404" if no images are saved for a trip', () => {
+      return request(app.getHttpServer())
+        .get(
+          `/images/route_segment?routeSegmentId=${route.segments[0].id}&maxOffset=0`,
+        )
+        .expect(404);
     });
-  });
 
-  it('/images/route_segment (GET) returns "404" if the requested route segment does not exist', async () => {
-    return request(app.getHttpServer())
-      .get(`/images/route_segment?routeSegmentId=${0}&maxOffset=${500}`)
-      .expect(404);
+    it('/images/route_segment (GET) returns "404" if the requested route segment does not exist', async () => {
+      return request(app.getHttpServer())
+        .get(`/images/route_segment?routeSegmentId=${0}&maxOffset=${500}`)
+        .expect(404);
+    });
+
+    afterEach(async () => {
+      await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${route.id}`;
+    });
   });
 });

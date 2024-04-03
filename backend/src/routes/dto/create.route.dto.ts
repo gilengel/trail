@@ -9,5 +9,8 @@ export class CreateRouteDto {
   name: string;
 
   @ApiProperty()
+  description: string;
+
+  @ApiProperty()
   segments: ConcealedCreateRouteSegmentDto[];
 }

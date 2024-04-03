@@ -5,7 +5,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ConcealedCreateRouteSegmentDto {
   @ApiProperty()
-  name: string;
+  name?: string;
+
+  @ApiProperty()
+  description?: string;
 
   /**
    * Limits:

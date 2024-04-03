@@ -13,10 +13,8 @@ describe('CoverageWorkaround', () => {
       if (!isCoverageEnabled) {
         //return
       }
-      console.log('???')
 
       for (const file in allFilesGlobExcludingCypress) {
-        console.log(file)
         await allFilesGlobExcludingCypress[file]()
       }
     }

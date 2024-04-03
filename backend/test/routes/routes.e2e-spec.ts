@@ -29,8 +29,8 @@ describe('RoutesController (e2e)', () => {
 
   beforeEach(async () => {
     const result = await prisma.$queryRaw<[{ id: number }]>`
-      INSERT INTO "Route" (name) 
-      VALUES ('e2e_test_route') RETURNING id`;
+      INSERT INTO "Route" (name, description) 
+      VALUES ('e2e_test_route', 'e2e_test_description') RETURNING id`;
     routeId = result[0].id;
 
     await prisma.$queryRaw`
@@ -40,8 +40,8 @@ describe('RoutesController (e2e)', () => {
         WHERE "routeId" = ${routeId}`;
   });
 
-  afterAll(async () => {
-    await prisma.route.deleteMany();
+  afterEach(async () => {
+    await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${routeId}`;
   });
 
   it('/routes/ (GET)', () => {
@@ -66,9 +66,11 @@ describe('RoutesController (e2e)', () => {
       .post(`/routes`)
       .send(testData.newRoute)
       .expect(201)
-      .expect((res) =>
-        expect(res.body).toHaveProperty('name', 'new_test_route'),
-      );
+      .expect(async (res) => {
+        expect(res.body).toHaveProperty('name', 'new_test_route');
+
+        await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+      });
   });
 
   it('/routes/ (POST) fails with a track containing invalid (not enough) coordinates', () => {
@@ -92,9 +94,11 @@ describe('RoutesController (e2e)', () => {
       .set('Content-Type', 'multipart/form-data')
       .attach('file', 'src/routes/test/short.gpx')
       .expect(201)
-      .expect((res) =>
-        expect(res.body).toHaveProperty('name', 'Ehrwald Hiking'),
-      );
+      .expect(async (res) => {
+        expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
+
+        await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+      });
   });
 
   it('/routes/gpx (POST) succeeds with a single segment track without elevation', () => {
@@ -103,9 +107,11 @@ describe('RoutesController (e2e)', () => {
       .set('Content-Type', 'multipart/form-data')
       .attach('file', 'src/routes/test/no_elevation.gpx')
       .expect(201)
-      .expect((res) =>
-        expect(res.body).toHaveProperty('name', 'Ehrwald Hiking'),
-      );
+      .expect(async (res) => {
+        expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
+
+        await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+      });
   });
 
   it('/routes/gpx (POST) succeeds with a multi segment track', () => {
@@ -114,12 +120,14 @@ describe('RoutesController (e2e)', () => {
       .set('Content-Type', 'multipart/form-data')
       .attach('file', 'src/routes/test/long.gpx')
       .expect(201)
-      .expect((res) =>
+      .expect(async (res) => {
         expect(res.body).toHaveProperty(
           'name',
           'Stage 1: Arctic Ocean to Väylä — European Divide Trail',
-        ),
-      );
+        );
+
+        await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+      });
   });
 
   it('/routes/gpx (POST) sets the route name to "no_name" if not provided within the metadata in the gpx file', () => {
@@ -128,7 +136,10 @@ describe('RoutesController (e2e)', () => {
       .set('Content-Type', 'multipart/form-data')
       .attach('file', 'src/routes/test/no_name.gpx')
       .expect(201)
-      .expect((res) => expect(res.body).toHaveProperty('name', 'no_name'));
+      .expect(async (res) => {
+        expect(res.body).toHaveProperty('name', 'no_name');
+        await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+      });
   });
 
   it('/routes/gpx (POST) fails with less than two coordinates', () => {
@@ -139,7 +150,7 @@ describe('RoutesController (e2e)', () => {
       .expect(400);
   });
 
-  it('/routes (PATCH) succeeds changing the name', () => {
+  it('/routes (PATCH) succeeds changing only the name', () => {
     return request(app.getHttpServer())
       .patch(`/routes/${routeId}`)
       .send({
@@ -151,7 +162,39 @@ describe('RoutesController (e2e)', () => {
       });
   });
 
-  it('/routes (PATCH) fails if no name attribute is send to the backend', () => {
+  it('/routes (PATCH) succeeds changing only the description', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/${routeId}`)
+      .send({
+        description: 'updated_test_description',
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty(
+          'description',
+          'updated_test_description',
+        );
+      });
+  });
+
+  it('/routes (PATCH) succeeds changing name and description', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/${routeId}`)
+      .send({
+        name: 'updated_test_route',
+        description: 'updated_test_description',
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty(
+          'description',
+          'updated_test_description',
+        );
+        expect(res.body).toHaveProperty('name', 'updated_test_route');
+      });
+  });
+
+  it('/routes (PATCH) fails if no name and no description attribute is send to the backend', () => {
     return request(app.getHttpServer())
       .patch(`/routes/${routeId}`)
       .send({})

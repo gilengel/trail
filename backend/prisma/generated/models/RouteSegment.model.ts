@@ -1,4 +1,4 @@
-import { IsInt, IsDefined, IsString } from "class-validator";
+import { IsInt, IsDefined, IsString, IsOptional } from "class-validator";
 import { Route } from "./";
 
 export class RouteSegment {
@@ -13,6 +13,10 @@ export class RouteSegment {
     @IsDefined()
     @IsString()
     name!: string;
+
+    @IsOptional()
+    @IsString()
+    description?: string;
 
     @IsDefined()
     route!: Route;

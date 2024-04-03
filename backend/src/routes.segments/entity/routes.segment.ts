@@ -11,5 +11,8 @@ export class RouteSegment {
   name: string;
 
   @ApiProperty()
+  description: string;
+
+  @ApiProperty()
   coordinates: string;
 }

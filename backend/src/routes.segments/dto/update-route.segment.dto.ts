@@ -11,5 +11,8 @@ export class UpdateRouteSegmentDto extends PartialType(
   name?: string;
 
   @ApiProperty()
+  description?: string;
+
+  @ApiProperty()
   coordinates?: Array<[number, number, number]>;
 }

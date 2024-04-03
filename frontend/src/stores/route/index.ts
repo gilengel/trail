@@ -73,7 +73,6 @@ export const useRouteStore = defineStore('route', () => {
     const formData = new FormData()
 
     for (let i = 0; i < trips.length; ++i) {
-      console.log(trips[i])
       formData.append(`file`, trips[i])
     }
 

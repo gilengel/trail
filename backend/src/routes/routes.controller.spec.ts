@@ -58,7 +58,7 @@ describe('RoutesController', () => {
   it('should create a new route based on a gpx file and return its dto', async () => {
     jest
       .spyOn(parser, 'extractCoordinatesFromGPX')
-      .mockReturnValue(testData.route);
+      .mockReturnValue(testData.gpxRoute);
     jest
       .spyOn(service, 'createRouteFromGPX')
       .mockReturnValue(Promise.resolve(testData.route));
@@ -108,6 +108,7 @@ describe('RoutesController', () => {
 
     const result = controller.create({
       name: 'invalid_route',
+      description: '',
       segments: [
         {
           name: 'invalid_segment',
@@ -126,6 +127,7 @@ describe('RoutesController', () => {
   it('should update a route and return its dto', async () => {
     const result: RouteDto = {
       id: 0,
+      description: '',
       name: testData.updatedName,
       segments: testData.segments,
     };

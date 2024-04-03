@@ -88,11 +88,11 @@ export class ImagesController {
         offset,
       );
     } catch (e) {
-      throw e;
+      return Promise.reject(e);
     }
 
     if (images.length == 0) {
-      throw new HttpException('', HttpStatus.NOT_FOUND);
+      return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
     }
 
     return Promise.resolve(images);

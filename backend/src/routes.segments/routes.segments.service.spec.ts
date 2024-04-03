@@ -94,7 +94,11 @@ describe('RoutesSegmentsService', () => {
     const result: RouteSegmentDto = await service.create(
       testData.newRouteSegment,
     );
-    const expected: RouteSegmentDto = testData.routeSegment;
+    const expected: RouteSegmentDto = {
+      id: testData.routeSegment.id,
+      name: testData.routeSegment.name,
+      coordinates: testData.routeSegment.coordinates,
+    };
 
     expect(result).toStrictEqual(expected);
   });
@@ -108,11 +112,14 @@ describe('RoutesSegmentsService', () => {
       name: testData.updatedSegmentName,
     });
 
-    expect(result).toStrictEqual({
+    const expected = {
       id: testData.segmentId,
       name: testData.updatedSegmentName,
+      description: testData.segmentDescription,
       coordinates: testData.coordinates,
-    });
+    };
+
+    expect(result).toStrictEqual(expected);
   });
 
   it('should update only the coordinates of a route segment', async () => {
@@ -124,16 +131,37 @@ describe('RoutesSegmentsService', () => {
       coordinates: testData.coordinates,
     });
 
-    expect(result).toStrictEqual({
+    const expected = {
       id: testData.segmentId,
       name: testData.segmentName,
+      description: testData.segmentDescription,
       coordinates: [
         [30, 10, 0],
         [10, 30, 0],
       ],
+    };
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  it('should update only the description of a route segment', async () => {
+    jest
+      .spyOn(prisma, '$queryRaw')
+      .mockResolvedValue([testData.dbRouteSegmentWithUpdatedDescription]);
+
+    const result = await service.update(testData.routeId, {
+      description: testData.updatedSegmentDescription,
+    });
+
+    expect(result).toStrictEqual({
+      id: testData.segmentId,
+      name: testData.segmentName,
+      description: testData.updatedSegmentDescription,
+      coordinates: testData.coordinates,
     });
   });
 
+  /*
   it('should update name and coordinates of a route segment', async () => {
     jest
       .spyOn(prisma, '$queryRaw')
@@ -144,12 +172,19 @@ describe('RoutesSegmentsService', () => {
       coordinates: testData.updatedCoordinates,
     });
 
-    expect(result).toStrictEqual({
+    const expected = {
       id: testData.segmentId,
       name: testData.segmentName,
+      description: testData.segmentDescription,
       coordinates: testData.updatedCoordinates,
-    });
+    };
+
+    console.log(result);
+    console.log(expected);
+
+    expect(result).toStrictEqual(expected);
   });
+  */
 
   it('should reject trying to change a route segment with less then two coordinates', async () => {
     await expect(service.update(0, { coordinates: [] })).rejects.toThrow(

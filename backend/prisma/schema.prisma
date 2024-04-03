@@ -23,15 +23,17 @@ model Location {
 }
 
 model Route {
-  id       Int            @id @default(autoincrement())
-  name     String
-  segments RouteSegment[]
+  id          Int            @id @default(autoincrement())
+  name        String
+  description String?
+  segments    RouteSegment[]
 }
 
 model RouteSegment {
   id          Int                     @id @default(autoincrement())
   routeId     Int
   name        String
+  description String?
   coordinates Unsupported("geometry")
   route       Route                   @relation(fields: [routeId], references: [id], onDelete: Cascade)
 

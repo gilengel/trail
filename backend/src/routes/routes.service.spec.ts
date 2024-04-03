@@ -14,7 +14,7 @@ import { GPXRoute } from './routes.parser';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
 
 jest.mock('@prisma/client', () => {
-  const a = jest.fn();
+  const a = jest.fn(() => 'MOCKED_QUERY');
   return {
     PrismaClient: jest.fn().mockImplementation(() => {
       return {
@@ -47,6 +47,7 @@ describe('conversion', () => {
   describe('route', () => {
     it('should convert from a db dto to a route dto', () => {
       const result = conversion.dbRoute2dto(testData.dbRoute);
+
       expect(result).toStrictEqual(testData.route);
     });
   });
@@ -148,6 +149,7 @@ describe('RoutesService', () => {
     expect(result).toStrictEqual({
       id: 0,
       name: 'gpx_route',
+      description: '',
       segments: [
         {
           id: 1,
@@ -172,8 +174,7 @@ describe('RoutesService', () => {
   it('should update only the name of a route', async () => {
     jest
       .spyOn(prisma, '$queryRaw')
-      .mockResolvedValueOnce([testData.dbRouteWithUpdatedName])
-      .mockResolvedValueOnce([testData.dbRouteSegment]);
+      .mockResolvedValue([testData.dbRouteWithUpdatedName]);
 
     const result = await service.updateRoute(0, {
       name: 'updated_test_route',
@@ -182,7 +183,44 @@ describe('RoutesService', () => {
     const expected = {
       id: testData.routeId,
       name: 'updated_test_route',
-      segments: [testData.routeSegment],
+      description: testData.routeDescription,
+    };
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  it('should update only the description of a route', async () => {
+    jest
+      .spyOn(prisma, '$queryRaw')
+      .mockResolvedValue([testData.dbRouteWithUpdatedDescription]);
+
+    const result = await service.updateRoute(0, {
+      description: testData.updatedRouteDescription,
+    });
+
+    const expected = {
+      id: testData.routeId,
+      name: testData.routeName,
+      description: testData.updatedRouteDescription,
+    };
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  it('should update only the description and name of a route', async () => {
+    jest
+      .spyOn(prisma, '$queryRaw')
+      .mockResolvedValue([testData.dbRouteWithUpdatedNameAndDescription]);
+
+    const result = await service.updateRoute(0, {
+      name: testData.updatedName,
+      description: testData.updatedRouteDescription,
+    });
+
+    const expected = {
+      id: testData.routeId,
+      name: testData.updatedName,
+      description: testData.updatedRouteDescription,
     };
 
     expect(result).toStrictEqual(expected);
@@ -193,13 +231,13 @@ describe('RoutesService', () => {
   });
 
   it('should reject changing a non existing route', async () => {
-    jest.spyOn(prisma, '$queryRaw').mockResolvedValue(0);
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValue([]);
 
     const result = service.updateRoute(0, {
       name: 'updated_test_route',
     });
 
-    expect(result).rejects.toThrow();
+    await expect(result).rejects.toThrow();
   });
 
   it('should delete a route from the db and return it', async () => {

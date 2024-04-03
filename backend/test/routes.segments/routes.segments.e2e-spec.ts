@@ -31,14 +31,15 @@ describe('RoutesSegmentsController (e2e)', () => {
 
   beforeEach(async () => {
     const result = await prisma.$queryRaw<[{ id: number }]>`
-      INSERT INTO "Route" (name) 
-      VALUES ('e2e_test_route') RETURNING id`;
+      INSERT INTO "Route" (name, description) 
+      VALUES ('e2e_test_route', 'e2e_test_description') RETURNING id`;
     routeId = result[0].id;
 
     const segmentResult = await prisma.$queryRaw<[{ id: number }]>`
-      INSERT INTO "RouteSegment" (name, "routeId", coordinates) 
-      VALUES ('e2e_test_route_segment', 
-               ${routeId}, 
+      INSERT INTO "RouteSegment" ("routeId", name, description, coordinates) 
+      VALUES (${routeId},
+              'e2e_test_route_segment', 
+              'e2e_test_route_segment_description', 
                ST_GeomFromText('LINESTRING Z(-71.160281 42.258729 0, -71.160837 42.259113 0,  -71.161144 42.25932 0)', 4326)
                ) RETURNING id`;
     routeSegmentId = segmentResult[0].id;
@@ -51,9 +52,7 @@ describe('RoutesSegmentsController (e2e)', () => {
   });
 
   afterEach(async () => {
-    await prisma.$queryRaw`
-    DELETE FROM "Route" 
-    WHERE id = ${routeId};`;
+    await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${routeId}`;
   });
 
   it('/routes/segment (GET) return the segment', () => {
@@ -88,7 +87,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       .post(`/routes/segment`)
       .send({
         name: testData,
-        coordinates: [[0, 0]],
+        coordinates: [[0, 0, 0]],
       })
       .expect(400);
   });
@@ -97,7 +96,7 @@ describe('RoutesSegmentsController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/routes/segment`)
       .send({
-        name: testData.name,
+        name: testData.routeName,
         routeId,
         coordinates: [
           [0, 0, 0],
@@ -175,6 +174,19 @@ describe('RoutesSegmentsController (e2e)', () => {
       .expect(200)
       .expect((res) => {
         expect(res.body).toHaveProperty('name', 'name_only_test_route');
+      });
+  });
+
+  it('/routes/segment (PATCH) with description only', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/${routeSegmentId}`)
+      .send({ description: 'description_only_test_route' })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty(
+          'description',
+          'description_only_test_route',
+        );
       });
   });
 

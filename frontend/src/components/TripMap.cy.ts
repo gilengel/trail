@@ -83,7 +83,6 @@ describe('Component', () => {
               methods: {
                 add: () => {},
                 zoomToSegment: () => {
-                  console.log('Kuuhaugen')
                   zoomed = true
 
                   expect(zoomed).to.be.true

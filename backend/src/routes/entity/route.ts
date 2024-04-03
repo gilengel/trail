@@ -15,5 +15,8 @@ export class Route {
   name: string;
 
   @ApiProperty()
+  description: string;
+
+  @ApiProperty()
   segments: Array<RouteSegment>;
 }
