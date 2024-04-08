@@ -92,7 +92,7 @@ export class ImagesService {
     VALUES ${Prisma.join(
       values.map((row) => Prisma.sql`(${Prisma.join(row)})`),
     )}
-    RETURNING id, name, ST_AsText(coordinates) as coordinates`;
+    RETURNING id, name, ST_AsText(coordinates) as coordinates, mime_type`;
 
     // save all images to storage
     // TODO: it is bad to store them on the same server. Move them to another via REST

@@ -92,7 +92,8 @@ describe('RoutesController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/routes/gpx`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('file', 'src/routes/test/short.gpx')
+      .field('name', 'Ehrwald Hiking')
+      .attach('files', 'src/routes/test/short.gpx')
       .expect(201)
       .expect(async (res) => {
         expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -105,7 +106,8 @@ describe('RoutesController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/routes/gpx`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('file', 'src/routes/test/no_elevation.gpx')
+      .field('name', 'Ehrwald Hiking')
+      .attach('files', 'src/routes/test/no_elevation.gpx')
       .expect(201)
       .expect(async (res) => {
         expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -118,7 +120,8 @@ describe('RoutesController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/routes/gpx`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('file', 'src/routes/test/long.gpx')
+      .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
+      .attach('files', 'src/routes/test/long.gpx')
       .expect(201)
       .expect(async (res) => {
         expect(res.body).toHaveProperty(
@@ -130,10 +133,12 @@ describe('RoutesController (e2e)', () => {
       });
   });
 
+  /*
   it('/routes/gpx (POST) sets the route name to "no_name" if not provided within the metadata in the gpx file', () => {
     return request(app.getHttpServer())
       .post(`/routes/gpx`)
       .set('Content-Type', 'multipart/form-data')
+      .field('name', 'no_name')
       .attach('file', 'src/routes/test/no_name.gpx')
       .expect(201)
       .expect(async (res) => {
@@ -141,12 +146,14 @@ describe('RoutesController (e2e)', () => {
         await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
       });
   });
+  */
 
   it('/routes/gpx (POST) fails with less than two coordinates', () => {
     return request(app.getHttpServer())
       .post(`/routes/gpx`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('file', 'src/routes/test/empty.gpx')
+      .field('name', 'empty')
+      .attach('files', 'src/routes/test/empty.gpx')
       .expect(400);
   });
 

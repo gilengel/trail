@@ -188,6 +188,6 @@ export const images: ImageDto[] = [
     name: 'not_implemented',
     timestamp: date,
     coordinates: [47.17970059972222, 10.893711999999999],
-    url: `${uuid.toString()}`,
+    url: `${uuid.toString()}.jpg`,
   },
 ];

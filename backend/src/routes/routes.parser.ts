@@ -5,7 +5,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { NotEnoughCoordinatesError } from '../routes.segments/routes.segments.service';
 
 export interface GPXRoute {
-  name: string;
+  name?: string;
   segments: GPXRouteSegment[];
 }
 
@@ -56,15 +56,7 @@ export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
     };
   });
 
-  let routeName = obj.gpx.metadata.name;
-  if (!routeName) {
-    routeName = 'no_name';
-  }
-
-  const result = {
-    name: routeName,
+  return {
     segments: convertedSegments,
   };
-
-  return result;
 }

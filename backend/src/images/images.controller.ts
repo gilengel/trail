@@ -91,13 +91,10 @@ export class ImagesController {
         offset,
       );
     } catch (e) {
-      this.logger.error(e);
       return Promise.reject(e);
     }
 
     if (images.length == 0) {
-      this.logger.error('MUUUU');
-
       return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
     }
 

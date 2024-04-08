@@ -41,7 +41,7 @@ describe('Conversion', () => {
       name: 'not_implemented',
       timestamp: undefined,
       coordinates: [1024, 1024],
-      url: uuid.toString(),
+      url: `${uuid.toString()}.jpg`,
     };
 
     expect(result).toStrictEqual(expected);
@@ -64,7 +64,7 @@ describe('Conversion', () => {
         name: 'not_implemented',
         timestamp: undefined,
         coordinates: [1024, 1024],
-        url: uuid.toString(),
+        url: `${uuid.toString()}.jpg`,
       },
     ];
 

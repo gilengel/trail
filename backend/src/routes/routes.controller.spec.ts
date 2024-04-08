@@ -65,7 +65,14 @@ describe('RoutesController', () => {
 
     const buffer = readFileSync(`src/routes/test/short.gpx`);
 
-    const result = await controller.createFromGPX(mockFileFromBuffer(buffer));
+    const files = [mockFileFromBuffer(buffer)];
+    const result = await controller.createFromGPX(
+      {
+        name: '',
+        files,
+      },
+      files,
+    );
     expect(result).toStrictEqual(testData.route);
   });
 
@@ -79,7 +86,14 @@ describe('RoutesController', () => {
 
     const buffer = readFileSync(`src/routes/test/invalid.gpx`);
 
-    const result = controller.createFromGPX(mockFileFromBuffer(buffer));
+    const files = [mockFileFromBuffer(buffer)];
+    const result = controller.createFromGPX(
+      {
+        name: 'test_route',
+        files,
+      },
+      files,
+    );
     await expect(result).rejects.toThrow(
       new HttpException(
         `Route segment with id 0 does not exist.`,
@@ -95,7 +109,15 @@ describe('RoutesController', () => {
 
     const buffer = readFileSync(`src/routes/test/invalid.gpx`);
 
-    const result = controller.createFromGPX(mockFileFromBuffer(buffer));
+    const files = [mockFileFromBuffer(buffer)];
+
+    const result = controller.createFromGPX(
+      {
+        name: 'test_route',
+        files,
+      },
+      files,
+    );
     await expect(result).rejects.toThrow(
       new HttpException('', HttpStatus.BAD_REQUEST),
     );

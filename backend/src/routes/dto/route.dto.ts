@@ -35,5 +35,5 @@ export class RouteWithMultipleFilesDTO {
       },
     },
   })
-  files: any[];
+  files: unknown[];
 }

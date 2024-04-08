@@ -12,7 +12,6 @@ import {
   Param,
   Patch,
   Post,
-  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -24,7 +23,7 @@ import {
   RouteWithoutSegmentsDto,
 } from './dto/route.dto';
 import { UpdateRouteDto } from './dto/update.route.dto';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { GPXRoute, extractCoordinatesFromGPX } from './routes.parser';
 import { ApiConsumes } from '@nestjs/swagger';
 
@@ -53,7 +52,6 @@ export class RoutesController {
 
       return Promise.resolve(route);
     } catch (e) {
-      this.logger.log(e.message);
       // < 2 coordinates, > 1.000.000 coordinates or mixed dimension coordinates
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -81,9 +79,6 @@ export class RoutesController {
 
       return Promise.resolve(routeDto);
     } catch (e) {
-      this.logger.error(':(');
-      this.logger.error(e.message);
-
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
@@ -100,8 +95,6 @@ export class RoutesController {
       );
       return updatedRow;
     } catch (e) {
-      this.logger.log(e.message);
-
       // special case, inform that the error is on client side
       if (e instanceof NoAttributesProvidedError) {
         throw new HttpException(

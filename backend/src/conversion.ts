@@ -13,9 +13,8 @@ import { Route } from './routes/entity/route';
  * Be aware that this function will return undefined / nothing if the provided
  * mimeType is not 'image/jpeg' or 'image/tiff'. The controller will enforce that only
  * images of these types can be further processed.
- *
- * @param mimeType
- * @returns jpg or tif, undefined or nothing if mimeType is invalid
+ * @param mimeType - File type as mime type string see https://www.iana.org/assignments/media-types/media-types.xhtml for a list of media types.
+ * @returns Jpg or tif, undefined or nothing if mimeType is invalid.
  */
 export function generateFileExtensionBasedOnMimeType(mimeType: string): string {
   switch (mimeType) {

@@ -13,7 +13,6 @@ describe('RoutesParser', () => {
     const result = extractCoordinatesFromGPX(data);
 
     expect(result).toStrictEqual({
-      name: 'Ehrwald Hiking',
       segments: [
         {
           name: 'Ehrwald Hiking',
@@ -45,20 +44,12 @@ describe('RoutesParser', () => {
     expect(t).toThrow(NotEnoughCoordinatesError);
   });
 
-  it('should return "no_name" for the route name if not provided in the meta data', async () => {
-    const data = fs.readFileSync('src/routes/test/no_name.gpx');
-    const result = extractCoordinatesFromGPX(data);
-
-    expect(result.name).toBe('no_name');
-  });
-
   it('should return default to zero elevation if no elevation data is in the gpx file', async () => {
     const data = fs.readFileSync('src/routes/test/no_elevation.gpx');
 
     const result = extractCoordinatesFromGPX(data);
 
     expect(result).toStrictEqual({
-      name: 'Ehrwald Hiking',
       segments: [
         {
           name: 'Ehrwald Hiking 1',
@@ -110,7 +101,6 @@ describe('RoutesParser', () => {
     const result = extractCoordinatesFromGPX(data);
 
     expect(result).toStrictEqual({
-      name: 'Ehrwald Hiking',
       segments: [
         {
           name: 'Ehrwald Hiking 1',

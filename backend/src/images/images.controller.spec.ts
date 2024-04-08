@@ -34,7 +34,6 @@ describe('ImageController', () => {
     'with_geo_information.jpg',
     'with_geo_information.jpeg',
     'with_geo_information.tif',
-    'with_geo_information.png',
   ])('should save an image (%s) and return its dto', async (file) => {
     jest
       .spyOn(imageService, 'saveImages')

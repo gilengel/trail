@@ -119,7 +119,8 @@ describe('ImagesController (e2e)', () => {
       const result = await request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
-        .attach('file', 'src/routes/test/short.gpx');
+        .field('name', 'short')
+        .attach('files', 'src/routes/test/short.gpx');
 
       route = result.body;
     });
