@@ -8,6 +8,7 @@
   },
   "coverageDirectory": "./coverage-e2e",
   "coveragePathIgnorePatterns": ["test.helper.ts"],
+  "coverageReporters": ["text", "cobertura", "html"],
   "coverageThreshold": {
     "global": {
       "branches": 100,

@@ -7,6 +7,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "collectCoverageFrom": ["src/**/*.{ts,jxs}"],
+  "coverageReporters": ["text", "cobertura", "html"],
   "coveragePathIgnorePatterns": [
     "main.ts",
     ".module.ts",
@@ -16,7 +17,6 @@
     "entity",
     "images.upload.interceptor.ts",
     "gpx.upload.interceptor.ts"
-
   ],
   "coverageDirectory": "./coverage-unit",
 
