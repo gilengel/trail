@@ -2,7 +2,7 @@
   <div>
     <TIcon :icon />
 
-    <span>
+    <span class="tborder-radius">
       <slot />
     </span>
   </div>
@@ -20,7 +20,7 @@ withDefaults(defineProps<TripAspectProps>(), {
 </script>
 
 <style scoped lang="scss">
-@import '../style/colors.scss';
+@import '@/style/border';
 
 div {
   $size: 64px;
@@ -34,7 +34,6 @@ div {
 
     width: $size;
     height: $size;
-    border-radius: $size / 2;
     border: rgb(230, 230, 230) 2px solid;
 
     font-size: $size * 0.8;

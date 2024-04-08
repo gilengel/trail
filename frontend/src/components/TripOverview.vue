@@ -1,7 +1,6 @@
 <template>
-  <TTile>
-    <h1 data-cy="trip-overview-h">Trip Overview</h1>
-    <ul>
+  <TTile title="Trip Overview">
+    <ul class="tborder tflex-grow-2">
       <li
         data-cy="trip-entry"
         v-for="trip in routeStore.routesWithoutSegments"
@@ -25,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import TTile from './TTile.vue'
+import TTile from '@/components/layout/TTile.vue'
 
 import { useRouteStore } from '@/stores/route'
 
@@ -37,20 +36,27 @@ const emit = defineEmits<{
 </script>
 
 <style lang="scss" scoped>
-$yellow: #d79921;
+@import '@/style/colors';
 
 ul {
   list-style: none;
   padding: 0;
+
+  overflow: hidden;
   li {
-    color: $yellow;
+    color: $text;
     padding: 0.5em;
+
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 
   li:hover {
     cursor: pointer;
-    background: $yellow;
-    color: black;
+    background: $primary;
+    //color: $yellow;
   }
 }
 </style>

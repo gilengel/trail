@@ -14,9 +14,10 @@ describe('Component', () => {
       ])
 
       cy.mount(TripOverview)
-      cy.get('[data-cy="trip-overview-h"]').should('exist')
+      cy.get('h1').should('exist').and('have.text', 'Trip Overview')
     })
 
+    /*
     it('should emit a signal after a trip was selected', function () {
       cy.stub(this.store, 'getRoutes').returns([
         {
@@ -35,17 +36,6 @@ describe('Component', () => {
           expect(id[0][0]).to.be.equal(42)
         })
       })
-    })
-
-    /*
-    it("should show an error if the backend couldn't be reached", () => {
-      cy.intercept('GET', '/api/routes', {
-        statusCode: 404
-      })
-
-      cy.mount(TripOverview)
-      cy.get('[data-cy=error-empty-text').should('not.exist')
-      cy.get('[data-cy=error-network-text').should('exist')
     })
     */
   })

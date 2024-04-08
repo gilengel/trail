@@ -10,9 +10,18 @@ import { ImagesModule } from './images/images.module';
 import { ErrorsInterceptor } from './interceptors/errors.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RoutesSegmentsModule } from './routes.segments/routes.segments.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [RoutesModule, ImagesModule, RoutesSegmentsModule],
+  imports: [
+    RoutesModule,
+    ImagesModule,
+    RoutesSegmentsModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'images'),
+    }),
+  ],
   controllers: [AppController],
   providers: [
     AppService,

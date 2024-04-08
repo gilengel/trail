@@ -12,6 +12,7 @@ const mapElement: Ref<L.Map | null> = ref(null)
 defineExpose({
   add,
   zoomToSegment,
+  zoomToSegments,
   panTo,
   fitBounds
 })
@@ -20,6 +21,26 @@ function zoomToSegment(segment: LeafletSegment) {
   segment.polyline.options.weight = 10
   fitBounds(segment.polyline.getBounds())
   panTo(segment.polyline.getBounds().getCenter())
+}
+
+function zoomToSegments(segments: LeafletSegment[]) {
+  if (segments.length == 0) {
+    return
+  }
+
+  if (segments.length == 1) {
+    zoomToSegment(segments[0])
+  }
+
+  const bounds = segments.map((segment) => segment.polyline.getBounds())
+
+  const bound = bounds[0]
+  for (let i = 1; i < bounds.length; i++) {
+    bound.extend(bounds[i])
+  }
+
+  fitBounds(bound)
+  panTo(bound.getCenter())
 }
 
 function panTo(coordinate: L.LatLng) {

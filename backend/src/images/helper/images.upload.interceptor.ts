@@ -12,12 +12,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 
 const ImagesUploadInterceptor = FilesInterceptor('files', 10, {
   fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype == 'image/png' ||
-      file.mimetype == 'image/jpg' ||
-      file.mimetype == 'image/jpeg' ||
-      file.mimetype == 'image/tif'
-    ) {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/tiff') {
       cb(null, true);
     } else {
       return cb(new Error('Invalid mime type'), false);

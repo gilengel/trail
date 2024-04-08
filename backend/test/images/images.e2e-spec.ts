@@ -44,19 +44,23 @@ describe('ImagesController (e2e)', () => {
   beforeEach(async () => {
     const id = uuidv4();
     await prisma.$executeRaw`
-      INSERT INTO "Image" (id, name, coordinates) 
-      VALUES (${id}, 'test_image', ST_GeomFromText('POINT(1024 1024)', 4326))`;
+      INSERT INTO "Image" (id, name, coordinates, mime_type) 
+      VALUES (${id}, 'test_image', ST_GeomFromText('POINT(1024 1024)', 4326), 'image/jpeg')`;
   });
 
   afterEach(async () => {
     await prisma.$queryRaw`TRUNCATE "Image"`;
   });
 
-  it('/images/ (POST)', () => {
+  it.each([
+    'with_geo_information.jpg',
+    'with_geo_information.jpeg',
+    'with_geo_information.tif',
+  ])('/images/ (POST) %s', (image) => {
     return request(app.getHttpServer())
       .post(`/images`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('files', 'src/images/test/with_geo_information.jpg')
+      .attach('files', `src/images/test/${image}`)
       .expect(201);
   });
 

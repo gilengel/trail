@@ -6,23 +6,47 @@
         ><TIcon icon="save"
       /></TButton>
     </div>
+
+    {{ status }}
+
+    <DropZone
+      :allowed-file-extensions="['jpg', 'jpeg', 'tif', 'tiff']"
+      @onFilesChanged="onFilesChanged"
+    ></DropZone>
+    <span data-cy="status-msg" v-if="status">{{ status }}</span>
+  </div>
+
+  <div class="tflex-row" style="align-content: space-between; justify-content: space-between">
+    <SingleLineText :value="route?.description" @value-changed="routeDescriptionChanged" />
   </div>
 </template>
 
 <script setup lang="ts">
-import SingleLineText from '@/components/SingleLineText.vue'
+import SingleLineText from '@/components/forms/SingleLineText.vue'
+import DropZone from '@/components/DropZone.vue'
 import TIcon from '@/components/TIcon.vue'
-import TButton from '@/components/TButton.vue'
+import TButton from '@/components/forms/TButton.vue'
 import { LeafletRoute } from '@/stores/route/types'
 import { useRouteStore } from '@/stores/route'
+import { useImageStore } from '@/stores/image'
 import { onMounted, ref, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const routeStore = useRouteStore()
+const imageStore = useImageStore()
 
 const vueRoute = useRoute()
 
 let route: Ref<LeafletRoute | null> = ref(null)
+
+const status: Ref<String> = ref('')
+
+function onFilesChanged(images: File[]) {
+  imageStore
+    .addImages(images)
+    .then(() => (status.value = ':)'))
+    .catch(() => (status.value = ':/'))
+}
 
 async function routeNameChanged(newValue: string) {
   if (!route.value) {
@@ -30,6 +54,15 @@ async function routeNameChanged(newValue: string) {
   }
 
   route.value.name = newValue
+  routeStore.updateRoute(route.value)
+}
+
+async function routeDescriptionChanged(newValue: string) {
+  if (!route.value) {
+    return
+  }
+
+  route.value.description = newValue
   routeStore.updateRoute(route.value)
 }
 

@@ -1,6 +1,6 @@
 <template>
   <button
-    class="btn animated_btn"
+    class="btn animated_btn tborder-radius"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @focusin="isHovered = true"
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import SVGTree from './SVGTree.vue'
+import SVGTree from '@/components/SVGTree.vue'
 
 export interface AnimatedButtonProps {
   title: string
@@ -28,7 +28,7 @@ withDefaults(defineProps<AnimatedButtonProps>(), {
 const isHovered = ref(false)
 </script>
 <style scoped lang="scss">
-@import '../style/button.scss';
+@import '@/style/button';
 
 .animated_btn {
   position: relative;

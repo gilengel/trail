@@ -1,29 +1,42 @@
 <template>
-  <div data-cy="trip-images" class="trip-images">
-    <div class="div1">
-      <img src="https://picsum.photos/600/600" />
-    </div>
-    <div class="div2">
-      <img src="https://picsum.photos/700/700" />
-    </div>
-    <div class="div3">
-      <img src="https://picsum.photos/300/300" />
-    </div>
-    <div class="div4">
-      <img src="https://picsum.photos/400/400" />
-    </div>
-    <div class="div5">
-      <img src="https://picsum.photos/500/500" />
+  <div data-cy="trip-images" class="trip-images tborder-radius">
+    <div v-for="image in images" :key="image.id">
+      <img :src="image.url" :alt="image.name" />
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useImageStore } from '@/stores/image'
+import type { ImageDto } from '@/stores/image/types'
+import { LeafletSegment } from '@/stores/route/types'
+import { onMounted, ref, type Ref } from 'vue'
+
+const imageStore = useImageStore()
+
+let images: Ref<ImageDto[]> = ref([])
+
+const props = defineProps({
+  segment: {
+    type: LeafletSegment,
+    required: true
+  }
+})
+
+/*
+onMounted(async () => {
+  imageStore
+    .getImagesNearRouteSegment(props.segment, 1)
+    .then((e) => {
+      images.value = e
+    })
+    .catch((e) => console.log('hm'))
+})
+*/
+</script>
 
 <style scoped lang="scss">
 .trip-images {
-  border-radius: 32px;
-
   $gap: 8px;
   height: 400px + $gap;
 

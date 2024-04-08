@@ -19,5 +19,5 @@
     "noFallthroughCasesInSwitch": false
   },
 
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*", "test/**/*", "src/images/dto/image.dto.ts"]
 }

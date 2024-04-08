@@ -1,50 +1,52 @@
 <template>
-  <div class="main">
-    {{ allowedFileExtensions }}
-    <div
-      class="dropzone-container"
-      :class="{ dragging: isDragging === true }"
-      @dragover="dragover"
-      @dragleave="dragleave"
-      @drop="drop"
-      data-cy="drop-zone"
-    >
-      <input type="file" multiple name="file" id="fileInput" @change="onChange" ref="file" />
+  <div
+    class="dropzone-container tborder"
+    :class="{ focused: isDragging === true }"
+    @dragover="dragover"
+    @dragleave="dragleave"
+    @drop="drop"
+    data-cy="drop-zone"
+  >
+    <TLabel v-if="supportText">{{ supportText }}</TLabel>
+    <input type="file" multiple name="file" id="fileInput" @change="onChange" ref="file" />
 
-      <label for="fileInput" class="file-label">
-        <div data-cy="release-msg" v-if="isDragging">Release to drop files here.</div>
-        <div data-cy="drop-msg" v-else>Drop files here or <u>click here</u> to upload.</div>
-      </label>
+    <label for="fileInput" class="file-label">
+      <div data-cy="release-msg" v-if="isDragging">Release to drop files here.</div>
+      <div data-cy="drop-msg" v-else>Drop files here or <u>click here</u> to upload.</div>
+    </label>
 
-      <p data-cy="wrong-file-extension" v-if="isWrongFileType">File has wrong type.</p>
-      <div data-cy="preview-container" class="preview-container mt-4" v-if="files.length">
-        <div
-          v-for="(file, index) in files"
-          :key="file.name"
-          class="preview-card"
-          :class="{ deleting: isDragging === true }"
-        >
-          <p>
-            {{ file.name }} -
+    <p data-cy="wrong-file-extension" v-if="isWrongFileType">File has wrong type.</p>
+    <ul data-cy="preview-container" class="preview-container mt-4" v-if="files.length">
+      <li
+        v-for="(file, index) in files"
+        :key="file.name"
+        class="preview-card"
+        :class="{ deleting: isDragging === true }"
+      >
+        <div>
+          <span>
+            {{ file.name }}
+          </span>
+          <span>
             {{ Math.round(file.size / 1000) + 'kb' }}
-          </p>
-
-          <div>
-            <SVGTrash data-cy="delete-btn" @click="remove(index)" />
-          </div>
+          </span>
         </div>
-      </div>
-    </div>
+
+        <SVGTrash data-cy="delete-btn" @click="remove(index)" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import SVGTrash from './SVGTrash.vue'
+import SVGTrash from '@/components/SVGTrash.vue'
+import TLabel from '@/components/forms/TLabel.vue'
 
 import { type Ref, ref } from 'vue'
 
 export interface DropZoneProps {
   allowedFileExtensions?: string[]
+  supportText?: String
 }
 const props = withDefaults(defineProps<DropZoneProps>(), {
   allowedFileExtensions: () => []
@@ -109,13 +111,30 @@ function remove(i: number) {
 @import '../style/button.scss';
 
 .dropzone-container {
-  border: solid 2px $light;
-  border-radius: 2em;
+  padding-left: 16px;
+  padding-right: 16px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  position: relative;
+
+  margin-top: 12px;
+
+  tlabel {
+    position: absolute;
+    top: 0;
+    left: 16px;
+    height: 24px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-top: -12px;
+
+    font-size: 1em;
+    background-color: $background;
+  }
 
   input {
     visibility: collapse;
@@ -125,22 +144,42 @@ function remove(i: number) {
     @include font;
   }
 }
-.dragging {
-  border: solid 4px orange;
-}
 
 .preview-container {
+  list-style: none;
   display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  //display: flex;
   gap: 1em;
+
+  max-height: 400px;
+  overflow: scroll;
+  width: 100%;
 }
 .preview-card {
-  @include trail-border;
-  border-radius: 2em;
-  border-color: $light;
-  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
 
-  p {
-    @include font;
+  //@include trail-border;
+  //border-color: $light;
+  //padding: 1em;
+  //
+  //p {
+  //  @include font;
+  //}
+
+  justify-content: space-between;
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  svg {
+    width: 70px;
   }
 }
 

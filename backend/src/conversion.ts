@@ -7,6 +7,27 @@ import { RouteSegmentDto } from './routes.segments/dto/route.segment.dto';
 import { RouteSegment } from './routes.segments/entity/routes.segment';
 import { Route } from './routes/entity/route';
 
+// eslint-disable-next-line jsdoc/require-example
+/**
+ * Returns the file extension for supported image file types.
+ * Be aware that this function will return undefined / nothing if the provided
+ * mimeType is not 'image/jpeg' or 'image/tiff'. The controller will enforce that only
+ * images of these types can be further processed.
+ *
+ * @param mimeType
+ * @returns jpg or tif, undefined or nothing if mimeType is invalid
+ */
+export function generateFileExtensionBasedOnMimeType(mimeType: string): string {
+  switch (mimeType) {
+    case 'image/jpeg': {
+      return 'jpg';
+    }
+    case 'image/tiff': {
+      return 'tif';
+    }
+  }
+}
+
 /**
  * Takes a point in the form of a number array and converts it into the wkt (well known text)
  * format. This is necessary e.g. For storing the point in a POSTGIS database.
@@ -169,10 +190,11 @@ export function dbRouteSegment2dto(
  */
 export function dbimage2dto(image: DbImageDto): ImageDto {
   return {
-    uuid: image.uuid,
+    id: image.id,
     timestamp: image.timestamp,
     name: 'not_implemented',
     coordinates: wkt2point(image.coordinates),
+    url: `${image.id}.${generateFileExtensionBasedOnMimeType(image.mime_type)}`,
   };
 }
 

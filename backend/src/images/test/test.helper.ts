@@ -22,15 +22,19 @@ export function mockImage(size: number, name: string): File {
 /**
  * Creates a file based on a buffer. This can be useful to unit test upload functionality.
  * @param buffer - The data that should be used to create the file.
+ * @param mimetype - The mimetype of the mocked file
  * @returns File - The file. Be aware that it is not a proper file e.g. Mimetype, encoding and other important
  * members are not correctly set.
  */
-export function mockFileFromBuffer(buffer: Buffer): Express.Multer.File {
+export function mockFileFromBuffer(
+  buffer: Buffer,
+  mimetype?: string,
+): Express.Multer.File {
   return {
     fieldname: '',
     originalname: '',
     encoding: '',
-    mimetype: '',
+    mimetype: mimetype ? mimetype : '',
     buffer: buffer,
     size: 200000,
     stream: null,

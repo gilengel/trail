@@ -161,31 +161,6 @@ describe('RoutesSegmentsService', () => {
     });
   });
 
-  /*
-  it('should update name and coordinates of a route segment', async () => {
-    jest
-      .spyOn(prisma, '$queryRaw')
-      .mockResolvedValueOnce([testData.dbRouteSegmentWithUpdatedCoordinates]);
-
-    const result = await service.update(0, {
-      name: 'updated_test_route',
-      coordinates: testData.updatedCoordinates,
-    });
-
-    const expected = {
-      id: testData.segmentId,
-      name: testData.segmentName,
-      description: testData.segmentDescription,
-      coordinates: testData.updatedCoordinates,
-    };
-
-    console.log(result);
-    console.log(expected);
-
-    expect(result).toStrictEqual(expected);
-  });
-  */
-
   it('should reject trying to change a route segment with less then two coordinates', async () => {
     await expect(service.update(0, { coordinates: [] })).rejects.toThrow(
       new NotEnoughCoordinatesError(),

@@ -12,7 +12,10 @@ import { json } from 'express';
  * Starts the backend server.
  */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    logger: ['verbose'],
+  });
   app.useGlobalPipes(new ValidationPipe());
   app.use(json({ limit: '50mb' }));
   app.enableCors();

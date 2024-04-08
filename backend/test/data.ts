@@ -175,17 +175,19 @@ export const dbRoutes: Route[] = [dbRoute];
 const uuid = uuidv4();
 export const dbImages: DbImageDto[] = [
   {
-    uuid,
+    id: uuid.toString(),
     timestamp: date,
     coordinates: 'POINT(47.17970059972222 10.893711999999999)',
+    mime_type: 'image/jpeg',
   },
 ];
 
 export const images: ImageDto[] = [
   {
-    uuid,
+    id: uuid.toString(),
     name: 'not_implemented',
     timestamp: date,
     coordinates: [47.17970059972222, 10.893711999999999],
+    url: `${uuid.toString()}`,
   },
 ];

@@ -6,7 +6,7 @@ describe('Component', () => {
   describe('TripUpload', () => {
     it('should render the trip upload element', () => {
       cy.mount(TripUpload)
-      cy.get('[data-cy="upload-header"]').should('exist')
+      cy.get('h1').should('exist').and('have.text', 'Trip Upload')
     })
 
     it('should show a success message if files were changed and uploaded', () => {
@@ -18,6 +18,7 @@ describe('Component', () => {
         const childWrapper = wrapper.getComponent(DropZone)
         childWrapper.vm.$emit('onFilesChanged', [mockFile('gpx', 1000)])
 
+        cy.get('[data-cy=upload-btn]').click()
         cy.get('[data-cy=status-msg]').should('exist').and('have.text', ':)')
       })
     })
@@ -31,6 +32,7 @@ describe('Component', () => {
         const childWrapper = wrapper.getComponent(DropZone)
         childWrapper.vm.$emit('onFilesChanged', [mockFile('gpx', 1000)])
 
+        cy.get('[data-cy=upload-btn]').click()
         cy.get('[data-cy=status-msg]').should('exist').and('have.text', ':/')
       })
     })

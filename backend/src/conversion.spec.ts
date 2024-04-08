@@ -29,17 +29,19 @@ describe('Conversion', () => {
   it('converts a db image to dto', () => {
     const uuid = uuidv4();
     const dbImage: DbImageDto = {
-      uuid,
+      id: uuid.toString(),
       timestamp: undefined,
       coordinates: 'POINT(1024 1024)',
+      mime_type: 'image/jpeg',
     };
 
     const result = dbimage2dto(dbImage);
     const expected: ImageDto = {
-      uuid: uuid,
+      id: uuid.toString(),
       name: 'not_implemented',
       timestamp: undefined,
       coordinates: [1024, 1024],
+      url: uuid.toString(),
     };
 
     expect(result).toStrictEqual(expected);
@@ -48,18 +50,21 @@ describe('Conversion', () => {
   it('converts db images to dto', () => {
     const uuid = uuidv4();
     const dbImage: DbImageDto = {
-      uuid,
+      id: uuid.toString(),
+
       timestamp: undefined,
       coordinates: 'POINT(1024 1024)',
+      mime_type: 'image/jpeg',
     };
 
     const result = dbimages2dto([dbImage]);
     const expected: ImageDto[] = [
       {
-        uuid: uuid,
+        id: uuid.toString(),
         name: 'not_implemented',
         timestamp: undefined,
         coordinates: [1024, 1024],
+        url: uuid.toString(),
       },
     ];
 

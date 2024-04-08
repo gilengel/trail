@@ -14,27 +14,22 @@
         </TTile>
         <TTile title="Description">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
+            {{ trip?.description }}
           </p>
         </TTile>
         <TTile title="Feed">
-          <TripFeedItem />
+          <TripFeedItem v-for="segment in trip?.segments" :key="segment.id" :segment="segment" />
         </TTile>
       </div>
     </div>
-    <TripMap :trip="trip" v-if="trip" />
+    <TripMap ref="map" :trip="trip" :markers="imageMarkers" v-if="trip" />
   </main>
 </template>
 
 <script setup lang="ts">
 import { onMounted, type Ref, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import TTile from '@/components/TTile.vue'
+import TTile from '@/components/layout/TTile.vue'
 import TripAspects from '@/components/TripAspects.vue'
 import TToolbar from '@/components/toolbar/TToolbar.vue'
 import TToolbarButton from '@/components/toolbar/TToolbarButton.vue'
@@ -42,17 +37,41 @@ import TripFeedItem from '@/components/TripFeedItem.vue'
 import TripMap from '@/components/TripMap.vue'
 import { useRouteStore } from '@/stores/route'
 import type { LeafletRoute } from '@/stores/route/types'
+import { useImageStore } from '@/stores/image'
+import type { ImageDto } from '@/stores/image/types'
+import * as L from 'leaflet'
 
 const route = useRoute()
 
 const routeStore = useRouteStore()
+const imageStore = useImageStore()
+
+const map = ref(null)
 
 let trip: Ref<LeafletRoute | null> = ref(null)
+let images: Ref<ImageDto[]> = ref([])
+
+let imageMarkers: Ref<L.Marker[]> = ref([])
 
 onMounted(async () => {
   id.value = parseInt(route.params.id as string)
 
   trip.value = await routeStore.getRoute(id.value)
+
+  trip.value.segments.forEach((s) => {
+    imageStore
+      .getImagesNearRouteSegment(s, 50000)
+      .then((e) => {
+        images.value = e
+
+        for (const image of images.value) {
+          imageMarkers.value.push(
+            L.marker(new L.LatLng(image.coordinates[0], image.coordinates[1], image.coordinates[2]))
+          )
+        }
+      })
+      .catch((e) => {})
+  })
 })
 
 const tripIsALoop = computed(() => {
@@ -66,7 +85,7 @@ const tripIsALoop = computed(() => {
 const id: Ref<number | undefined> = ref(undefined)
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 main {
   flex-grow: 1;
   display: flex;
@@ -79,5 +98,23 @@ main {
 .btn-container {
   display: flex;
   gap: 1em;
+}
+
+.marker-start-end {
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 2em;
+  min-height: 2em;
+  margin-left: -1em !important;
+  margin-top: -1em !important;
+  background-color: white;
+
+  p {
+    font-weight: bold;
+  }
 }
 </style>

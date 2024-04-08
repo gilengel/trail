@@ -13,14 +13,20 @@ import {
   Patch,
   Post,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateRouteDto } from './dto/create.route.dto';
 import { NoAttributesProvidedError, RoutesService } from './routes.service';
-import { RouteDto, RouteWithoutSegmentsDto } from './dto/route.dto';
+import {
+  RouteDto,
+  RouteWithMultipleFilesDTO,
+  RouteWithoutSegmentsDto,
+} from './dto/route.dto';
 import { UpdateRouteDto } from './dto/update.route.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { GPXRoute, extractCoordinatesFromGPX } from './routes.parser';
+import { ApiConsumes } from '@nestjs/swagger';
 
 @Controller('routes')
 export class RoutesController {
@@ -54,18 +60,29 @@ export class RoutesController {
   }
 
   @Post('gpx')
-  @UseInterceptors(FileInterceptor('file'))
+  //@UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FilesInterceptor('files'))
   async createFromGPX(
-    @UploadedFile() file: Express.Multer.File,
+    @Body() body: RouteWithMultipleFilesDTO,
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ): Promise<RouteDto> {
     try {
-      const gpxRoute: GPXRoute = extractCoordinatesFromGPX(file.buffer);
-      const routeDto = await this.routeService.createRouteFromGPX(gpxRoute);
+      const mergedRoute: GPXRoute = {
+        name: body.name,
+        segments: [],
+      };
+      for (const file of files) {
+        const gpxRoute: GPXRoute = extractCoordinatesFromGPX(file.buffer);
+        mergedRoute.segments.push(...gpxRoute.segments);
+      }
+
+      const routeDto = await this.routeService.createRouteFromGPX(mergedRoute);
 
       return Promise.resolve(routeDto);
     } catch (e) {
-      this.logger.log(':(');
-      this.logger.log(e.message);
+      this.logger.error(':(');
+      this.logger.error(e.message);
 
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }

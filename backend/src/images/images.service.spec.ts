@@ -50,13 +50,28 @@ describe('ImageService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  it('should save the given files on the fileserver and database', async () => {
+  it.each(['image/jpeg', 'image/tiff'])(
+    'should save a image with mimetype %s on the fileserver and database',
+    async (mimetype) => {
+      const buffer = readFileSync('src/images/test/with_geo_information.jpg');
+
+      jest.spyOn(prisma, '$queryRaw').mockResolvedValue(testData.dbImages);
+      const result = await service.saveImages([
+        mockFileFromBuffer(buffer, mimetype),
+      ]);
+
+      expect(result).toStrictEqual(testData.dbImages);
+    },
+  );
+
+  it('should fail to save a image with invalid mimetype on the fileserver and database', async () => {
     const buffer = readFileSync('src/images/test/with_geo_information.jpg');
 
     jest.spyOn(prisma, '$queryRaw').mockResolvedValue(testData.dbImages);
-    const result = await service.saveImages([mockFileFromBuffer(buffer)]);
 
-    expect(result).toStrictEqual(testData.dbImages);
+    await expect(
+      service.saveImages([mockFileFromBuffer(buffer, '')]),
+    ).rejects.toThrow(new Error('Invalid mime type'));
   });
 
   it('should fail to retrieve images if the offset is < 0', async () => {

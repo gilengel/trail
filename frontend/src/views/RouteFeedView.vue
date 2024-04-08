@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import TIcon from '@/components/TIcon.vue'
-import TButton from '@/components/TButton.vue'
+import TButton from '@/components/forms/TButton.vue'
 </script>
 
 <style scoped></style>

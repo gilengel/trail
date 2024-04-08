@@ -9,4 +9,8 @@ export class Image {
     @IsDefined()
     @IsString()
     name!: string;
+
+    @IsDefined()
+    @IsString()
+    mime_type!: string;
 }

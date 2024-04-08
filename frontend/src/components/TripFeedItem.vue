@@ -22,12 +22,20 @@
       </div>
     </div>
 
-    <TripImages />
+    <TripImages :segment="segment" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { LeafletSegment } from '@/stores/route/types'
 import TripImages from './TripImages.vue'
+
+defineProps({
+  segment: {
+    type: LeafletSegment,
+    required: true
+  }
+})
 </script>
 
 <style scoped lang="scss">

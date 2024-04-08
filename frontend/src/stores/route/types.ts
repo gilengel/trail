@@ -9,12 +9,14 @@ export type RouteWithoutSegments = {
 export interface RouteDto {
   id: number
   name: string
+  description?: string
   segments: RouteSegmentDto[]
 }
 
 export interface RouteSegmentDto {
   id: number
   name: string
+  description?: string
   coordinates: number[][]
   color: string
 }
@@ -28,11 +30,20 @@ export class LeafletRoute implements Segment {
   constructor(
     private _id: number,
     private _name: string,
-    private _segments: LeafletSegment[]
+    private _segments: LeafletSegment[],
+    private _description?: string
   ) {}
 
   get id(): number {
     return this._id
+  }
+
+  get description(): string | undefined {
+    return this._description
+  }
+
+  set description(description: string) {
+    this._description = description
   }
 
   get name(): string {
@@ -70,9 +81,10 @@ export class LeafletSegment implements Segment {
     private _id: number,
     private _name: string,
     _coordinates: L.LatLng[],
-    private _color: string
+    private _color: string,
+    private _description?: string
   ) {
-    this._polyline = L.polyline(_coordinates, { color: _color })
+    this._polyline = L.polyline(_coordinates, { color: _color, weight: 3 })
   }
 
   get id(): number {
@@ -81,6 +93,14 @@ export class LeafletSegment implements Segment {
 
   get name(): string {
     return this._name
+  }
+
+  get description(): string | undefined {
+    return this._description
+  }
+
+  set description(description: string) {
+    this._description = description
   }
 
   get coordinates(): L.LatLng[] {

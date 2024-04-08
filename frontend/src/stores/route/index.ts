@@ -48,11 +48,17 @@ export const useRouteStore = defineStore('route', () => {
           segment.id,
           segment.name,
           segment.coordinates.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1])),
-          randomColor()
+          randomColor(),
+          segment.description
         )
       })
 
-      const fetchedRoute = new LeafletRoute(result.data.id, result.data.name, segments)
+      const fetchedRoute = new LeafletRoute(
+        result.data.id,
+        result.data.name,
+        segments,
+        result.data.description
+      )
       routes.value.set(id, fetchedRoute)
 
       return Promise.resolve(fetchedRoute)
@@ -65,15 +71,17 @@ export const useRouteStore = defineStore('route', () => {
 
   async function updateRoute(route: LeafletRoute) {
     await http.patch(`/api/routes/${route.id}`, {
-      name: route.name
+      name: route.name,
+      description: route.description
     })
   }
 
-  async function addRoute(trips: File[]) {
+  async function addRoute(name: string, trips: File[]) {
     const formData = new FormData()
 
+    formData.append('name', name)
     for (let i = 0; i < trips.length; ++i) {
-      formData.append(`file`, trips[i])
+      formData.append('files', trips[i])
     }
 
     await http.post('/api/routes/gpx', formData, {

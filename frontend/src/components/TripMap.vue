@@ -11,7 +11,7 @@
           :key="segment.id"
           @click="map?.zoomToSegment(segment)"
         >
-          <div :style="{ 'background-color': segment.color }"></div>
+          <div :style="{ 'background-color': segment.color }" class="tborder-radius"></div>
           <span>
             {{ segment.name }}
           </span>
@@ -33,16 +33,26 @@ import 'flag-icons/css/flag-icons.min.css'
 import { ref, type Ref, onMounted } from 'vue'
 import { LeafletRoute, LeafletSegment } from '@/stores/route/types'
 
-export interface TripMapProps {
-  trip: LeafletRoute
-}
-const props = defineProps<TripMapProps>()
+let map: Ref<InstanceType<typeof TMap> | null> = ref(null)
+
+const tripSegments: Ref<ExtendedLeafletSegment[]> = ref([])
+
+const props = defineProps({
+  trip: {
+    type: LeafletRoute,
+    required: true
+  },
+
+  markers: Array<L.Marker>
+})
 
 function createSegment(dtoSegment: LeafletSegment): ExtendedLeafletSegment {
-  const startMarker = L.marker(dtoSegment.start as L.LatLng) // TODO: Don't enforce but check for null
+  var startIcon = L.divIcon({ className: 'marker-start-end', html: '<p>S</p>' })
+  const startMarker = L.marker(dtoSegment.start as L.LatLng, { icon: startIcon }) // TODO: Don't enforce but check for null
   map.value?.add(startMarker)
 
-  const endMarker = L.marker(dtoSegment.end as L.LatLng) // TODO: Don't enforce but check for null
+  var endIcon = L.divIcon({ className: 'marker-start-end', html: '<p>E</p>' })
+  const endMarker = L.marker(dtoSegment.end as L.LatLng, { icon: endIcon }) // TODO: Don't enforce but check for null
   map.value?.add(endMarker)
 
   /*
@@ -72,11 +82,17 @@ onMounted(() => {
     const leafletSegment = createSegment(segment)
     tripSegments.value.push(leafletSegment)
   }
+
+  if (!props.markers) {
+    return
+  }
+
+  for (const marker of props.markers) {
+    map.value?.add(marker)
+  }
+
+  map.value?.zoomToSegments(props.trip.segments)
 })
-
-let map: Ref<InstanceType<typeof TMap> | null> = ref(null)
-
-const tripSegments: Ref<ExtendedLeafletSegment[]> = ref([])
 </script>
 
 <style lang="scss">
@@ -125,7 +141,6 @@ const tripSegments: Ref<ExtendedLeafletSegment[]> = ref([])
         div {
           width: 2em;
           height: 2em;
-          border-radius: 1em;
 
           margin-right: 0.5em;
         }

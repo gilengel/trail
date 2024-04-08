@@ -16,11 +16,9 @@ $aqua: #689d6a;
 $gray: #a89984;
 $orange: #d65d0e;
 
-$border-size: 3;
-$border-color: $yellow;
+$text: $dark-bg;
 
-$text: $fg4;
+$primary: #90a17d;
+$light: #f5ebe0;
 
-@mixin trail-border {
-  border: solid $border-color calc($border-size * 1px);
-}
+$background: white;

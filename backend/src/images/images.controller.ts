@@ -6,6 +6,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Post,
   Query,
   UploadedFiles,
@@ -19,6 +20,8 @@ import { RoutesSegmentsService } from '../routes.segments/routes.segments.servic
 
 @Controller('images')
 export class ImagesController {
+  private readonly logger = new Logger(ImagesService.name);
+
   constructor(
     private imagesService: ImagesService,
     private routeSegmentService: RoutesSegmentsService,
@@ -88,10 +91,13 @@ export class ImagesController {
         offset,
       );
     } catch (e) {
+      this.logger.error(e);
       return Promise.reject(e);
     }
 
     if (images.length == 0) {
+      this.logger.error('MUUUU');
+
       return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
     }
 

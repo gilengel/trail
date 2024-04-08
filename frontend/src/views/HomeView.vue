@@ -13,11 +13,10 @@ fetch('http://localhost:3000/routes')
 <template>
   <div class="container">
     <div>
-      <TripUpload></TripUpload>
+      <TripUpload />
     </div>
-    <div class="scroll">
+    <div>
       <TripOverview @selectedTripChanged="(id) => $router.push(`route/${id}/feed`)"></TripOverview>
-      <RouterLink data-testid="link-to-about" to="/about">Go to About</RouterLink>
     </div>
   </div>
 </template>
@@ -40,6 +39,11 @@ fetch('http://localhost:3000/routes')
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    div:nth-of-type(1) {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .scroll {

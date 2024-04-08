@@ -1,7 +1,7 @@
 /**
  * @file Provides functionality to create, read, update and delete images.
  */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DbImageDto, ImageDto } from './dto/image.dto';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -11,6 +11,7 @@ import { Prisma } from '@prisma/client';
 import * as conversion from '../conversion';
 import * as fs from 'fs';
 import { RouteSegmentDto } from '../routes.segments/dto/route.segment.dto';
+import { generateFileExtensionBasedOnMimeType } from '../conversion';
 
 interface SphericalCoordinates {
   longitude: number;
@@ -41,17 +42,23 @@ export class InvalidCoordinates extends Error {
 
 @Injectable()
 export class ImagesService {
+  private readonly logger = new Logger(ImagesService.name);
+
   constructor(private prisma: PrismaService) {}
 
   private extractCoordinates(image: Express.Multer.File): SphericalCoordinates {
-    const metaInfo = ExifReader.load(image.buffer);
+    const metaInfo = ExifReader.load(image.buffer, {
+      async: false,
+      expanded: true,
+      includeUnknown: true,
+    });
 
-    if (!metaInfo.GPSLatitude || !metaInfo.GPSLongitude) {
+    if (!metaInfo.gps) {
       throw new NoOrWrongGeoInformationError();
     }
 
-    const longitude = parseFloat(metaInfo.GPSLongitude.description);
-    const latitude = parseFloat(metaInfo.GPSLatitude.description);
+    const longitude = metaInfo.gps.Longitude;
+    const latitude = metaInfo.gps.Latitude;
 
     return {
       longitude,
@@ -73,23 +80,28 @@ export class ImagesService {
           uuidv4(),
           'test',
           Prisma.sql`ST_GeomFromText(${point}::text, 4326)`,
+          image.mimetype,
         ];
       });
     } catch (e) {
       return Promise.reject(new NoOrWrongGeoInformationError());
     }
 
-    const result: DbImageDto[] = await this.prisma.$queryRaw`
-          INSERT INTO "Image" (id, name, coordinates) 
-          VALUES ${Prisma.join(
-            values.map((row) => Prisma.sql`(${Prisma.join(row)})`),
-          )}
-          RETURNING id, name, ST_AsText(coordinates) as coordinates`;
+    const result: DbImageDto[] = await this.prisma
+      .$queryRaw`INSERT INTO "Image" (id, name, coordinates, mime_type) 
+    VALUES ${Prisma.join(
+      values.map((row) => Prisma.sql`(${Prisma.join(row)})`),
+    )}
+    RETURNING id, name, ST_AsText(coordinates) as coordinates`;
 
     // save all images to storage
     // TODO: it is bad to store them on the same server. Move them to another via REST
-    result.forEach((value, index) => {
-      fs.writeFileSync(`./images/${value.uuid}`, images[index].buffer);
+    result.forEach(async (value, index) => {
+      const extension = generateFileExtensionBasedOnMimeType(
+        images[index].mimetype,
+      );
+
+      fs.writeFileSync(`images/${value.id}.${extension}`, images[index].buffer);
     });
 
     return Promise.resolve(result);
@@ -99,11 +111,12 @@ export class ImagesService {
     geomertyAsWkt: string,
     offset: number,
   ): Promise<Array<ImageDto>> {
-    const result: Array<DbImageDto> = await this.prisma.$queryRaw`
-                        SELECT id, name, ST_AsText(coordinates) as coordinates
-                        FROM "Image"
-                        WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
+    const query = Prisma.sql`
+    SELECT id, name, ST_AsText(coordinates) as coordinates, mime_type
+    FROM "Image"
+    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
 
+    const result: Array<DbImageDto> = await this.prisma.$queryRaw(query);
     return Promise.resolve(conversion.dbimages2dto(result));
   }
 

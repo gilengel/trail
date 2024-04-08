@@ -43,6 +43,7 @@ model RouteSegment {
 model Image {
   id          String                  @id @default(uuid())
   name        String
+  mime_type   String
   coordinates Unsupported("geometry")
 
   @@index([coordinates], map: "image_idx", type: Gist)

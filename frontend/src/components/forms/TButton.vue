@@ -1,5 +1,5 @@
 <template>
-  <button class="btn">
+  <button class="btn tborder-radius">
     <slot />
     <span data-cy="button-label" v-if="label">{{ label }}</span>
   </button>
@@ -11,7 +11,7 @@ defineProps({
 })
 </script>
 <style scoped lang="scss">
-@import '../style/button';
+@import '@/style/button';
 
 // Necessary to hide weird outline on button in chrome
 *,

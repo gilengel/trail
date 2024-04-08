@@ -1,8 +1,5 @@
-@import 'colors';
+@import 'border';
 @import 'font';
-
-$primary: #90a17d;
-$light: #f5ebe0;
 
 @mixin font {
   font-family: 'Amatic SC', cursive;
@@ -10,7 +7,6 @@ $light: #f5ebe0;
 }
 
 .btn {
-  border-radius: 2em;
   border: none;
   padding: 0.25em;
   padding-left: 1em;
