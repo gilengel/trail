@@ -30,6 +30,8 @@ import { useRouteStore } from '@/stores/route'
 
 const routeStore = useRouteStore()
 
+routeStore.getRoutes()
+
 const emit = defineEmits<{
   (e: 'selectedTripChanged', id: number): void
 }>()

@@ -39,6 +39,17 @@ describe('RoutesController', () => {
     expect(await controller.findAll()).toEqual([testData.route]);
   });
 
+  it('should return "400" if the service produces an error', async () => {
+    jest
+      .spyOn(service, 'routes')
+      .mockRejectedValue(new Error('Some error message'));
+
+    const result = controller.findAll();
+    await expect(result).rejects.toThrow(
+      new HttpException('Some error message', HttpStatus.BAD_REQUEST),
+    );
+  });
+
   it('should be returning a single route', async () => {
     jest
       .spyOn(service, 'route')

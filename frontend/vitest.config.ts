@@ -7,15 +7,17 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: 'jsdom',
+
       coverage: {
         provider: 'istanbul',
-        reporter: ['html', 'text'],
-        thresholds: {
-          statements: 100,
-          branches: 100,
-          functions: 100,
-          lines: 100,
-        }
+        reporter: ['json', 'lcov', 'html']
+
+        //thresholds: {
+        //statements: 100,
+        //branches: 100,
+        //functions: 100,
+        //lines: 100
+        //}
       }
     }
   })

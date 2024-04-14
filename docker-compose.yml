@@ -23,16 +23,26 @@ services:
     volumes:
       - ./db/postgresql:/var/lib/postgresql/data
     environment:
-      # If you need to create multiple database you can add coma separated databases eg gis,data
-      - POSTGRES_DB=gis
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
+      # If you need to create multiple database you can add coma separated databases eg trail,data
+      - POSTGRES_DB=trail
+      - POSTGRES_USER=trail
+      - POSTGRES_PASSWORD=trail
       - ALLOW_IP_RANGE=0.0.0.0/0
     ports:
       - "5432:5432"
     restart: on-failure
     healthcheck:
-      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis"
+      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U trail -d trail"
+
+  db-test:
+    image: postgis/postgis:latest
+    environment:
+      - POSTGRES_DB=trail
+      - POSTGRES_USER=trail
+      - POSTGRES_PASSWORD=trail
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    ports:
+      - 5433:5432
 
   frontend:
     build:

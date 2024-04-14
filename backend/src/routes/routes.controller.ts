@@ -35,9 +35,15 @@ export class RoutesController {
 
   @Get()
   async findAll(): Promise<RouteWithoutSegmentsDto[]> {
-    const routes = await this.routeService.routes();
+    try {
+      const routes = await this.routeService.routes();
 
-    return routes;
+      return routes;
+    } catch (e) {
+      this.logger.error(e);
+
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get(':id')
@@ -52,6 +58,8 @@ export class RoutesController {
 
       return Promise.resolve(route);
     } catch (e) {
+      this.logger.error(e);
+
       // < 2 coordinates, > 1.000.000 coordinates or mixed dimension coordinates
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -79,6 +87,8 @@ export class RoutesController {
 
       return Promise.resolve(routeDto);
     } catch (e) {
+      this.logger.error(e);
+
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
@@ -95,6 +105,8 @@ export class RoutesController {
       );
       return updatedRow;
     } catch (e) {
+      this.logger.error(e);
+
       // special case, inform that the error is on client side
       if (e instanceof NoAttributesProvidedError) {
         throw new HttpException(

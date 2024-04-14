@@ -8,7 +8,15 @@
     data-cy="drop-zone"
   >
     <TLabel v-if="supportText">{{ supportText }}</TLabel>
-    <input type="file" multiple name="file" id="fileInput" @change="onChange" ref="file" />
+    <input
+      data-cy="file-input"
+      type="file"
+      multiple
+      name="file"
+      id="fileInput"
+      @change="onChange"
+      ref="file"
+    />
 
     <label for="fileInput" class="file-label">
       <div data-cy="release-msg" v-if="isDragging">Release to drop files here.</div>
@@ -65,7 +73,7 @@ function onChange() {
   //files.value.push(...this.$refs.file.files)
 }
 
-function dragover(e) {
+function dragover(e: DragEvent) {
   e.preventDefault()
 
   isDragging.value = true
@@ -75,9 +83,13 @@ function dragleave() {
   isDragging.value = false
 }
 
-function drop(e) {
+function drop(e: DragEvent) {
+  if (!e.dataTransfer?.files) {
+    return
+  }
+
   e.preventDefault()
-  for (let i = 0; i < e.dataTransfer.files.length; ++i) {
+  for (let i = 0; i < e.dataTransfer?.files.length; ++i) {
     const file: File = e.dataTransfer.files[i]
 
     const found = props.allowedFileExtensions.find((extension) => {

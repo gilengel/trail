@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import TripUpload from '../components/TripUpload.vue'
 import TripOverview from '../components/TripOverview.vue'
-
-import { ref } from 'vue'
-
-const routes = ref(null)
-fetch('http://localhost:3000/routes')
-  .then((response) => response.json())
-  .then((data) => (routes.value = data))
 </script>
 
 <template>

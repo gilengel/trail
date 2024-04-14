@@ -3,7 +3,7 @@
     <h1>Muu?</h1>
     <div class="btn-container">
       <TButton><TIcon icon="add" /></TButton>
-      <TButton label="Edit" @click="$router.push({ name: 'route-edit' })"
+      <TButton data-cy="button-edit" label="Edit" @click="$router.push({ name: 'route-edit' })"
         ><TIcon icon="edit"
       /></TButton>
     </div>

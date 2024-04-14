@@ -1,10 +1,10 @@
 import { mockFile } from './__tests__/util'
-import DropZone from './DropZone.vue'
+import DropZone from '@/components//DropZone.vue'
 
 describe('Component', () => {
   describe('DropZone', () => {
     beforeEach(() => {
-      cy.mount(DropZone, {
+      cy.mount(DropZone as any, {
         props: {
           allowedFileExtensions: ['gpx']
         }

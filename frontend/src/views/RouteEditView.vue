@@ -2,7 +2,7 @@
   <div class="tflex-row" style="align-content: space-between; justify-content: space-between">
     <SingleLineText :value="route?.name" @value-changed="routeNameChanged" />
     <div class="btn-container">
-      <TButton label="Save" @click="$router.push({ name: 'route-edit' })"
+      <TButton data-cy="button-save" label="Save" @click="$router.push({ name: 'route-edit' })"
         ><TIcon icon="save"
       /></TButton>
     </div>
@@ -42,6 +42,7 @@ let route: Ref<LeafletRoute | null> = ref(null)
 const status: Ref<String> = ref('')
 
 function onFilesChanged(images: File[]) {
+  console.log('STORE IMAGES')
   imageStore
     .addImages(images)
     .then(() => (status.value = ':)'))

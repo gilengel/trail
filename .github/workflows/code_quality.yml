@@ -20,6 +20,9 @@ jobs:
           - localhost
         db-port:
           - 5432
+        broken-db-port:
+          - 5433
+
     services:
       postgis:
         image: postgis/postgis:latest
@@ -35,22 +38,53 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      broken-postgis:
+        image: postgis/postgis:latest
+        env:
+          POSTGRES_DB: ${{ matrix.db-name }}
+          POSTGRES_USER: ${{ matrix.db-user }}
+          POSTGRES_PASSWORD: ${{ matrix.db-password }}
+        ports:
+          - ${{ matrix.broken-db-port }}:${{ matrix.db-port }}
+        # Set health checks to wait until postgres has started
+        options: --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        # v3 does not work with act, don't know why...
+      # -----------------------------------------------------------------
+      # global
+      # -----------------------------------------------------------------
+      - name: Set up Node.js ${{ matrix.node-version }} (global)
         uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: "./frontend/package-lock.json"
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
+      - name: Install dependencies (global)
+        run: npm install
+
+      # -----------------------------------------------------------------
+      # backend
+      # -----------------------------------------------------------------
+      - name: Set up Node.js ${{ matrix.node-version }} (backend)
+        uses: actions/setup-node@v4
         with:
           cache-dependency-path: "./backend/package-lock.json"
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - name: Install dependencies
+      - name: Install dependencies (backend)
         run: npm install
         working-directory: ./backend
+
+      - name: Build (backend)
+        run: npm run build:backend
 
       - name: Run eslint
         run: npm run lint
@@ -71,9 +105,51 @@ jobs:
         working-directory: ./backend
         env:
           DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
+          BROKEN_DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.broken-db-port }}/${{ matrix.db-name }}?schema=public
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: gilengel/trail
+          files: ./backend/coverage-unit/cobertura-coverage.xml
+          flags: backend,unit
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: gilengel/trail
+          files: ./backend/coverage-e2e/cobertura-coverage.xml
+          flags: backend,e2e
+
+      # -----------------------------------------------------------------
+      # frontend
+      # -----------------------------------------------------------------
+      - name: Set up Node.js ${{ matrix.node-version }} (frontend)
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: "./frontend/package-lock.json"
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies (frontend)
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build (frontend)
+        run: npm run build:frontend
+
+      - name: Run ci (frontend)
+        run: npm run ci
+        env:
+          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+      - name: Upload coverage reports to Codecov (frontend)
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: gilengel/trail
+          files: ./frontend/coverage-e2e/cobertura-coverage.xml
+          flags: frontend,e2e

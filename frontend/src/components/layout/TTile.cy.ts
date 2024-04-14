@@ -3,7 +3,7 @@ import TTile from './TTile.vue'
 describe('Component', () => {
   describe('Tile', () => {
     beforeEach(() => {
-      cy.mount(TTile, {
+      cy.mount(TTile as any, {
         slots: {
           default: () => 'Hello Tile'
         }

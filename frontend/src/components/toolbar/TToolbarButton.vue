@@ -1,5 +1,5 @@
 <template>
-  <a class="toolbar_btn">
+  <a data-cy="ttoolbar-btn" class="toolbar_btn">
     <span class="material-symbols-outlined"> {{ icon }} </span>
     <slot />
   </a>

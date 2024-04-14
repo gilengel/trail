@@ -37,14 +37,12 @@ let map: Ref<InstanceType<typeof TMap> | null> = ref(null)
 
 const tripSegments: Ref<ExtendedLeafletSegment[]> = ref([])
 
-const props = defineProps({
-  trip: {
-    type: LeafletRoute,
-    required: true
-  },
+export interface TripMapProps {
+  trip: LeafletRoute
+  markers?: Array<L.Marker>
+}
 
-  markers: Array<L.Marker>
-})
+const props = defineProps<TripMapProps>()
 
 function createSegment(dtoSegment: LeafletSegment): ExtendedLeafletSegment {
   var startIcon = L.divIcon({ className: 'marker-start-end', html: '<p>S</p>' })
@@ -83,6 +81,8 @@ onMounted(() => {
     tripSegments.value.push(leafletSegment)
   }
 
+  map.value?.zoomToSegments(props.trip.segments)
+
   if (!props.markers) {
     return
   }
@@ -90,8 +90,6 @@ onMounted(() => {
   for (const marker of props.markers) {
     map.value?.add(marker)
   }
-
-  map.value?.zoomToSegments(props.trip.segments)
 })
 </script>
 

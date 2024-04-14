@@ -145,9 +145,7 @@ describe('ImagesController (e2e)', () => {
             (_: ImageDto[], callback: request.CallbackHandler) => {
               request(app.getHttpServer())
                 .get(
-                  `/images/route_segment?routeSegmentId=${
-                    route.segments[0].id
-                  }&maxOffset=${500}`,
+                  `/images/route_segment?routeSegmentId=${route.segments[0].id}&maxOffset=${500}`,
                 )
                 .expect(200, callback);
             },

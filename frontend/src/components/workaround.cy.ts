@@ -11,9 +11,8 @@ describe('CoverageWorkaround', () => {
     async () => {
       const isCoverageEnabled = Cypress.env('coverage')
       if (!isCoverageEnabled) {
-        //return
+        return
       }
-
       for (const file in allFilesGlobExcludingCypress) {
         await allFilesGlobExcludingCypress[file]()
       }

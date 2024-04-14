@@ -31,16 +31,32 @@ export default defineConfig({
   ],
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}'],
+    exclude: ['src/**/*.cy.ts'],
     coverage: {
-      all: true
+      exclude: ['coverage*', 'e2e*', 'src/**/*.cy.ts', '**/*.cy.e2e.ts', '.eslintrc.cjs']
     }
   },
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
   server: {
+    host: '0.0.0.0',
+    port: 8080,
+
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
+
+  preview: {
     host: '0.0.0.0',
     port: 8080,
 

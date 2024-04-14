@@ -3,7 +3,7 @@ import AnimatedButton from './AnimatedButton.vue'
 describe('Component', () => {
   describe('AnimatedButton', () => {
     beforeEach(() => {
-      cy.mount(AnimatedButton)
+      cy.mount(AnimatedButton as any)
     })
 
     it('should trigger the animate "in" the tree svg elements on mouse over', () => {

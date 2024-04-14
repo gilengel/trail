@@ -1,5 +1,5 @@
 <template>
-  <tlabel class="tlabel"> <slot /> </tlabel>
+  <div data-cy="tlabel" class="tlabel"><slot /></div>
 </template>
 
 <script setup lang="ts"></script>

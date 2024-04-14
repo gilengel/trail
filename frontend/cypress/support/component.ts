@@ -17,14 +17,8 @@
 import '@cypress/code-coverage/support'
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
 import { mount } from 'cypress/vue'
 // Ensure global styles are loaded
 import '../../src/assets/main.css'
 
 Cypress.Commands.add('mount', mount)
-
-// Example use:
-// cy.mount(MyComponent)

@@ -31,7 +31,7 @@ describe('Conversion', () => {
     const dbImage: DbImageDto = {
       id: uuid.toString(),
       timestamp: undefined,
-      coordinates: 'POINT(1024 1024)',
+      coordinates: 'POINT(1024 1024 0)',
       mime_type: 'image/jpeg',
     };
 
@@ -40,7 +40,7 @@ describe('Conversion', () => {
       id: uuid.toString(),
       name: 'not_implemented',
       timestamp: undefined,
-      coordinates: [1024, 1024],
+      coordinates: [1024, 1024, 0],
       url: `${uuid.toString()}.jpg`,
     };
 

@@ -1,7 +1,7 @@
 <template>
   <div data-cy="trip-images" class="trip-images tborder-radius">
     <div v-for="image in images" :key="image.id">
-      <img :src="image.url" :alt="image.name" />
+      <img data-cy="single-image" :src="image.url" :alt="image.name" />
     </div>
   </div>
 </template>
@@ -14,25 +14,20 @@ import { onMounted, ref, type Ref } from 'vue'
 
 const imageStore = useImageStore()
 
+interface TripImagesProps {
+  segment: LeafletSegment
+}
+
 let images: Ref<ImageDto[]> = ref([])
 
-const props = defineProps({
-  segment: {
-    type: LeafletSegment,
-    required: true
-  }
-})
+const props = defineProps<TripImagesProps>()
 
-/*
 onMounted(async () => {
-  imageStore
-    .getImagesNearRouteSegment(props.segment, 1)
-    .then((e) => {
-      images.value = e
-    })
-    .catch((e) => console.log('hm'))
+  imageStore.getImagesNearRouteSegment(props.segment, 1).then((e) => {
+    images.value = e
+  })
+  // TODO: Show sad smiley or similar with error message
 })
-*/
 </script>
 
 <style scoped lang="scss">

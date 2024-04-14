@@ -25,30 +25,18 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
 
 import { createPinia, setActivePinia } from 'pinia'
 import { useRouteStore } from '../../src/stores/route'
+import { useImageStore } from '../../src/stores/image'
 
 setActivePinia(createPinia())
 
-const store = useRouteStore()
+const routeStore = useRouteStore()
+const imageStore = useImageStore()
 
-Cypress.Commands.add('getStore', () => store)
+Cypress.Commands.add('getRouteStore', () => routeStore)
+Cypress.Commands.add('getImageStore', () => imageStore)
 
-declare global {
-  namespace Cypress {
-    interface Chainable {
-      getStore()
-    }
-  }
-}
+const Commands = {}
+export default Commands

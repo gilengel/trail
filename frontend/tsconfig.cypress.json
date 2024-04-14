@@ -7,5 +7,10 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "cypress.d.ts"
-  ]
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress", "node"]
+  }
 }

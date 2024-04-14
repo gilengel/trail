@@ -8,13 +8,15 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default defineConfig({
+  projectId: '4967xy',
+
   env: {
     codeCoverage: {
       exclude: 'cypress/**/*.*'
     }
   },
   e2e: {
-    baseUrl: 'http://localhost:8081/',
+    baseUrl: 'http://localhost:8080/',
     viewportWidth: 1280,
     viewportHeight: 768,
     specPattern: '**/*.e2e.ts',

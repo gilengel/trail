@@ -1,7 +1,8 @@
 <template>
-  <div class="tborder" :class="{ focused: focused === true }">
+  <div data-cy="singleline-text-container" class="tborder" :class="{ focused: focused === true }">
     <TLabel v-if="supportText">{{ supportText }}</TLabel>
     <input
+      data-cy="singleline-text"
       type="text"
       :value="value"
       @input="(event) => emit('valueChanged', (event as InputFileEvent).target?.value)"

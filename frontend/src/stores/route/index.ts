@@ -3,6 +3,8 @@ import http from '../api'
 import L from 'leaflet'
 import { LeafletRoute, type RouteDto, LeafletSegment, type RouteWithoutSegments } from './types'
 import { ref, type Ref } from 'vue'
+import type { AxiosError } from 'axios'
+import axios from 'axios'
 
 function randomColor() {
   const r = Math.floor(Math.random() * 255)
@@ -15,7 +17,7 @@ function randomColor() {
 export const useRouteStore = defineStore('route', () => {
   const networkError: Ref<Boolean> = ref(false)
 
-  const routesWithoutSegments = ref<RouteWithoutSegments[]>()
+  const routesWithoutSegments: Ref<RouteWithoutSegments[]> = ref([])
 
   const routes: Ref<Map<number, LeafletRoute>> = ref(new Map())
 
@@ -25,7 +27,20 @@ export const useRouteStore = defineStore('route', () => {
 
       routesWithoutSegments.value = result.data
       return Promise.resolve(result.data)
-    } catch (error) {
+    } catch (e) {
+      if (!axios.isAxiosError(e)) {
+        console.error(':(')
+      }
+      const error = e as AxiosError
+
+      if (error.response) {
+        console.error(error.response)
+      } else if (error.request) {
+        console.error(error.request)
+      } else if (error.message) {
+        console.error(error.message)
+      }
+
       networkError.value = true
 
       return Promise.reject(error)
@@ -91,9 +106,7 @@ export const useRouteStore = defineStore('route', () => {
     })
   }
 
-  getRoutes()
-    .then((e) => (routesWithoutSegments.value = e))
-    .catch(() => (networkError.value = true))
-
   return { getRoutes, networkError, routesWithoutSegments, addRoute, getRoute, updateRoute }
 })
+
+export type RouteStore = ReturnType<typeof useRouteStore>

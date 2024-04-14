@@ -30,6 +30,7 @@ function zoomToSegments(segments: LeafletSegment[]) {
 
   if (segments.length == 1) {
     zoomToSegment(segments[0])
+    return
   }
 
   const bounds = segments.map((segment) => segment.polyline.getBounds())

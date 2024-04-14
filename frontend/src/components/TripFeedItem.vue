@@ -30,12 +30,11 @@
 import { LeafletSegment } from '@/stores/route/types'
 import TripImages from './TripImages.vue'
 
-defineProps({
-  segment: {
-    type: LeafletSegment,
-    required: true
-  }
-})
+export interface TripFeedItemProps {
+  segment: LeafletSegment
+}
+
+defineProps<TripFeedItemProps>()
 </script>
 
 <style scoped lang="scss">

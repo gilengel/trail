@@ -72,3 +72,5 @@ export const useImageStore = defineStore('image', () => {
 
   return { getImagesNearLocation, getImagesNearRouteSegment, addImages }
 })
+
+export type ImageStore = ReturnType<typeof useImageStore>

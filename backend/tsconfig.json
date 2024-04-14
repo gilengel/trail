@@ -19,5 +19,11 @@
     "noFallthroughCasesInSwitch": false
   },
 
-  "include": ["src/**/*", "test/**/*", "src/images/dto/image.dto.ts"]
+  "include": ["src/**/*", "test/**/*", "src/images/dto/image.dto.ts"],
+
+  "typedocOptions": {
+    "entryPoints": ["src/**/*.ts"],
+    "exclude": "**/*+(index|.spec|.e2e).ts",
+    "out": "docs"
+  }
 }
