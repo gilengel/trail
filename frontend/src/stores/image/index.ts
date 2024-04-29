@@ -5,6 +5,8 @@ import type { ImageDto } from './types'
 import type { LeafletSegment } from '../route/types'
 import type { AxiosError } from 'axios'
 
+const baseURL = (import.meta as any).env.VITE_API_ENDPOINT
+
 export const useImageStore = defineStore('image', () => {
   const networkError: Ref<Boolean> = ref(false)
 
@@ -28,17 +30,19 @@ export const useImageStore = defineStore('image', () => {
 
   async function getImagesNearRouteSegment(
     segment: LeafletSegment,
-    offset: number
+    offset: number,
+    maximumNumberOfImages: number = Number.MAX_VALUE
   ): Promise<ImageDto[]> {
     try {
       const result = await http.get<ImageDto[]>('/api/images/route_segment', {
         params: {
           routeSegmentId: segment.id,
-          maxOffset: offset
+          maxOffset: offset,
+          maxNumberOfImages: maximumNumberOfImages
         }
       })
 
-      result.data.forEach((image) => (image.url = `http://localhost:3000/${image.url}`))
+      result.data.forEach((image) => (image.url = `${baseURL}/${image.url}`))
 
       return Promise.resolve(result.data)
     } catch (error) {

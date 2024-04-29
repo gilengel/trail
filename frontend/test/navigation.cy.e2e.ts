@@ -2,12 +2,9 @@
 
 describe('Navigation', () => {
   it('should display home', () => {
-    // cy.visit() used to visit a remote url
-    // learn more about it here: https://docs.cypress.io/api/commands/visit#Syntax
     cy.visit('/')
 
-    // cy.get() command Gets one or more DOM elements by selector or alias
-    // learn more about Cypress commands/api here: https://docs.cypress.io/api/table-of-contents
+    cy.get('[data-cy=home-container]').should('exist').and('be.visible')
     cy.get('#app').should('be.visible')
   })
 

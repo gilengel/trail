@@ -8,7 +8,7 @@
 
 <style scoped lang="scss">
 .ttoolbar {
-  width: 64px;
+  min-width: 64px;
   border-right: rgb(230, 230, 230) 1px solid;
 
   display: flex;

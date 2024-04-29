@@ -6,6 +6,7 @@
     </TToolbar>
 
     <div class="tflex-row main">
+      {{ trip }}
       <div>
         <router-view></router-view>
 

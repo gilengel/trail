@@ -4,7 +4,7 @@ import TripOverview from '../components/TripOverview.vue'
 </script>
 
 <template>
-  <div class="container">
+  <div data-cy="home-container" class="container">
     <div>
       <TripUpload />
     </div>

@@ -48,7 +48,7 @@ div {
 
   border: solid calc($border-size * 1px) $border-color;
 
-  tlabel {
+  .tlabel {
     height: 24px;
     padding-left: 12px;
     padding-right: 12px;
@@ -57,6 +57,7 @@ div {
     font-size: 1em;
 
     background-color: $background;
+    border: none;
   }
 
   input {
