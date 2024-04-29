@@ -69,6 +69,7 @@ export class ImagesController {
   async getImagesNearRouteSegment(
     @Query('routeSegmentId') routeSegmentId: number,
     @Query('maxOffset') offset: number,
+    @Query('maxNumberOfImages') maxNumberOfImages?: number,
   ): Promise<ImageDto[]> {
     if (offset < 0) {
       throw new HttpException('Invalid Index', HttpStatus.BAD_REQUEST);
@@ -89,6 +90,7 @@ export class ImagesController {
       images = await this.imagesService.getImagesNearRouteSegment(
         routeSegment,
         offset,
+        maxNumberOfImages,
       );
     } catch (e) {
       return Promise.reject(e);

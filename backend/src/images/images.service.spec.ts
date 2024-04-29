@@ -116,4 +116,18 @@ describe('ImageService', () => {
 
     expect(result).toStrictEqual(testData.images);
   });
+
+  it('should get all images near a route limited by the max number of images', async () => {
+    jest
+      .spyOn(prisma, '$queryRaw')
+      .mockResolvedValue(testData.multipleDbImages);
+
+    const result = await service.getImagesNearRouteSegment(
+      testData.routeSegment,
+      10,
+      3,
+    );
+
+    expect(result).toStrictEqual(testData.multipleImages);
+  });
 });

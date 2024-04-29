@@ -157,8 +157,45 @@ describe('ImagesController (e2e)', () => {
         );
       });
 
-      return wrapper.then((data: ImageDto[]) => {
-        expect(data.length == 6);
+      return wrapper.then((data: { _body: unknown }) => {
+        expect((data._body as Array<ImageDto>).length).toBe(6);
+      });
+    });
+
+    it('/images/route_segment (GET) returns list of images near a route segment limited by the max number of images', () => {
+      const wrapper = new Promise((resolve, reject) => {
+        async.waterfall(
+          [
+            (callback: request.CallbackHandler) => {
+              request(app.getHttpServer())
+                .post(`/images`)
+                .set('Content-Type', 'multipart/form-data')
+                .attach('files', `${__dirname}/data/20230909_102937.jpg`)
+                .attach('files', `${__dirname}/data/20230909_102954.jpg`)
+                .attach('files', `${__dirname}/data/20230909_105445.jpg`)
+                .attach('files', `${__dirname}/data/20230909_105508.jpg`)
+                .attach('files', `${__dirname}/data/20230909_105615.jpg`)
+                .attach('files', `${__dirname}/data/20230909_110041.jpg`)
+                .expect(201, callback);
+            },
+
+            (_: ImageDto[], callback: request.CallbackHandler) => {
+              request(app.getHttpServer())
+                .get(
+                  `/images/route_segment?routeSegmentId=${route.segments[0].id}&maxOffset=${500}&maxNumberOfImages=3`,
+                )
+                .expect(200, callback);
+            },
+          ],
+          (err: Error, results: unknown) => {
+            if (err) return reject(err);
+            return resolve(results);
+          },
+        );
+      });
+
+      return wrapper.then((data: { _body: unknown }) => {
+        expect((data._body as Array<ImageDto>).length).toBe(3);
       });
     });
 

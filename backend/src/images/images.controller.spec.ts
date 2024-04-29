@@ -107,6 +107,22 @@ describe('ImageController', () => {
     expect(result).toStrictEqual(testData.images);
   });
 
+  it('should return the image dtos for all images near a route segment capped by the max parameter', async () => {
+    jest
+      .spyOn(routeSegmentService, 'findOne')
+      .mockReturnValue(Promise.resolve(testData.routeSegment));
+    jest
+      .spyOn(imageService, 'getImagesNearRouteSegment')
+      .mockReturnValue(Promise.resolve(testData.multipleImages.slice(0, 3)));
+
+    const result = await controller.getImagesNearRouteSegment(
+      testData.routeSegment.id,
+      0,
+      3,
+    );
+    expect(result.length).toEqual(3);
+  });
+
   it('should muuu', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')

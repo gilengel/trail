@@ -16,7 +16,7 @@
     "test:backend:unit:cov": "npm run -w @trail/backend test:unit:cov",
     "test:backend:e2e:cov": "npm run -w @trail/backend test:unit:cov",
     "build:frontend": "npm run -w @trail/frontend build",
-    "start:frontend:dev": "npm run -w @trail/backend start:prod",
+    "start:frontend:dev": "npm run -w @trail/frontend start:dev",
     "start:frontend:preview": "npm run -w @trail/frontend preview",
     "start:frontend:prod": "npm run -w @trail/frontend start:prod",
     "test:frontend:unit:cov": "npm run -w @trail/frontend test:unit:cov",

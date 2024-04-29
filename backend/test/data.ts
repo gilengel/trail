@@ -191,3 +191,28 @@ export const images: ImageDto[] = [
     url: `${uuid.toString()}.jpg`,
   },
 ];
+
+const multipleImages: ImageDto[] = [];
+
+for (let i = 0; i < 3; i++) {
+  multipleImages.push({
+    id: uuid.toString(),
+    name: 'not_implemented',
+    timestamp: date,
+    coordinates: [47.17970059972222, 10.893711999999999],
+    url: `${uuid.toString()}.jpg`,
+  });
+}
+
+const multipleDbImages: DbImageDto[] = [];
+
+for (let i = 0; i < 3; i++) {
+  multipleDbImages.push({
+    id: uuid.toString(),
+    timestamp: date,
+    coordinates: 'POINT(47.17970059972222 10.893711999999999)',
+    mime_type: 'image/jpeg',
+  });
+}
+
+export { multipleImages, multipleDbImages };

@@ -110,11 +110,18 @@ export class ImagesService {
   private async multipleImagesQuery(
     geomertyAsWkt: string,
     offset: number,
+    maxNumberOfImages?: number,
   ): Promise<Array<ImageDto>> {
+    let limit: bigint = BigInt(Number.MAX_SAFE_INTEGER);
+    if (maxNumberOfImages) {
+      limit = BigInt(maxNumberOfImages);
+    }
+
     const query = Prisma.sql`
     SELECT id, name, ST_AsText(coordinates) as coordinates, mime_type
     FROM "Image"
-    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
+    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int ) 
+    LIMIT ${limit}`;
 
     const result: Array<DbImageDto> = await this.prisma.$queryRaw(query);
     return Promise.resolve(conversion.dbimages2dto(result));
@@ -144,8 +151,9 @@ export class ImagesService {
   async getImagesNearRouteSegment(
     segment: RouteSegmentDto,
     maxOffset: number,
+    maxNumberOfImages?: number,
   ): Promise<ImageDto[]> {
     const routeWkt = conversion.numberArray2wkt(segment.coordinates);
-    return this.multipleImagesQuery(routeWkt, maxOffset);
+    return this.multipleImagesQuery(routeWkt, maxOffset, maxNumberOfImages);
   }
 }
