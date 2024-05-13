@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import RouteView from '../views/RouteView.vue'
 import RouteFeedView from '@/views/RouteFeedView.vue'
 import RouteEditView from '@/views/RouteEditView.vue'
+import RouteFeedToolbarView from '@/views/RouteFeedToolbarView.vue'
 
 const router = createRouter({
   history: createWebHistory((import.meta as any).env.BASE_URL),
@@ -21,13 +22,18 @@ const router = createRouter({
         {
           path: 'feed',
           name: 'route-feed',
-          component: RouteFeedView
+          components: {
+            content: RouteFeedView,
+            toolbar: RouteFeedToolbarView
+          }
         },
 
         {
           path: 'edit',
           name: 'route-edit',
-          component: RouteEditView
+          components: {
+            content: RouteEditView
+          }
         }
       ]
     },

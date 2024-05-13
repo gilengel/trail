@@ -13,7 +13,7 @@ describe('Component', () => {
 
     it('should emit a signal after a trip was selected', function () {
       this.store.routesWithoutSegments.push({
-        id: 42,
+        id: 1,
         name: 'intercepted route',
         segments: [
           {
@@ -30,13 +30,13 @@ describe('Component', () => {
       })
 
       cy.mount(TripOverview as any).then(({ wrapper }) => {
-        cy.get('[data-cy="trip-entry"]').click()
+        cy.get('[data-cy="trip-entry"]').first().click()
         cy.wait(100).then(() => {
           const emitted = wrapper.emitted('selectedTripChanged')
           expect(emitted?.length).to.be.equal(1)
 
           const id = emitted as unknown[][]
-          expect(id[0][0]).to.be.equal(42)
+          expect(id[0][0]).to.be.equal(1)
         })
       })
     })

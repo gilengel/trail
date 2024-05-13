@@ -16,7 +16,7 @@
     "test:e2e": "playwright test",
     "cypress:run": "cypress run --config video=false --component",
     "test:component:cov": "cypress run --config video=false --component",
-    "test:e2e:cov": "ELECTRON_ENABLE_LOGGING=1 cypress run --config video=false --e2e",
+    "test:e2e:cov": "ELECTRON_ENABLE_LOGGING=1 cypress run --config video=true --e2e",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",

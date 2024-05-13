@@ -29,7 +29,7 @@ describe('Route', () => {
     cy.get('[data-cy=button-save]').click()
   })
 
-  it('create a new route', () => {
+  it('create a new route and change name', () => {
     cy.visit('/')
     cy.get('[data-cy=singleline-text]').type('Zugspitze')
     cy.get('[data-cy=drop-zone]').selectFile('cypress/fixtures/activity_11982912017.gpx', {
@@ -55,7 +55,9 @@ describe('Route', () => {
       }
     )
 
-    cy.get('[data-cy=singleline-text-container]').type('Changed route name')
+    cy.get('[data-cy=singleline-text-container]').first().type('Changed route name')
+    //cy.get('[data-cy=button-save]').scrollIntoView()
+    cy.scrollTo(0, 500)
     cy.get('[data-cy=button-save]').click()
   })
 })

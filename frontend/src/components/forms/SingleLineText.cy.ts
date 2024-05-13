@@ -3,11 +3,9 @@ import SingleLineText from './SingleLineText.vue'
 describe('Component', () => {
   describe('SingleLineText', () => {
     it('should show a supporting label if provided as property', function () {
-      cy.mount(SingleLineText as any, { props: { supportText: 'SupportText' } }).then(
-        ({ wrapper }) => {
-          cy.get('[data-cy="tlabel"]').should('exist').and('contain.text', 'SupportText')
-        }
-      )
+      cy.mount(SingleLineText as any, { props: { supportText: 'SupportText' } }).then(() => {
+        cy.get('[data-cy="tlabel"]').should('exist').and('contain.text', 'SupportText')
+      })
     })
 
     it('should be highlighted if focused', () => {

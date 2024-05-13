@@ -31,8 +31,12 @@ export const useImageStore = defineStore('image', () => {
   async function getImagesNearRouteSegment(
     segment: LeafletSegment,
     offset: number,
-    maximumNumberOfImages: number = Number.MAX_VALUE
+    maximumNumberOfImages?: number
   ): Promise<ImageDto[]> {
+    if (!maximumNumberOfImages) {
+      maximumNumberOfImages = 100
+    }
+
     try {
       const result = await http.get<ImageDto[]>('/api/images/route_segment', {
         params: {

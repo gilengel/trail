@@ -133,8 +133,6 @@ function remove(i: number) {
 
   position: relative;
 
-  margin-top: 12px;
-
   tlabel {
     position: absolute;
     top: 0;

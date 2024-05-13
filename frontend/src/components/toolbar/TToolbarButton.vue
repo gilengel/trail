@@ -1,5 +1,5 @@
 <template>
-  <a data-cy="ttoolbar-btn" class="toolbar_btn">
+  <a class="toolbar_btn">
     <span class="material-symbols-outlined"> {{ icon }} </span>
     <slot />
   </a>
@@ -22,7 +22,9 @@ withDefaults(defineProps<ToolbarButtonProps>(), {
 
   color: rgb(200, 200, 200);
 
-  width: 100%;
+  width: 64px;
+  height: 64px;
+
   aspect-ratio: 1;
 
   span {

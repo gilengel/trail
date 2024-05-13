@@ -62,6 +62,7 @@ onMounted(() => {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(mapElement.value)
+
   //tripLayer.value = L.featureGroup().addTo(mapElement.value)
 })
 </script>

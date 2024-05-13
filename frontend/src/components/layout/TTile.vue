@@ -22,10 +22,23 @@ defineProps({
   justify-content: space-between;
   align-items: stretch;
   gap: 1em;
+
   h1 {
     font-family: 'Amatic SC', cursive;
-    font-size: 3em;
+
     color: $yellow;
+  }
+}
+
+@container (max-width: 1200px) {
+  h1 {
+    font-weight: bold;
+  }
+}
+@container (min-width: 1200px) {
+  h1 {
+    font-size: 3em;
+    font-weight: normal;
   }
 }
 </style>

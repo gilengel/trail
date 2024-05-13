@@ -13,15 +13,11 @@ body {
 
   background: #90a17d;
   background: white;
-  display: flex;
 
   #app {
-    flex-grow: 1;
-
-    display: flex;
-    flex-direction: row;
-
     color: black;
+    height: 2000px;
+    container-type: inline-size;
   }
 }
 </style>

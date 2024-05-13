@@ -1,23 +1,24 @@
 <template>
-  <div class="tflex-row" style="align-content: space-between; justify-content: space-between">
-    <SingleLineText :value="route?.name" @value-changed="routeNameChanged" />
-    <div class="btn-container">
-      <TButton data-cy="button-save" label="Save" @click="$router.push({ name: 'route-edit' })"
-        ><TIcon icon="save"
-      /></TButton>
-    </div>
+  <SingleLineText :value="route?.name" @value-changed="routeNameChanged" support-text="Trip Name" />
 
-    {{ status }}
+  <SingleLineText
+    :value="route?.description"
+    @value-changed="routeDescriptionChanged"
+    support-text="Trip Description"
+  />
 
-    <DropZone
-      :allowed-file-extensions="['jpg', 'jpeg', 'tif', 'tiff']"
-      @onFilesChanged="onFilesChanged"
-    ></DropZone>
-    <span data-cy="status-msg" v-if="status">{{ status }}</span>
-  </div>
+  {{ status }}
 
-  <div class="tflex-row" style="align-content: space-between; justify-content: space-between">
-    <SingleLineText :value="route?.description" @value-changed="routeDescriptionChanged" />
+  <DropZone
+    :allowed-file-extensions="['jpg', 'jpeg', 'tif', 'tiff']"
+    @onFilesChanged="onFilesChanged"
+  ></DropZone>
+  <span data-cy="status-msg" v-if="status">{{ status }}</span>
+
+  <div class="btn-container">
+    <TButton data-cy="button-save" label="Save" @click="$router.push({ name: 'route-edit' })"
+      ><TIcon icon="save"
+    /></TButton>
   </div>
 </template>
 

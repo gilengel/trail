@@ -2,9 +2,7 @@
   <div>
     <TIcon :icon />
 
-    <span class="tborder-radius">
-      <slot />
-    </span>
+    <slot />
   </div>
 </template>
 
@@ -23,7 +21,7 @@ withDefaults(defineProps<TripAspectProps>(), {
 @import '@/style/border';
 
 div {
-  $size: 64px;
+  $size: 32px;
 
   display: flex;
   flex-direction: column;
@@ -34,10 +32,17 @@ div {
 
     width: $size;
     height: $size;
-    border: rgb(230, 230, 230) 2px solid;
 
-    font-size: $size * 0.8;
+    font-size: $size;
     text-align: center;
+
+    margin-bottom: 8px;
+  }
+}
+
+@container (max-width: 1200px) {
+  div {
+    font-size: 1em;
   }
 }
 </style>

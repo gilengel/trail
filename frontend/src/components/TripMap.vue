@@ -93,7 +93,7 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .trip-details {
   color: black;
 
@@ -112,7 +112,7 @@ onMounted(() => {
   .main {
     border-right: rgb(230, 230, 230) 1px solid;
     flex-grow: 2;
-    padding: 4em;
+    //padding: 4em;
 
     .bar {
       display: flex;
@@ -167,7 +167,7 @@ onMounted(() => {
   .overview {
     min-width: 600px; // TODO: not use pixels
 
-    padding: 1em;
+    //padding: 1em;
 
     ul {
       list-style: none;

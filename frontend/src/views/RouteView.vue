@@ -1,40 +1,45 @@
 <template>
-  <main class="tflex-row">
-    <TToolbar>
-      <TToolbarButton icon="arrow_back" @click="$router.push({ path: '/' })"></TToolbarButton>
-      <TToolbarButton icon="add"></TToolbarButton>
-    </TToolbar>
+  <main>
+    <div class="toolbars">
+      <TToolbar>
+        <TToolbarButton icon="arrow_back" @click="$router.push({ path: '/' })"></TToolbarButton>
+      </TToolbar>
 
-    <div class="tflex-row main">
-      {{ trip }}
-      <div>
-        <router-view></router-view>
-
-        <TTile :title="trip?.name as string">
-          <TripAspects :trip-is-loop="tripIsALoop" />
-        </TTile>
-        <TTile title="Description">
-          <p>
-            {{ trip?.description }}
-          </p>
-        </TTile>
-        <TTile title="Feed">
-          <TripFeedItem v-for="segment in trip?.segments" :key="segment.id" :segment="segment" />
-        </TTile>
-      </div>
+      <router-view name="toolbar" class="focused-toolbar" />
     </div>
-    <TripMap ref="map" :trip="trip" :markers="imageMarkers" v-if="trip" />
+
+    <div class="details">
+      <!--
+      <TTile :title="trip?.name as string">
+        <TripAspects
+          :trip-is-loop="tripIsALoop"
+          :trip-length="trip?.segments[0].length"
+          :ascending="trip?.segments[0].accumulatedAscent"
+          :descending="trip?.segments[0].accumulatedDescent"
+        />
+      </TTile>
+      <TTile title="Description">
+        <p>
+          {{ trip?.description }}
+        </p>
+      </TTile>
+      <TTile title="Feed">
+        <TripFeedItem v-for="segment in trip?.segments" :key="segment.id" :segment="segment" />
+      </TTile>
+    -->
+
+      <router-view name="content" />
+    </div>
+
+    <TripMap ref="map" :trip="trip" :markers="imageMarkers" v-if="trip" class="map" />
   </main>
 </template>
 
 <script setup lang="ts">
-import { onMounted, type Ref, ref, computed } from 'vue'
+import { onMounted, type Ref, ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
-import TTile from '@/components/layout/TTile.vue'
-import TripAspects from '@/components/TripAspects.vue'
 import TToolbar from '@/components/toolbar/TToolbar.vue'
 import TToolbarButton from '@/components/toolbar/TToolbarButton.vue'
-import TripFeedItem from '@/components/TripFeedItem.vue'
 import TripMap from '@/components/TripMap.vue'
 import { useRouteStore } from '@/stores/route'
 import type { LeafletRoute } from '@/stores/route/types'
@@ -54,6 +59,8 @@ let images: Ref<ImageDto[]> = ref([])
 
 let imageMarkers: Ref<L.Marker[]> = ref([])
 
+provide('trip', trip)
+
 onMounted(async () => {
   id.value = parseInt(route.params.id as string)
 
@@ -71,22 +78,67 @@ onMounted(async () => {
           )
         }
       })
-      .catch((e) => {})
+      .catch(() => {})
   })
-})
-
-const tripIsALoop = computed(() => {
-  if (trip.value?.segments.length == 0) {
-    return false
-  }
-
-  return trip.value?.segments[0] == trip.value?.segments[trip.value?.segments.length - 1]
 })
 
 const id: Ref<number | undefined> = ref(undefined)
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '@/style/colors';
+
+main {
+  width: 100%;
+}
+
+.focused-toolbar {
+  background-color: rgba($yellow, 0.1);
+}
+
+@container (max-width: 1200px) {
+  main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toolbars {
+    order: 0;
+    display: flex;
+  }
+
+  .map {
+    order: 1;
+  }
+
+  .details {
+    order: 2;
+  }
+}
+
+@container (min-width: 1200px) {
+  .toolbars {
+    border-right: rgb(230, 230, 230) 1px solid;
+  }
+  main {
+    display: grid;
+    grid-template-columns: 64px auto min-content;
+  }
+}
+
+.details {
+  padding: 1em;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: stretch;
+  align-items: stretch;
+
+  gap: 24px;
+}
+
+/*
 main {
   flex-grow: 1;
   display: flex;
@@ -118,4 +170,12 @@ main {
     font-weight: bold;
   }
 }
+
+@container (min-width: 1200px) {
+  h1 {
+    font-size: 3em;
+    font-weight: normal;
+  }
+}
+*/
 </style>

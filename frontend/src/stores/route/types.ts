@@ -130,4 +130,54 @@ export class LeafletSegment implements Segment {
   get polyline(): L.Polyline {
     return this._polyline
   }
+
+  get length(): number {
+    let sum = 0
+    for (let i = 0; i < this.coordinates.length - 1; ++i) {
+      sum += this.coordinates[i + 1].distanceTo(this.coordinates[i])
+    }
+
+    return sum
+  }
+
+  /**
+   * Calculates the sum of all ascents between two neighbouring points in the segment.
+   *
+   * @readonly
+   * @type {number}
+   * @memberof LeafletSegment
+   */
+  get accumulatedAscent(): number {
+    let sum = 0
+    for (let i = 0; i < this.coordinates.length - 1; ++i) {
+      const alt1 = this.coordinates[i].alt as number
+      const alt2 = this.coordinates[i + 1].alt as number
+
+      if (alt1 < alt2) {
+        sum += alt2 - alt1
+      }
+    }
+
+    return sum
+  }
+
+  /**
+   * Calculates the sum of all descents between two neighbouring points in the segment.
+   *
+   * @readonly
+   * @type {number}
+   * @memberof LeafletSegment
+   */
+  get accumulatedDescent(): number {
+    let sum = 0
+    for (let i = 0; i < this.coordinates.length - 1; ++i) {
+      const alt1 = this.coordinates[i].alt as number
+      const alt2 = this.coordinates[i + 1].alt as number
+      if (alt1 > alt2) {
+        sum += alt1 - alt2
+      }
+    }
+
+    return sum
+  }
 }

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, vi, type MockedFunction } from 'vitest'
 import { useImageStore } from './index'
 import * as L from 'leaflet'
 
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { mockFile } from '@/components/__tests__/util'
 import { LeafletSegment } from '../route/types'
 

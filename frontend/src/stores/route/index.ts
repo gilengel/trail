@@ -62,7 +62,9 @@ export const useRouteStore = defineStore('route', () => {
         return new LeafletSegment(
           segment.id,
           segment.name,
-          segment.coordinates.map((coordinate) => new L.LatLng(coordinate[0], coordinate[1])),
+          segment.coordinates.map(
+            (coordinate) => new L.LatLng(coordinate[0], coordinate[1], coordinate[2])
+          ),
           randomColor(),
           segment.description
         )

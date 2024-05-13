@@ -1,5 +1,5 @@
 import { LeafletRoute, LeafletSegment } from '@/stores/route/types'
-import TripMap, { type TripMapProps } from './TripMap.vue'
+import TripMap from './TripMap.vue'
 import * as L from 'leaflet'
 
 const testRouteSegment: LeafletSegment = new LeafletSegment(
