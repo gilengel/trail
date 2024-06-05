@@ -130,4 +130,14 @@ describe('ImageService', () => {
 
     expect(result).toStrictEqual(testData.multipleImages);
   });
+
+  it('should get the number of images near a route', async () => {
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValue([4]);
+
+    const result = await service.getNumberOfImagesNearRouteSegment(
+      testData.routeSegment,
+      10,
+    );
+    expect(result).toStrictEqual(4);
+  });
 });

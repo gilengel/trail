@@ -1,8 +1,10 @@
 <template>
   <div data-cy="trip-images" class="trip-images tborder-radius">
     <div v-for="image in images" :key="image.id">
-      <img data-cy="single-image" :src="image.url" :alt="image.name" />
+      <img data-cy="single-image" :src="image.url" :alt="`trip image ${image.name}`" />
     </div>
+
+    <span v-if="imagesHiddenCount > 0">{{ imagesHiddenCount }}+</span>
   </div>
 </template>
 
@@ -18,14 +20,19 @@ interface TripImagesProps {
   segment: LeafletSegment
 }
 
-let images: Ref<ImageDto[]> = ref([])
-
+const numberOfVisibleImages = 5
+const images: Ref<ImageDto[]> = ref([])
+const imagesHiddenCount: Ref<number> = ref(0)
 const props = defineProps<TripImagesProps>()
 
 onMounted(async () => {
-  imageStore.getImagesNearRouteSegment(props.segment, 1).then((e) => {
-    images.value = e
-  })
+  const totalImages = await imageStore.getNumberOfImagesNearRouteSegment(props.segment, 1)
+  imagesHiddenCount.value = totalImages - numberOfVisibleImages
+  images.value = await imageStore.getImagesNearRouteSegment(
+    props.segment,
+    1,
+    imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined
+  )
   // TODO: Show sad smiley or similar with error message
 })
 </script>
@@ -44,6 +51,15 @@ onMounted(async () => {
 
 div {
   overflow: hidden;
+}
+
+span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 4em;
+  font-family: 'Amatic SC', cursive;
 }
 
 .div1 {

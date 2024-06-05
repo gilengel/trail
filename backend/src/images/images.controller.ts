@@ -15,7 +15,7 @@ import {
 import { ImagesService } from './images.service';
 import { dbimages2dto } from '../conversion';
 import ImagesUploadInterceptor from './helper/images.upload.interceptor';
-import { ImageDto } from './dto/image.dto';
+import { ImageDto, CountDto } from './dto/image.dto';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
 
 @Controller('images')
@@ -65,12 +65,7 @@ export class ImagesController {
     return Promise.resolve(images);
   }
 
-  @Get('route_segment')
-  async getImagesNearRouteSegment(
-    @Query('routeSegmentId') routeSegmentId: number,
-    @Query('maxOffset') offset: number,
-    @Query('maxNumberOfImages') maxNumberOfImages?: number,
-  ): Promise<ImageDto[]> {
+  private validateImageParameters(offset: number, routeSegmentId: number) {
     if (offset < 0) {
       throw new HttpException('Invalid Index', HttpStatus.BAD_REQUEST);
     }
@@ -82,6 +77,15 @@ export class ImagesController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Get('route_segment')
+  async getImagesNearRouteSegment(
+    @Query('routeSegmentId') routeSegmentId: number,
+    @Query('maxOffset') offset: number,
+    @Query('maxNumberOfImages') maxNumberOfImages?: number,
+  ): Promise<ImageDto[]> {
+    this.validateImageParameters(offset, routeSegmentId);
 
     let images: Array<ImageDto> = [];
     try {
@@ -101,5 +105,33 @@ export class ImagesController {
     }
 
     return Promise.resolve(images);
+  }
+
+  @Get('route_segment/number')
+  async getNumberOfImagesNearRouteSegment(
+    @Query('routeSegmentId') routeSegmentId: number,
+    @Query('maxOffset') offset: number,
+  ): Promise<CountDto> {
+    this.validateImageParameters(offset, routeSegmentId);
+
+    let images: CountDto | undefined = undefined;
+    try {
+      const routeSegment =
+        await this.routeSegmentService.findOne(routeSegmentId);
+      images = await this.imagesService.getNumberOfImagesNearRouteSegment(
+        routeSegment,
+        offset,
+      );
+    } catch (e) {
+      this.logger.error(e);
+
+      return Promise.reject(e);
+    }
+
+    if (parseInt(images.count) == 0) {
+      return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
+    }
+
+    return Promise.resolve({ count: images.count });
   }
 }

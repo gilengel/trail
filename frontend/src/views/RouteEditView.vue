@@ -43,7 +43,6 @@ let route: Ref<LeafletRoute | null> = ref(null)
 const status: Ref<String> = ref('')
 
 function onFilesChanged(images: File[]) {
-  console.log('STORE IMAGES')
   imageStore
     .addImages(images)
     .then(() => (status.value = ':)'))
@@ -51,28 +50,24 @@ function onFilesChanged(images: File[]) {
 }
 
 async function routeNameChanged(newValue: string) {
-  if (!route.value) {
+  if (newValue === '') {
+    console.log('Invalid value: name cannot be null')
     return
   }
 
-  route.value.name = newValue
-  routeStore.updateRoute(route.value)
+  route.value!.name = newValue
+  routeStore.updateRoute(route.value!)
 }
 
 async function routeDescriptionChanged(newValue: string) {
-  if (!route.value) {
-    return
-  }
-
-  route.value.description = newValue
-  routeStore.updateRoute(route.value)
+  route.value!.description = newValue
+  routeStore.updateRoute(route.value!)
 }
 
 onMounted(async () => {
   const id = parseInt(vueRoute.params.id as string)
 
+  // TODO handle an error case (invalid id, network error), by informing the user and redirect to index page
   route.value = await routeStore.getRoute(id)
 })
 </script>
-
-<style scoped></style>

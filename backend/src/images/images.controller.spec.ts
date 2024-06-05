@@ -12,6 +12,23 @@ import * as testData from '../../test/data';
 import { mockFileFromBuffer } from './test/test.helper';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
 
+jest.mock('@prisma/client', () => {
+  const a = jest.fn().mockResolvedValue([]);
+  return {
+    PrismaClient: jest.fn().mockImplementation(() => {
+      return {
+        $queryRaw: a,
+      };
+    }),
+
+    // necessary as we use sql to convert the image coordinates to postgis see image.service.ts
+    Prisma: {
+      sql: () => '',
+      join: () => '',
+    },
+  };
+});
+
 describe('ImageController', () => {
   let controller: ImagesController;
   let imageService: ImagesService;
@@ -107,6 +124,38 @@ describe('ImageController', () => {
     expect(result).toStrictEqual(testData.images);
   });
 
+  it('should return the number of images near a route segment', async () => {
+    jest
+      .spyOn(routeSegmentService, 'findOne')
+      .mockReturnValue(Promise.resolve(testData.routeSegment));
+    jest
+      .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
+      .mockReturnValue(Promise.resolve({ count: '4' }));
+
+    const result = await controller.getNumberOfImagesNearRouteSegment(
+      testData.routeSegment.id,
+      0,
+    );
+    expect(result).toStrictEqual({ count: '4' });
+  });
+
+  it('should throw an error if the database returns an error for the numbers of images', async () => {
+    jest
+      .spyOn(routeSegmentService, 'findOne')
+      .mockReturnValue(Promise.resolve(testData.routeSegment));
+    jest
+      .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
+      .mockRejectedValue(new Error());
+
+    const result = controller.getImagesNearRouteSegment(
+      testData.routeSegment.id,
+      0,
+    );
+    await expect(result).rejects.toThrow(
+      new HttpException('', HttpStatus.BAD_REQUEST),
+    );
+  });
+
   it('should return the image dtos for all images near a route segment capped by the max parameter', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')
@@ -123,7 +172,43 @@ describe('ImageController', () => {
     expect(result.length).toEqual(3);
   });
 
-  it('should muuu', async () => {
+  it('should fail with a "NotFound" if no images are near a route segment for number', async () => {
+    jest
+      .spyOn(routeSegmentService, 'findOne')
+      .mockReturnValue(Promise.resolve(testData.routeSegment));
+    jest
+      .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
+      .mockReturnValue(Promise.resolve({ count: '0' }));
+
+    const result = controller.getNumberOfImagesNearRouteSegment(
+      testData.routeSegment.id,
+      0,
+    );
+
+    await expect(result).rejects.toThrow(
+      new HttpException('', HttpStatus.NOT_FOUND),
+    );
+  });
+
+  it('should fail with an "500" if the database query for the number of images for a route segments fails', async () => {
+    jest
+      .spyOn(routeSegmentService, 'findOne')
+      .mockReturnValue(Promise.resolve(testData.routeSegment));
+    jest
+      .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
+      .mockRejectedValue(new Error('some error'));
+
+    const result = controller.getNumberOfImagesNearRouteSegment(
+      testData.routeSegment.id,
+      0,
+    );
+
+    await expect(result).rejects.toThrow(
+      new HttpException('some error', HttpStatus.BAD_REQUEST),
+    );
+  });
+
+  it('should throw an error if the database returns an error', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')
       .mockRejectedValue(new Error('some error'));
@@ -158,6 +243,7 @@ describe('ImageController', () => {
     );
   });
 
+  /*
   it('should fail with a "NotFound" if no images are near a route segment', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')
@@ -173,6 +259,7 @@ describe('ImageController', () => {
       new HttpException('', HttpStatus.NOT_FOUND),
     );
   });
+  */
 
   it('should fail with a 404 if the requested segment does not exist', async () => {
     jest

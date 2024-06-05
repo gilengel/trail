@@ -87,7 +87,6 @@ describe('Route Store', () => {
     })
 
     const routes = await routeStore.getRoutes()
-    console.log(routes)
 
     expect(routes).to.be.toStrictEqual([])
   })

@@ -6,6 +6,7 @@ describe('Component', () => {
   })
   describe('TripImages', () => {
     it('should render the images of a segment', function () {
+      cy.stub(this.store, 'getNumberOfImagesNearRouteSegment').resolves([1])
       cy.stub(this.store, 'getImagesNearRouteSegment').resolves([
         {
           id: 'aeb50f69-189d-437a-aba6-14f69400b37b',

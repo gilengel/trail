@@ -2,7 +2,7 @@
  * @file Provides functionality to create, read, update and delete images.
  */
 import { Injectable, Logger } from '@nestjs/common';
-import { DbImageDto, ImageDto } from './dto/image.dto';
+import { CountDto, DbImageDto, ImageDto } from './dto/image.dto';
 
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma.service';
@@ -127,6 +127,20 @@ export class ImagesService {
     return Promise.resolve(conversion.dbimages2dto(result));
   }
 
+  private async multipleImagesQueryCount(
+    geomertyAsWkt: string,
+    offset: number,
+  ): Promise<CountDto> {
+    const query = Prisma.sql`
+    SELECT COUNT(id)
+    FROM "Image"
+    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
+
+    const result: CountDto[] = await this.prisma.$queryRaw(query);
+
+    return Promise.resolve(result[0]);
+  }
+
   async getImagesNearCoordinate(
     longitude: number,
     latitude: number,
@@ -155,5 +169,13 @@ export class ImagesService {
   ): Promise<ImageDto[]> {
     const routeWkt = conversion.numberArray2wkt(segment.coordinates);
     return this.multipleImagesQuery(routeWkt, maxOffset, maxNumberOfImages);
+  }
+
+  async getNumberOfImagesNearRouteSegment(
+    segment: RouteSegmentDto,
+    maxOffset: number,
+  ): Promise<CountDto> {
+    const routeWkt = conversion.numberArray2wkt(segment.coordinates);
+    return this.multipleImagesQueryCount(routeWkt, maxOffset);
   }
 }

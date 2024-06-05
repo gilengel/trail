@@ -115,7 +115,6 @@ function drop(e: DragEvent) {
 }
 
 function remove(i: number) {
-  console.log(files.value)
   files.value.splice(i, 1)
 }
 </script>

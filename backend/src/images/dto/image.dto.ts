@@ -33,3 +33,8 @@ export class ImageDto {
   @ApiProperty()
   url: string;
 }
+
+export class CountDto {
+  @ApiProperty()
+  count: string;
+}

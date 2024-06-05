@@ -28,6 +28,38 @@ export const useImageStore = defineStore('image', () => {
     }
   }
 
+  async function getNumberOfImagesNearRouteSegment(
+    segment: LeafletSegment,
+    offset: number,
+    maximumNumberOfImages?: number
+  ): Promise<number> {
+    if (!maximumNumberOfImages) {
+      maximumNumberOfImages = 100
+    }
+
+    try {
+      const result = await http.get<{ count: string }>('/api/images/route_segment/number', {
+        params: {
+          routeSegmentId: segment.id,
+          maxOffset: offset
+        }
+      })
+
+      return Promise.resolve(parseInt(result.data.count))
+    } catch (error) {
+      const e = error as AxiosError
+
+      // The backend is build to return a 404 if no images exist so we need to return an empty array
+      // to not arise an error on browser side
+      if (e.response?.status == 404) {
+        return Promise.resolve(0)
+      }
+
+      networkError.value = true
+
+      return Promise.reject(error)
+    }
+  }
   async function getImagesNearRouteSegment(
     segment: LeafletSegment,
     offset: number,
@@ -78,7 +110,12 @@ export const useImageStore = defineStore('image', () => {
     })
   }
 
-  return { getImagesNearLocation, getImagesNearRouteSegment, addImages }
+  return {
+    getImagesNearLocation,
+    getNumberOfImagesNearRouteSegment,
+    getImagesNearRouteSegment,
+    addImages
+  }
 })
 
 export type ImageStore = ReturnType<typeof useImageStore>

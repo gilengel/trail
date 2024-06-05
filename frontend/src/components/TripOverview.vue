@@ -44,7 +44,9 @@ ul {
   list-style: none;
   padding: 0;
 
-  overflow: hidden;
+  max-height: 50vh;
+
+  overflow: scroll;
   li {
     color: $text;
     padding: 0.5em;
@@ -58,7 +60,26 @@ ul {
   li:hover {
     cursor: pointer;
     background: $primary;
-    //color: $yellow;
   }
+}
+
+/* width */
+ul::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+ul::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+ul::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+ul::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>
