@@ -61,14 +61,14 @@
 
 <script setup lang="ts">
 export interface SVGTreeProps {
-  animationIn: boolean
+  animationIn: boolean;
 }
 withDefaults(defineProps<SVGTreeProps>(), {
-  animationIn: false
-})
+  animationIn: false,
+});
 </script>
 <style scoped lang="scss">
-@import '../style/button';
+//@import '../style/button';
 
 @function branch($branch-duration, $length) {
   @return calc($branch-duration / $length * 15);
@@ -135,16 +135,76 @@ withDefaults(defineProps<SVGTreeProps>(), {
 }
 @mixin tree1_in($duration, $branch-duration) {
   @include muu(trunk, 259.4061279296875, $duration, $branch-duration, false);
-  @include muu(left0, 56.71225357055664, $duration * 0.85, $branch-duration, true);
-  @include muu(right0, 54.36085891723633, $duration * 0.85, $branch-duration, true);
-  @include muu(left1, 39.78474807739258, $duration * 0.55, $branch-duration, true);
-  @include muu(right1, 50.937076568603516, $duration * 0.55, $branch-duration, true);
-  @include muu(left2, 51.52828598022461, $duration * 0.38, $branch-duration, true);
-  @include muu(right2, 53.48910140991211, $duration * 0.38, $branch-duration, true);
-  @include muu(left3, 66.30268859863281, $duration * 0.25, $branch-duration, true);
-  @include muu(right3, 58.932861328125, $duration * 0.25, $branch-duration, true);
-  @include muu(left4, 66.25408172607422, $duration * 0.125, $branch-duration, true);
-  @include muu(right4, 67.06096649169922, $duration * 0.125, $branch-duration, true);
+  @include muu(
+    left0,
+    56.71225357055664,
+    $duration * 0.85,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    right0,
+    54.36085891723633,
+    $duration * 0.85,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    left1,
+    39.78474807739258,
+    $duration * 0.55,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    right1,
+    50.937076568603516,
+    $duration * 0.55,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    left2,
+    51.52828598022461,
+    $duration * 0.38,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    right2,
+    53.48910140991211,
+    $duration * 0.38,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    left3,
+    66.30268859863281,
+    $duration * 0.25,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    right3,
+    58.932861328125,
+    $duration * 0.25,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    left4,
+    66.25408172607422,
+    $duration * 0.125,
+    $branch-duration,
+    true
+  );
+  @include muu(
+    right4,
+    67.06096649169922,
+    $duration * 0.125,
+    $branch-duration,
+    true
+  );
 }
 
 @mixin tree1_out() {

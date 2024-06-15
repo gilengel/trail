@@ -8,11 +8,11 @@
 
 <script setup lang="ts">
 export interface TripAspectProps {
-  icon: string
+  icon: string;
 }
 withDefaults(defineProps<TripAspectProps>(), {
-  icon: 'pet_supplies'
-})
+  icon: "pet_supplies",
+});
 </script>
 
 <style scoped lang="scss">

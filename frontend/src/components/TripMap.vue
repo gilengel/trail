@@ -25,11 +25,6 @@
 import TMap from './map/TMap.vue'
 import { type ExtendedLeafletSegment } from './map/map'
 
-import 'leaflet/dist/leaflet.css'
-import * as L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import 'flag-icons/css/flag-icons.min.css'
-
 import { ref, type Ref, onMounted } from 'vue'
 import { LeafletRoute, LeafletSegment } from '@/stores/route/types'
 
