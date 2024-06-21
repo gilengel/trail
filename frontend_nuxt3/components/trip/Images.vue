@@ -1,9 +1,9 @@
 <template>
-  <div data-cy="trip-images" class="trip-images tborder-radius">
+  <div data-cy="trip-images" class="trip-images">
     <div v-for="image in images" :key="image.id">
       <img
         data-cy="single-image"
-        :src="image.url"
+        :src="`${config.public.baseURL}/${image.url}`"
         :alt="`trip image ${image.name}`"
       />
     </div>
@@ -29,20 +29,30 @@ const images: Ref<ImageDto[]> = ref([]);
 const imagesHiddenCount: Ref<number> = ref(0);
 const props = defineProps<TripImagesProps>();
 
+const config = useRuntimeConfig();
+
 onMounted(async () => {
-  // TODO: reactivate this with fetchAPI
-  /*
-  const totalImages = await imageStore.getNumberOfImagesNearRouteSegment(
-    props.segment,
-    1
-  );
+  const totalImages: number = await $fetch(`images/route_segment/number`, {
+    baseURL: config.public.baseURL,
+    method: "GET",
+    params: {
+      routeSegmentId: props.segment.id,
+      maxOffset: 1,
+    },
+  });
+
   imagesHiddenCount.value = totalImages - numberOfVisibleImages;
-  images.value = await imageStore.getImagesNearRouteSegment(
-    props.segment,
-    1,
-    imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined
-  );
-  */
+  images.value = await $fetch(`images/route_segment`, {
+    baseURL: config.public.baseURL,
+    method: "GET",
+    params: {
+      routeSegmentId: props.segment.id,
+      maxOffset: 1,
+      maxNumberOfImages:
+        imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined,
+    },
+  });
+
   // TODO: Show sad smiley or similar with error message
 });
 </script>
@@ -57,6 +67,8 @@ onMounted(async () => {
   grid-template-rows: repeat(2, 1fr);
   grid-column-gap: 8px;
   grid-row-gap: 8px;
+
+  clip-path: polygon(2% 4%, 97% 2%, 98% 94%, 1% 88%);
 }
 
 div {

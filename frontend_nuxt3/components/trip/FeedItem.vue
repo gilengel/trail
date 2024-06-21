@@ -2,7 +2,10 @@
   <div data-cy="trip-feed-item">
     <div class="header">
       <div class="profile">
-        <img src="https://randomuser.me/api/portraits/women/51.jpg" />
+        <img
+          src="https://randomuser.me/api/portraits/women/51.jpg"
+          alt="avatar"
+        />
 
         <div>
           <span>Anne Travelor</span>
@@ -12,11 +15,11 @@
 
       <div class="social">
         <div class="button">
-          <span class="material-symbols-outlined"> thumb_up </span>
+          <i class="las la-thumbs-up"></i>
           <span>1k</span>
         </div>
         <div class="button">
-          <span class="material-symbols-outlined"> chat </span>
+          <i class="las la-comment-dots"></i>
           <span>200</span>
         </div>
       </div>
@@ -28,7 +31,6 @@
 
 <script setup lang="ts">
 import { MapLibreSegment } from "@/stores/route/types";
-import TripImages from "./Images.vue";
 
 export interface TripFeedItemProps {
   segment: MapLibreSegment;

@@ -68,8 +68,6 @@ withDefaults(defineProps<SVGTreeProps>(), {
 });
 </script>
 <style scoped lang="scss">
-//@import '../style/button';
-
 @function branch($branch-duration, $length) {
   @return calc($branch-duration / $length * 15);
 }

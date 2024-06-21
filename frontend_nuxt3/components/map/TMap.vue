@@ -63,6 +63,7 @@ function addLine(coordinates: number[][], style: LineStyle) {
       },
     },
   });
+
   map.value!.addLayer({
     id,
     type: "line",
@@ -95,13 +96,13 @@ function fitBounds(bounds: LngLatBounds, animate: boolean = true) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .map {
   aspect-ratio: 1/1;
 
   display: block;
-  width: 400px;
-  height: 400px;
-  border: solid 1px black;
+  width: 100%;
+
+  clip-path: polygon(2% 4%, 97% 2%, 98% 94%, 1% 88%);
 }
 </style>

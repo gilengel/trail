@@ -7,12 +7,10 @@
 
 <script setup lang="ts">
 defineProps({
-  label: String
-})
+  label: String,
+});
 </script>
 <style scoped lang="scss">
-@import '@/style/button';
-
 // Necessary to hide weird outline on button in chrome
 *,
 *:focus,

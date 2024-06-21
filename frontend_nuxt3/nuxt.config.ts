@@ -10,7 +10,10 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ["line-awesome/dist/line-awesome/css/line-awesome.min.css"],
+  css: [
+    "line-awesome/dist/line-awesome/css/line-awesome.min.css",
+    "assets/maplibre-gl.css",
+  ],
 
   vite: {
     css: {

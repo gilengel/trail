@@ -27,7 +27,8 @@ export function TripDto2MapLibreTrip(trip: TripDto): MapLibreTrip {
     trip.name,
     trip.segments.map((segment) =>
       RouteSegmentDto2MapLibreRouteSegment(segment)
-    )
+    ),
+    trip.description
   );
 }
 
