@@ -132,19 +132,6 @@ function remove(i: number) {
 
   position: relative;
 
-  tlabel {
-    position: absolute;
-    top: 0;
-    left: 16px;
-    height: 24px;
-    padding-left: 12px;
-    padding-right: 12px;
-    margin-top: -12px;
-
-    font-size: 1em;
-    background-color: $background;
-  }
-
   input {
     visibility: collapse;
   }
@@ -160,7 +147,7 @@ function remove(i: number) {
   flex-direction: column;
   padding: 0;
   margin: 0;
-  //display: flex;
+
   gap: 1em;
 
   max-height: 400px;
@@ -172,15 +159,6 @@ function remove(i: number) {
   justify-content: space-between;
   align-items: stretch;
 
-  //@include trail-border;
-  //border-color: $light;
-  //padding: 1em;
-  //
-  //p {
-  //  @include font;
-  //}
-
-  justify-content: space-between;
   div {
     display: flex;
     flex-direction: column;

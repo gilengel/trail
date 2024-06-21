@@ -125,6 +125,8 @@ function remove(i: number) {
 .dropzone-container {
   padding-left: 16px;
   padding-right: 16px;
+  padding-top: 2em;
+  padding-bottom: 2em;
 
   display: flex;
   flex-direction: column;
@@ -132,19 +134,6 @@ function remove(i: number) {
   justify-content: center;
 
   position: relative;
-
-  tlabel {
-    position: absolute;
-    top: 0;
-    left: 16px;
-    height: 24px;
-    padding-left: 12px;
-    padding-right: 12px;
-    margin-top: -12px;
-
-    font-size: 1em;
-    background-color: $background;
-  }
 
   input {
     visibility: collapse;

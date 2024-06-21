@@ -17,10 +17,7 @@
   ></DropZone>
 
   <div class="btn-container">
-    <FormsTButton
-      data-cy="button-save"
-      label="Save"
-      @click="$router.push({ path: `../${route.params.id}/feed` })"
+    <FormsTButton data-cy="button-save" label="Save" @click="save"
       ><TIcon icon="save"
     /></FormsTButton>
   </div>
@@ -35,61 +32,46 @@
 <script setup lang="ts">
 import type { MapLibreTrip } from "~/stores/route/types";
 
-const trip: Ref<MapLibreTrip | null> = inject(
-  "trip"
-) as Ref<MapLibreTrip | null>;
+const trip: MapLibreTrip = inject("trip") as MapLibreTrip;
 
 const config = useRuntimeConfig();
 const route = useRoute();
 
 const status: Ref<String> = ref("");
 
+const changedRouteData: Ref<{
+  name?: string;
+  description?: string;
+  images?: File[];
+}> = ref({});
 const errorDialogData: Ref<{ title: string; message: string } | null> =
   ref(null);
 
-async function routeNameChanged(newValue: string) {
-  if (newValue === "") {
-    console.log("Invalid value: name cannot be null");
+async function saveRoute() {
+  await $fetch(`/routes/${trip.id}`, {
+    baseURL: config.public.baseURL,
+    method: "PATCH",
+    body: changedRouteData.value,
+  });
+}
+
+async function saveRouteImages() {
+  if (!changedRouteData.value.images) {
     return;
   }
 
-  const patchDTO = {
-    name: newValue,
-  };
-
-  await $fetch(`/routes/${trip.value!.id}`, {
-    baseURL: config.public.baseURL,
-    method: "PATCH",
-    body: patchDTO,
-  });
-}
-
-async function routeDescriptionChanged(newDescription: string) {
-  const patchDTO = {
-    description: newDescription,
-  };
-
-  await useApiFetch(`/routes/${trip.value!.id}`, {
-    method: "PATCH",
-    body: patchDTO,
-  });
-}
-
-async function onFilesChanged(images: File[]) {
   const formData = new FormData();
 
-  for (let i = 0; i < images.length; ++i) {
-    formData.append(`files`, images[i]);
+  for (let i = 0; i < changedRouteData.value.images.length; ++i) {
+    formData.append(`files`, changedRouteData.value.images[i]);
   }
 
-  try {
-    await $fetch(`/images`, {
-      baseURL: config.public.baseURL,
-      method: "POST",
-      body: formData,
-    });
-  } catch (e) {
-    if (e.statusCode == 400) {
+  await $fetch(`/images`, {
+    baseURL: config.public.baseURL,
+    method: "POST",
+    body: formData,
+  }).catch((error) => {
+    if (error.statusCode == 400) {
       errorDialogData.value = {
         title: "Missing geoinformations in one or more images",
         message:
@@ -98,6 +80,30 @@ async function onFilesChanged(images: File[]) {
           "smartphones manual for instructions how to enable them.",
       };
     }
+  });
+}
+async function save() {
+  saveRoute();
+  saveRouteImages();
+}
+function routeNameChanged(newValue: string) {
+  if (newValue === "") {
+    console.log("Invalid value: name cannot be null");
+    return;
   }
+
+  changedRouteData.value.name = newValue;
+}
+
+async function routeDescriptionChanged(newDescription: string) {
+  if (newDescription === "") {
+    return;
+  }
+
+  changedRouteData.value.description = newDescription;
+}
+
+async function onFilesChanged(images: File[]) {
+  changedRouteData.value.images = images;
 }
 </script>
