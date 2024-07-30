@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { computed, inject, type Ref } from "vue";
-import type { MapLibreTrip } from "~/stores/route/types";
+import type { MapLibreTrip } from "~/data/routes/types";
 
 const trip: Ref<MapLibreTrip | null> = inject(
   "trip"

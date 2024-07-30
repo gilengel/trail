@@ -1,5 +1,5 @@
 <template>
-  <a class="toolbar_btn">
+  <a class="toolbar_btn" data-cy="ttoolbar-btn">
     <span :class="cssClass" />
     <slot />
   </a>

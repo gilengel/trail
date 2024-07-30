@@ -1,9 +1,9 @@
 <template>
-  <div data-cy="map-container" class="map" id="map" />
+  <div data-cy="map-container" class="map" :id="mapContainerId" />
 </template>
 
 <script setup lang="ts">
-import type { MapLibreSegment, MapLibreTrip } from "~/stores/route/types";
+import type { MapLibreSegment, MapLibreTrip } from "~/data/routes/types";
 import { LngLatBounds, Map } from "maplibre-gl";
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,6 +15,8 @@ type LineStyle = {
 };
 
 const map: Ref<Map | null> = ref(null);
+
+const mapContainerId = uuidv4();
 
 const props = defineProps<{
   trip: MapLibreTrip;
@@ -28,7 +30,7 @@ defineExpose({
 
 onMounted(() => {
   map.value = new Map({
-    container: "map",
+    container: mapContainerId,
     style:
       "https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
     center: props.trip.bounds.getCenter(),

@@ -1,20 +1,20 @@
 <template>
   <main>
-    <div class="toolbars">
+    <div class="toolbars" data-cy="page-toolbars">
       <ToolbarTToolbar>
         <ToolbarTToolbarButton
           icon="las la-hand-point-left"
           @click="$router.push({ path: '/' })"
-        ></ToolbarTToolbarButton>
+        />
       </ToolbarTToolbar>
       <slot name="toolbar" />
     </div>
 
-    <div class="content">
+    <div class="content" data-cy="page-content">
       <slot name="content" />
     </div>
 
-    <div class="overview">
+    <div class="overview" data-cy="page-overview">
       <slot name="overview" />
     </div>
   </main>

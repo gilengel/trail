@@ -4,7 +4,7 @@
       <img
         data-cy="single-image"
         :src="`${config.public.baseURL}/${image.url}`"
-        :alt="`trip image ${image.name}`"
+        :alt="`trip ${image.name}`"
       />
     </div>
 
@@ -13,12 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { useImageStore } from "@/stores/image";
-import type { ImageDto } from "@/stores/image/types";
-import { MapLibreSegment } from "@/stores/route/types";
 import { onMounted, ref, type Ref } from "vue";
-
-const imageStore = useImageStore();
+import type { ImageDto } from "~/data/images/types";
+import type { MapLibreSegment } from "~/data/routes/types";
 
 interface TripImagesProps {
   segment: MapLibreSegment;

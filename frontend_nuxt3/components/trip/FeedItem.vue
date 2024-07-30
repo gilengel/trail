@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { MapLibreSegment } from "@/stores/route/types";
+import type { MapLibreSegment } from "~/data/routes/types";
 
 export interface TripFeedItemProps {
   segment: MapLibreSegment;

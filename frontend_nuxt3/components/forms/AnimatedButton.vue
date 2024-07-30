@@ -28,8 +28,6 @@ withDefaults(defineProps<AnimatedButtonProps>(), {
 const isHovered = ref(false);
 </script>
 <style scoped lang="scss">
-//@import '@/style/button';
-
 .animated_btn {
   position: relative;
   background-color: $light;

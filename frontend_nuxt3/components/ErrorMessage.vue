@@ -1,6 +1,6 @@
 <template>
-  <dialog ref="dialog">
-    <h1 v-if="title">{{ title }}</h1>
+  <dialog data-cy="t-error-message" ref="dialog">
+    <h1 v-if="title" data-cy="t-error-message-title">{{ title }}</h1>
     <p>
       <slot />
     </p>
@@ -18,9 +18,7 @@ defineProps<ErrorMessageProps>();
 const dialog = ref<HTMLDialogElement | null>(null);
 
 onMounted(() => {
-  if (dialog.value) {
-    dialog.value.showModal();
-  }
+  dialog.value!.showModal();
 });
 </script>
 

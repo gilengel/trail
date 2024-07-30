@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MapLibreTrip } from "~/stores/route/types";
+import type { MapLibreTrip } from "~/data/routes/types";
 
 defineProps<{
   trip: MapLibreTrip;

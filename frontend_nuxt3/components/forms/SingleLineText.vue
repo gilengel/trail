@@ -1,17 +1,19 @@
 <template>
+  <span class="tinvalid" v-if="invalid"
+    >INVALID {{ props.validation?.invalidText }}</span
+  >
   <div
     data-cy="singleline-text-container"
     class="tborder"
+    v-bind:class="{ invalid }"
     :class="{ focused: focused === true }"
   >
-    <TLabel v-if="supportText">{{ supportText }}</TLabel>
+    <FormsTLabel v-if="supportText">{{ supportText }}</FormsTLabel>
     <input
       data-cy="singleline-text"
       type="text"
       :value="value"
-      @input="
-        (event) => emit('valueChanged', (event as InputFileEvent).target?.value)
-      "
+      @input="(event) => valueChanged(event as InputFileEvent)"
       @focusin="focused = true"
       @focusout="focused = false"
     />
@@ -20,17 +22,31 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import TLabel from "@/components/forms/TLabel.vue";
 
 interface InputFileEvent extends Event {
   target: HTMLInputElement;
 }
-defineProps({
-  value: String,
-  supportText: String,
-});
+
+interface SingleTextProps {
+  value: String | undefined;
+  supportText: String;
+  validation?: {
+    func: (value: String) => boolean;
+    invalidText: String;
+  };
+}
+
+const props = defineProps<SingleTextProps>();
 
 const focused = ref(false);
+const invalid: Ref<Boolean | undefined> = ref(false);
+
+function valueChanged(event: InputFileEvent) {
+  const value = event.target?.value;
+  invalid.value = props.validation && !props.validation.func(value);
+
+  emit("valueChanged", (event as InputFileEvent).target?.value);
+}
 
 const emit = defineEmits<{
   (e: "valueChanged", newValue: string): void;
@@ -38,9 +54,36 @@ const emit = defineEmits<{
 </script>
 
 <style scoped lang="scss">
-//@import '@/style/border';
-
 $height: 2em;
+
+.tinvalid {
+  position: absolute;
+  height: 32px;
+  line-height: 32px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  background-color: $red;
+  border-radius: 32px;
+}
+.tinvalid::after {
+  content: " ";
+  display: block;
+  height: 0px;
+  width: 0px;
+  top: 10px;
+  left: 10%;
+  position: relative;
+  border-right: solid 12px transparent;
+  border-left: solid 12px transparent;
+  border-top: solid 16px $red;
+}
+
+.invalid {
+  border: $red solid 1px;
+  margin-top: calc(32px + 48px);
+}
 
 div {
   position: relative;
@@ -53,6 +96,7 @@ div {
   padding-right: 16px;
 
   border: solid calc($border-size * 1px) $border-color;
+  border-radius: 28px;
 
   .tlabel {
     height: 24px;
@@ -73,7 +117,6 @@ div {
 
     outline: none;
     border: none;
-    line-height: 32px;
 
     font-size: 1em;
   }

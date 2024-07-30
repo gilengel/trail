@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteWithoutSegments } from "~/stores/route/types";
+import type { RouteWithoutSegments } from "~/data/routes/types";
 
 const networkError = ref(false);
 const { data: routes } = await useApiFetch<RouteWithoutSegments[]>("/routes", {

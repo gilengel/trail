@@ -21,9 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouteStore } from "@/stores/route";
-
-const routeStore = useRouteStore();
+import { useRouteUpload } from "~/composables/useUpload";
 
 const status: Ref<string> = ref("");
 
@@ -38,20 +36,9 @@ function onFilesChanged(trips: File[]) {
 async function upload() {
   const config = useRuntimeConfig();
 
-  const formData = new FormData();
-
-  formData.append("name", routeName.value);
-  for (const tripFile of files.value) {
-    formData.append("files", tripFile);
-  }
-
-  await $fetch(`/routes/gpx`, {
-    baseURL: config.public.baseURL,
-    method: "POST",
-    //headers: {
-    //  "Content-Type": "multipart/form-data; boundary=MyBoundary",
-    //},
-    body: formData,
+  useRouteUpload(config, {
+    name: routeName.value,
+    files: files.value,
   });
 }
 

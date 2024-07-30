@@ -1,5 +1,5 @@
 <template>
-  <button class="btn tborder-radius">
+  <button class="btn tborder-radius" data-cy="t-button">
     <slot />
     <span data-cy="button-label" v-if="label">{{ label }}</span>
   </button>

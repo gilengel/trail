@@ -2,6 +2,13 @@
   <FormsSingleLineText
     :value="trip?.name"
     @value-changed="routeNameChanged"
+    :validation="{
+      func: (value: String) => {
+        console.log(value.length > 0);
+        return value.length > 0;
+      },
+      invalidText: 'Name cannot be empty.',
+    }"
     support-text="Trip Name"
   />
 
@@ -30,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MapLibreTrip } from "~/stores/route/types";
+import type { MapLibreTrip } from "~/data/routes/types";
 
 const trip: MapLibreTrip = inject("trip") as MapLibreTrip;
 

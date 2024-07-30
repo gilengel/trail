@@ -24,7 +24,7 @@ div {
   align-items: center;
 
   span:first-of-type {
-    color: $border-color;
+    //color: $border-color;
 
     width: $size;
     height: $size;
