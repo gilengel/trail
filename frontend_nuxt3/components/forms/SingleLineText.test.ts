@@ -7,14 +7,17 @@ describe("Component", () => {
     it("should show a supporting label if provided as property", async () => {
       const component = await mountSuspended(SingleLineText, {
         attachTo: document.documentElement,
-        props: { supportText: "SupportText" },
+        props: { supportText: "SupportText", value: "" },
       });
 
       expect(component.get('[data-cy="tlabel"]').text()).toBe("SupportText");
     });
 
     it("should emit a valueChanged signal after the value was changed", async () => {
-      const component = await mountSuspended(SingleLineText);
+      const component = await mountSuspended(SingleLineText, {
+        attachTo: document.documentElement,
+        props: { supportText: "SupportText", value: "" },
+      });
 
       const input = component.get('[data-cy="singleline-text"]');
       const text = "UnimportantText";

@@ -1,6 +1,7 @@
 <template>
   <LayoutTTile title="Trip Upload">
     <FormsSingleLineText
+      value=""
       @value-changed="routeNameChanged"
       support-text="Trip Name"
     />

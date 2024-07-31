@@ -1,6 +1,6 @@
 <template>
   <TTile title="Trip Upload">
-    <SingleLineText @value-changed="routeNameChanged" support-text="Trip Name" />
+    <SingleLineText value="" @value-changed="routeNameChanged" support-text="Trip Name" />
 
     <DropZone
       support-text="Trip Files (allowed are files of type gpx)"

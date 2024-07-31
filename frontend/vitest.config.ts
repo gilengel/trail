@@ -9,8 +9,8 @@ export default mergeConfig(
       environment: 'jsdom',
 
       coverage: {
-        provider: 'istanbul',
-        reporter: ['json', 'lcov', 'html']
+        provider: 'istanbul'
+        //reporter: ['json', 'lcov', 'html']
 
         //thresholds: {
         //statements: 100,

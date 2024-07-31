@@ -24,15 +24,14 @@ const trip = new MapLibreTrip(0, "test_trip", [segment]);
 
 describe("Component", () => {
   describe("Map", () => {
-    it("", () => {});
-    /*
     it("should render the map properly on start", async () => {
       const component = await renderSuspended(MapTMap, { props: { trip } });
-      //expect(
-      //  component.get('[data-cy="map-container"]').classes("maplibregl-map")
-      //).toBeTruthy();
+      expect(
+        component.get('[data-cy="map-container"]').classes("maplibregl-map")
+      ).toBeTruthy();
     });
 
+    /*
   
     it("should pan to new location", () => {
       cy.mount(MapTMap as any).then(({ wrapper }) => {

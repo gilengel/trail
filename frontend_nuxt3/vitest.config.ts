@@ -4,9 +4,10 @@ export default defineVitestConfig({
   test: {
     environment: "nuxt",
 
+    includeTaskLocation: true,
+
     coverage: {
       provider: "istanbul",
-      reporter: ["json", "lcov", "html"],
 
       /*
       thresholds: {

@@ -2,6 +2,8 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  compatibilityDate: "2024-07-31",
+
   modules: ["@pinia/nuxt", "@nuxtjs/google-fonts", "@nuxt/test-utils/module"],
 
   runtimeConfig: {
