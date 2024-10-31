@@ -25,9 +25,7 @@
         ></v-text-field>
       </v-responsive>
 
-      <v-btn icon @click="toggle()">
-        <v-icon>{{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}</v-icon>
-      </v-btn>
+      <theme-toggle-button />
     </v-app-bar>
 
     <v-main data-cy="page-content" class="d-flex justify-center ga-7">
@@ -40,9 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCustomTheme } from '~/composables/useCustomTheme'
 
-const { toggle, isDark } = useCustomTheme()
 </script>
 
 <style lang="scss" scoped>

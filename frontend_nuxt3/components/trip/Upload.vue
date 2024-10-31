@@ -1,28 +1,25 @@
 <template>
-  <LayoutTTile title="Trip Upload">
-    <FormsSingleLineText
-      value=""
-      @value-changed="routeNameChanged"
-      support-text="Trip Name"
-    />
-
-    <DropZone
-      support-text="Trip Files (allowed are files of type gpx)"
-      class="tflex-grow-2"
-      :allowed-file-extensions="['gpx']"
-      @onFilesChanged="onFilesChanged"
-    />
-    <span data-cy="status-msg" v-if="status">{{ status }}</span>
-    <FormsAnimatedButton
-      data-cy="upload-btn"
-      title="Upload Trip"
-      @click="upload"
-    />
-  </LayoutTTile>
+  <v-card title="Upload" variant="outlined">
+    <v-card-text>
+      <v-text-field label="Trip Name" @value-changed="routeNameChanged" variant="outlined"></v-text-field>
+      <DropZone
+          support-text="Trip Files (allowed are files of type gpx)"
+          class="tflex-grow-2"
+          :allowed-file-extensions="['gpx']"
+          @onFilesChanged="onFilesChanged"
+      />
+      <span data-cy="status-msg" v-if="status">{{ status }}</span>
+      <FormsAnimatedButton
+          data-cy="upload-btn"
+          title="Upload Trip"
+          @click="upload"
+      />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">
-import { useRouteUpload } from "~/composables/useUpload";
+import {useRouteUpload} from "~/composables/useUpload";
 
 const status: Ref<string> = ref("");
 

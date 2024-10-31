@@ -1,15 +1,15 @@
 <template>
-  <LayoutTTile title="Trip Overview">
-    <ul class="tborder tflex-grow-2">
-      <li
-        data-cy="trip-entry"
-        v-for="trip in routes"
-        :key="trip.id"
-        v-on:click="emit('selectedTripChanged', trip.id)"
-      >
-        {{ trip.name }}
-      </li>
-    </ul>
+  <v-card title="My Latest Trips" variant="outlined">
+    <v-card-text>
+      <v-list lines="one">
+        <v-list-item
+            v-for="trip in routes"
+            :key="trip.id"
+            :title="trip.name"
+            @click="onTripClicked(trip)"
+        ></v-list-item>
+      </v-list>
+
 
     <h2 data-cy="error-empty-text" v-if="!networkError && routes?.length == 0">
       😞 Looks like you don't have any trips stored yet
@@ -17,11 +17,16 @@
     <h2 data-cy="error-network-text" v-if="networkError">
       😞 Looks like there was a network problem.
     </h2>
-  </LayoutTTile>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">
 import type { RouteWithoutSegments } from "~/data/routes/types";
+
+function onTripClicked(trip: RouteWithoutSegments) {
+  emit('selectedTripChanged', trip.id)
+}
 
 const networkError = ref(false);
 const { data: routes } = await useApiFetch<RouteWithoutSegments[]>("/routes", {
