@@ -4,7 +4,13 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2024-07-31",
 
-  modules: ["@pinia/nuxt", "@nuxtjs/google-fonts", "@nuxt/test-utils/module"],
+  modules: [
+    "@pinia/nuxt",
+    '@vueuse/nuxt',
+    "@nuxtjs/google-fonts",
+    "@nuxt/test-utils/module",
+    "vuetify-nuxt-module"
+  ],
 
   runtimeConfig: {
     public: {

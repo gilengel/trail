@@ -1,7 +1,7 @@
-<template>
-  <div>
-    <TIcon :icon />
 
+<template>
+  <div class="aspect">
+    <TIcon :icon />
     <slot />
   </div>
 </template>
@@ -15,30 +15,19 @@ withDefaults(defineProps<TripAspectProps>(), {
 });
 </script>
 
-<style scoped lang="scss">
-div {
-  $size: 32px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  span:first-of-type {
-    color: $border-color;
-
-    width: $size;
-    height: $size;
-
-    font-size: $size;
-    text-align: center;
-
-    margin-bottom: 8px;
+<style lang="scss" scoped>
+@container (max-width: 699px) {
+  .aspect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
-
-@container (max-width: 1200px) {
-  div {
-    font-size: 1em;
+@container (min-width: 700px) {
+  .aspect {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 }
 </style>

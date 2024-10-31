@@ -4,3 +4,15 @@
 @import "_layout";
 
 @import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
+
+.c-size {
+  container-type: size;
+}
+
+.c-inline-size {
+  container-type: inline-size;
+}
+
+.c-normal {
+  container-type: normal;
+}

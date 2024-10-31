@@ -1,5 +1,11 @@
 <template>
-  <div data-cy="trip-images" class="trip-images">
+  <div v-if="images.length === 0">
+    <h1>😞 No Pictures</h1>
+    <p>Such a great trip deserves some awesome pictures. Don't you think? </p>
+    <p>Help others by uploading your pictures here</p>
+  </div>
+  <div v-else data-cy="trip-images" class="trip-images">
+
     <div v-for="image in images" :key="image.id">
       <img
         data-cy="single-image"
@@ -55,9 +61,15 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+h1 {
+  text-align: center;
+  vertical-align: center;
+}
 .trip-images {
   $gap: 8px;
   height: 400px + $gap;
+
+  border: solid 2px black;
 
   display: grid;
   grid-template-columns: 2fr repeat(2, 1fr);
@@ -65,7 +77,6 @@ onMounted(async () => {
   grid-column-gap: 8px;
   grid-row-gap: 8px;
 
-  clip-path: polygon(2% 4%, 97% 2%, 98% 94%, 1% 88%);
 }
 
 div {

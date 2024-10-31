@@ -1,5 +1,6 @@
 <template>
-  <div data-cy="map-container" class="map" :id="mapContainerId" />
+
+  <div data-cy="map-container" class="map" ref="mapContainer" />
 </template>
 
 <script setup lang="ts">
@@ -16,7 +17,7 @@ type LineStyle = {
 
 const map: Ref<Map | null> = ref(null);
 
-const mapContainerId = uuidv4();
+const mapContainer: Ref<HTMLElement | null> = ref(null);
 
 const props = defineProps<{
   trip: MapLibreTrip;
@@ -30,7 +31,7 @@ defineExpose({
 
 onMounted(() => {
   map.value = new Map({
-    container: mapContainerId,
+    container: mapContainer.value!,
     style:
       "https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
     center: props.trip.bounds.getCenter(),
@@ -100,11 +101,19 @@ function fitBounds(bounds: LngLatBounds, animate: boolean = true) {
 
 <style lang="scss">
 .map {
-  aspect-ratio: 1/1;
-
   display: block;
   width: 100%;
+}
 
-  clip-path: polygon(2% 4%, 97% 2%, 98% 94%, 1% 88%);
+@container (max-width: 699px) {
+  .map {
+    aspect-ratio: 1/1;
+  }
+
+}
+@container (min-width: 700px) {
+  .map {
+    aspect-ratio: 16/9;
+  }
 }
 </style>

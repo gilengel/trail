@@ -2,13 +2,19 @@
   <main>
     <NuxtLayout name="page">
       <template #toolbar>
-        <ToolbarTToolbar class="focused-toolbar">
-          <ToolbarTToolbarButton
-            data-cy="button-edit"
-            icon="las la-edit"
-            @click="$router.push({ path: `../${route.params.id}/edit` })"
-          />
-        </ToolbarTToolbar>
+
+        <v-list-item
+            @click="$router.push({ path: 'edit' })"
+            color="primary"
+            rounded="xl"
+
+            prepend-icon="mdi-pencil"
+
+            title="Starred"
+            value="starred"
+        >
+
+        </v-list-item>
       </template>
 
       <template #content>
@@ -16,8 +22,16 @@
       </template>
 
       <template #overview>
-        <TripMap :trip="trip!" ref="map" class="map" />
+        <v-list>
+          <v-list-item
+              v-for="segment in tripDto?.segments"
+              :key="segment.id"
+              :title=segment.name
+              link
+          ></v-list-item>
+        </v-list>
       </template>
+
     </NuxtLayout>
   </main>
 </template>

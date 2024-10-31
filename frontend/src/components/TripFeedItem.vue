@@ -1,4 +1,13 @@
 <template>
+  <v-card class="mx-auto" variant="outlined">
+    <v-card-item>
+      <v-card-title>FEED</v-card-title>
+    </v-card-item>
+
+    <v-card-text> TEXT </v-card-text>
+  </v-card>
+
+  <!--
   <div data-cy="trip-feed-item">
     <div class="header">
       <div class="profile">
@@ -24,7 +33,7 @@
 
     <TripImages :segment="segment" />
   </div>
-</template>
+--></template>
 
 <script setup lang="ts">
 import { LeafletSegment } from '@/stores/route/types'

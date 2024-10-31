@@ -1,26 +1,56 @@
 <template>
-  <main>
-    <div class="toolbars" data-cy="page-toolbars">
-      <ToolbarTToolbar>
-        <ToolbarTToolbarButton
-          icon="las la-hand-point-left"
-          @click="$router.push({ path: '/' })"
-        />
-      </ToolbarTToolbar>
+  <v-app id="inspire">
+    <v-navigation-drawer rail data-cy="page-toolbars">
+      <v-list>
+        <v-list-item
+            prepend-icon="mdi-arrow-left"
+            title="Back To Overview"
+        >
+
+        </v-list-item>
+      </v-list>
+
+
+      <v-divider class="mx-3 my-5"></v-divider>
+
+
       <slot name="toolbar" />
-    </div>
+    </v-navigation-drawer>
 
-    <div class="content" data-cy="page-content">
+    <v-app-bar class="px-3" height="72" flat>
+      <v-spacer></v-spacer>
+
+      <v-responsive max-width="156">
+        <v-text-field
+          density="compact"
+          rounded="pill"
+          variant="solo-filled"
+          flat
+          hide-details
+        ></v-text-field>
+      </v-responsive>
+
+      <v-btn icon @click="toggle()">
+        <v-icon>{{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-main data-cy="page-content" class="d-flex justify-center ga-7">
       <slot name="content" />
-    </div>
+    </v-main>
 
-    <div class="overview" data-cy="page-overview">
+
+    <v-navigation-drawer location="right" data-cy="page-overview">
       <slot name="overview" />
-    </div>
-  </main>
+    </v-navigation-drawer>
+  </v-app>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useCustomTheme } from '~/composables/useCustomTheme'
+
+const { toggle, isDark } = useCustomTheme()
+</script>
 
 <style lang="scss" scoped>
 main {

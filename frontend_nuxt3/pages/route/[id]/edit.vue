@@ -1,66 +1,104 @@
 <template>
-  <FormsSingleLineText
-    :value="trip?.name"
-    @value-changed="routeNameChanged"
-    :validation="{
-      func: (value: String) => {
-        console.log(value.length > 0);
-        return value.length > 0;
-      },
-      invalidText: 'Name cannot be empty.',
-    }"
-    support-text="Trip Name"
-  />
 
-  <FormsSingleLineText
-    :value="trip?.description"
-    @value-changed="routeDescriptionChanged"
-    support-text="Trip Description"
-  />
+  <v-card class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size" variant="outlined">
+    <v-card-item>
+      <v-card-title>Edit</v-card-title>
+    </v-card-item>
 
-  <DropZone
-    :allowed-file-extensions="['jpg', 'jpeg', 'tif', 'tiff']"
-    @onFilesChanged="onFilesChanged"
-  ></DropZone>
+    <v-card-text>
 
-  <div class="btn-container">
-    <FormsTButton data-cy="button-save" label="Save" @click="save"
-      ><TIcon icon="save"
-    /></FormsTButton>
-  </div>
 
-  <template v-if="errorDialogData">
-    <ErrorMessage :title="errorDialogData.title">
-      {{ errorDialogData.message }}
-    </ErrorMessage>
-  </template>
+    <v-form
+        @submit.prevent="saveRoute"
+    >
+
+      <v-text-field
+          v-model="changedRouteData.name"
+          :rules="[rules.required, rules.counter]"
+          :readonly="false"
+          class="mb-2"
+          label="Trip Name"
+          prepend-icon="mdi-tag-text"
+          clearable
+      ></v-text-field>
+
+      <v-file-input
+          label="Trip Images"
+          prepend-icon="mdi-camera"
+          variant="filled"
+      ></v-file-input>
+
+      <v-btn
+          color="success"
+          size="large"
+          type="submit"
+          variant="elevated"
+          block
+      >
+        Save
+      </v-btn>
+    </v-form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import type { MapLibreTrip } from "~/data/routes/types";
 
 const trip: MapLibreTrip = inject("trip") as MapLibreTrip;
 
 const config = useRuntimeConfig();
-const route = useRoute();
 
-const status: Ref<String> = ref("");
+const router = useRouter();
+const route    = useRoute();
+
 
 const changedRouteData: Ref<{
   name?: string;
   description?: string;
   images?: File[];
-}> = ref({});
-const errorDialogData: Ref<{ title: string; message: string } | null> =
-  ref(null);
+}> = ref({ name: trip.name, description: trip.description, images: []});
 
-async function saveRoute() {
-  await $fetch(`/routes/${trip.id}`, {
+function saveRoute() {
+
+  $fetch(`/routes/${trip.id}`, {
     baseURL: config.public.baseURL,
     method: "PATCH",
     body: changedRouteData.value,
-  });
+  }).then(() => {
+    router.push(`/route/${route.params.id}/feed`);
+  }).catch(() => {
+
+  })
+
+
 }
+
+const rules = {
+  required: (value: string) => !!value || 'Required.',
+  counter: (value: string) => value.length <= 20 || 'Max 20 characters',
+}
+
+
+
+
+/*
+
+import {InputEvent} from "happy-dom";
+
+
+
+
+const route = useRoute();
+
+const status: Ref<String> = ref("");
+
+
+
+const errorDialogData: Ref<{ title: string; message: string } | null> =
+  ref(null);
+
 
 async function saveRouteImages() {
   if (!changedRouteData.value.images) {
@@ -93,14 +131,7 @@ async function save() {
   saveRoute();
   saveRouteImages();
 }
-function routeNameChanged(newValue: string) {
-  if (newValue === "") {
-    console.log("Invalid value: name cannot be null");
-    return;
-  }
 
-  changedRouteData.value.name = newValue;
-}
 
 async function routeDescriptionChanged(newDescription: string) {
   if (newDescription === "") {
@@ -113,4 +144,5 @@ async function routeDescriptionChanged(newDescription: string) {
 async function onFilesChanged(images: File[]) {
   changedRouteData.value.images = images;
 }
+*/
 </script>

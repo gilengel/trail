@@ -1,5 +1,5 @@
 <template>
-  <div class="tflex-row">
+  <div class="d-flex ga-4 justify-center mt-5 py-2 aspects">
     <TripAspect :icon="tripIsLoop ? 'las la-circle-notch' : 'las la-route'">
       <span data-cy="trip-loop-indicator" v-if="tripIsLoop">Loop</span>
       <span data-cy="trip-route-indicator" v-else>Route</span>
@@ -11,8 +11,8 @@
       <span v-if="ascending">Up {{ Math.floor(ascending) }}m</span><br />
       <span v-if="descending">Down {{ Math.floor(descending) }}m</span>
     </TripAspect>
-    <TripAspect icon="cell_tower" />
-    <TripAspect icon="sunny" />
+    <TripAspect icon="las la-broadcast-tower" />
+    <TripAspect icon="las la-cloud-sun" />
   </div>
 </template>
 
@@ -25,18 +25,7 @@ defineProps({
 });
 </script>
 
-<style scoped lang="scss">
-.tflex-row {
-  gap: 24px;
-  border-top: solid 1px $border;
-  border-bottom: solid 1px $border;
-  padding-top: 1em;
-  padding-bottom: 1em;
-}
-
-@container (max-width: 1200px) {
-  .tflex-row {
-    justify-content: center;
-  }
+<style lang="scss" scoped>
+.aspects {
 }
 </style>
