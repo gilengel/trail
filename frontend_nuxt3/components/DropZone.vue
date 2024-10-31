@@ -1,13 +1,13 @@
 <template>
   <div
-    class="dropzone-container tborder"
+    class="v-input-collapse pa-6 border-thin d-flex flex-column"
     :class="{ focused: isDragging === true }"
     @dragover="dragover"
     @dragleave="dragleave"
     @drop="drop"
     data-cy="drop-zone"
   >
-    <FormsTLabel v-if="supportText">{{ supportText }}</FormsTLabel>
+    <label v-if="supportText">{{ supportText }}</label>
     <input
       data-cy="file-input"
       type="file"
@@ -18,41 +18,44 @@
       ref="file"
     />
 
-    <label for="fileInput" class="file-label">
-      <div data-cy="release-msg" v-if="isDragging">
-        Release to drop files here.
-      </div>
-      <div data-cy="drop-msg" v-else>
-        Drop files here or <u>click here</u> to upload.
-      </div>
+    <label for="fileInput" data-cy="release-msg" v-if="isDragging">
+      Release to drop files here.
+    </label>
+    <label for="fileInput" data-cy="release-msg" v-else>
+      Drop files here or <u>click here</u> to upload.
     </label>
 
-    <p data-cy="wrong-file-extension" v-if="isWrongFileType">
+    <label data-cy="wrong-file-extension" v-if="isWrongFileType">
       File has wrong type.
-    </p>
-    <ul
-      data-cy="preview-container"
-      class="preview-container mt-4"
-      v-if="files.length"
-    >
-      <li
-        v-for="(file, index) in files"
-        :key="file.name"
-        class="preview-card"
-        :class="{ deleting: isDragging === true }"
+    </label>
+
+    <slot name="container" :files="files">
+      <ul
+          data-cy="preview-container"
+          class="preview-container mt-4"
+          v-if="files.length"
       >
-        <div>
+        <li
+            v-for="(file, index) in files"
+            :key="file.name"
+            class="preview-card"
+            :class="{ deleting: isDragging === true }"
+        >
+          <slot name="item" :file="file" :index="index">
+            <div>
           <span>
             {{ file.name }}
           </span>
-          <span>
+              <span>
             {{ Math.round(file.size / 1000) + "kb" }}
           </span>
-        </div>
+            </div>
 
-        <SVGTrash data-cy="delete-btn" @click="remove(index)" />
-      </li>
-    </ul>
+            <SVGTrash data-cy="delete-btn" @click="remove(index)" />
+          </slot>
+        </li>
+      </ul>
+    </slot>
   </div>
 </template>
 
@@ -73,7 +76,6 @@ const files: Ref<File[]> = ref([]);
 
 function onChange() {
   emit("onFilesChanged", files.value);
-  //files.value.push(...this.$refs.file.files)
 }
 
 function dragover(e: DragEvent) {
@@ -122,57 +124,18 @@ function remove(i: number) {
 }
 </script>
 <style scoped lang="scss">
-.dropzone-container {
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 2em;
-  padding-bottom: 2em;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  position: relative;
-
+.v-input-collapse {
   input {
     visibility: collapse;
-  }
-
-  label {
-    @include font;
-  }
-}
-
-.preview-container {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 0;
-  gap: 1em;
-
-  max-height: 400px;
-  overflow: scroll;
-  width: 100%;
-}
-.preview-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-
-  div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  svg {
-    width: 70px;
   }
 }
 
 .deleting {
   border-color: red;
+}
+
+label {
+
+  line-height: 2em;
 }
 </style>

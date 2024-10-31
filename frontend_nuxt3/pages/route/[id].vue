@@ -1,39 +1,5 @@
 <template>
-  <main>
-    <NuxtLayout name="page">
-      <template #toolbar>
-
-        <v-list-item
-            @click="$router.push({ path: 'edit' })"
-            color="primary"
-            rounded="xl"
-
-            prepend-icon="mdi-pencil"
-
-            title="Starred"
-            value="starred"
-        >
-
-        </v-list-item>
-      </template>
-
-      <template #content>
-        <NuxtPage />
-      </template>
-
-      <template #overview>
-        <v-list>
-          <v-list-item
-              v-for="segment in tripDto?.segments"
-              :key="segment.id"
-              :title=segment.name
-              link
-          ></v-list-item>
-        </v-list>
-      </template>
-
-    </NuxtLayout>
-  </main>
+  <NuxtPage />
 </template>
 
 <script setup lang="ts">

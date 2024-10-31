@@ -1,64 +1,101 @@
 <template>
-  <v-card class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size" variant="outlined">
-    <v-card-item>
-      <v-card-title>{{ trip?.name }} </v-card-title>
-    </v-card-item>
+  <main>
+    <NuxtLayout name="page">
+      <template #primary-toolbar>
+        <v-list-item
+            @click="$router.push({ path: '/' })"
+            color="primary"
+            rounded="xl"
+            prepend-icon="mdi-arrow-left"
+        />
+      </template>
 
-    <v-card-text>
-      {{ trip?.description }}
+      <template #toolbar>
+        <v-list-item
+            @click="$router.push({ path: 'edit' })"
+            color="primary"
+            rounded="xl"
+            prepend-icon="mdi-pencil"
+        />
+      </template>
 
-      <TMap v-if="trip" :trip="trip" />
+      <template #content>
+        <v-card class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size" variant="outlined">
+          <v-card-item>
+            <v-card-title>{{ trip?.name }} </v-card-title>
+          </v-card-item>
 
-      <TripAspects
-        :trip-is-loop="tripIsALoop"
-        :trip-length="trip?.segments[0].length"
-        :ascending="trip?.segments[0].accumulatedAscent"
-        :descending="trip?.segments[0].accumulatedDescent"
-      />
-    </v-card-text>
-  </v-card>
+          <v-card-text>
+            {{ trip?.description }}
 
-  <v-card
-      class="mx-xxl-auto mx-9 w-xxl-50 w-fill"
-      variant="outlined"
-    v-for="segment in trip?.segments"
-    :key="segment.id"
-  >
-    <v-card-item>
-      <v-card-title>{{ segment.name }} </v-card-title>
-    </v-card-item>
+            <TMap v-if="trip" :trip="trip" />
 
-    <v-card-text>
-      <TripImages :segment="segment" />
-    </v-card-text>
+            <TripAspects
+                :trip-is-loop="tripIsALoop"
+                :trip-length="trip?.segments[0].length"
+                :ascending="trip?.segments[0].accumulatedAscent"
+                :descending="trip?.segments[0].accumulatedDescent"
+            />
+          </v-card-text>
+        </v-card>
 
-    <v-card-actions>
-      <v-list-item class="w-100">
-        <template v-slot:prepend>
-          <v-avatar
-            color="grey-darken-3"
-            image="https://randomuser.me/api/portraits/women/51.jpg"
-          ></v-avatar>
-        </template>
+        <v-card
+            class="mx-xxl-auto mx-9 w-xxl-50 w-fill"
+            variant="outlined"
+            v-for="segment in trip?.segments"
+            :key="segment.id"
+        >
+          <v-card-item>
+            <v-card-title>{{ segment.name }} </v-card-title>
+          </v-card-item>
 
-        <v-list-item-title>Anne Traveler</v-list-item-title>
+          <v-card-text>
+            <TripImages :segment="segment" />
+          </v-card-text>
 
-        <v-list-item-subtitle>@traveler</v-list-item-subtitle>
+          <v-card-actions>
+            <v-list-item class="w-100">
+              <template v-slot:prepend>
+                <v-avatar
+                    color="grey-darken-3"
+                    image="https://randomuser.me/api/portraits/women/51.jpg"
+                ></v-avatar>
+              </template>
 
-        <template v-slot:append>
-          <div class="justify-self-end">
-            <v-icon class="me-1" icon="mdi-heart"></v-icon>
-            <span class="subheading me-2">256</span>
-            <span class="me-1">·</span>
-            <v-icon class="me-1" icon="mdi-share-variant"></v-icon>
-            <span class="subheading">45</span>
-          </div>
-        </template>
-      </v-list-item>
-    </v-card-actions>
-  </v-card>
+              <v-list-item-title>Anne Traveler</v-list-item-title>
 
+              <v-list-item-subtitle>@traveler</v-list-item-subtitle>
 
+              <template v-slot:append>
+                <div class="justify-self-end">
+                  <v-icon class="me-1" icon="mdi-heart"></v-icon>
+                  <span class="subheading me-2">256</span>
+                  <span class="me-1">·</span>
+                  <v-icon class="me-1" icon="mdi-share-variant"></v-icon>
+                  <span class="subheading">45</span>
+                </div>
+              </template>
+            </v-list-item>
+          </v-card-actions>
+        </v-card>
+      </template>
+
+      <template #overview>
+        <v-navigation-drawer location="right" data-cy="page-overview">
+          <v-list>
+            <v-list-item
+                v-for="segment in trip?.segments"
+                :key="segment.id"
+                :title=segment.name
+                link
+            ></v-list-item>
+          </v-list>
+        </v-navigation-drawer>
+
+      </template>
+
+    </NuxtLayout>
+  </main>
 </template>
 
 <script setup lang="ts">

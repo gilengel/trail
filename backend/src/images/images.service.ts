@@ -128,13 +128,13 @@ export class ImagesService {
   }
 
   private async multipleImagesQueryCount(
-    geomertyAsWkt: string,
+    geometryAsWkt: string,
     offset: number,
   ): Promise<CountDto> {
     const query = Prisma.sql`
     SELECT COUNT(id)
     FROM "Image"
-    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int )`;
+    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geometryAsWkt}::text, 4326), ${offset}::int )`;
 
     const result: CountDto[] = await this.prisma.$queryRaw(query);
 

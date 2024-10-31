@@ -35,6 +35,7 @@ const props = defineProps<TripImagesProps>();
 const config = useRuntimeConfig();
 
 onMounted(async () => {
+  console.log(props.segment.id);
   const totalImages: number = await $fetch(`images/route_segment/number`, {
     baseURL: config.public.baseURL,
     method: "GET",

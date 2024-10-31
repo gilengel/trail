@@ -2,12 +2,7 @@
   <v-app id="inspire">
     <v-navigation-drawer rail data-cy="page-toolbars">
       <v-list>
-        <v-list-item
-            prepend-icon="mdi-arrow-left"
-            title="Back To Overview"
-        >
-
-        </v-list-item>
+        <slot name="primary-toolbar" />
       </v-list>
 
 
@@ -40,9 +35,7 @@
     </v-main>
 
 
-    <v-navigation-drawer location="right" data-cy="page-overview">
-      <slot name="overview" />
-    </v-navigation-drawer>
+    <slot name="overview" />
   </v-app>
 </template>
 

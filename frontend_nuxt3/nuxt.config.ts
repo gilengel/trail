@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   },
 
   css: [
-    "line-awesome/dist/line-awesome/css/line-awesome.min.css",
+    "line-awesome/dist/line-awesome/css/line-awesome.css",
     "assets/maplibre-gl.css",
   ],
 
