@@ -17,18 +17,26 @@
             rounded="xl"
             prepend-icon="mdi-pencil"
         />
+
+        <v-list-item
+            @click="dialog = true"
+            color="primary"
+            rounded="xl"
+            prepend-icon="mdi-delete-alert-outline"
+        />
       </template>
 
       <template #content>
-        <v-card class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size" variant="outlined">
+
+        <v-card v-if="trip?.segments.length" class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size" variant="outlined" >
           <v-card-item>
-            <v-card-title>{{ trip?.name }} </v-card-title>
+            <v-card-title>{{ trip?.name }}</v-card-title>
           </v-card-item>
 
           <v-card-text>
             {{ trip?.description }}
 
-            <TMap v-if="trip" :trip="trip" />
+            <TMap v-if="trip" :trip="trip"/>
 
             <TripAspects
                 :trip-is-loop="tripIsALoop"
@@ -39,18 +47,20 @@
           </v-card-text>
         </v-card>
 
+
         <v-card
+            v-if="trip"
             class="mx-xxl-auto mx-9 w-xxl-50 w-fill"
             variant="outlined"
             v-for="segment in trip?.segments"
             :key="segment.id"
         >
           <v-card-item>
-            <v-card-title>{{ segment.name }} </v-card-title>
+            <v-card-title>{{ segment.name }}</v-card-title>
           </v-card-item>
 
           <v-card-text>
-            <TripImages :segment="segment" />
+            <TripImages :segment="segment"/>
           </v-card-text>
 
           <v-card-actions>
@@ -78,10 +88,11 @@
             </v-list-item>
           </v-card-actions>
         </v-card>
+
       </template>
 
       <template #overview>
-        <v-navigation-drawer location="right" data-cy="page-overview">
+        <v-navigation-drawer v-if="trip" location="right" data-cy="page-overview" >
           <v-list>
             <v-list-item
                 v-for="segment in trip?.segments"
@@ -95,27 +106,81 @@
       </template>
 
     </NuxtLayout>
+
+    <v-dialog
+        v-model="dialog"
+        width="auto"
+        persistent
+    >
+      <v-card
+          max-width="400"
+          prepend-icon="mdi-delete-alert-outline"
+          text="Please confirm that you want to delete the trip. This action is permanent and cannot be undone."
+          title="Confirm Delete Trip"
+      >
+        <template v-slot:actions>
+
+          <v-btn @click="dialog = false">
+            Cancel
+          </v-btn>
+          <v-btn
+              class="ms-auto"
+              text="Permanently Delete"
+              @click="deleteRoute()"
+          ></v-btn>
+        </template>
+      </v-card>
+    </v-dialog>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, type Ref } from "vue";
-import type { MapLibreTrip } from "~/data/routes/types";
+import {computed, inject, type Ref} from "vue";
+import type {MapLibreTrip} from "~/data/routes/types";
 import TMap from "~/components/map/TMap.vue";
+import {useRouter} from "#vue-router";
+
+const route = useRoute();
+const router = useRouter();
 
 const trip: Ref<MapLibreTrip | null> = inject(
-  "trip"
+    "trip"
 ) as Ref<MapLibreTrip | null>;
 
+
+/**
+ * Makes the call to the backup to delete a route
+ */
+function deleteRoute() {
+
+
+  useApiFetch(
+      `/routes/${route.params.id}`,
+      {
+        method: "DELETE"
+      }
+  ).then(() => {
+    router.push('/')
+  }).catch((e) => console.error(e));
+}
+
+const dialog = ref(false);
+
+
 const tripIsALoop = computed(() => {
+  if(!trip){
+    return false;
+  }
+
   if (trip.value?.segments.length == 0) {
     return false;
   }
 
   return (
-    trip.value?.segments[0] ==
-    trip.value?.segments[trip.value?.segments.length - 1]
+      trip.value?.segments[0] ==
+      trip.value?.segments[trip.value?.segments.length - 1]
   );
 });
+
 </script>
 
