@@ -30,7 +30,7 @@ const isHovered = ref(false);
 <style scoped lang="scss">
 .animated_btn {
   position: relative;
-  background-color: $light;
+  //background-color: $light;
   margin-top: 2em;
 
   > svg {

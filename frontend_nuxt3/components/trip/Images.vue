@@ -92,24 +92,4 @@ span {
   font-size: 4em;
   font-family: "Amatic SC", cursive;
 }
-
-.div1 {
-  grid-area: 1 / 1 / 3 / 2;
-}
-
-.div2 {
-  grid-area: 1 / 2 / 2 / 3;
-}
-
-.div3 {
-  grid-area: 1 / 3 / 2 / 4;
-}
-
-.div4 {
-  grid-area: 2 / 2 / 3 / 3;
-}
-
-.div5 {
-  grid-area: 2 / 3 / 3 / 4;
-}
 </style>

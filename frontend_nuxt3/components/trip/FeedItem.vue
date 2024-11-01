@@ -8,8 +8,8 @@
         />
 
         <div>
-          <span>Anne Travelor</span>
-          <span>/travelor</span>
+          <span>Anne Traveler</span>
+          <span>/traveler</span>
         </div>
       </div>
 
@@ -52,9 +52,8 @@ defineProps<TripFeedItemProps>();
     span {
       line-height: 2em;
       height: 2em;
-      padding: none;
-      margin: none;
-      color: $text;
+      padding: 0;
+      margin: 0;
     }
     span:nth-of-type(2) {
       margin-left: 0.3em;
@@ -92,7 +91,6 @@ defineProps<TripFeedItemProps>();
     }
 
     span:nth-of-type(2) {
-      color: $text;
       margin-top: -0.25em;
     }
   }

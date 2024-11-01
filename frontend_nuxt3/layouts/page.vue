@@ -54,14 +54,6 @@ main {
   align-content: stretch;
 }
 
-.toolbars {
-  order: 0;
-  display: flex;
-  flex-direction: column;
-
-  border-right: rgb(230, 230, 230) 1px solid;
-}
-
 .map {
   box-sizing: border-box;
   order: 2;

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import TripOverview from "./Overview.vue";
 
@@ -7,9 +7,9 @@ describe("Component", () => {
     it("should render the images of a trip", async () => {
       const component = await mountSuspended(TripOverview);
 
-      const h1 = component.find("h1");
+      const h1 = component.find('[data-cy="overview-title"]');
       expect(h1.exists()).toBeTruthy();
-      expect(h1.text()).toBe("Trip Overview");
+      expect(h1.text()).toBe("My Latest Trips");
     });
 
     /*

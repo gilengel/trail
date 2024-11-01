@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "vitest";
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import App from "~/app.vue";
 

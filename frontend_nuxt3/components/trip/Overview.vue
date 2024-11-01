@@ -1,5 +1,8 @@
 <template>
-  <v-card title="My Latest Trips" variant="outlined">
+  <v-card variant="outlined">
+    <template v-slot:title >
+      <span data-cy="overview-title">My Latest Trips</span>
+    </template>
     <v-card-text>
       <v-list lines="one">
         <v-list-item
@@ -47,18 +50,13 @@ ul {
 
   overflow: scroll;
   li {
-    color: $text;
-    padding: 0.5em;
-
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    //color: $text;
+    padding: 8px 16px;
   }
 
   li:hover {
     cursor: pointer;
-    background: $primary;
+    //background: $primary;
   }
 }
 

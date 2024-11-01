@@ -1,7 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import DropZone from "../DropZone.vue";
-import TripUpload from "./Upload.vue";
-import { mockFile } from "../__tests__/util";
+import { describe, it } from "vitest";
+
 
 describe("Component", () => {
   describe("TripUpload", () => {

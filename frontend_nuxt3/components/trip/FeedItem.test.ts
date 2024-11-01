@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { MapLibreSegment } from "~/data/routes/types";
 import TripFeedItem from "./FeedItem.vue";

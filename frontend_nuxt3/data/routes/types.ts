@@ -1,5 +1,5 @@
 import { LngLat, LngLatBounds } from "maplibre-gl";
-import { distance, length } from "@turf/turf";
+import { distance } from "@turf/turf";
 
 export type RouteWithoutSegments = {
   id: number;
@@ -48,7 +48,7 @@ export function RouteSegmentDto2MapLibreRouteSegment(
 }
 
 export class MapLibreTrip {
-  private _bounds: LngLatBounds;
+  private readonly _bounds: LngLatBounds;
 
   constructor(
     private _id: number,
@@ -109,7 +109,7 @@ export class MapLibreTrip {
 export class MapLibreSegment {
   private _lineString: any;
 
-  private _bounds: LngLatBounds;
+  private readonly _bounds: LngLatBounds;
 
   constructor(
     private _id: number,

@@ -20,9 +20,3 @@ const trip = TripDto2MapLibreTrip(tripDto.value!);
 
 provide("trip", trip);
 </script>
-
-<style lang="scss" scoped>
-.focused-toolbar {
-  background-color: rgba($yellow, 0.1);
-}
-</style>

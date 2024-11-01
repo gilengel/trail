@@ -1,7 +1,5 @@
 @import "_colors";
 @import "_button";
-@import "_border";
-@import "_layout";
 
 .c-size {
   container-type: size;
@@ -9,8 +7,4 @@
 
 .c-inline-size {
   container-type: inline-size;
-}
-
-.c-normal {
-  container-type: normal;
 }

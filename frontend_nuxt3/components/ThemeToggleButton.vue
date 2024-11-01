@@ -3,11 +3,6 @@
     <input type="checkbox"  :checked="isDark" @change="toggle()" >
     <span class="slider round"></span>
   </label>
-  <!--
-  <v-btn icon @click="toggle()">
-    <v-icon>{{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}</v-icon>
-  </v-btn>
-  -->
 </template>
 
 <script setup lang="ts">

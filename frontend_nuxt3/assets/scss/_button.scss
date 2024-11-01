@@ -6,10 +6,7 @@
 }
 
 .btn {
-  border: solid 1px $light;
-  padding: 0.25em;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 0.25em 1em;
   min-width: 244px;
   font-weight: bold;
 
@@ -18,9 +15,6 @@
 
 @mixin trail-button {
   & {
-    @include trail-border;
-    color: $text;
-
     padding: 0.5em;
 
     background-color: transparent;

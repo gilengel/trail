@@ -1,15 +1,10 @@
 <template>
   <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:svg="http://www.w3.org/2000/svg"
     xmlns="http://www.w3.org/2000/svg"
     style="fill: none"
     width="278.42975"
     height="558.16321"
     viewBox="0 0 139.21 279.08"
-    version="1.1"
     :class="animationIn ? 'in' : 'out'"
   >
     <path
@@ -232,7 +227,7 @@ svg {
   width: 100%;
 
   path {
-    stroke: $light;
+    //stroke: $light;
     stroke-opacity: 1;
     stroke-width: 16;
     stroke-linecap: round;

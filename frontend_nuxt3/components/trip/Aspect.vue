@@ -1,7 +1,6 @@
 
 <template>
   <div class="aspect">
-    <TIcon :icon />
     <slot />
   </div>
 </template>

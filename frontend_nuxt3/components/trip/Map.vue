@@ -36,16 +36,6 @@ defineProps<{
     border-right: rgb(230, 230, 230) 1px solid;
     flex-grow: 2;
 
-    .bar {
-      display: flex;
-      gap: 1em;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-    }
-
     ul {
       position: relative;
       list-style: none;
@@ -114,9 +104,7 @@ defineProps<{
     width: 6em;
     height: 4.5em;
     border: solid 1px rgb(230, 230, 230);
-    margin: 20px;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin: 20px 10px;
   }
 
   .fi::before {
@@ -129,16 +117,5 @@ defineProps<{
     top: -10px;
     bottom: -10px;
   }
-}
-
-.overlay-content {
-  background: #efefef;
-  border: solid 1px black;
-  border-radius: 50% 50%;
-  padding: 10px 20px;
-  font-size: 16px;
-  color: black;
-
-  transform: translate(-50%, -50%);
 }
 </style>

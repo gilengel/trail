@@ -50,8 +50,6 @@
             {{ Math.round(file.size / 1000) + "kb" }}
           </span>
             </div>
-
-            <SVGTrash data-cy="delete-btn" @click="remove(index)" />
           </slot>
         </li>
       </ul>
