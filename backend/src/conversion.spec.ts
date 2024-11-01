@@ -21,12 +21,12 @@ describe('Conversion', () => {
     expect(result).toStrictEqual([8, 8]);
   });
 
-  it('convertes a ed wkt string to point', () => {
+  it('convertes a 2d wkt string to point', () => {
     const result = wkt2point('POINT(8 8 8)');
     expect(result).toStrictEqual([8, 8, 8]);
   });
 
-  it('converts a db image to dto', () => {
+  it('converts a db image jpg to dto', () => {
     const uuid = uuidv4();
     const dbImage: DbImageDto = {
       id: uuid.toString(),
@@ -42,6 +42,30 @@ describe('Conversion', () => {
       timestamp: undefined,
       coordinates: [1024, 1024, 0],
       url: `${uuid.toString()}.jpg`,
+    };
+
+    expect(result).toStrictEqual(expected);
+  });
+
+  it.each([
+    ['image/jpeg', 'jpg'],
+    ['image/tiff', 'tif'],
+  ])('converts a db image %p to dto with type %p', () => {
+    const uuid = uuidv4();
+    const dbImage: DbImageDto = {
+      id: uuid.toString(),
+      timestamp: undefined,
+      coordinates: 'POINT(1024 1024 0)',
+      mime_type: 'image/tiff',
+    };
+
+    const result = dbimage2dto(dbImage);
+    const expected: ImageDto = {
+      id: uuid.toString(),
+      name: 'not_implemented',
+      timestamp: undefined,
+      coordinates: [1024, 1024, 0],
+      url: `${uuid.toString()}.tif`,
     };
 
     expect(result).toStrictEqual(expected);

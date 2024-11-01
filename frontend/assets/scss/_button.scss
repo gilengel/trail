@@ -1,0 +1,26 @@
+@use "_colors";
+
+@mixin font {
+  font-family: "Amatic SC", cursive;
+  font-size: 2em;
+}
+
+.btn {
+  padding: 0.25em 1em;
+  min-width: 244px;
+  font-weight: bold;
+
+  @include font;
+}
+
+@mixin trail-button {
+  & {
+    padding: 0.5em;
+
+    background-color: transparent;
+  }
+
+  &:hover {
+    color: black;
+  }
+}

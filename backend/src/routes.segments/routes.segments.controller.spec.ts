@@ -12,6 +12,23 @@ import { NoAttributesProvidedError } from '../routes/routes.service';
 import * as testData from '../../test/data';
 import { PrismaService } from '../prisma.service';
 
+jest.mock('@prisma/client', () => {
+  const a = jest.fn().mockResolvedValue([]);
+  return {
+    PrismaClient: jest.fn().mockImplementation(() => {
+      return {
+        $queryRaw: a,
+      };
+    }),
+
+    // necessary as we use sql to convert the image coordinates to postgis see image.service.ts
+    Prisma: {
+      sql: () => '',
+      join: () => '',
+    },
+  };
+});
+
 describe('RoutesSegmentsController', () => {
   let controller: RoutesSegmentsController;
   let service: RoutesSegmentsService;

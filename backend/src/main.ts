@@ -7,6 +7,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { json } from 'express';
 
+BigInt.prototype.toJSON = function () {
+  return { $bigint: this.toString() };
+};
+
 // eslint-disable-next-line jsdoc/require-example
 /**
  * Starts the backend server.
@@ -21,10 +25,10 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Trail backend')
+    .setDescription('The trails API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('trail')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

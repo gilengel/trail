@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "start:migrate:init": "npx prisma migrate dev --name init && npm run start:dev",
     "start:migrate:dev": "prisma migrate deploy && npm run start:dev",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "doc": "typedoc",

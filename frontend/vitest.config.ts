@@ -1,24 +1,22 @@
-import { mergeConfig, defineConfig } from 'vitest/config'
-import viteConfig from './vite.config'
+import { defineVitestConfig } from "@nuxt/test-utils/config";
 
-export default mergeConfig(
-  viteConfig,
-  defineConfig({
-    test: {
-      globals: true,
-      environment: 'jsdom',
+export default defineVitestConfig({
+  test: {
+    environment: "nuxt",
 
-      coverage: {
-        provider: 'istanbul',
-        reporter: ['json', 'lcov', 'html']
+    includeTaskLocation: true,
 
-        //thresholds: {
-        //statements: 100,
-        //branches: 100,
-        //functions: 100,
-        //lines: 100
-        //}
-      }
-    }
-  })
-)
+    coverage: {
+      provider: "istanbul",
+
+      /*
+      thresholds: {
+        statements: 100,
+        branches: 100,
+        functions: 100,
+        lines: 100,
+      },
+      */
+    },
+  },
+});

@@ -1,4 +1,4 @@
-<div align="center">
+<div style="text-align: center">
   <h1>Trail</h1>
 
   <p>
@@ -13,7 +13,7 @@
 
 # Vision
 
-There are multiple commercial applications available that let you plan, navigate and share routes for your favorite activities. While they generally offer you a great service for a decent price you'll always need to pay for these services and you don't really know what these services really do with your data - the everlasting problem of commercial software.
+There are multiple commercial applications available that let you plan, navigate and share routes for your favorite activities. While they generally offer you a great service for a decent price you'll always need to pay for these services, and you don't really know what these services really do with your data - the everlasting problem of commercial software.
 
 Trail wants to be a good alternative, free and open source so that everyone can use it and check how the data is handled by it.
 
@@ -30,7 +30,7 @@ Trail is in very early development and so far more a vision than an actual produ
 You'll need to install the following software to get started:
 
 - Docker (tested with version 25.0.4)
-- NodeJS (tested with version 20.9.0)
+- Node.js (tested with version 20.9.0)
 
 ## Getting Started
 

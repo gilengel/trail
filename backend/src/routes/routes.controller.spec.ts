@@ -17,6 +17,23 @@ import {
   RoutesSegmentsService,
 } from '../routes.segments/routes.segments.service';
 
+jest.mock('@prisma/client', () => {
+  const a = jest.fn().mockResolvedValue([]);
+  return {
+    PrismaClient: jest.fn().mockImplementation(() => {
+      return {
+        $queryRaw: a,
+      };
+    }),
+
+    // necessary as we use sql to convert the image coordinates to postgis see image.service.ts
+    Prisma: {
+      sql: () => '',
+      join: () => '',
+    },
+  };
+});
+
 describe('RoutesController', () => {
   let controller: RoutesController;
   let service: RoutesService;

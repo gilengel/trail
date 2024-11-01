@@ -1,5 +1,3 @@
-
-
 ###################
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
@@ -9,26 +7,24 @@ ARG NODE_VERSION=20.11.0
 # Base image
 FROM node:${NODE_VERSION}-alpine AS development
 
-# Create app directory
+# Set working directory
 WORKDIR /usr/src/app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# Install dependencies
 COPY package*.json ./
+RUN npm ci
 
-# Bundle app source
-#COPY /usr/src/app/node_modules ./node_modules
+# Copy application code
 COPY . .
-
-# Install app dependencies
-RUN npm install
 
 # Generate database client
 RUN npx prisma generate
 
-# Creates a "dist" folder with the production build
+# Create the production build
 RUN npm run build
 
+# Expose application port
 EXPOSE 3000
 
-# Start the server using the production build
+# Start the server
 CMD [ "npm", "run", "start:migrate:dev" ]
