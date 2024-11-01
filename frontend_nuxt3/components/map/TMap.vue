@@ -32,8 +32,7 @@ defineExpose({
 onMounted(() => {
   map.value = new Map({
     container: mapContainer.value!,
-    style:
-      "https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
+    style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
     center: props.trip.bounds.getCenter(),
     zoom: 16,
   });
