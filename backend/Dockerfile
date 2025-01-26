@@ -1,7 +1,3 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
-
 ARG NODE_VERSION=20.11.0
 
 # Base image
@@ -13,6 +9,8 @@ WORKDIR /usr/src/app
 # Install dependencies
 COPY package*.json ./
 RUN npm ci
+
+FROM development
 
 # Copy application code
 COPY . .

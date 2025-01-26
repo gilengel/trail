@@ -8,16 +8,6 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  backend:
-    build:
-      context: ./backend
-    environment:
-      NODE_ENV: production
-    ports:
-      - 80:80
-    depends_on:
-      db:
-        condition: service_healthy
   db:
     image: postgis/postgis:latest
     volumes:
@@ -34,15 +24,16 @@ services:
     healthcheck:
       test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U trail -d trail"
 
-  db-test:
-    image: postgis/postgis:latest
+  backend:
+    build:
+      context: ./backend
     environment:
-      - POSTGRES_DB=trail
-      - POSTGRES_USER=trail
-      - POSTGRES_PASSWORD=trail
-      - ALLOW_IP_RANGE=0.0.0.0/0
+      NODE_ENV: production
     ports:
-      - 5433:5432
+      - "80:80"
+    depends_on:
+      db:
+        condition: service_healthy
 
   frontend:
     build:

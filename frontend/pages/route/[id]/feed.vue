@@ -28,9 +28,22 @@
 
       <template #content>
 
-        <v-card v-if="trip?.segments.length" class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size" variant="outlined" >
+        <v-card v-if="trip?.segments.length" class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size"
+                variant="outlined">
           <v-card-item>
-            <v-card-title>{{ trip?.name }}</v-card-title>
+            <v-card-title>Elevation Profile</v-card-title>
+          </v-card-item>
+
+          <v-card-text>
+            <ElevationProfile :segment="trip?.segments[0] as MapLibreSegment" />
+          </v-card-text>
+        </v-card>
+
+
+          <v-card v-if="trip?.segments.length" class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size"
+                variant="outlined">
+          <v-card-item>
+            <v-card-title>Route</v-card-title>
           </v-card-item>
 
           <v-card-text>
@@ -56,11 +69,14 @@
             :key="segment.id"
         >
           <v-card-item>
-            <v-card-title>{{ segment.name }}</v-card-title>
+            <v-card-title>Image Gallery</v-card-title>
           </v-card-item>
 
           <v-card-text>
+
             <TripImages :segment="segment"/>
+
+
           </v-card-text>
 
           <v-card-actions>
@@ -92,7 +108,7 @@
       </template>
 
       <template #overview>
-        <v-navigation-drawer v-if="trip" location="right" data-cy="page-overview" >
+        <v-navigation-drawer v-if="trip" location="right" data-cy="page-overview">
           <v-list>
             <v-list-item
                 v-for="segment in trip?.segments"
@@ -136,9 +152,10 @@
 
 <script setup lang="ts">
 import {computed, inject, type Ref} from "vue";
-import type {MapLibreTrip} from "~/data/routes/types";
+import {MapLibreSegment, type MapLibreTrip} from "~/data/routes/types";
 import TMap from "~/components/map/TMap.vue";
-import {useRouter} from "#vue-router";
+import {useRouter} from "vue-router";
+import ElevationProfile from "~/components/ElevationProfile.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -167,8 +184,9 @@ function deleteRoute() {
 const dialog = ref(false);
 
 
+
 const tripIsALoop = computed(() => {
-  if(!trip){
+  if (!trip) {
     return false;
   }
 

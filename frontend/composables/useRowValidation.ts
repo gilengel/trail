@@ -1,0 +1,1 @@
+export function validRow(value: number){ return value >= 0 && value <= 12 }

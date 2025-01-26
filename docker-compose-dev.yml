@@ -7,27 +7,10 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
-services:
-  server:
-    container_name: trail-backend
-    build:
-      context: ./backend
-    develop:
-      watch:
-        - action: sync
-          path: ./backend
-          target: /usr/src/app
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: ./trail-backend/package.json
-    env_file:
-      - ./backend/.env
-    ports:
-      - "3000:3000"
-    links:
-      - db
 
+volumes:
+  node_modules:
+services:
   db:
     container_name: trail-db
     image: postgis/postgis:latest
@@ -48,18 +31,59 @@ services:
     healthcheck:
       test: "PGPASSWORD=${DB_PASSWORD} pg_isready -h 127.0.0.1 -U ${DB_USER} -d gis"
 
-#  frontend:
-#    container_name: trail-frontend
-#    build:
-#      context: ./frontend
-#    develop:
-#      watch:
-#        - action: sync
-#          path: ./frontend
-#          target: /app
-#          ignore:
-#            - node_modules/
-#        - action: rebuild
-#          path: ./frontend/package.json
-#    ports:
-#      - "${FRONTEND_PORT}:8080"
+  db-test:
+    image: postgis/postgis:latest
+    environment:
+      - POSTGRES_DB=trail
+      - POSTGRES_USER=trail
+      - POSTGRES_PASSWORD=trail
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    ports:
+      - "${TEST_DB_PORT}:5432"
+    restart: on-failure
+    healthcheck:
+      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U trail -d trail"
+
+  backend:
+    container_name: trail-backend
+    build:
+      context: ./backend
+    x-develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /usr/src/app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./backend/package.json
+        - action: rebuild
+          path: ./backend/.env
+      environment:
+        - DATABASE_URL
+    env_file:
+      - ./backend/.env
+    ports:
+      - "${BACKEND_PORT}:3000"
+    links:
+      - db
+
+  #frontend:
+    #volumes:
+    #  - ./frontend:/app:cached
+  #  container_name: trail-frontend
+  #  build:
+  #    context: ./frontend
+  #    dockerfile: ./Dockerfile.dev
+  #  depends_on:
+  #    - backend
+  #  ports:
+  #    - "${FRONTEND_PORT}:3000"
+  #  environment:
+  #    HOST: 0.0.0.0
+  #    PORT: 3000
+  #    BACKEND_URL: http://backend:3000
+  #  ulimits:
+  #    nofile:
+  #      soft: 8192
+  #      hard: 8192

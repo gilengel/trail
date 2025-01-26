@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    myProxyUrl: 'http://localhost:4000'
+  },
+
   compatibilityDate: "2024-07-31",
 
   modules: [
@@ -12,25 +16,41 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module"
   ],
 
-  runtimeConfig: {
-    public: {
-      baseURL: process.env.API_ENDPOINT_BASE_URL || "http://localhost:3000",
-    },
-  },
 
   css: [
     "line-awesome/dist/line-awesome/css/line-awesome.css",
     "assets/maplibre-gl.css",
   ],
 
+
   vite: {
+    optimizeDeps: {
+      include: ['@yeger/vue-masonry-wall'],
+    },
+
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "~/assets/scss/global.scss";',
+          additionalData: '@use "~/assets/scss/global.scss";',
         },
       },
     },
+
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 1000,
+        ignored: [
+          '**/node_modules/**',  // Exclude node_modules from all levels
+          '**/node_modules/*/**',
+          '**/.git/**',           // Exclude .git directories
+          '**/.nuxt/**',          // Exclude nuxt build directories
+          '**/dist/**',           // Exclude dist folders
+          '**/coverage/**',       // Exclude coverage folders
+          '**/tmp/**',            // Exclude tmp folders
+        ]
+      }
+    }
   },
 
   googleFonts: {

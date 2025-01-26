@@ -35,7 +35,7 @@ function onFilesChanged(trips: File[]) {
 async function upload() {
   const config = useRuntimeConfig();
 
-  useRouteUpload(config, {
+  await useRouteUpload(config, {
     name: routeName.value,
     files: files.value,
   });

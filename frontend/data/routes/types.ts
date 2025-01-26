@@ -1,4 +1,4 @@
-import { LngLat, LngLatBounds } from "maplibre-gl";
+import {LngLat, LngLatBounds} from "maplibre-gl";
 import { distance } from "@turf/turf";
 
 export type RouteWithoutSegments = {
@@ -21,6 +21,15 @@ export interface TripSegmentDto {
   color: string;
 }
 
+export class LngLatWithElevation extends LngLat {
+  constructor(lng: number, lat: number, elevation: number) {
+    super(lng, lat);
+
+    this.elevation = elevation;
+  }
+  elevation: number = 0;
+}
+
 export function TripDto2MapLibreTrip(trip: TripDto): MapLibreTrip {
   return new MapLibreTrip(
     trip.id,
@@ -41,7 +50,7 @@ export function RouteSegmentDto2MapLibreRouteSegment(
 
     // not sure why but LibreMap switches longitude and latitude...
     tripSegment.coordinates.map(
-      (coordinate) => new LngLat(coordinate[1], coordinate[0])
+      (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
     ),
     "#000"
   );
@@ -114,7 +123,7 @@ export class MapLibreSegment {
   constructor(
     private _id: number,
     private _name: string,
-    private _coordinates: LngLat[],
+    private _coordinates: LngLatWithElevation[],
     private _color: string,
     private _description?: string
   ) {
@@ -148,7 +157,7 @@ export class MapLibreSegment {
     this._description = description;
   }
 
-  get coordinates(): LngLat[] {
+  get coordinates(): LngLatWithElevation[] {
     return this._coordinates;
   }
 
@@ -175,13 +184,6 @@ export class MapLibreSegment {
     return this._bounds;
   }
 
-  /**
-   * Calculates the sum of all ascents between two neighbouring points in the segment.
-   *
-   * @readonly
-   * @type {number}
-   * @memberof LeafletSegment
-   */
   get accumulatedAscent(): number {
     /*
     let sum = 0;
@@ -197,13 +199,6 @@ export class MapLibreSegment {
     return 42;
   }
 
-  /**
-   * Calculates the sum of all descents between two neighbouring points in the segment.
-   *
-   * @readonly
-   * @type {number}
-   * @memberof LeafletSegment
-   */
   get accumulatedDescent(): number {
     /*
     let sum = 0;

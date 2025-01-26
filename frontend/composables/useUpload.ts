@@ -22,7 +22,7 @@ export async function useRouteUpload(config: RuntimeConfig, body: NewRouteDto) {
     formData.append("description", body.description);
   }
 
-  useUpload(config, "/routes/gpx", formData);
+  await useUpload(config, "api/routes/gpx", formData);
 }
 
 export function useFileFormData(

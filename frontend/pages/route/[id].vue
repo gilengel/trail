@@ -13,7 +13,7 @@ import { TripDto2MapLibreTrip } from "~/data/routes/types";
 const route = useRoute();
 
 const { data: tripDto } = await useApiFetch<RouteDto>(
-  `/routes/${route.params.id}`
+  `/api/routes/${route.params.id}`
 );
 
 const trip = TripDto2MapLibreTrip(tripDto.value!);

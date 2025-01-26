@@ -22,7 +22,12 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.use(json({ limit: '50mb' }));
-  app.enableCors();
+  app.enableCors({
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Trail backend')

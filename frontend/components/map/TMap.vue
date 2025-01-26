@@ -1,5 +1,4 @@
 <template>
-
   <div data-cy="map-container" class="map" ref="mapContainer" />
 </template>
 
@@ -7,6 +6,7 @@
 import type { MapLibreSegment, MapLibreTrip } from "~/data/routes/types";
 import { LngLatBounds, Map } from "maplibre-gl";
 import { v4 as uuidv4 } from "uuid";
+import type { Color } from "~/types/color";
 
 type LineStyle = {
   width: number;
@@ -19,9 +19,18 @@ const map: Ref<Map | null> = ref(null);
 
 const mapContainer: Ref<HTMLElement | null> = ref(null);
 
-const props = defineProps<{
-  trip: MapLibreTrip;
-}>();
+const props = defineProps({
+  trip: {
+    type: Object as PropType<MapLibreTrip>,
+    required: true,
+  },
+
+  lineColor: {
+    type: String as PropType<Color>,
+    required: false,
+    default: 'rgb(75, 192, 192)'
+  }
+});
 
 defineExpose({
   zoomToSegment,
@@ -43,7 +52,7 @@ onMounted(() => {
         segment.coordinates.map((e) => e.toArray()),
         {
           width: 5,
-          color: "#f00",
+          color: props.lineColor,
         }
       );
     }

@@ -2,6 +2,7 @@
   <v-card variant="outlined">
     <template v-slot:title >
       <span data-cy="overview-title">My Latest Trips</span>
+      {{routes}}
     </template>
     <v-card-text>
       <v-list lines="one">
@@ -32,11 +33,8 @@ function onTripClicked(trip: RouteWithoutSegments) {
 }
 
 const networkError = ref(false);
-const { data: routes } = await useApiFetch<RouteWithoutSegments[]>("/routes", {
-  onResponseError({ request, response, options }) {
-    networkError.value = true;
-  },
-});
+
+const { data: routes } = await useFetch<RouteWithoutSegments[]>("/api/routes")
 
 const emit = defineEmits<(e: "selectedTripChanged", id: number) => void>();
 </script>
