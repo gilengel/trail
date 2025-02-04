@@ -86,4 +86,4 @@ services:
   #  ulimits:
   #    nofile:
   #      soft: 8192
-  #      hard: 8192
+  #0      hard: 8192

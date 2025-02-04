@@ -7,9 +7,7 @@
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
-
-
-        <theme-toggle-button />
+        <theme-toggle-button/>
       </v-toolbar>
       <v-col>
         <v-sheet class="pa-2 ma-2 pa-10 d-flex flex-column align-center" elevation="1">

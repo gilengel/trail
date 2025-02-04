@@ -6,11 +6,20 @@
             @click="$router.push({ path: 'feed' })"
             color="primary"
             rounded="xl"
-            prepend-icon="mdi-arrow-left"
+            prepend-icon="las la-arrow-left"
         />
       </template>
 
       <template #content>
+        <!--
+                <Editor />
+                -->
+
+        <BuilderWidgetLayout
+            :grid
+        />
+
+
         <v-form @submit.prevent="saveChangesToRoute">
           <v-card class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size" variant="outlined">
             <v-card-item>
@@ -26,15 +35,15 @@
                   :readonly="false"
                   class="mb-2"
                   label="Trip Name"
-                  prepend-icon="mdi-tag-text"
+                  prepend-icon="las la-tag"
                   clearable
               ></v-text-field>
 
               <div class="d-flex align-center">
-                <v-icon icon="mdi-camera-image" size="large" class="mr-3"/>
+                <v-icon icon="las la-camera" size="large" class="mr-3"/>
                 <DropZone :allowed-file-extensions='["jpg", "jpeg", "png"]'
                           @onFilesChanged=onFilesChanged>
-                          class="flex-grow-1 flex-shrink-0">
+                  class="flex-grow-1 flex-shrink-0">
                   <template #container="{ files }">
                     <v-row>
                       <v-col
@@ -47,11 +56,8 @@
                       </v-col>
                     </v-row>
                   </template>
-
                 </DropZone>
               </div>
-
-
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -66,8 +72,6 @@
           </v-card>
         </v-form>
       </template>
-
-
     </NuxtLayout>
   </main>
 </template>
@@ -76,7 +80,13 @@
 import {useRouter} from 'vue-router';
 import {useObjectUrl} from '@vueuse/core'
 import type {MapLibreTrip} from "~/data/routes/types";
+import type {Grid} from "~/types/grid";
+import * as uuid from 'uuid';
+import Editor from "~/components/Editor.vue";
+import {useGridModuleStore} from '~/stores/gridModule';
+import {columnValueValidator} from '~/composables/useColumValidator';
 
+const gridModuleStore = useGridModuleStore();
 const trip: MapLibreTrip = inject("trip") as MapLibreTrip;
 
 const config = useRuntimeConfig();
@@ -99,6 +109,40 @@ const changedRouteData: Ref<{
   description?: string;
   images?: File[];
 }> = ref({name: trip.name, description: trip.description, images: []});
+
+
+const DefaultGrid: Grid<any, any> = {
+  id: uuid.v4(),
+
+  rows: [
+    {
+      id: uuid.v4(),
+      columns: [
+        {width: 4, id: uuid.v4()},
+        {width: 8, id: uuid.v4()},
+      ],
+    },
+
+    {
+      id: uuid.v4(),
+      columns: [
+        {width: 4, id: uuid.v4()},
+        {width: 4, id: uuid.v4()},
+        {width: 4, id: uuid.v4()},
+      ],
+    },
+
+    {
+      id: uuid.v4(),
+      columns: [
+        {width: 6, id: uuid.v4()},
+        {width: 6, id: uuid.v4()},
+      ],
+    },
+  ],
+};
+
+const grid = gridModuleStore.grid;
 
 
 async function saveChangesToRoute() {
@@ -158,6 +202,7 @@ async function saveRouteImages() {
     }
   });
 }
+
 /*
 
 import {InputEvent} from "happy-dom";

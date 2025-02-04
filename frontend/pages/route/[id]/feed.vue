@@ -6,7 +6,7 @@
             @click="$router.push({ path: '/' })"
             color="primary"
             rounded="xl"
-            prepend-icon="mdi-arrow-left"
+            prepend-icon="las la-arrow-left"
         />
       </template>
 
@@ -15,14 +15,14 @@
             @click="$router.push({ path: 'edit' })"
             color="primary"
             rounded="xl"
-            prepend-icon="mdi-pencil"
+            prepend-icon="las la-pencil-alt"
         />
 
         <v-list-item
             @click="dialog = true"
             color="primary"
             rounded="xl"
-            prepend-icon="mdi-delete-alert-outline"
+            prepend-icon="las la-trash-alt"
         />
       </template>
 

@@ -1,12 +1,12 @@
 <template>
-  <div data-cy="map-container" class="map" ref="mapContainer" />
+  <div data-cy="map-container" class="map" ref="mapContainer"/>
 </template>
 
 <script setup lang="ts">
-import type { MapLibreSegment, MapLibreTrip } from "~/data/routes/types";
-import { LngLatBounds, Map } from "maplibre-gl";
-import { v4 as uuidv4 } from "uuid";
-import type { Color } from "~/types/color";
+import type {MapLibreSegment, MapLibreTrip} from "~/data/routes/types";
+import {LngLatBounds, Map} from "maplibre-gl";
+import {v4 as uuidv4} from "uuid";
+import type {Color} from "~/types/color";
 
 type LineStyle = {
   width: number;
@@ -22,7 +22,7 @@ const mapContainer: Ref<HTMLElement | null> = ref(null);
 const props = defineProps({
   trip: {
     type: Object as PropType<MapLibreTrip>,
-    required: true,
+    required: false,
   },
 
   lineColor: {
@@ -39,6 +39,16 @@ defineExpose({
 });
 
 onMounted(() => {
+  if (!props.trip) {
+    map.value = new Map({
+      container: mapContainer.value!,
+      style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
+      zoom: 16,
+    });
+
+    return;
+  }
+
   map.value = new Map({
     container: mapContainer.value!,
     style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
@@ -47,13 +57,17 @@ onMounted(() => {
   });
 
   map.value!.on("load", () => {
+    if (!props.trip) {
+      return;
+    }
+
     for (const segment of props.trip.segments) {
       addLine(
-        segment.coordinates.map((e) => e.toArray()),
-        {
-          width: 5,
-          color: props.lineColor,
-        }
+          segment.coordinates.map((e) => e.toArray()),
+          {
+            width: 5,
+            color: props.lineColor,
+          }
       );
     }
 
@@ -100,7 +114,7 @@ function zoomToSegment(segment: MapLibreSegment, animate: boolean = true) {
 
 function fitBounds(bounds: LngLatBounds, animate: boolean = true) {
   map.value!.fitBounds(bounds, {
-    padding: { top: 10, bottom: 25, left: 15, right: 5 },
+    padding: {top: 10, bottom: 25, left: 15, right: 5},
 
     animate,
   });
@@ -111,6 +125,7 @@ function fitBounds(bounds: LngLatBounds, animate: boolean = true) {
 .map {
   display: block;
   width: 100%;
+  min-height: 300px;
 }
 
 @container (max-width: 699px) {
@@ -119,6 +134,7 @@ function fitBounds(bounds: LngLatBounds, animate: boolean = true) {
   }
 
 }
+
 @container (min-width: 700px) {
   .map {
     aspect-ratio: 16/9;
