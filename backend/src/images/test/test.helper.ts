@@ -1,12 +1,12 @@
 /**
- * @file Provide usefull functions for unit testing like mocking a file.
+ * @file Provide useful functions for unit testing like mocking a file.
  */
 import * as fs from 'fs';
 
 /**
  * Creates a fake image in the sense that the content is not valid.
  * Used for unit tests.
- * @param size - Size of the fake image in bytes. Must be larger than 8 and magnitutes of 2.
+ * @param size - Size of the fake image in bytes. Must be larger than 8 and magnitudes of 2.
  */
 /*
 export function mockImage(size: number, name: string): File {
@@ -48,7 +48,7 @@ export function mockFileFromBuffer(
 /**
  * Ensure that the storage directory for the images exists.
  */
-export function ensureExistanceOfStorageDirectory(): void {
+export function ensureExistenceOfStorageDirectory(): void {
   fs.mkdir('./images', { recursive: true }, (err) => {
     if (err) throw err;
   });

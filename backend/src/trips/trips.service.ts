@@ -9,9 +9,7 @@ import { TripDto } from './dto/trip.dto';
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
 @Injectable()
 export class TripsService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   // eslint-disable-next-line jsdoc/require-example
   /**
@@ -31,5 +29,4 @@ export class TripsService {
       layout: tripDto.layout,
     });
   }
-
 }

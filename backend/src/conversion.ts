@@ -67,7 +67,7 @@ export function wkt2point(wkt: string): Array<number> {
  */
 export function wkt2numberArray(wkt: string): Array<[number, number, number]> {
   return wkt
-    .replace(/LINESTRING Z[ ]?\(/, '')
+    .replace(/LINESTRING Z ?\(/, '')
     .replace(')', '')
     .split(',')
     .map((point) => {

@@ -4,19 +4,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { RoutesModule } from '../../src/routes/routes.module';
 import { PrismaService } from '../../src/prisma.service';
 import * as testData from '../data';
 import { json } from 'express';
-
-import { env } from 'node:process';
 import { TripsModule } from '../../src/trips/trips.module';
 
 describe('TripsController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
-
-  let tripId: number;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({

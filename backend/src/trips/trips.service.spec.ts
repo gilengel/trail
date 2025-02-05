@@ -63,23 +63,18 @@ describe('TripsService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-
-
-
   it('should create a route from gpx', async () => {
     const trip: CreateTripDto = {
-      layout: {}
+      layout: {},
     };
 
-    jest
-      .spyOn(prisma, '$queryRaw')
-      .mockResolvedValueOnce([{ id: 0 }]); // trip id
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([{ id: 0 }]); // trip id
 
     const result = await service.createTrip(trip);
 
     expect(result).toStrictEqual({
       id: 0,
-      layout: {}
+      layout: {},
     });
   });
 });

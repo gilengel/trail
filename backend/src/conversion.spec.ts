@@ -6,22 +6,22 @@ import { DbImageDto, ImageDto } from './images/dto/image.dto';
 import { v4 as uuidv4 } from 'uuid';
 
 describe('Conversion', () => {
-  it('convertes a 2d point to wkt string', () => {
+  it('converts a 2d point to wkt string', () => {
     const result = point2wkt([8, 8]);
     expect(result).toBe('POINT(8 8)');
   });
 
-  it('convertes a 3d point to wkt string', () => {
+  it('converts a 3d point to wkt string', () => {
     const result = point2wkt([8, 8, 8]);
     expect(result).toBe('POINT(8 8 8)');
   });
 
-  it('convertes a 2d wkt string to point', () => {
+  it('converts a 2d wkt string to point', () => {
     const result = wkt2point('POINT(8 8)');
     expect(result).toStrictEqual([8, 8]);
   });
 
-  it('convertes a 2d wkt string to point', () => {
+  it('converts a 2d wkt string to point', () => {
     const result = wkt2point('POINT(8 8 8)');
     expect(result).toStrictEqual([8, 8, 8]);
   });

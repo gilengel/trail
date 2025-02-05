@@ -1,6 +1,6 @@
 /**
  * @file Service that provides all related functionality regarding route segment like creating, updating, deleting, accessing.
- * Also it provides functions for different calculations like the length of a segment.
+ * Also, it provides functions for different calculations like the length of a segment.
  */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRouteSegmentDto } from './dto/create-route.segment.dto';
@@ -92,7 +92,6 @@ export class RoutesSegmentsService {
       WHERE id = ${id}::int`;
 
     if (routeSegment.length == 0) {
-      Promise.resolve([]);
       throw new HttpException(
         `Route segment with id ${id} does not exist.`,
         HttpStatus.NOT_FOUND,

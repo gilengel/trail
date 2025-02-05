@@ -54,7 +54,7 @@ describe('TripsController', () => {
     });
 
     const result = controller.create({
-      layout: {}
+      layout: {},
     });
     await expect(result).rejects.toThrow(
       new HttpException(

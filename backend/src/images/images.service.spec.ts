@@ -12,7 +12,7 @@ import { PrismaService } from '../prisma.service';
 import { readFileSync } from 'fs';
 import * as testData from '../../test/data';
 import {
-  ensureExistanceOfStorageDirectory,
+  ensureExistenceOfStorageDirectory,
   mockFileFromBuffer,
 } from './test/test.helper';
 
@@ -38,7 +38,7 @@ describe('ImageService', () => {
   let prisma: PrismaService;
 
   beforeAll(() => {
-    ensureExistanceOfStorageDirectory();
+    ensureExistenceOfStorageDirectory();
   });
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe('ImageService', () => {
   });
 
   it.each(['image/jpeg', 'image/tiff'])(
-    'should save a image with mimetype %s on the fileserver and database',
+    'should save a image with mimetype %s on the file server and database',
     async (mimetype) => {
       const buffer = readFileSync('src/images/test/with_geo_information.jpg');
 
@@ -65,7 +65,7 @@ describe('ImageService', () => {
   );
 
   /*
-  it('should fail to save a image with invalid mimetype on the fileserver and database', async () => {
+  it('should fail to save an image with invalid mimetype on the file server and database', async () => {
     const buffer = readFileSync('src/images/test/with_geo_information.jpg');
 
     jest.spyOn(prisma, '$queryRaw').mockResolvedValue(testData.dbImages);

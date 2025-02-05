@@ -17,7 +17,6 @@ describe('RoutesController (e2e)', () => {
 
   let routeId: number;
 
-
   // For testing with a broken database. For example if the schema is not applied.
   describe('without working database', () => {
     let databaseUrl: string = '';
@@ -45,8 +44,6 @@ describe('RoutesController (e2e)', () => {
       return request(app.getHttpServer()).get('/routes').expect(400);
     });
   });
-
-
 
   describe('with working database', () => {
     beforeAll(async () => {
@@ -91,7 +88,7 @@ describe('RoutesController (e2e)', () => {
         );
     });
 
-    it('/routes/:id (GET) returns "404" for nonexisting route', () => {
+    it('/routes/:id (GET) returns "404" for nonexistent route', () => {
       return request(app.getHttpServer()).get(`/routes/123456789`).expect(404);
     });
 
@@ -241,6 +238,5 @@ describe('RoutesController (e2e)', () => {
         .delete(`/routes/${routeId}`)
         .expect(200);
     });
-
   });
 });

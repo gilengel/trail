@@ -1,5 +1,5 @@
 /**
- * @file Provides an utility interceptor that catches unhandled exceptions and throws a "BadRequest" back to the client.
+ * @file Provides a utility interceptor that catches unhandled exceptions and throws a "BadRequest" back to the client.
  */
 import {
   Injectable,
@@ -18,7 +18,7 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError((err) => {
         // We ignore handling HttpExceptions raised by controllers as it is expected that
-        // these are already correct and can be send to the client without additional care
+        // these are already correct and can be sent to the client without additional care
         if (err instanceof HttpException) {
           return throwError(() => err);
         }

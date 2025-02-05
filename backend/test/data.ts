@@ -219,11 +219,11 @@ for (let i = 0; i < 3; i++) {
 
 export const trip: Trip = {
   id: routeId,
-  layout: {}
-}
+  layout: {},
+};
 
 export const newTrip: CreateTripDto = {
-  layout: {}
-}
+  layout: {},
+};
 
 export { multipleImages, multipleDbImages };

@@ -11,5 +11,5 @@ export class Trip {
   id: number;
 
   @ApiProperty()
-  layout: Object;
+  layout: object;
 }

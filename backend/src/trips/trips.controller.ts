@@ -1,16 +1,10 @@
 /**
  * @file Public API for trips.
  */
-import {
-  Body,
-  Controller,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripsService } from './trips.service';
-import {
-  TripDto,
-} from './dto/trip.dto';
+import { TripDto } from './dto/trip.dto';
 
 @Controller('trips')
 export class TripsController {
