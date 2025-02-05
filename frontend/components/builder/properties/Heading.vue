@@ -28,8 +28,6 @@
 
 <script setup lang="ts">
 
-import {useGridModuleStore} from '~/stores/gridModule';
-
 const gridModuleStore = useGridModuleStore();
 
 

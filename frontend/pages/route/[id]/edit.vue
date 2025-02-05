@@ -80,11 +80,9 @@
 import {useRouter} from 'vue-router';
 import {useObjectUrl} from '@vueuse/core'
 import type {MapLibreTrip} from "~/data/routes/types";
-import type {Grid} from "~/types/grid";
 import * as uuid from 'uuid';
-import Editor from "~/components/Editor.vue";
 import {useGridModuleStore} from '~/stores/gridModule';
-import {columnValueValidator} from '~/composables/useColumValidator';
+import type {Grid} from "~/models/Grid";
 
 const gridModuleStore = useGridModuleStore();
 const trip: MapLibreTrip = inject("trip") as MapLibreTrip;
@@ -110,37 +108,6 @@ const changedRouteData: Ref<{
   images?: File[];
 }> = ref({name: trip.name, description: trip.description, images: []});
 
-
-const DefaultGrid: Grid<any, any> = {
-  id: uuid.v4(),
-
-  rows: [
-    {
-      id: uuid.v4(),
-      columns: [
-        {width: 4, id: uuid.v4()},
-        {width: 8, id: uuid.v4()},
-      ],
-    },
-
-    {
-      id: uuid.v4(),
-      columns: [
-        {width: 4, id: uuid.v4()},
-        {width: 4, id: uuid.v4()},
-        {width: 4, id: uuid.v4()},
-      ],
-    },
-
-    {
-      id: uuid.v4(),
-      columns: [
-        {width: 6, id: uuid.v4()},
-        {width: 6, id: uuid.v4()},
-      ],
-    },
-  ],
-};
 
 const grid = gridModuleStore.grid;
 

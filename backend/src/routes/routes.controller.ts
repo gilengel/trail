@@ -40,8 +40,6 @@ export class RoutesController {
 
       return routes;
     } catch (e) {
-      this.logger.error(e);
-
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }

@@ -125,13 +125,13 @@ export class ImagesController {
     } catch (e) {
       this.logger.error(e);
 
-      return Promise.reject(e);
+      return Promise.reject(new HttpException(e, HttpStatus.NOT_FOUND));
     }
 
     if (parseInt(images.count) == 0) {
       return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
     }
 
-    return Promise.resolve({ count: images.count });
+    return Promise.resolve({ count: Number(images.count).toString() });
   }
 }

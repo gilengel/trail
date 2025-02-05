@@ -1,6 +1,6 @@
 import {mount} from '@vue/test-utils'
 import {beforeEach, describe, expect, it, vi} from 'vitest'
-import MapComponent from "@/components/map/TMap.vue";
+import MapComponent from "~/components/TMap.vue";
 import {LngLat, LngLatBounds, Map as MockMap} from 'maplibre-gl'
 import {MapLibreSegment, MapLibreTrip} from "~/data/routes/types";
 

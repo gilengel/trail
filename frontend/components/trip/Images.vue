@@ -1,5 +1,5 @@
 <template>
-  <ImageGallery :images="[
+  <BuilderElementsImageGallery :images="[
       { url: 'https://picsum.photos/id/70/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/71/400/600', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/72/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
@@ -15,14 +15,14 @@
       { url: 'https://picsum.photos/id/82/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/83/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
 
-  ]" :cols="3" />
+  ]" :cols="3"/>
 
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from "vue";
-import type { ImageDto } from "~/data/images/types";
-import type { MapLibreSegment } from "~/data/routes/types";
+import {onMounted, ref, type Ref} from "vue";
+import type {ImageDto} from "~/data/images/types";
+import type {MapLibreSegment} from "~/data/routes/types";
 
 interface TripImagesProps {
   segment: MapLibreSegment;
@@ -54,7 +54,7 @@ onMounted(async () => {
       routeSegmentId: props.segment.id,
       maxOffset: 1,
       maxNumberOfImages:
-        imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined,
+          imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined,
     },
   });
 
@@ -67,6 +67,7 @@ h1 {
   text-align: center;
   vertical-align: center;
 }
+
 .trip-images {
   $gap: 8px;
   height: 400px + $gap;

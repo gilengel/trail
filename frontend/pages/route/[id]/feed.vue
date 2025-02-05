@@ -35,12 +35,12 @@
           </v-card-item>
 
           <v-card-text>
-            <ElevationProfile :segment="trip?.segments[0] as MapLibreSegment" />
+            <ElevationProfile :segment="trip?.segments[0] as MapLibreSegment"/>
           </v-card-text>
         </v-card>
 
 
-          <v-card v-if="trip?.segments.length" class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size"
+        <v-card v-if="trip?.segments.length" class="mx-xxl-auto mx-xl-auto mx-9 w-xxl-50 w-xl-50 w-fill c-inline-size"
                 variant="outlined">
           <v-card-item>
             <v-card-title>Route</v-card-title>
@@ -153,9 +153,9 @@
 <script setup lang="ts">
 import {computed, inject, type Ref} from "vue";
 import {MapLibreSegment, type MapLibreTrip} from "~/data/routes/types";
-import TMap from "~/components/map/TMap.vue";
+import TMap from "~/components/TMap.vue";
 import {useRouter} from "vue-router";
-import ElevationProfile from "~/components/ElevationProfile.vue";
+import ElevationProfile from "~/components/builder/elements/ElevationProfile.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -182,7 +182,6 @@ function deleteRoute() {
 }
 
 const dialog = ref(false);
-
 
 
 const tripIsALoop = computed(() => {

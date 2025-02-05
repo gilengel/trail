@@ -1,5 +1,5 @@
 <template>
-  <MapTMap/>
+  <TMap/>
 </template>
 
 <script setup lang="ts">
