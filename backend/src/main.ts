@@ -7,10 +7,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { json } from 'express';
 
-BigInt.prototype.toJSON = function () {
-  return { $bigint: this.toString() };
-};
-
 // eslint-disable-next-line jsdoc/require-example
 /**
  * Starts the backend server.
