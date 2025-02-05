@@ -10,6 +10,8 @@ import { CreateRouteSegmentDto } from '../src/routes.segments/dto/create-route.s
 import { Route } from '../src/routes/entity/route';
 import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
 import { GPXRoute, GPXRouteSegment } from 'src/routes/routes.parser';
+import { Trip } from '../src/trips/entity/trip';
+import { CreateTripDto } from '../src/trips/dto/create.trip.dto';
 
 export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
@@ -213,6 +215,15 @@ for (let i = 0; i < 3; i++) {
     coordinates: 'POINT(47.17970059972222 10.893711999999999)',
     mime_type: 'image/jpeg',
   });
+}
+
+export const trip: Trip = {
+  id: routeId,
+  layout: {}
+}
+
+export const newTrip: CreateTripDto = {
+  layout: {}
 }
 
 export { multipleImages, multipleDbImages };
