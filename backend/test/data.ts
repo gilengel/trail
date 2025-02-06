@@ -217,7 +217,7 @@ for (let i = 0; i < 3; i++) {
   });
 }
 
-export const trip: Trip = {
+export const dbTrip: Trip = {
   id: routeId,
   layout: {},
 };

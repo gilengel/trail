@@ -6,9 +6,9 @@ import * as testData from '../../test/data';
 
 import { TripsService } from './trips.service';
 import { PrismaService } from '../prisma.service';
-
-import * as conversion from '../conversion';
 import { CreateTripDto } from './dto/create.trip.dto';
+import { TripDto } from './dto/trip.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');
@@ -26,30 +26,6 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-describe('conversion', () => {
-  describe('lineString', () => {
-    it('should convert a 2D linestring from wkt in a number array', () => {
-      const result = conversion.wkt2numberArray(testData.wkt);
-
-      expect(result).toStrictEqual(testData.coordinates);
-    });
-
-    it('should convert 2D number array into a wkt string', () => {
-      const result = conversion.numberArray2wkt(testData.coordinates);
-
-      expect(result).toStrictEqual(testData.wkt);
-    });
-  });
-
-  describe('route', () => {
-    it('should convert from a db dto to a route dto', () => {
-      const result = conversion.dbRoute2dto(testData.dbRoute);
-
-      expect(result).toStrictEqual(testData.route);
-    });
-  });
-});
-
 describe('TripsService', () => {
   let service: TripsService;
   let prisma: PrismaService;
@@ -63,7 +39,7 @@ describe('TripsService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  it('should create a route from gpx', async () => {
+  it('should create an empty trip', async () => {
     const trip: CreateTripDto = {
       layout: {},
     };
@@ -76,5 +52,26 @@ describe('TripsService', () => {
       id: 0,
       layout: {},
     });
+  });
+
+  it('should return a route stored in the database by id', async () => {
+    jest
+      .spyOn(prisma, '$queryRaw')
+      .mockResolvedValueOnce([testData.dbTrip]);
+
+    const result: TripDto = await service.trip(0);
+    expect(result).toStrictEqual(testData.dbTrip);
+  });
+
+  it('should return "404" if no trip is stored in the database by the given id', async () => {
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([]);
+
+    const result = service.trip(0);
+    await expect(result).rejects.toThrow(
+      new HttpException(
+        `Route with id 0 does not exist.`,
+        HttpStatus.NOT_FOUND,
+      ),
+    );
   });
 });

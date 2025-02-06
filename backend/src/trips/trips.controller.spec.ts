@@ -43,9 +43,9 @@ describe('TripsController', () => {
   it('should create a new route and return its dto', async () => {
     jest
       .spyOn(service, 'createTrip')
-      .mockReturnValue(Promise.resolve(testData.trip));
+      .mockReturnValue(Promise.resolve(testData.dbTrip));
 
-    expect(await controller.create(testData.newTrip)).toBe(testData.trip);
+    expect(await controller.create(testData.newTrip)).toBe(testData.dbTrip);
   });
 
   it('should throw "BadRequest" trying to create a trip if layout is invalid', async () => {
@@ -62,5 +62,13 @@ describe('TripsController', () => {
         HttpStatus.BAD_REQUEST,
       ),
     );
+  });
+
+  it('should be returning a single trip', async () => {
+    jest
+      .spyOn(service, 'trip')
+      .mockReturnValue(Promise.resolve(testData.dbTrip));
+
+    expect(await controller.findOne({ id: 0 })).toEqual(testData.dbTrip);
   });
 });

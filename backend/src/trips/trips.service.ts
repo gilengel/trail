@@ -1,10 +1,15 @@
 /**
  * @file Provides functionality to create, read, update and delete routes.
  */
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripDto } from './dto/trip.dto';
+
 
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
 @Injectable()
@@ -28,5 +33,25 @@ export class TripsService {
       id: tripId,
       layout: tripDto.layout,
     });
+  }
+
+  /**
+   * Retrieve a trip by its ID.
+   * @param id - The ID of the trip to retrieve.
+   * @returns A Promise that resolves to a TripDto object or null if not found.
+   */
+  async trip(id: number): Promise<TripDto | null> {
+    const trips = await this.prisma.$queryRaw<
+      TripDto[]
+    >`SELECT * FROM "Trip" WHERE id = ${id}::int`;
+
+    if (!trips || trips.length == 0) {
+      throw new HttpException(
+        `Route with id ${id} does not exist.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return Promise.resolve(trips[0]);
   }
 }
