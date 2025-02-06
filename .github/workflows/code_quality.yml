@@ -82,6 +82,12 @@ jobs:
         run: npm install
         working-directory: ./backend
 
+      - name: Prepare database schema for e2e test (backend)
+        run: npx prisma migrate deploy
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
+
       - name: Build (backend)
         run: npm run build:backend
 
@@ -92,12 +98,6 @@ jobs:
       - name: Run the unit tests (backend)
         run: npm run test:unit:cov
         working-directory: ./backend
-
-      - name: Prepare database schema for e2e test (backend)
-        run: npx prisma migrate deploy
-        working-directory: ./backend
-        env:
-          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
 
       - name: Run the e2e tests (backend)
         run: npm run test:e2e:cov
