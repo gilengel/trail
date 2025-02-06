@@ -34,7 +34,7 @@ export class TooManyCoordinatesError extends Error {
 export class RoutesSegmentsService {
   constructor(private prisma: PrismaService) {}
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Create a new route in the database.
    * @param createRouteSegmentDto - The data for creating the new route.
@@ -78,7 +78,7 @@ export class RoutesSegmentsService {
     return Promise.resolve(segments);
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Retrieve a route segment by its ID.
    * @param id - The ID of the route segment to retrieve.
@@ -101,7 +101,7 @@ export class RoutesSegmentsService {
     return Promise.resolve(conversion.dbRouteSegment2dto(routeSegment[0]));
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Calculates the length (2d) of a segment and returns it.
    * @param id - The ID of the route segment to retrieve.
@@ -120,7 +120,7 @@ export class RoutesSegmentsService {
     return Promise.resolve(segmentLength[0].st_length);
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Updates an existing route segment in the database.
    * @param id - The ID of the route segment to be updated.
@@ -174,7 +174,7 @@ export class RoutesSegmentsService {
     return Promise.resolve(conversion.dbRouteSegment2dto(result[0]));
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Validates an array of coordinates to ensure they meet specific criteria.
    * @param coordinates - An array of arrays representing coordinates.

@@ -81,7 +81,7 @@ export class ImagesService {
           image.mimetype,
         ];
       });
-    } catch (e) {
+    } catch {
       return Promise.reject(new NoOrWrongGeoInformationError());
     }
 

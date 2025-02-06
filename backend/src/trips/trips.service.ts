@@ -11,7 +11,7 @@ import { TripDto } from './dto/trip.dto';
 export class TripsService {
   constructor(private prisma: PrismaService) {}
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Create a new trip in the database.
    * @param tripDto - The data for creating the new route.

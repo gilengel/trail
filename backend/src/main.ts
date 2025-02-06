@@ -7,7 +7,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { json } from 'express';
 
-// eslint-disable-next-line jsdoc/require-example
+ 
 /**
  * Starts the backend server.
  */

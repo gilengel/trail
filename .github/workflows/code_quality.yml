@@ -1,6 +1,6 @@
 name: Code Quality
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["20.x"]
+        node-version: [ "23.x" ]
 
         db-name:
           - e2e-testing-db

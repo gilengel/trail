@@ -7,7 +7,7 @@ import { RouteSegmentDto } from './routes.segments/dto/route.segment.dto';
 import { RouteSegment } from './routes.segments/entity/routes.segment';
 import { Route } from './routes/entity/route';
 
-// eslint-disable-next-line jsdoc/require-example
+ 
 /**
  * Returns the file extension for supported image file types.
  * Be aware that this function will return undefined / nothing if the provided
@@ -33,10 +33,10 @@ export function generateFileExtensionBasedOnMimeType(mimeType: string): string {
  * @param point - The point as array. Can have multiple dimensions.
  * @returns String in the wkt standard representing the point.
  * @example
- * // returns POINT(32 64)
+ * // returns {string} POINT(32 64)
  * point2wkt([32, 64])
  */
-export function point2wkt(point: Array<number>): string {
+export function point2wkt(point: number[]): string {
   return `POINT(${point.join(' ')})`;
 }
 
