@@ -149,7 +149,6 @@ jobs:
 
       - name: Build (frontend)
         run: npm run build:frontend
-        working-directory: ./frontend
 
       - name: Run ci (frontend)
         run: npm run ci
