@@ -31,7 +31,7 @@ describe('TripsController (e2e)', () => {
     const result = await prisma.$queryRaw<[{ id: number }]>`
         INSERT INTO "Trip" (layout)
         VALUES ('{}') RETURNING id`;
-    tripId = result[0].id;
+    tripId = Number(result[0].id);
 
   });
 
@@ -57,5 +57,29 @@ describe('TripsController (e2e)', () => {
 
   it('/trips/:id (GET) returns "404" for nonexistent route', () => {
     return request(app.getHttpServer()).get(`/trips/123456789`).expect(404);
+  });
+
+  it('/trips (PATCH) succeeds changing the layout', () => {
+    return request(app.getHttpServer())
+      .patch(`/trips/${tripId}`)
+      .send({
+        layout: { row: [ { column: 'id' }, ]}
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('layout', {
+          row: [
+            { column: 'id' },
+          ]
+        });
+      });
+  });
+
+  it('/trips (PATCH) returns "404" for a non existing trip', () => {
+    return request(app.getHttpServer())
+      .patch(`/trips/123456789`)
+      .send({
+        layout: { row: [ { column: 'id' }, ]}
+      }).expect(404);
   });
 });

@@ -226,4 +226,8 @@ export const newTrip: CreateTripDto = {
   layout: {},
 };
 
+export const dbTripWithUpdatedLayout: Trip = {
+  id: routeId,
+  layout: { test: "value" },
+};
 export { multipleImages, multipleDbImages };

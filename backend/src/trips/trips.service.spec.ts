@@ -16,6 +16,9 @@ jest.mock('@prisma/client', () => {
     PrismaClient: jest.fn().mockImplementation(() => {
       return {
         $queryRaw: a,
+        trip: {
+          update: () => { return Promise.resolve(testData.dbTripWithUpdatedLayout)}
+        }
       };
     }),
 
@@ -73,5 +76,22 @@ describe('TripsService', () => {
         HttpStatus.NOT_FOUND,
       ),
     );
+  });
+
+  it('should update the layout of a trip', async () => {
+    jest
+      .spyOn(prisma, '$queryRaw')
+      .mockResolvedValue([testData.dbRouteWithUpdatedName]);
+
+    const result = await service.updateTrip(0, {
+      layout: { test: "value" }
+    });
+
+    const expected = {
+      id: testData.routeId,
+      layout: { test: "value" }
+    };
+
+    expect(result).toStrictEqual(expected);
   });
 });

@@ -9,6 +9,7 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripDto } from './dto/trip.dto';
+import { UpdateTripDto } from './dto/update.trip.dto';
 
 
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
@@ -53,5 +54,27 @@ export class TripsService {
     }
 
     return Promise.resolve(trips[0]);
+  }
+
+  /**
+   * Update an existing trip in the database.
+   * @param id - The ID of the trip to update.
+   * @param data - The data for updating the trip.
+   * @returns A Promise that resolves to the updated trip.
+   */
+  async updateTrip(
+    id: number,
+    data: UpdateTripDto,
+  ): Promise<TripDto> {
+    const updatedTrip = await this.prisma.trip.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        layout: data.layout
+      }
+    });
+
+    return Promise.resolve({ id: updatedTrip.id, layout: updatedTrip.layout as object });
   }
 }

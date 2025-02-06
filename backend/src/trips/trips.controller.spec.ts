@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma.service';
 import * as testData from '../../test/data';
 import { NotEnoughCoordinatesError } from '../routes.segments/routes.segments.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { TripDto } from './dto/trip.dto';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn().mockResolvedValue([]);
@@ -70,5 +71,32 @@ describe('TripsController', () => {
       .mockReturnValue(Promise.resolve(testData.dbTrip));
 
     expect(await controller.findOne({ id: 0 })).toEqual(testData.dbTrip);
+  });
+
+  it('should update a route and return its dto', async () => {
+    const result: TripDto = {
+      id: 0,
+      layout: { test: "value"}
+    };
+
+    jest.spyOn(service, 'updateTrip').mockReturnValue(Promise.resolve(result));
+
+    expect(
+      await controller.update(0, { layout: { test: "value" } }),
+    ).toStrictEqual(result);
+  });
+
+  it('should update a route and return its dto', async () => {
+    jest.spyOn(service, 'updateTrip').mockImplementation(() => {
+      throw new Error();
+    });
+
+    const result = controller.update(0, { layout: { test: "value" } });
+    await expect(result).rejects.toThrow(
+      new HttpException(
+        'The requested trip you want to update does not exist.',
+        HttpStatus.NOT_FOUND,
+      ),
+    );
   });
 });

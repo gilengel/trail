@@ -3,7 +3,7 @@
  */
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateRouteDto {
+export class UpdateTripDto {
   @ApiProperty()
   layout: object;
 }
