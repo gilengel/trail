@@ -150,17 +150,18 @@ jobs:
       - name: Build (frontend)
         run: npm run build:frontend
 
-      - name: Run ci (frontend)
-        run: npm run ci
+      - name: Run eslint (frontend)
+        run: npm run lint
         working-directory: ./frontend
-        env:
-          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+      - name: Run the unit tests (frontend)
+        run: npm run test:unit:cov
+        working-directory: ./frontend
 
       - name: Upload coverage reports to Codecov (frontend)
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: gilengel/trail
-          files: ./frontend/coverage-e2e/cobertura-coverage.xml
-          flags: frontend,e2e
+          files: ./frontend/coverage/cobertura-coverage.xml
+          flags: frontend,unit

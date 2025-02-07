@@ -32,35 +32,35 @@ defineProps({
   sm: {
     type: Number,
     required: false,
-    default: false,
+    default: 0,
     validator: columnValueValidator,
   },
 
   md: {
     type: Number,
     required: false,
-    default: false,
+    default: 0,
     validator: columnValueValidator,
   },
 
   lg: {
     type: Number,
     required: false,
-    default: false,
+    default: 0,
     validator: columnValueValidator
   },
 
   xl: {
     type: Number,
     required: false,
-    default: false,
+    default: 0,
     validator: columnValueValidator
   },
 
   xxl: {
     type: Number,
     required: false,
-    default: false,
+    default: 0,
     validator: columnValueValidator
   }
 });

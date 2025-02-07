@@ -70,7 +70,7 @@ describe('TripsController', () => {
       .spyOn(service, 'trip')
       .mockReturnValue(Promise.resolve(testData.dbTrip));
 
-    expect(await controller.findOne({ id: 0 })).toEqual(testData.dbTrip);
+    expect(await controller.findOne(0)).toEqual(testData.dbTrip);
   });
 
   it('should update a route and return its dto', async () => {

@@ -12,7 +12,7 @@
     "lint": "eslint . --fix",
     "test": "vitest run",
     "test:browser:cov": "vitest run  --workspace=vitest.workspace.browser.ts --coverage",
-    "test:cov": "vitest run --coverage",
+    "test:unit:cov": "vitest run --coverage",
     "test:component:cov": "cypress run --config video=false --component",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -55,9 +55,11 @@
     "eslint": "^9.13.0",
     "eslint-plugin-vue": "^9.30.0",
     "happy-dom": "^16.7.2",
+    "jsdom": "^26.0.0",
     "playwright": "^1.50.0",
     "playwright-core": "^1.50.0",
     "sass": "^1.83.4",
+    "tinyspy": "^3.0.2",
     "vitest": "^3.0.4",
     "vuetify-nuxt-module": "^0.18.3"
   }

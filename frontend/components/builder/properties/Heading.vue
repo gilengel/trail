@@ -5,7 +5,7 @@
       H1
     </v-btn>
 
-    <v-btn>
+    <v-btn datatest-id="button-h2">
       H2
     </v-btn>
 
@@ -37,7 +37,7 @@ const props = defineProps<HeadingProps>();
 
 const size = ref(0);
 
-const color = ref('white');
+const color = ref('ffffff');
 
 const correctSize = computed(() => {
   return size.value + 1

@@ -1,31 +1,31 @@
-import { ElementType, ElementAttributeType, Row } from '~/models/Grid';
-import { expect, describe, it } from 'vitest';
-import { AddRow } from './addRow';
-import { createTestGrid } from './test.helper';
+import {type Row} from '~/models/Grid';
+import {expect, describe, it} from 'vitest';
+import {AddRow} from './addRow';
+import {createTestGrid} from './test.helper';
 
-const row: Row<ElementType, ElementAttributeType> = {
-  id: '',
-  columns: [],
+const row: Row = {
+    id: '',
+    columns: [],
 };
 
 describe('addRow', () => {
-  it('should add a row to the grid on redo', async () => {
-    const grid = createTestGrid();
-    const addRow = new AddRow(row, grid);
-    addRow.redo();
+    it('should add a row to the grid on redo', async () => {
+        const grid = createTestGrid();
+        const addRow = new AddRow(row, grid);
+        await addRow.redo();
 
-    expect(grid.rows.length).toBe(1);
-  });
+        expect(grid.rows.length).toBe(2);
+    });
 
-  it('should remove the row from the grid on undo', async () => {
-    const grid = createTestGrid();
+    it('should remove the row from the grid on undo', async () => {
+        const grid = createTestGrid();
 
-    const addRow = new AddRow(row, grid);
-    addRow.redo();
+        const addRow = new AddRow(row, grid);
+        await addRow.redo();
 
-    expect(grid.rows.length).toBe(1);
+        expect(grid.rows.length).toBe(2);
 
-    addRow.undo();
-    expect(grid.rows.length).toBe(0);
-  });
+        await addRow.undo();
+        expect(grid.rows.length).toBe(1);
+    });
 });

@@ -10,7 +10,7 @@ import {SetElement} from "~/stores/actions/setElement";
 import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 import {UpdateColumnWidth} from "~/stores/actions/updateColumnWidth";
 
-export const useGridModuleStore = () =>
+export const useGridModuleStore =
     defineStore('gridModule', () => {
 
         const _undoRedoStore = useUndoRedoStore();

@@ -2,6 +2,7 @@
   <v-tooltip :text=props.tooltip location="bottom">
     <template v-slot:activator="{ props }">
       <v-btn
+          data-testid="tooltip-button"
           icon
           v-bind="props"
           :color="isActive ? 'primary' : 'transparent'"
@@ -16,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits} from 'vue';
 
 const props = defineProps({
   icon: {

@@ -3,11 +3,12 @@
     <div class="actions" v-if="editable">
       <v-toolbar collapse :floating="true">
 
-        <v-btn round="0" icon>
+        <v-btn round="0" icon data-testid="action-menu-btn">
           <v-icon>las la-plus</v-icon>
-          <v-menu activator="parent">
+          <v-menu activator="parent" data-testid="action-menu">
             <v-list>
               <v-list-item
+                  data-testid="column-element"
                   v-for="(element, index) in allowedElements"
                   :key="element"
                   :value="index"
@@ -58,7 +59,7 @@
   </v-col>
 </template>
 
-<script setup lang="ts" generic="T extends string, S extends string">
+<script setup lang="ts">
 
 import {type Column, Element, ElementType, ElementTypes, type Grid} from '~/models/Grid';
 import {type PropType, computed, ref} from 'vue';
