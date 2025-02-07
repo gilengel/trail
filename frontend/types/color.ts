@@ -9,6 +9,7 @@ export type Color = RGB | RGBA | HEX;
  * @param color - The input color (rgb, rgba, or any valid string).
  * @param alpha - The alpha value to set (0.0 to 1.0).
  * @returns A new color string in `rgba` format.
+ * @throws Error if the color is not valid rgb or rgba format.
  */
 export function addAlphaToColor(color: Color, alpha: number): string {
     // Regular expressions to match `rgb` and `rgba` formats
@@ -18,14 +19,14 @@ export function addAlphaToColor(color: Color, alpha: number): string {
     // Check for `rgb` format
     const rgbMatch = color.match(rgbRegex);
     if (rgbMatch) {
-        const [_, r, g, b] = rgbMatch;
+        const [, r, g, b] = rgbMatch;
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     // Check for `rgba` format
     const rgbaMatch = color.match(rgbaRegex);
     if (rgbaMatch) {
-        const [_, r, g, b] = rgbaMatch;
+        const [, r, g, b] = rgbaMatch;
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 

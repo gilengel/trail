@@ -1,5 +1,6 @@
 import {type Grid} from '~/models/Grid';
 import {type UndoRedoAction} from '../undoredo';
+import {useGridSave} from "~/composables/useGridSave";
 
 export class MoveRow
     implements UndoRedoAction {
@@ -14,11 +15,15 @@ export class MoveRow
         const tempRow = this.grid.rows[this.oldRowIndex];
         this.grid.rows[this.oldRowIndex] = this.grid.rows[this.newRowIndex];
         this.grid.rows[this.newRowIndex] = tempRow;
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
         const tempRow = this.grid.rows[this.newRowIndex];
         this.grid.rows[this.newRowIndex] = this.grid.rows[this.oldRowIndex];
         this.grid.rows[this.oldRowIndex] = tempRow;
+
+        await useGridSave(this.grid)
     }
 }

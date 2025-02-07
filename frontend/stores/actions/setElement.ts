@@ -1,10 +1,11 @@
 import {type Column, Element} from '~/models/Grid';
+import {useGridSave} from "~/composables/useGridSave";
 
 /**
  * Sets the element type of column. If there was an element before it is cached
  * inside to allow the action to be undoable.
  *
- * This is an undo/redouble action
+ * This is an undo/redouble action.
  */
 export class SetElement
     implements UndoRedoAction {
@@ -24,6 +25,8 @@ export class SetElement
         }
 
         this.column.element = this.oldElement;
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
@@ -44,5 +47,7 @@ export class SetElement
 
         this.column.element = this.element;
         this.newElement = this.element;
+
+        await useGridSave(this.grid)
     }
 }

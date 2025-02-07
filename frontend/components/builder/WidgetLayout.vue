@@ -18,6 +18,7 @@
                 dataKey="itemId"
                 dataValue="Row"
                 :model="element"
+                :grid="grid"
                 :rowIndex="index"
                 :key="index"
                 :data-testid="`layout-row-${index}`"
@@ -31,7 +32,7 @@
           gridModuleStore.addRow({
             id: uuid.v4(),
             columns: [{ width: 12, id: uuid.v4() }],
-          })
+          }, props.grid)
         "
       >Add Row
       </v-btn>
@@ -58,7 +59,7 @@ export interface WidgetLayoutProps {
   grid: Grid;
 }
 
-defineProps<WidgetLayoutProps>();
+const props = defineProps<WidgetLayoutProps>();
 
 defineEmits<{
   onElementChanged: [element: Element];
@@ -77,7 +78,7 @@ function onSelectedElementChanged(element: Element) {
 function onUpdate(event: SortableEvent): void {
   if (!event.oldIndex || !event.newIndex) return;
 
-  gridModuleStore.moveRow(event.oldIndex, event.newIndex);
+  gridModuleStore.moveRow(event.oldIndex, event.newIndex, props.grid);
 }
 
 const selectedComponent = computed(() => {

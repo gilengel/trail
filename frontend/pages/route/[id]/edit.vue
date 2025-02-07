@@ -11,12 +11,8 @@
       </template>
 
       <template #content>
-        <!--
-                <Editor />
-                -->
-
-        <BuilderWidgetLayout
-            :grid
+        <BuilderWidgetLayout v-if="grid"
+                             :grid
         />
 
 
@@ -79,15 +75,12 @@
 <script setup lang="ts">
 import {useRouter} from 'vue-router';
 import {useObjectUrl} from '@vueuse/core'
-import type {MapLibreTrip} from "~/data/routes/types";
+import type {MapLibreTrip, TripDto} from "~/data/routes/types";
 import * as uuid from 'uuid';
-import {useGridModuleStore} from '~/stores/gridModule';
 import type {Grid} from "~/models/Grid";
+import type {Reactive} from "vue";
 
-const gridModuleStore = useGridModuleStore();
 const trip: MapLibreTrip = inject("trip") as MapLibreTrip;
-
-const config = useRuntimeConfig();
 
 const router = useRouter();
 const route = useRoute();
@@ -109,7 +102,52 @@ const changedRouteData: Ref<{
 }> = ref({name: trip.name, description: trip.description, images: []});
 
 
-const grid = gridModuleStore.grid;
+let grid: Reactive<Grid> | undefined = undefined;
+try {
+  await $fetch<TripDto>(`/api/trips/119`)
+      .then((e) => {
+        const a = e as any as { id: number, layout: Grid };
+        console.log(a.layout);
+        grid = reactive(a.layout);
+        console.log(grid);
+      });
+
+} catch {
+  grid = reactive({
+    id: uuid.v4(),
+
+    rows: [
+      {
+        id: uuid.v4(),
+        columns: [
+          {width: 4, id: uuid.v4()},
+          {width: 8, id: uuid.v4()},
+        ],
+      },
+
+      {
+        id: uuid.v4(),
+        columns: [
+          {width: 4, id: uuid.v4()},
+          {width: 4, id: uuid.v4()},
+          {width: 4, id: uuid.v4()},
+        ],
+      },
+
+      {
+        id: uuid.v4(),
+        columns: [
+          {width: 6, id: uuid.v4()},
+          {width: 6, id: uuid.v4()},
+        ],
+      },
+    ],
+  });
+}
+
+watch(grid!, async (newValue) => {
+  await useGridSave(newValue)
+})
 
 
 async function saveChangesToRoute() {
@@ -120,8 +158,7 @@ async function saveChangesToRoute() {
 
 function saveRoute() {
 
-  $fetch(`/routes/${trip.id}`, {
-    baseURL: config.public.baseURL,
+  $fetch(`/api/routes/${trip.id}`, {
     method: "PATCH",
     body: changedRouteData.value,
   }).then(() => {
@@ -151,8 +188,7 @@ async function saveRouteImages() {
     formData.append(`files`, changedRouteData.value.images[i]);
   }
 
-  await $fetch(`/images`, {
-    baseURL: config.public.baseURL,
+  await $fetch(`/api/images`, {
     method: "POST",
     body: formData,
   }).catch((error) => {

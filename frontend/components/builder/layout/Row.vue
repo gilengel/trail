@@ -1,8 +1,13 @@
 <template>
   <v-container>
-    <v-row class="layout-row" no-gutters>
-      <v-col cols="auto" class="actions">
-
+    <v-row
+        class="border layout-row"
+        :class="isDraggingColumnSize ? 'dragging' : ''"
+        no-gutters
+        @mouseenter="isHovering=true"
+        @mouseleave="isHovering=false">
+      <v-col cols="auto" class="actions"
+      >
         <v-btn
             :ripple="false"
             rounded="0"
@@ -15,12 +20,11 @@
             rounded="0"
             data-testid="delete-row-button"
             icon="las la-trash-alt"
-            @click="gridModuleStore.deleteRow(rowIndex)"
+            @click="gridModuleStore.deleteRow(rowIndex, props.grid)"
         />
       </v-col>
       <v-col>
         <v-row class="fill-height" data-testid="layout-row" ref="container">
-
           <BuilderLayoutColumn
               dataKey="itemId"
               @selectElement="(element) => $emit('selectElement', element)"
@@ -29,6 +33,7 @@
               :columnIndex="col_index"
               :rowIndex="rowIndex"
               :model="column"
+              :grid="grid"
               :class="colClass(col_index)"
               :splitDisabled="column.width <= 2"
               :editable="!isDraggingColumnSize"
@@ -39,7 +44,7 @@
           <div
               data-testid="row-splitter"
               class="splitter"
-
+              :class="isDraggingColumnSize ? 'dragging-slider' : ''"
               :style="splitterStyleFn(i)"
               v-for="(e, i) in model.columns.length - 1"
               :key="e"
@@ -52,14 +57,16 @@
 </template>
 
 <script setup lang="ts" generic="T extends string, S extends string">
-import {type Ref, ref} from 'vue';
+import {type PropType, type Ref, ref} from 'vue';
 
-import {type Row, Element} from '~/models/Grid';
+import {type Row, Element, type Grid} from '~/models/Grid';
 import {columnValueValidator} from '~/composables/useColumValidator';
 
 const gridModuleStore = useGridModuleStore();
 
 const container: Ref<{ $el: HTMLElement } | null> = ref(null);
+
+const isHovering = ref(false);
 
 const props = defineProps({
   minColSize: {
@@ -82,8 +89,14 @@ const props = defineProps({
     validator: (x: number) => x >= 0,
   },
 
+
+  grid: {
+    type: Object as PropType<Grid>,
+    required: true,
+  },
+
   model: {
-    type: Object as () => Row,
+    type: Object as PropType<Row>,
     required: true,
   },
 });
@@ -126,7 +139,7 @@ function colClass(i: number): string {
 function splitterStyleFn(i: number): string {
   const left = (previousColSize(i + 1) / flexColumns) * 100;
 
-  return `left: ${left}%; backgroundColor: var(--v-theme-primary)`;
+  return `left: ${left}%`;
 }
 
 function dragMouseDown(event: MouseEvent, index: number) {
@@ -257,9 +270,12 @@ function closeDragElement() {
 </script>
 
 <style lang="scss" scoped>
-
+$primary-color: rgb(var(--v-theme-primary));
 
 $border-width: 2px;
+$focus-border: solid $border-width $primary-color;
+
+
 .actions {
   display: flex;
   flex-direction: column;
@@ -268,20 +284,35 @@ $border-width: 2px;
 
   margin-left: -52px;
 
-  border: solid $border-width rgb(var(--v-theme-primary));
+  border: solid $border-width $primary-color;
   margin-top: -$border-width;
   margin-bottom: -$border-width;
 }
 
+.dragging {
+  border: $focus-border !important;
+}
+
+.dragging-slider {
+  &::before {
+    background: $primary-color;
+  }
+
+  &::after {
+    background: $primary-color;
+  }
+}
 
 .layout-row {
-  border: solid $border-width rgb(var(--v-theme-primary));
+  border: $focus-border;
 }
 
 .layout-row:hover {
   .actions {
     visibility: visible;
   }
+
+  border: $focus-border !important;
 }
 
 .v-row {
@@ -291,7 +322,8 @@ $border-width: 2px;
 
 $row-margin: 10px;
 $row-offset: $row-margin;
-$splitter-handle-width: 16px;
+$splitter-handle-width: 1px;
+$splitter-width: 1px;
 .splitter {
   position: absolute;
   top: $row-offset + $border-width;
@@ -301,17 +333,35 @@ $splitter-handle-width: 16px;
   cursor: ew-resize;
   transform: translateX(-50%);
 
+  &::before, &::after {
+    position: absolute;
+    content: ' ';
+    display: block;
+
+    height: 100%;
+    margin-left: calc($splitter-handle-width / 2 - $splitter-width / 2);
+  }
+
+  &::before {
+    width: 16px;
+
+
+    background: transparent;
+  }
+
+  &::after {
+    width: 2px;
+    left: 8px;
+  }
 }
 
-$splitter-width: 2px;
-.splitter::after {
-  content: ' ';
-  display: block;
+.splitter:not(.dragging-slider)::after {
+  background: rgba(var(--v-border-color), var(--v-border-opacity));
+}
 
-  width: $splitter-width;
-  height: 100%;
-
-  margin-left: calc($splitter-handle-width / 2 - $splitter-width / 2);
-  background: rgb(var(--v-theme-primary));
+.splitter:hover {
+  &::after {
+    background: rgb(var(--v-theme-primary));
+  }
 }
 </style>

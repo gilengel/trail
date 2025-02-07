@@ -7,7 +7,4 @@
 </script>
 
 <style scoped lang="scss">
-.map {
-  border: solid 4px salmon !important;
-}
 </style>

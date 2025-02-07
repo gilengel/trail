@@ -2,6 +2,7 @@ import {type Column, type Row} from '~/models/Grid';
 import {type UndoRedoAction} from '../undoredo';
 
 import * as uuid from 'uuid';
+import {useGridSave} from "~/composables/useGridSave";
 
 export class SplitColumn
     implements UndoRedoAction {
@@ -16,6 +17,8 @@ export class SplitColumn
     async undo() {
         const removedColumn = this.row.columns.splice(this.columnIndex - 2, 1);
         this.row.columns[this.columnIndex].width += removedColumn[0].width;
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
@@ -32,5 +35,7 @@ export class SplitColumn
         };
 
         this.row.columns.splice(this.columnIndex, 0, this.addedColumn);
+
+        await useGridSave(this.grid)
     }
 }

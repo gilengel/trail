@@ -1,102 +1,116 @@
-import {type Column, Element, type Grid, type Row} from '~/models/Grid';
 import {defineStore} from 'pinia';
+import {type Column, Element, type Grid, type Row} from '~/models/Grid';
 import {GroupedUndoRedoAction, useUndoRedoStore} from './undoredo';
-import {ref} from 'vue';
-import * as uuid from 'uuid';
-import {AddRow} from './actions/addRow';
-import {DeleteColumn} from './actions/deleteColumn';
-import {DeleteRow} from './actions/deleteRow';
-import {MoveRow} from './actions/moveRow';
-import {SplitColumn} from './actions/splitColumn';
-import {SetElement} from './actions/setElement';
-import {UpdateElementAttribute} from './actions/updateElementAttribute';
+import {DeleteColumn} from "~/stores/actions/deleteColumn";
+import {AddRow} from "~/stores/actions/addRow";
+import {DeleteRow} from "~/stores/actions/deleteRow";
+import {SplitColumn} from "~/stores/actions/splitColumn";
+import {MoveRow} from "~/stores/actions/moveRow";
+import {SetElement} from "~/stores/actions/setElement";
+import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 import {UpdateColumnWidth} from "~/stores/actions/updateColumnWidth";
-
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const DefaultGrid: Grid = {
-    id: uuid.v4(),
-
-    rows: [
-        {
-            id: uuid.v4(),
-            columns: [
-                {width: 4, id: uuid.v4()},
-                {width: 8, id: uuid.v4()},
-            ],
-        },
-
-        {
-            id: uuid.v4(),
-            columns: [
-                {width: 4, id: uuid.v4()},
-                {width: 4, id: uuid.v4()},
-                {width: 4, id: uuid.v4()},
-            ],
-        },
-
-        {
-            id: uuid.v4(),
-            columns: [
-                {width: 6, id: uuid.v4()},
-                {width: 6, id: uuid.v4()},
-            ],
-        },
-    ],
-};
 
 export const useGridModuleStore = () =>
     defineStore('gridModule', () => {
 
-        const grid = ref(DefaultGrid);
         const _undoRedoStore = useUndoRedoStore();
 
-        function addRow(row: Row) {
-            _undoRedoStore.execute(new AddRow(row, grid.value));
+        /**
+         * Adds a row to the grid.
+         * @param row - The new grid added to the grid.
+         * @param grid - The grid the row gets added to.
+         */
+        async function addRow(row: Row, grid: Grid) {
+            await _undoRedoStore.execute(new AddRow(row, grid));
         }
 
-        function deleteRow(rowIndex: number) {
-            const row = grid.value?.rows[rowIndex];
-            _undoRedoStore.execute(new DeleteRow(row, grid.value));
+        /**
+         * Deletes a row at the given index in the grid.
+         * @param rowIndex - The index of the row that shall be deleted.
+         * @param grid - The grid the row gets removed from.
+         */
+        async function deleteRow(rowIndex: number, grid: Grid) {
+            const row = grid.rows[rowIndex];
+            await _undoRedoStore.execute(new DeleteRow(row!, grid));
         }
 
-        function deleteColumn(rowIndex: number, columnIndex: number) {
-            const row = grid.value?.rows[rowIndex];
+        /**
+         * Deletes a column at the given index in the grid.
+         * @param rowIndex - The index of the row from which the column shall be deleted.
+         * @param columnIndex - The index of the column that shall be deleted.
+         * @param grid - The grid the column gets removed from.
+         */
+        async function deleteColumn(rowIndex: number, columnIndex: number, grid: Grid) {
+            const row = grid.rows[rowIndex];
 
-            _undoRedoStore.execute(new DeleteColumn(row, columnIndex));
+            await _undoRedoStore.execute(new DeleteColumn(row, columnIndex));
         }
 
-        function splitColumn(rowIndex: number, columnIndex: number) {
-            const row = grid.value?.rows[rowIndex];
+        /**
+         * Splits a column into two. Does not check if this is valid or not - as the backend does not limit the
+         * number of allowed columns per row.
+         * @param rowIndex - The index of the row from where a column shall be split.
+         * @param columnIndex - The index of the column that shall be split.
+         * @param grid - The grid where the column will be split.
+         */
+        async function splitColumn(rowIndex: number, columnIndex: number, grid: Grid) {
+            const row = grid.rows[rowIndex];
 
-            _undoRedoStore.execute(new SplitColumn(row, columnIndex));
+            await _undoRedoStore.execute(new SplitColumn(row, columnIndex));
         }
 
-        function moveRow(oldRowIndex: number, newRowIndex: number) {
-            _undoRedoStore.execute(
-                new MoveRow(oldRowIndex, newRowIndex, grid.value),
+        /**
+         * Moves a row to another position.
+         * @param oldRowIndex - The old index of the row from where it is transferred.
+         * @param newRowIndex - The new index of the row where it is transferred to.
+         * @param grid - The grid where the row will be moved.
+         */
+        async function moveRow(oldRowIndex: number, newRowIndex: number, grid: Grid) {
+            await _undoRedoStore.execute(
+                new MoveRow(oldRowIndex, newRowIndex, grid),
             );
         }
 
-        function setColumnElement(column: Column, element: Element) {
-            _undoRedoStore.execute(new SetElement(column, element));
+        /**
+         * Sets the displayed element of a column.
+         * @param column - The column from which you want to set the element.
+         * @param element - The element that shall be displayed.
+         */
+        async function setColumnElement(column: Column, element: Element) {
+            await _undoRedoStore.execute(new SetElement(column, element));
         }
 
-        function updateElementAttribute(
+        /**
+         * Updates an attribute of an element. As each element has its own set of attributes, the attribute
+         * to be changed is identified by a key.
+         * @param element - The element from which you want to set an attribute.
+         * @param attribute - The key of the attribute that shall be changed.
+         * @param value - The new value for the attribute. Can be either string, number or boolean.
+         */
+        async function updateElementAttribute(
             element: Element,
             attribute: string,
             value: string | number | boolean,
         ) {
-            _undoRedoStore.execute(
+            await _undoRedoStore.execute(
                 new UpdateElementAttribute(element, attribute, value),
             );
         }
 
-        function updateColumnsWidth(
+        /**
+         * Updates the widths of two neighbouring columns.
+         * @param left - The left column.
+         * @param left.column - The left column model.
+         * @param left.width - The new width for the left column.
+         * @param right - The right column.
+         * @param right.column - The right column model.
+         * @param right.width - The new width for the right column.
+         */
+        async function updateColumnsWidth(
             left: { column: Column; width: number },
             right: { column: Column; width: number },
         ) {
-            _undoRedoStore.execute(
+            await _undoRedoStore.execute(
                 new GroupedUndoRedoAction([
                     new UpdateColumnWidth(left.column, left.width),
                     new UpdateColumnWidth(right.column, right.width),
@@ -105,7 +119,6 @@ export const useGridModuleStore = () =>
         }
 
         return {
-            grid,
             addRow,
             moveRow,
             deleteRow,

@@ -1,8 +1,9 @@
 import {type Grid, type Row} from '~/models/Grid';
 import {type UndoRedoAction} from '../undoredo';
+import {useGridSave} from "~/composables/useGridSave";
 
 /**
- * Deletes a row to the grid. This is an undo/redoable action
+ * Deletes a row to the grid. This is an undo/redoable action.
  */
 export class DeleteRow
     implements UndoRedoAction {
@@ -17,9 +18,13 @@ export class DeleteRow
 
     async undo() {
         this.grid.rows.splice(this.rowIndex, 0, this.row);
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
         this.grid.rows.splice(this.rowIndex, 1);
+
+        await useGridSave(this.grid)
     }
 }

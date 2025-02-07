@@ -1,8 +1,7 @@
 import type {Column} from "~/models/Grid";
 
-
 /**
- * Updates the column width. This is an undo/redoable action
+ * Updates the column width. This is an undo/redoable action.
  */
 export class UpdateColumnWidth
     implements UndoRedoAction {

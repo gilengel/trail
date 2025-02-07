@@ -1,8 +1,9 @@
 import {type Grid, type Row} from '~/models/Grid';
 import {type UndoRedoAction} from '../undoredo';
+import {useGridSave} from "~/composables/useGridSave";
 
 /**
- * Adds a row to the grid. This is an undo/redo able action
+ * Adds a row to the grid. This is an undo/redo able action.
  */
 export class AddRow
     implements UndoRedoAction {
@@ -15,9 +16,13 @@ export class AddRow
     async undo() {
         const rowIndex = this.grid.rows.indexOf(this.row);
         this.grid.rows.splice(rowIndex, 1);
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
         this.grid.rows.push(this.row);
+
+        await useGridSave(this.grid)
     }
 }

@@ -23,14 +23,14 @@
             flat
             round
             icon="las la-columns"
-            @click="gridModuleStore.splitColumn(rowIndex, columnIndex)"
+            @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
         />
         <v-btn
             flat
             round
             icon="las la-trash-alt"
             :readonly="model.width === 12"
-            @click="gridModuleStore.deleteColumn(rowIndex, columnIndex)"
+            @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
         />
       </v-toolbar>
     </div>
@@ -60,7 +60,7 @@
 
 <script setup lang="ts" generic="T extends string, S extends string">
 
-import {type Column, Element, ElementType, ElementTypes} from '~/models/Grid';
+import {type Column, Element, ElementType, ElementTypes, type Grid} from '~/models/Grid';
 import {type PropType, computed, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
 //import {useDrop} from '~/composables/useDrop';
@@ -140,6 +140,11 @@ const props = defineProps({
    */
   model: {
     type: Object as PropType<Column>,
+    required: true,
+  },
+
+  grid: {
+    type: Object as PropType<Grid>,
     required: true,
   },
 

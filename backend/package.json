@@ -2,7 +2,7 @@
   "name": "@trail/backend",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Gil Engel",
   "private": true,
   "license": "AGPL-3.0-or-later",
   "scripts": {

@@ -31,8 +31,8 @@ export class TripsController {
   }
 
   @Get(':id')
-  async findOne(@Param() params: { id: number }): Promise<TripDto> {
-    const trip = await this.tripsService.trip(params.id);
+  async findOne(@Param('id') id: number): Promise<TripDto> {
+    const trip = await this.tripsService.trip(id);
 
     return Promise.resolve(trip);
   }

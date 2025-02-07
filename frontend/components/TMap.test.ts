@@ -1,8 +1,11 @@
-import {mount} from '@vue/test-utils'
-import {beforeEach, describe, expect, it, vi} from 'vitest'
+/**
+ * @file Unit tests for the map element.
+ */
+import {mount, VueWrapper} from '@vue/test-utils'
+import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest'
 import MapComponent from "~/components/TMap.vue";
-import {LngLat, LngLatBounds, Map as MockMap} from 'maplibre-gl'
-import {MapLibreSegment, MapLibreTrip} from "~/data/routes/types";
+import {LngLatBounds, Map as MockMap} from 'maplibre-gl'
+import {LngLatWithElevation, MapLibreSegment, MapLibreTrip} from "~/data/routes/types";
 
 // Mock maplibre-gl components and methods
 vi.mock('maplibre-gl', () => {
@@ -37,14 +40,14 @@ vi.mock('uuid', () => ({
 }))
 
 describe('MapComponent', () => {
-    let wrapper: any
+    let wrapper: VueWrapper<ComponentPublicInstance<typeof MapComponent>>;
 
     const segment = new MapLibreSegment(
         0,
         "test_segment",
         [
-            new LngLat(0, 0),
-            new LngLat(1, 1)
+            new LngLatWithElevation(0, 0, 0),
+            new LngLatWithElevation(1, 1, 0)
         ],
         "red"
     );
@@ -95,7 +98,7 @@ describe('MapComponent', () => {
         wrapper.vm.addLine(coordinates, style)
 
         // Directly reference the mock instance of Map
-        const mockMapInstance = (MockMap as any).mock.results[0].value;
+        const mockMapInstance = (MockMap as Mock).mock.results[0].value;
         expect(mockMapInstance.addSource).toHaveBeenCalledWith(
             'route_unique-id',
             {
@@ -123,7 +126,7 @@ describe('MapComponent', () => {
     it('zooms to the entire trip with fitBounds and pan', () => {
         wrapper.vm.zoomToTrip(mockTrip, false)
 
-        const mockMapInstance = (MockMap as any).mock.results[0].value;
+        const mockMapInstance = (MockMap as Mock).mock.results[0].value;
         expect(mockMapInstance.fitBounds).toHaveBeenCalledWith(
             mockTrip.bounds,
             {padding: {top: 10, bottom: 25, left: 15, right: 5}, animate: false}
@@ -134,7 +137,7 @@ describe('MapComponent', () => {
         const mockSegment = {bounds: new LngLatBounds([0, 0], [5, 5])}
         wrapper.vm.zoomToSegment(mockSegment, true)
 
-        const mockMapInstance = (MockMap as any).mock.results[0].value;
+        const mockMapInstance = (MockMap as Mock).mock.results[0].value;
         expect(mockMapInstance.fitBounds).toHaveBeenCalledWith(
             mockSegment.bounds,
             {padding: {top: 10, bottom: 25, left: 15, right: 5}, animate: true}
@@ -145,7 +148,7 @@ describe('MapComponent', () => {
         const bounds = new LngLatBounds([0, 0], [10, 10])
         wrapper.vm.fitBounds(bounds, false)
 
-        const mockMapInstance = (MockMap as any).mock.results[0].value;
+        const mockMapInstance = (MockMap as Mock).mock.results[0].value;
         expect(mockMapInstance.fitBounds).toHaveBeenCalledWith(
             bounds,
             {padding: {top: 10, bottom: 25, left: 15, right: 5}, animate: false}

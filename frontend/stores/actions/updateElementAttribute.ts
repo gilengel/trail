@@ -1,7 +1,8 @@
 import {Element} from '~/models/Grid';
+import {useGridSave} from "~/composables/useGridSave";
 
 /**
- * Updates an attribute of the element. This is an undoable/redoable action
+ * Updates an attribute of the element. This is an undoable/redoable action.
  */
 export class UpdateElementAttribute
     implements UndoRedoAction {
@@ -28,6 +29,8 @@ export class UpdateElementAttribute
           */
 
         //this.element.attributes[this.attribute] = this.oldValue;
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
@@ -41,5 +44,7 @@ export class UpdateElementAttribute
 
         this.oldValue = this.element.attributes[this.attribute];
         this.element.attributes[this.attribute] = this.value;
+
+        await useGridSave(this.grid)
     }
 }

@@ -1,5 +1,6 @@
 <template>
-  <NuxtPage />
+  {{ tripDto }}
+  <NuxtPage/>
 </template>
 
 <script setup lang="ts">
@@ -7,16 +8,17 @@ definePageMeta({
   layout: false,
 });
 
-import type { RouteDto } from "~/components/route";
-import { TripDto2MapLibreTrip } from "~/data/routes/types";
+import type {RouteDto} from "~/components/route";
+import {type TripDto, TripDto2MapLibreTrip} from "~/data/routes/types";
 
 const route = useRoute();
 
-const { data: tripDto } = await useApiFetch<RouteDto>(
-  `/api/routes/${route.params.id}`
+
+const {data: routeDto} = await useApiFetch<RouteDto>(
+    `/api/routes/${route.params.id}`
 );
 
-const trip = TripDto2MapLibreTrip(tripDto.value!);
+const trip = TripDto2MapLibreTrip(routeDto.value!);
 
 provide("trip", trip);
 </script>

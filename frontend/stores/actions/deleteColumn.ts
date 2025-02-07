@@ -1,5 +1,6 @@
 import {type Column, type Row} from '~/models/Grid';
 import {type UndoRedoAction} from '../undoredo';
+import {useGridSave} from "~/composables/useGridSave";
 
 export class DeleteColumn
     implements UndoRedoAction {
@@ -14,6 +15,8 @@ export class DeleteColumn
     async undo() {
         this.row.columns[this.columnIndex].width -= this.deletedColumn!.width;
         this.row.columns.splice(this.columnIndex, 0, this.deletedColumn!);
+
+        await useGridSave(this.grid)
     }
 
     async redo() {
@@ -25,5 +28,7 @@ export class DeleteColumn
         this.row.columns[
             isLastColumn ? this.columnIndex - 1 : this.columnIndex
             ].width += colSize;
+
+        await useGridSave(this.grid)
     }
 }
