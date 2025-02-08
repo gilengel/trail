@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import type {ImageDto} from "~/data/images/types";
+import type {ImageDto} from "~/types/types";
 import {columnValueValidator} from "~/composables/useColumValidator";
 
 

@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 
-import {type Column, Element, ElementType, ElementTypes, type Grid} from '~/models/Grid';
+import {type Column, Element, ElementType, ElementTypes, type Grid} from '~/types/grid';
 import {type PropType, computed, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
 //import {useDrop} from '~/composables/useDrop';

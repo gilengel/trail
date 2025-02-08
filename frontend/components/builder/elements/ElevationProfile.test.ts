@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest'
 import ElevationProfileComponent from '@/components/builder/elements/ElevationProfile.vue'
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {MapLibreSegment} from "~/data/routes/types";
+import {MapLibreSegment} from "~/types/route";
 
 describe('Component', () => {
     describe('ElevationProfile', () => {

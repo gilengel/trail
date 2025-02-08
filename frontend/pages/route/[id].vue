@@ -9,7 +9,7 @@ definePageMeta({
 });
 
 import type {RouteDto} from "~/types/route";
-import {type TripDto, TripDto2MapLibreTrip} from "~/data/routes/types";
+import {type TripDto, TripDto2MapLibreTrip} from "~/types/types";
 
 const route = useRoute();
 

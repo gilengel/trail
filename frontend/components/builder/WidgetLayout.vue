@@ -50,7 +50,7 @@ import * as uuid from 'uuid';
 import {Sortable} from 'sortablejs-vue3';
 import type {SortableEvent} from 'sortablejs';
 
-import {type Grid, Element, type Row} from '~/models/Grid';
+import {type Grid, Element, type Row} from '~/types/Grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {HeadingProps} from "~/components/builder/properties";
 

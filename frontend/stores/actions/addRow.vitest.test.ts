@@ -1,4 +1,4 @@
-import {type Row} from '~/models/Grid';
+import {type Row} from '~/types/grid';
 import {expect, describe, it} from 'vitest';
 import {AddRow} from './addRow';
 import {createTestGrid} from './test.helper';

@@ -3,8 +3,8 @@
     <div class="header">
       <div class="profile">
         <img
-          src="https://randomuser.me/api/portraits/women/51.jpg"
-          alt="avatar"
+            src="https://randomuser.me/api/portraits/women/51.jpg"
+            alt="avatar"
         />
 
         <div>
@@ -25,12 +25,12 @@
       </div>
     </div>
 
-    <TripImages :segment="segment" />
+    <TripImages :segment="segment"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { MapLibreSegment } from "~/data/routes/types";
+import type {MapLibreSegment} from "~/types/route";
 
 export interface TripFeedItemProps {
   segment: MapLibreSegment;
@@ -55,6 +55,7 @@ defineProps<TripFeedItemProps>();
       padding: 0;
       margin: 0;
     }
+
     span:nth-of-type(2) {
       margin-left: 0.3em;
     }

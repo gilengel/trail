@@ -1,4 +1,4 @@
-import type {Column} from "~/models/Grid";
+import type {Column} from "~/types/grid";
 
 /**
  * Updates the column width. This is an undo/redoable action.

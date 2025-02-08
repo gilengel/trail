@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type {MapLibreSegment, MapLibreTrip} from "~/data/routes/types";
+import type {MapLibreSegment, MapLibreTrip} from "~/types/types";
 import {LngLatBounds, Map} from "maplibre-gl";
 import {v4 as uuidv4} from "uuid";
 import type {Color} from "~/types/color";

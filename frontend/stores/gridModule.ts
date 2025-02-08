@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {type Column, Element, type Grid, type Row} from '~/models/Grid';
+import {type Column, Element, type Grid, type Row} from '~/types/grid';
 import {GroupedUndoRedoAction, useUndoRedoStore} from './undoredo';
 import {DeleteColumn} from "~/stores/actions/deleteColumn";
 import {AddRow} from "~/stores/actions/addRow";
@@ -10,7 +10,7 @@ import {SetElement} from "~/stores/actions/setElement";
 import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 import {UpdateColumnWidth} from "~/stores/actions/updateColumnWidth";
 
-export const useGridModuleStore =
+export const useGridModuleStore = () =>
     defineStore('gridModule', () => {
 
         const _undoRedoStore = useUndoRedoStore();

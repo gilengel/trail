@@ -1,4 +1,4 @@
-import {type Element} from '~/models/Grid'
+import {type Element} from '~/types/grid'
 
 export interface HeadingProps {
     element: Element;

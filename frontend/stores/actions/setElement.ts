@@ -1,5 +1,4 @@
-import {type Column, Element} from '~/models/Grid';
-import {useGridSave} from "~/composables/useGridSave";
+import {type Column, Element} from '~/types/grid';
 
 /**
  * Sets the element type of column. If there was an element before it is cached
@@ -25,8 +24,6 @@ export class SetElement
         }
 
         this.column.element = this.oldElement;
-
-        await useGridSave(this.grid)
     }
 
     async redo() {
@@ -47,7 +44,5 @@ export class SetElement
 
         this.column.element = this.element;
         this.newElement = this.element;
-
-        await useGridSave(this.grid)
     }
 }

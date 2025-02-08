@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import {onMounted, ref, type Ref} from "vue";
-import type {ImageDto} from "~/data/images/types";
-import type {MapLibreSegment} from "~/data/routes/types";
+import type {ImageDto} from "~/types/types";
+import type {MapLibreSegment} from "~/types/types";
 
 interface TripImagesProps {
   segment: MapLibreSegment;

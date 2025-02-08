@@ -1,5 +1,5 @@
-import { ElementType } from '~/models/Grid';
+import {ElementType} from '~/types/grid';
 
 export type DragAndDropDto = {
-  elementType: ElementType;
+    elementType: ElementType;
 };

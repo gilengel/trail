@@ -1,4 +1,4 @@
-import {type Column, type Row} from '~/models/Grid';
+import {type Column, type Row} from '~/types/grid';
 import {type UndoRedoAction} from '../undoredo';
 import {useGridSave} from "~/composables/useGridSave";
 

@@ -75,9 +75,9 @@
 <script setup lang="ts">
 import {useRouter} from 'vue-router';
 import {useObjectUrl} from '@vueuse/core'
-import type {MapLibreTrip, TripDto} from "~/data/routes/types";
+import type {MapLibreTrip, TripDto} from "~/types/types";
 import * as uuid from 'uuid';
-import type {Grid} from "~/models/Grid";
+import type {Grid} from "~/types/Grid";
 import type {Reactive} from "vue";
 
 const trip: MapLibreTrip = inject("trip") as MapLibreTrip;

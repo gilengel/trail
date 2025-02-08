@@ -59,7 +59,7 @@
 <script setup lang="ts" generic="T extends string, S extends string">
 import {type PropType, type Ref, ref} from 'vue';
 
-import {type Row, Element, type Grid} from '~/models/Grid';
+import {type Row, Element, type Grid} from '~/types/Grid';
 import {columnValueValidator} from '~/composables/useColumValidator';
 
 const gridModuleStore = useGridModuleStore();
@@ -187,6 +187,7 @@ function restrictNewColumnSizes(newColumnSize: number): {
 } {
   const completeColumnSize = affectedColumnSizes().complete;
 
+
   if (newColumnSize < props.minColSize) {
     newColumnSize = props.minColSize;
   }
@@ -228,10 +229,6 @@ function elementDrag(event: MouseEvent) {
   const positionLeft = positions.clientX - leftAbsolute;
 
 
-  if (!selectedSplitter.value) {
-    return;
-  }
-
   const previousColSizes = previousColSize(selectedSplitterIndex.value);
   const flexSize =
       Math.ceil((positionLeft / containerWidth()) * flexColumns) -
@@ -250,8 +247,6 @@ function elementDrag(event: MouseEvent) {
       {column: leftColumn, width: newColumnSizes.left},
       {column: rightColumn, width: newColumnSizes.right},
   );
-
-
 }
 
 function closeDragElement() {

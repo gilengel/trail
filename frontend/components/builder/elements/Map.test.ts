@@ -1,11 +1,11 @@
 import {describe, it, expect} from 'vitest'
 import MapComponent from '@/components/builder/elements/Map.vue'
-import {mountSuspended} from "@nuxt/test-utils/runtime";
+import {shallowMount} from "@vue/test-utils";
 
 describe('Component', () => {
-    describe('Text', () => {
+    describe('Map', () => {
         it('renders', async () => {
-            const component = await mountSuspended(MapComponent, {
+            const component = shallowMount(MapComponent, {
                 global: {
                     stubs: {
                         TMap: {

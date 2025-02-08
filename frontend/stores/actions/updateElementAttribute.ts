@@ -1,4 +1,4 @@
-import {Element} from '~/models/Grid';
+import {Element} from '~/types/grid';
 import {useGridSave} from "~/composables/useGridSave";
 
 /**

@@ -5,7 +5,7 @@ import {mount, VueWrapper} from '@vue/test-utils'
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest'
 import MapComponent from "~/components/TMap.vue";
 import {LngLatBounds, Map as MockMap} from 'maplibre-gl'
-import {LngLatWithElevation, MapLibreSegment, MapLibreTrip} from "~/data/routes/types";
+import {LngLatWithElevation, MapLibreSegment, MapLibreTrip} from "~/types/route";
 
 // Mock maplibre-gl components and methods
 vi.mock('maplibre-gl', () => {

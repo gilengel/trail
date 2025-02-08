@@ -1,8 +1,8 @@
 <template>
   <v-card variant="outlined">
-    <template v-slot:title >
+    <template v-slot:title>
       <span data-cy="overview-title">My Latest Trips</span>
-      {{routes}}
+      {{ routes }}
     </template>
     <v-card-text>
       <v-list lines="one">
@@ -15,18 +15,18 @@
       </v-list>
 
 
-    <h2 data-cy="error-empty-text" v-if="!networkError && routes?.length == 0">
-      😞 Looks like you don't have any trips stored yet
-    </h2>
-    <h2 data-cy="error-network-text" v-if="networkError">
-      😞 Looks like there was a network problem.
-    </h2>
+      <h2 data-cy="error-empty-text" v-if="!networkError && routes?.length == 0">
+        😞 Looks like you don't have any trips stored yet
+      </h2>
+      <h2 data-cy="error-network-text" v-if="networkError">
+        😞 Looks like there was a network problem.
+      </h2>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import type { RouteWithoutSegments } from "~/data/routes/types";
+import type {RouteWithoutSegments} from "~/types/types";
 
 function onTripClicked(trip: RouteWithoutSegments) {
   emit('selectedTripChanged', trip.id)
@@ -34,7 +34,7 @@ function onTripClicked(trip: RouteWithoutSegments) {
 
 const networkError = ref(false);
 
-const { data: routes } = await useFetch<RouteWithoutSegments[]>("/api/routes")
+const {data: routes} = await useFetch<RouteWithoutSegments[]>("/api/routes")
 
 const emit = defineEmits<(e: "selectedTripChanged", id: number) => void>();
 </script>
@@ -47,6 +47,7 @@ ul {
   max-height: 50vh;
 
   overflow: scroll;
+
   li {
     //color: $text;
     padding: 8px 16px;

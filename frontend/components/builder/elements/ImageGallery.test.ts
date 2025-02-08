@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest'
 import ImageGalleryComponent from '@/components/builder/elements/ImageGallery.vue'
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import type {ImageDto} from "~/data/images/types";
+import type {ImageDto} from "~/types/route";
 
 describe('Component', () => {
     describe('ImageGallery', () => {

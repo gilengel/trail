@@ -1,7 +1,7 @@
 <template>
   <div data-cy="trip-details" class="trip-details">
     <div class="overview">
-      <MapTMap :trip />
+      <MapTMap :trip/>
 
       <ul></ul>
     </div>
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MapLibreTrip } from "~/data/routes/types";
+import type {MapLibreTrip} from "~/types/types";
 
 defineProps<{
   trip: MapLibreTrip;

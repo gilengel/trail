@@ -1,4 +1,4 @@
-import {type Column, type Grid} from '~/models/Grid';
+import {type Column, type Grid} from '~/types/grid';
 
 export const createTestGrid = (numRows: number = 1, numCols: number = 0): Grid => {
     const grid: Grid = {

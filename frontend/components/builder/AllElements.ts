@@ -1,4 +1,4 @@
-import {ElementType} from "~/models/Grid";
+import {ElementType} from "~/types/grid";
 
 export const componentsMap = {
     [ElementType.Text]: defineAsyncComponent(() => import('@/components/builder/elements/Text.vue')),

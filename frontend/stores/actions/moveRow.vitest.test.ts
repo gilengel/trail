@@ -1,6 +1,6 @@
 import {MoveRow} from './moveRow';
 import {expect, describe, it} from 'vitest';
-import {type Grid} from '~/models/Grid';
+import {type Grid} from '~/types/grid';
 
 const createTestGrid = (): Grid => {
     return {

@@ -12,9 +12,9 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import { Line } from 'vue-chartjs'
-import {MapLibreSegment} from "~/data/routes/types";
-import {addAlphaToColor} from "~/types/color";
+import {Line} from 'vue-chartjs'
+import {MapLibreSegment} from "~/types/route";
+import {addAlphaToColor, type Color} from "~/types/color";
 
 const chartOptions = ref({
   plugins: {
@@ -77,7 +77,9 @@ const maxElevations = computed(() => {
 const data = computed(() => {
   return {
     //labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "DecemberF"],
-    labels: elevations.value.map((el, index) => { return index; }),
+    labels: elevations.value.map((el: unknown, index: number) => {
+      return index;
+    }),
     datasets: [
       {
         label: 'Elevation',
@@ -93,7 +95,6 @@ const data = computed(() => {
   }
 })
 </script>
-
 
 
 <style scoped lang="scss">

@@ -152,7 +152,7 @@
 
 <script setup lang="ts">
 import {computed, inject, type Ref} from "vue";
-import {MapLibreSegment, type MapLibreTrip} from "~/data/routes/types";
+import {MapLibreSegment, type MapLibreTrip} from "~/types/types";
 import TMap from "~/components/TMap.vue";
 import {useRouter} from "vue-router";
 import ElevationProfile from "~/components/builder/elements/ElevationProfile.vue";

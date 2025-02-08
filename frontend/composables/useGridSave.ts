@@ -1,5 +1,5 @@
-import type {Grid} from "~/models/Grid";
-import type {TripDto} from "~/data/routes/types";
+import type {Grid} from "~/types/grid";
+import type {TripDto} from "~/types/route";
 
 /**
  * Persists the grid to the backend.
