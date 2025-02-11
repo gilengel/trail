@@ -1,14 +1,17 @@
 <template>
-  <v-tooltip :text=props.tooltip location="bottom">
-    <template v-slot:activator="{ props }">
+  <v-tooltip
+    :text="props.tooltip"
+    location="bottom"
+  >
+    <template>
       <v-btn
-          data-testid="tooltip-button"
-          icon
-          v-bind="props"
-          :color="isActive ? 'primary' : 'transparent'"
-          variant="flat"
-          rounded="0"
-          @click="onClick"
+        data-testid="tooltip-button"
+        icon
+        v-bind="props"
+        :color="isActive ? 'primary' : 'transparent'"
+        variant="flat"
+        rounded="0"
+        @click="onClick"
       >
         <v-icon>{{ icon }}</v-icon>
       </v-btn>

@@ -1,13 +1,10 @@
 <template>
-
-
   <div style="min-height: 400px">
     <Line
-        :data
-        :options="chartOptions"
+      :data
+      :options="chartOptions"
     />
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -15,6 +12,20 @@ import {computed} from "vue";
 import {Line} from 'vue-chartjs'
 import {MapLibreSegment} from "~/types/route";
 import {addAlphaToColor, type Color} from "~/types/color";
+
+const props = defineProps({
+  segment: {
+    type: MapLibreSegment,
+    required: true
+  },
+
+  color: {
+    type: String as PropType<Color>,
+    required: false,
+    default: 'rgb(75, 192, 192)'
+  }
+});
+
 
 const chartOptions = ref({
   plugins: {
@@ -49,29 +60,8 @@ const chartOptions = ref({
 })
 
 
-const props = defineProps({
-  segment: {
-    type: MapLibreSegment,
-    required: true
-  },
-
-  color: {
-    type: String as PropType<Color>,
-    required: false,
-    default: 'rgb(75, 192, 192)'
-  }
-});
-
 const elevations = computed(() => {
   return props.segment.coordinates.map(coordinate => coordinate.elevation)
-})
-
-const minElevations = computed(() => {
-  return Math.min.apply(null, elevations.value);
-})
-
-const maxElevations = computed(() => {
-  return Math.max.apply(null, elevations.value);
 })
 
 const data = computed(() => {

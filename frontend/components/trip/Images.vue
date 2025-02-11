@@ -1,5 +1,6 @@
 <template>
-  <BuilderElementsImageGallery :images="[
+  <BuilderElementsImageGallery
+    :images="[
       { url: 'https://picsum.photos/id/70/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/71/400/600', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/72/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
@@ -15,8 +16,9 @@
       { url: 'https://picsum.photos/id/82/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/83/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
 
-  ]" :cols="3"/>
-
+    ]"
+    :cols="3"
+  />
 </template>
 
 <script setup lang="ts">
@@ -28,15 +30,13 @@ interface TripImagesProps {
   segment: MapLibreSegment;
 }
 
+const props = defineProps<TripImagesProps>();
 const numberOfVisibleImages = 5;
 const images: Ref<ImageDto[]> = ref([]);
 const imagesHiddenCount: Ref<number> = ref(0);
-const props = defineProps<TripImagesProps>();
-
 const config = useRuntimeConfig();
 
 onMounted(async () => {
-  console.log(props.segment.id);
   const totalImages: number = await $fetch(`/api/images/route_segment/number`, {
     baseURL: config.public.baseURL,
     method: "GET",

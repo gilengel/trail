@@ -10,8 +10,8 @@ import {SetElement} from "~/stores/actions/setElement";
 import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 import {UpdateColumnWidth} from "~/stores/actions/updateColumnWidth";
 
-export const useGridModuleStore = () =>
-    defineStore('gridModule', () => {
+export const useGridStore = () =>
+    defineStore('gridStore', () => {
 
         const _undoRedoStore = useUndoRedoStore();
 
@@ -90,7 +90,7 @@ export const useGridModuleStore = () =>
         async function updateElementAttribute(
             element: Element,
             attribute: string,
-            value: string | number | boolean,
+            value: string | number | boolean | string[] | number[],
         ) {
             await _undoRedoStore.execute(
                 new UpdateElementAttribute(element, attribute, value),

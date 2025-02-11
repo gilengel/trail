@@ -1,5 +1,5 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest';
-import RowComponent from '@/components/builder/layout/Row.vue';
+import RowComponent from '~/components/builder/layout/Row.vue';
 import type {VueWrapper} from "@vue/test-utils";
 import {mount} from "@vue/test-utils";
 import {createTestGrid} from "~/stores/actions/test.helper";
@@ -11,7 +11,7 @@ const mockGridModuleStore = {
 };
 
 vi.mock('@/stores/gridModuleStore', () => ({
-    useGridModuleStore: () => mockGridModuleStore,
+    useGridStore: () => mockGridModuleStore,
 }));
 
 

@@ -1,6 +1,9 @@
 <template>
-  <v-btn-toggle v-model="size" @update:modelValue="onSizeChange">
-
+  <h1>Heading Properties</h1>
+  <v-btn-toggle
+      v-model="size"
+      @update:model-value="onSizeChange"
+  >
     <v-btn>
       H1
     </v-btn>
@@ -22,31 +25,34 @@
       v-model="color"
       hide-inputs
       show-swatches
-      @update:modelValue="onColorChange"
-  ></v-color-picker>
+      @update:model-value="onColorChange"
+  />
 </template>
 
 <script setup lang="ts">
 
-const gridModuleStore = useGridModuleStore();
+const props = defineProps<ElementProps>();
 
 
-import type {HeadingProps} from "~/components/builder/properties/index";
+const gridModuleStore = useGridStore();
 
-const props = defineProps<HeadingProps>();
+
+import type {ElementProps} from "~/components/builder/properties/index";
 
 const size = ref(0);
 
 const color = ref('ffffff');
 
-const correctSize = computed(() => {
-  return size.value + 1
-})
-
+/**
+ * @param newValue
+ */
 function onSizeChange(newValue: number) {
   gridModuleStore.updateElementAttribute(props.element, "level", newValue)
 }
 
+/**
+ * @param newValue
+ */
 function onColorChange(newValue: string) {
   gridModuleStore.updateElementAttribute(props.element, "color", newValue)
 }

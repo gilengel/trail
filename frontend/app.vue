@@ -3,8 +3,8 @@
     <NuxtPage />
   </NuxtLayout>
 </template>
-<script setup>
-import { useCustomTheme } from '~/composables/useCustomTheme'
+<script setup lang="ts">
+import {useCustomTheme} from '~/composables/useCustomTheme'
 
-const { isDark } = useCustomTheme()
+const {isDark} = useCustomTheme()
 </script>

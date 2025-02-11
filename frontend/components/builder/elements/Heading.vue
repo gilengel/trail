@@ -1,13 +1,20 @@
 <template>
-  <component :is="element" :style>Heading</component>
+  <component
+    :is="element"
+    :style
+  >
+    Heading
+  </component>
 </template>
 
 <script setup lang="ts">
 
-const props = defineProps({
-  level: Number,
-  color: String
-});
+interface Props {
+  level: number,
+  color: string
+}
+
+const props = defineProps<Props>();
 
 const element = computed(() => {
   if (!props.level) {

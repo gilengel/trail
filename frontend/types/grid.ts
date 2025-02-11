@@ -12,12 +12,13 @@ export enum ElementType {
     Image = 'Image',
 }
 
+export type AttributeType = string | number | boolean | string[] | number[] | boolean[] | object | undefined;
 const elementTypeKeys = Object.keys(ElementType);
 
 export const ElementTypes = elementTypeKeys as ElementType[];
 
 export class Element {
-    constructor(public readonly type: ElementType, public readonly attributes: Record<string, string | number | boolean | undefined>) {
+    constructor(public readonly type: ElementType, public readonly attributes: Record<string, AttributeType>) {
     }
 }
 

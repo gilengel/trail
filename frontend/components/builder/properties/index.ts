@@ -1,6 +1,6 @@
 import {type Element} from '~/types/grid'
 
-export interface HeadingProps {
+export interface ElementProps {
     element: Element;
-    attributes: Record<string, string | number | boolean>
+    attributes: Record<string, string | number | boolean | string[]>
 }

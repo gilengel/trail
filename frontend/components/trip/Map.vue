@@ -1,9 +1,12 @@
 <template>
-  <div data-cy="trip-details" class="trip-details">
+  <div
+    data-cy="trip-details"
+    class="trip-details"
+  >
     <div class="overview">
-      <MapTMap :trip/>
+      <MapTMap :trip />
 
-      <ul></ul>
+      <ul />
     </div>
   </div>
 </template>

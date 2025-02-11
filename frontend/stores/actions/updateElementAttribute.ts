@@ -1,17 +1,16 @@
-import {Element} from '~/types/grid';
-import {useGridSave} from "~/composables/useGridSave";
+import {type AttributeType, Element} from '~/types/grid';
 
 /**
  * Updates an attribute of the element. This is an undoable/redoable action.
  */
 export class UpdateElementAttribute
     implements UndoRedoAction {
-    private oldValue: string | number | boolean | undefined;
+    private oldValue: AttributeType;
 
     constructor(
         private element: Element,
         private attribute: string,
-        private value: string | number | boolean,
+        private value: AttributeType,
     ) {
     }
 
@@ -29,8 +28,6 @@ export class UpdateElementAttribute
           */
 
         //this.element.attributes[this.attribute] = this.oldValue;
-
-        await useGridSave(this.grid)
     }
 
     async redo() {
@@ -42,9 +39,7 @@ export class UpdateElementAttribute
           }
           */
 
-        this.oldValue = this.element.attributes[this.attribute];
-        this.element.attributes[this.attribute] = this.value;
 
-        await useGridSave(this.grid)
+        this.element.attributes[this.attribute] = this.value;
     }
 }

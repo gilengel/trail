@@ -1,7 +1,11 @@
 <template>
   <label class="switch">
-    <input type="checkbox"  :checked="isDark" @change="toggle()" >
-    <span class="slider round"></span>
+    <input
+      type="checkbox"
+      :checked="isDark"
+      @change="toggle()"
+    >
+    <span class="slider round" />
   </label>
 </template>
 

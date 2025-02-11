@@ -14,22 +14,18 @@ export async function useUpload(url: string, body: object) {
     });
 }
 
-export type NewRouteDto = {
-    name: string;
-    description?: string;
-    files: File[];
-};
-
 /**
  * Wrapper for uploading a route to the backend.
- * @param body - The new route.
+ * @param name - The name used for the route.
+ * @param files - The gps files for the route. Mandatory is at least one.
+ * @param description - Optional description for the trip.
  */
-export async function useRouteUpload(body: NewRouteDto) {
-    const formData = useFileFormData(body.files);
-    formData.append("name", body.name);
+export async function useRouteUpload(name: string, files: File[], description?: string) {
+    const formData = useFileFormData(files);
+    formData.append("name", name);
 
-    if (body.description) {
-        formData.append("description", body.description);
+    if (description) {
+        formData.append("description", description);
     }
 
     await useUpload("api/routes/gpx", formData);

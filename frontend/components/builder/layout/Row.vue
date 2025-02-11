@@ -1,55 +1,62 @@
 <template>
   <v-container>
     <v-row
-        class="border layout-row"
-        :class="isDraggingColumnSize ? 'dragging' : ''"
-        no-gutters
-        @mouseenter="isHovering=true"
-        @mouseleave="isHovering=false">
-      <v-col cols="auto" class="actions"
+      class="border layout-row"
+      :class="isDraggingColumnSize ? 'dragging' : ''"
+      no-gutters
+      @mouseenter="isHovering=true"
+      @mouseleave="isHovering=false"
+    >
+      <v-col
+        cols="auto"
+        class="actions"
       >
         <v-btn
-            :ripple="false"
-            rounded="0"
-            class="drag-handle"
-            icon="las la-arrows-alt"
+          :ripple="false"
+          rounded="0"
+          class="drag-handle"
+          icon="las la-arrows-alt"
         />
         <v-btn
-            flat
-            :ripple="false"
-            rounded="0"
-            data-testid="delete-row-button"
-            icon="las la-trash-alt"
-            @click="gridModuleStore.deleteRow(rowIndex, props.grid)"
+          flat
+          :ripple="false"
+          rounded="0"
+          data-testid="delete-row-button"
+          icon="las la-trash-alt"
+          @click="gridModuleStore.deleteRow(rowIndex, props.grid)"
         />
       </v-col>
       <v-col>
-        <v-row class="fill-height" data-testid="layout-row" ref="container">
+        <v-row
+          ref="container"
+          class="fill-height"
+          data-testid="layout-row"
+        >
           <BuilderLayoutColumn
-              dataKey="itemId"
-              @selectElement="(element) => $emit('selectElement', element)"
-              @onElementChanged="(element) => $emit('onElementChanged', element)"
-              :data-testid="`grid-column-${col_index}-${rowIndex}`"
-              :columnIndex="col_index"
-              :rowIndex="rowIndex"
-              :model="column"
-              :grid="grid"
-              :class="colClass(col_index)"
-              :splitDisabled="column.width <= 2"
-              :editable="!isDraggingColumnSize"
-              v-for="(column, col_index) in model.columns"
-              :key="col_index"
+            data-key="itemId"
+            :data-testid="`grid-column-${col_index}-${rowIndex}`"
+            :column-index="col_index"
+            :row-index="rowIndex"
+            :model="column"
+            :grid
+            :class="colClass(col_index)"
+            :split-disabled="column.width <= 2"
+            :editable="!isDraggingColumnSize"
+            v-for="(column, col_index) in model.columns"
+            @select-element="(element) => $emit('selectElement', element)"
+            :key="col_index"
+            @on-element-changed="(element) => $emit('onElementChanged', element)"
           />
 
           <div
-              data-testid="row-splitter"
-              class="splitter"
-              :class="isDraggingColumnSize ? 'dragging-slider' : ''"
-              :style="splitterStyleFn(i)"
-              v-for="(e, i) in model.columns.length - 1"
-              :key="e"
-              @mousedown="dragMouseDown($event, i)"
-          ></div>
+            v-for="(e, i) in model.columns.length - 1"
+            :key="e"
+            data-testid="row-splitter"
+            class="splitter"
+            :class="isDraggingColumnSize ? 'dragging-slider' : ''"
+            :style="splitterStyleFn(i)"
+            @mousedown="dragMouseDown($event, i)"
+          />
         </v-row>
       </v-col>
     </v-row>
@@ -61,12 +68,6 @@ import {type PropType, type Ref, ref} from 'vue';
 
 import {type Row, Element, type Grid} from '~/types/Grid';
 import {columnValueValidator} from '~/composables/useColumValidator';
-
-const gridModuleStore = useGridModuleStore();
-
-const container: Ref<{ $el: HTMLElement } | null> = ref(null);
-
-const isHovering = ref(false);
 
 const props = defineProps({
   minColSize: {
@@ -89,7 +90,6 @@ const props = defineProps({
     validator: (x: number) => x >= 0,
   },
 
-
   grid: {
     type: Object as PropType<Grid>,
     required: true,
@@ -107,6 +107,12 @@ defineEmits<{
   onElementChanged: [element: Element];
 }>();
 
+const gridModuleStore = useGridStore();
+
+const container: Ref<{ $el: HTMLElement } | null> = ref(null);
+
+const isHovering = ref(false);
+
 const flexColumns = 12;
 
 const selectedSplitter: Ref<HTMLElement | undefined> = ref(undefined);
@@ -122,6 +128,9 @@ const positions = {
 };
 
 
+/**
+ * @param index
+ */
 function previousColSize(index: number): number {
   let result = 0;
   for (let i = 0; i < index; i++) {
@@ -131,17 +140,27 @@ function previousColSize(index: number): number {
   return result;
 }
 
+/**
+ * @param i
+ */
 function colClass(i: number): string {
   const width = props.model.columns[i].width;
   return `col col-${width}`;
 }
 
+/**
+ * @param i
+ */
 function splitterStyleFn(i: number): string {
   const left = (previousColSize(i + 1) / flexColumns) * 100;
 
   return `left: ${left}%`;
 }
 
+/**
+ * @param event
+ * @param index
+ */
 function dragMouseDown(event: MouseEvent, index: number) {
   event.preventDefault();
 
@@ -160,11 +179,17 @@ function dragMouseDown(event: MouseEvent, index: number) {
   isDraggingColumnSize.value = true;
 }
 
+/**
+ *
+ */
 function containerWidth(): number {
   const size = container.value!.$el.getBoundingClientRect();
   return size.width;
 }
 
+/**
+ * @param event
+ */
 function updatePositions(event: MouseEvent) {
   positions.movementX = positions.clientX - event.clientX;
   positions.movementY = positions.clientY - event.clientY;
@@ -172,6 +197,9 @@ function updatePositions(event: MouseEvent) {
   positions.clientY = event.clientY;
 }
 
+/**
+ *
+ */
 function affectedColumnSizes(): { [key: string]: number } {
   const left = props.model.columns[selectedSplitterIndex.value].width;
   const right = props.model.columns[selectedSplitterIndex.value + 1].width;
@@ -182,6 +210,9 @@ function affectedColumnSizes(): { [key: string]: number } {
   };
 }
 
+/**
+ * @param newColumnSize
+ */
 function restrictNewColumnSizes(newColumnSize: number): {
   [key: string]: number;
 } {
@@ -219,6 +250,9 @@ function restrictNewColumnSizes(newColumnSize: number): {
   };
 }
 
+/**
+ * @param event
+ */
 function elementDrag(event: MouseEvent) {
   event.preventDefault();
 
@@ -249,6 +283,9 @@ function elementDrag(event: MouseEvent) {
   );
 }
 
+/**
+ *
+ */
 function closeDragElement() {
 
   document.onmouseup = null;

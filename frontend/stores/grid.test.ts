@@ -1,6 +1,5 @@
 import {setActivePinia, createPinia} from 'pinia';
 import {describe, it, beforeEach, expect, vi} from 'vitest';
-import {useGridModuleStore} from '@/stores/gridModule';
 import {type Column, Element} from '~/types/grid';
 import {AddRow} from '@/stores/actions/addRow';
 import {DeleteRow} from '@/stores/actions/deleteRow';
@@ -10,6 +9,7 @@ import {MoveRow} from '@/stores/actions/moveRow';
 import {SetElement} from '@/stores/actions/setElement';
 import {UpdateElementAttribute} from '@/stores/actions/updateElementAttribute';
 import {createTestGrid} from "~/stores/actions/test.helper";
+import {useGridStore} from "~/stores/grid";
 
 vi.mock('@/stores/undoRedo', () => {
     return {
@@ -25,12 +25,12 @@ vi.mock('@/stores/undoRedo', () => {
 });
 
 describe('GridModuleStore', () => {
-    let store: ReturnType<typeof useGridModuleStore>;
+    let store: ReturnType<typeof useGridStore>;
     let undoRedoStoreMock: ReturnType<typeof useUndoRedoStore>;
 
     beforeEach(() => {
         setActivePinia(createPinia());
-        store = useGridModuleStore();
+        store = useGridStore();
         undoRedoStoreMock = useUndoRedoStore();
 
         undoRedoStoreMock.execute = vi.fn();

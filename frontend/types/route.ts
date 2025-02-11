@@ -1,11 +1,6 @@
 import {LngLat, LngLatBounds} from "maplibre-gl";
 import {distance} from "@turf/turf";
 
-export type RouteWithoutSegments = {
-    id: number;
-    name: string;
-};
-
 export interface TripDto {
     id: number;
     name: string;

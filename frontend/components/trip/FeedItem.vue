@@ -3,9 +3,9 @@
     <div class="header">
       <div class="profile">
         <img
-            src="https://randomuser.me/api/portraits/women/51.jpg"
-            alt="avatar"
-        />
+          src="https://randomuser.me/api/portraits/women/51.jpg"
+          alt="avatar"
+        >
 
         <div>
           <span>Anne Traveler</span>
@@ -15,17 +15,17 @@
 
       <div class="social">
         <div class="button">
-          <i class="las la-thumbs-up"></i>
+          <i class="las la-thumbs-up" />
           <span>1k</span>
         </div>
         <div class="button">
-          <i class="las la-comment-dots"></i>
+          <i class="las la-comment-dots" />
           <span>200</span>
         </div>
       </div>
     </div>
 
-    <TripImages :segment="segment"/>
+    <TripImages :segment="segment" />
   </div>
 </template>
 

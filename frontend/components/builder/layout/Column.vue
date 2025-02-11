@@ -1,18 +1,33 @@
 <template>
-  <v-col class="layout-col" :cols="model.width">
-    <div class="actions" v-if="editable">
-      <v-toolbar collapse :floating="true">
-
-        <v-btn round="0" icon data-testid="action-menu-btn">
+  <v-col
+    class="layout-col"
+    :cols="model.width"
+  >
+    <div
+      v-if="editable"
+      class="actions"
+    >
+      <v-toolbar
+        collapse
+        :floating="true"
+      >
+        <v-btn
+          round="0"
+          icon
+          data-testid="action-menu-btn"
+        >
           <v-icon>las la-plus</v-icon>
-          <v-menu activator="parent" data-testid="action-menu">
+          <v-menu
+            activator="parent"
+            data-testid="action-menu"
+          >
             <v-list>
               <v-list-item
-                  data-testid="column-element"
-                  v-for="(element, index) in allowedElements"
-                  :key="element"
-                  :value="index"
-                  @click="() => onElementChanged(element)"
+                v-for="(element, index) in allowedElements"
+                :key="element"
+                data-testid="column-element"
+                :value="index"
+                @click="() => onElementChanged(element)"
               >
                 <v-list-item-title>{{ element }}</v-list-item-title>
               </v-list-item>
@@ -20,32 +35,32 @@
           </v-menu>
         </v-btn>
         <v-btn
-            :disable="splitDisabled"
-            flat
-            round
-            icon="las la-columns"
-            @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
+          :disable="splitDisabled"
+          flat
+          round
+          icon="las la-columns"
+          @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
         />
         <v-btn
-            flat
-            round
-            icon="las la-trash-alt"
-            :readonly="model.width === 12"
-            @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
+          flat
+          round
+          icon="las la-trash-alt"
+          :readonly="model.width === 12"
+          @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
         />
       </v-toolbar>
     </div>
 
     <div
-        ref="dropContainer"
-        class="element-container"
-        :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
+      ref="dropContainer"
+      class="element-container"
+      :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
     >
-
-      <component :is="selectedComponent"
-                 v-bind="selectedComponentProps"
-                 @click="() => $emit('selectElement', model.element as Element)"
-                 v-if="selectedComponent"
+      <component
+        :is="selectedComponent"
+        v-bind="selectedComponentProps"
+        v-if="selectedComponent"
+        @click="() => $emit('selectElement', model.element as Element)"
       />
       <!--
       <component
@@ -61,54 +76,15 @@
 
 <script setup lang="ts">
 
-import {type Column, Element, ElementType, ElementTypes, type Grid} from '~/types/grid';
 import {type PropType, computed, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
-//import {useDrop} from '~/composables/useDrop';
-//import {type DragAndDropDto} from '../Dto';
 import {componentsMap} from "~/components/builder/AllElements";
-
-const dropContainer = ref(null);
-
-/*
-useDrop(dropContainer, (e: DragAndDropDto) => {
-  gridModuleStore.setColumnElement(props.model, e.elementType);
-  emit('selectElement', props.model.element as Element);
-});
-*/
-
-// Workaround as Sortable.SortableEvent type does not correctly contain the original event
-// which is necessary to get the transferred data (as defined by setData)
-/*
-type AddEvent = Sortable.SortableEvent & {
-  originalEvent: DragEvent;
-  add: Sortable.SortableEvent;
-};
-*/
-
-const gridModuleStore = useGridModuleStore();
-
-
-const selectedComponent = computed(() => {
-  if (!props.model.element) {
-    return undefined;
-  }
-
-  return componentsMap[props.model.element.type];
-});
-
-const selectedComponentProps = computed(() => {
-  if (!props.model.element) {
-    return undefined;
-  }
-
-  return props.model.element.attributes;
-})
+import {type Column, Element, ElementType, ElementTypes, type Grid} from "~/types/grid";
 
 
 const props = defineProps({
   /**
-   * The index of the row which is the parent of the column
+   * The index of the row which is the parent of the column.
    */
   rowIndex: {
     type: Number,
@@ -116,7 +92,7 @@ const props = defineProps({
   },
 
   /**
-   * The index of the column within its parent row
+   * The index of the column within its parent row.
    */
   columnIndex: {
     type: Number,
@@ -172,6 +148,47 @@ const emit = defineEmits<{
   onElementChanged: [element: Element];
 }>();
 
+const dropContainer = ref(null);
+
+/*
+useDrop(dropContainer, (e: DragAndDropDto) => {
+  gridModuleStore.setColumnElement(props.model, e.elementType);
+  emit('selectElement', props.model.element as Element);
+});
+*/
+
+// Workaround as Sortable.SortableEvent type does not correctly contain the original event
+// which is necessary to get the transferred data (as defined by setData)
+/*
+type AddEvent = Sortable.SortableEvent & {
+  originalEvent: DragEvent;
+  add: Sortable.SortableEvent;
+};
+*/
+
+const gridModuleStore = useGridStore();
+
+
+const selectedComponent = computed(() => {
+  if (!props.model.element) {
+    return undefined;
+  }
+
+  return componentsMap[props.model.element.type];
+});
+
+const selectedComponentProps = computed(() => {
+  if (!props.model.element) {
+    return undefined;
+  }
+
+  return props.model.element.attributes;
+})
+
+
+/**
+ * @param elementType
+ */
 function getDefaultProps(elementType: ElementType) {
   switch (elementType) {
     case ElementType.Text:
@@ -188,6 +205,9 @@ function getDefaultProps(elementType: ElementType) {
   }
 }
 
+/**
+ * @param elementType
+ */
 function onElementChanged(elementType: ElementType) {
   const element = new Element(elementType, getDefaultProps(elementType));
   gridModuleStore.setColumnElement(props.model, element);
@@ -195,10 +215,10 @@ function onElementChanged(elementType: ElementType) {
 }
 
 /**
- * Callback that gets called once an "element" is dropped on the container
- * @param event The event containing the dropped element. In order to make this work the
- *              event must have a value stored in the DataTransfer object with the key
- *              'data-element' and a valid value of a ElementType enum key (but all in lowercase).
+ * Callback that gets called once an "element" is dropped on the container.
+ * @param event - The event containing the dropped element. In order to make this work the
+ * event must have a value stored in the DataTransfer object with the key
+ * 'data-element' and a valid value of a ElementType enum key (but all in lowercase).
  */
 /*
 function elementAdded(event: AddEvent) {

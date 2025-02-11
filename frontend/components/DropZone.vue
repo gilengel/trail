@@ -2,53 +2,71 @@
   <div
     class="v-input-collapse pa-6 border-thin d-flex flex-column"
     :class="{ focused: isDragging === true }"
+    data-cy="drop-zone"
     @dragover="dragover"
     @dragleave="dragleave"
     @drop="drop"
-    data-cy="drop-zone"
   >
     <label v-if="supportText">{{ supportText }}</label>
     <input
+      id="fileInput"
+      ref="file"
       data-cy="file-input"
       type="file"
       multiple
       name="file"
-      id="fileInput"
       @change="onChange"
-      ref="file"
-    />
+    >
 
-    <label for="fileInput" data-cy="release-msg" v-if="isDragging">
+    <label
+      v-if="isDragging"
+      for="fileInput"
+      data-cy="release-msg"
+    >
       Release to drop files here.
     </label>
-    <label for="fileInput" data-cy="release-msg" v-else>
+    <label
+      v-else
+      for="fileInput"
+      data-cy="release-msg"
+    >
       Drop files here or <u>click here</u> to upload.
     </label>
 
-    <label data-cy="wrong-file-extension" v-if="isWrongFileType">
+    <label
+      v-if="isWrongFileType"
+      data-cy="wrong-file-extension"
+    >
       File has wrong type.
     </label>
 
-    <slot name="container" :files="files">
+    <slot
+      name="container"
+      :files="files"
+    >
       <ul
-          data-cy="preview-container"
-          class="preview-container mt-4"
-          v-if="files.length"
+        v-if="files.length"
+        data-cy="preview-container"
+        class="preview-container mt-4"
       >
         <li
-            v-for="(file, index) in files"
-            :key="file.name"
-            class="preview-card"
-            :class="{ deleting: isDragging === true }"
+          v-for="(file, index) in files"
+          :key="file.name"
+          class="preview-card"
+          :class="{ deleting: isDragging === true }"
         >
-          <slot name="item" :file="file" :index="index">
+          <slot
+            name="item"
+            :file="file"
+            :index="index"
+          >
             <div>
-          <span>
-            {{ file.name }}
-          </span>
               <span>
-            {{ Math.round(file.size / 1000) + "kb" }}
-          </span>
+                {{ file.name }}
+              </span>
+              <span>
+                {{ Math.round(file.size / 1000) + "kb" }}
+              </span>
             </div>
           </slot>
         </li>
@@ -58,13 +76,13 @@
 </template>
 
 <script setup lang="ts">
-export interface DropZoneProps {
+
+interface Props {
   allowedFileExtensions?: string[];
   supportText?: string;
 }
-const props = withDefaults(defineProps<DropZoneProps>(), {
-  allowedFileExtensions: () => [],
-});
+
+const {allowedFileExtensions = [], supportText = "Support Text"} = defineProps<Props>();
 
 const emit = defineEmits<(e: "onFilesChanged", files: File[]) => void>();
 
@@ -72,20 +90,32 @@ const isDragging: Ref<boolean> = ref(false);
 const isWrongFileType: Ref<boolean> = ref(false);
 const files: Ref<File[]> = ref([]);
 
+/**
+ *
+ */
 function onChange() {
   emit("onFilesChanged", files.value);
 }
 
+/**
+ * @param e
+ */
 function dragover(e: DragEvent) {
   e.preventDefault();
 
   isDragging.value = true;
 }
 
+/**
+ *
+ */
 function dragleave() {
   isDragging.value = false;
 }
 
+/**
+ * @param e
+ */
 function drop(e: DragEvent) {
   if (!e.dataTransfer?.files) {
     return;
@@ -95,13 +125,13 @@ function drop(e: DragEvent) {
   for (let i = 0; i < e.dataTransfer?.files.length; ++i) {
     const file: File = e.dataTransfer.files[i];
 
-    const found = props.allowedFileExtensions.find((extension) => {
+    const found = allowedFileExtensions.find((extension) => {
       return file.name.endsWith(`.${extension}`);
     });
 
     isDragging.value = false;
 
-    if (!found && props.allowedFileExtensions.length > 0) {
+    if (!found && allowedFileExtensions.length > 0) {
       console.log(`${file.name} is not from allowed type`);
       isWrongFileType.value = true;
       setTimeout(() => {
@@ -117,9 +147,6 @@ function drop(e: DragEvent) {
   onChange();
 }
 
-function remove(i: number) {
-  files.value.splice(i, 1);
-}
 </script>
 <style scoped lang="scss">
 .v-input-collapse {

@@ -4,16 +4,34 @@ import jsdoc from 'eslint-plugin-jsdoc';
 import {includeIgnoreFile} from "@eslint/compat";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import pluginVue from 'eslint-plugin-vue'
+import {
+    defineConfigWithVueTs,
+    vueTsConfigs,
+} from '@vue/eslint-config-typescript'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const gitignorePath = path.resolve(__dirname, ".gitignore");
 
-export default tseslint.config(
+export default defineConfigWithVueTs(
     eslint.configs.recommended,
     tseslint.configs.recommended,
     includeIgnoreFile(gitignorePath),
-
+    pluginVue.configs[
+        'flat/essential',
+            'flat/strongly-recommended'
+        ],
+    vueTsConfigs.recommended,
+    {
+        ignores: ['pages/*.vue', 'layouts/**/*.vue'],
+    },
+    {
+        files: ['**/*.vue'],
+        rules: {
+            "vue/multi-word-component-names": 0 // Usually a good rule but due to nuxt we take care with different directories
+        }
+    },
     {
 
         files: ['**/*.ts'],
