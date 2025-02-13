@@ -1,42 +1,43 @@
 <template>
-  <div v-if="images.length === 0">
-    <h1>😞 No Pictures</h1>
-    <p>Such a great trip deserves some awesome pictures. Don't you think? </p>
-    <p>Help others by uploading your pictures here</p>
-  </div>
-  <div v-else data-cy="trip-images" class="trip-images">
+  <BuilderElementsImageGallery
+    :images="[
+      { url: 'https://picsum.photos/id/70/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/71/400/600', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/72/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/73/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/74/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/75/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/76/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/77/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/78/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/79/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/80/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/81/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/82/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
+      { url: 'https://picsum.photos/id/83/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
 
-    <div v-for="image in images" :key="image.id">
-      <img
-        data-cy="single-image"
-        :src="`${config.public.baseURL}/${image.url}`"
-        :alt="`trip ${image.name}`"
-      />
-    </div>
-
-    <span v-if="imagesHiddenCount > 0">{{ imagesHiddenCount }}+</span>
-  </div>
+    ]"
+    :cols="3"
+  />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from "vue";
-import type { ImageDto } from "~/data/images/types";
-import type { MapLibreSegment } from "~/data/routes/types";
+import {onMounted, ref, type Ref} from "vue";
+import type {ImageDto} from "~/types/types";
+import type {MapLibreSegment} from "~/types/types";
 
 interface TripImagesProps {
   segment: MapLibreSegment;
 }
 
+const props = defineProps<TripImagesProps>();
 const numberOfVisibleImages = 5;
 const images: Ref<ImageDto[]> = ref([]);
 const imagesHiddenCount: Ref<number> = ref(0);
-const props = defineProps<TripImagesProps>();
-
 const config = useRuntimeConfig();
 
 onMounted(async () => {
-  console.log(props.segment.id);
-  const totalImages: number = await $fetch(`images/route_segment/number`, {
+  const totalImages: number = await $fetch(`/api/images/route_segment/number`, {
     baseURL: config.public.baseURL,
     method: "GET",
     params: {
@@ -46,14 +47,14 @@ onMounted(async () => {
   });
 
   imagesHiddenCount.value = totalImages - numberOfVisibleImages;
-  images.value = await $fetch(`images/route_segment`, {
+  images.value = await $fetch(`/api/images/route_segment`, {
     baseURL: config.public.baseURL,
     method: "GET",
     params: {
       routeSegmentId: props.segment.id,
       maxOffset: 1,
       maxNumberOfImages:
-        imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined,
+          imagesHiddenCount.value > 0 ? numberOfVisibleImages : undefined,
     },
   });
 
@@ -66,6 +67,7 @@ h1 {
   text-align: center;
   vertical-align: center;
 }
+
 .trip-images {
   $gap: 8px;
   height: 400px + $gap;

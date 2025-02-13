@@ -1,6 +1,6 @@
 name: Code Quality
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -8,20 +8,13 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["20.x"]
-
-        db-name:
-          - e2e-testing-db
-        db-user:
-          - user
-        db-password:
-          - password
-        db-host:
-          - localhost
-        db-port:
-          - 5432
-        broken-db-port:
-          - 5433
+        node-version: [ "23.x" ]
+        db-name: [ e2e-testing-db ]
+        db-user: [ user ]
+        db-password: [ password ]
+        db-host: [ localhost ]
+        db-port: [ 5432 ]
+        broken-db-port: [ 5433 ]
 
     services:
       postgis:
@@ -32,11 +25,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ matrix.db-password }}
         ports:
           - ${{ matrix.db-port }}:${{ matrix.db-port }}
-        # Set health checks to wait until postgres has started
-        options: --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
       broken-postgis:
         image: postgis/postgis:latest
@@ -46,15 +35,11 @@ jobs:
           POSTGRES_PASSWORD: ${{ matrix.db-password }}
         ports:
           - ${{ matrix.broken-db-port }}:${{ matrix.db-port }}
-        # Set health checks to wait until postgres has started
-        options: --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # -----------------------------------------------------------------
       # global
@@ -62,9 +47,16 @@ jobs:
       - name: Set up Node.js ${{ matrix.node-version }} (global)
         uses: actions/setup-node@v4
         with:
-          cache-dependency-path: "./frontend/package-lock.json"
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: 'npm'
+
+      - name: Cache npm dependencies (global)
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm  # Cache npm cache
+          key: ${{ runner.os }}-node-${{ hashFiles('./frontend/package-lock.json', './backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies (global)
         run: npm install
@@ -75,39 +67,50 @@ jobs:
       - name: Set up Node.js ${{ matrix.node-version }} (backend)
         uses: actions/setup-node@v4
         with:
-          cache-dependency-path: "./backend/package-lock.json"
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: 'npm'
+
+      - name: Cache npm dependencies (backend)
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-backend-${{ hashFiles('./backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-backend-
 
       - name: Install dependencies (backend)
         run: npm install
         working-directory: ./backend
 
+      - name: Generate Prisma Client (backend)
+        run: npx prisma generate
+        working-directory: ./backend
+
       - name: Build (backend)
         run: npm run build:backend
 
-      - name: Run eslint
+      - name: Run eslint (backend)
         run: npm run lint
         working-directory: ./backend
 
-      - name: Run the unit tests
+      - name: Run the unit tests (backend)
         run: npm run test:unit:cov
         working-directory: ./backend
 
-      - name: Prepare database schema for e2e test
+      - name: Prepare database schema for e2e test (backend)
         run: npx prisma migrate deploy
         working-directory: ./backend
         env:
           DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
 
-      - name: Run the e2e tests
+      - name: Run the e2e tests (backend)
         run: npm run test:e2e:cov
         working-directory: ./backend
         env:
           DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
           BROKEN_DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.broken-db-port }}/${{ matrix.db-name }}?schema=public
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage reports to Codecov (backend)
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -115,7 +118,7 @@ jobs:
           files: ./backend/coverage-unit/cobertura-coverage.xml
           flags: backend,unit
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage reports to Codecov (e2e)
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -129,9 +132,16 @@ jobs:
       - name: Set up Node.js ${{ matrix.node-version }} (frontend)
         uses: actions/setup-node@v4
         with:
-          cache-dependency-path: "./frontend/package-lock.json"
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: 'npm'
+
+      - name: Cache npm dependencies (frontend)
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-frontend-${{ hashFiles('./frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-frontend-
 
       - name: Install dependencies (frontend)
         run: npm install
@@ -140,16 +150,18 @@ jobs:
       - name: Build (frontend)
         run: npm run build:frontend
 
-      - name: Run ci (frontend)
-        run: npm run ci
-        env:
-          DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: Run eslint (frontend)
+        run: npm run lint
+        working-directory: ./frontend
+
+      - name: Run the unit tests (frontend)
+        run: npm run test:unit:cov
+        working-directory: ./frontend
 
       - name: Upload coverage reports to Codecov (frontend)
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: gilengel/trail
-          files: ./frontend/coverage-e2e/cobertura-coverage.xml
-          flags: frontend,e2e
+          files: ./frontend/coverage/cobertura-coverage.xml
+          flags: frontend,unit

@@ -10,6 +10,8 @@ import { CreateRouteSegmentDto } from '../src/routes.segments/dto/create-route.s
 import { Route } from '../src/routes/entity/route';
 import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
 import { GPXRoute, GPXRouteSegment } from 'src/routes/routes.parser';
+import { Trip } from '../src/trips/entity/trip';
+import { CreateTripDto } from '../src/trips/dto/create.trip.dto';
 
 export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
@@ -215,4 +217,17 @@ for (let i = 0; i < 3; i++) {
   });
 }
 
+export const dbTrip: Trip = {
+  id: routeId,
+  layout: {},
+};
+
+export const newTrip: CreateTripDto = {
+  layout: {},
+};
+
+export const dbTripWithUpdatedLayout: Trip = {
+  id: routeId,
+  layout: { test: "value" },
+};
 export { multipleImages, multipleDbImages };

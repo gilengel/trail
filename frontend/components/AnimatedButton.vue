@@ -1,13 +1,16 @@
 <template>
   <button
     class="btn animated_btn tborder-radius"
+    data-cy="animated-btn"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @focusin="isHovered = true"
     @focusout="isHovered = false"
-    data-cy="animated-btn"
   >
-    <SVGTree data-cy="svg-tree" :animation-in="!isHovered" />
+    <SVGTree
+      data-cy="svg-tree"
+      :animation-in="!isHovered"
+    />
     <SVGTree :animation-in="!isHovered" />
     <SVGTree :animation-in="!isHovered" />
     <span>{{ title }}</span>
@@ -15,15 +18,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
 import SVGTree from "@/components/SVGTree.vue";
 
-export interface AnimatedButtonProps {
-  title: string;
+interface Props {
+  title: string
 }
-withDefaults(defineProps<AnimatedButtonProps>(), {
-  title: "Animated Button",
-});
+
+const {title = "Animated Button"} = defineProps<Props>();
+
 
 const isHovered = ref(false);
 </script>
@@ -57,6 +60,7 @@ const isHovered = ref(false);
     left: 70%;
   }
 }
+
 .animated_btn:hover {
   cursor: pointer;
   border-image-width: 0;

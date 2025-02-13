@@ -49,6 +49,11 @@ model Image {
   @@index([coordinates], map: "image_idx", type: Gist)
 }
 
+model Trip {
+  id     Int  @id @default(autoincrement())
+  layout Json
+}
+
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model spatial_ref_sys {
   srid      Int     @id

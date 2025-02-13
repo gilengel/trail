@@ -60,13 +60,13 @@ describe('RoutesController (e2e)', () => {
 
     beforeEach(async () => {
       const result = await prisma.$queryRaw<[{ id: number }]>`
-        INSERT INTO "Route" (name, description) 
+        INSERT INTO "Route" (name, description)
         VALUES ('e2e_test_route', 'e2e_test_description') RETURNING id`;
       routeId = result[0].id;
 
       await prisma.$queryRaw`
-          SELECT "RouteSegment".id, "RouteSegment".name, ST_AsText(coordinates) AS coordinates 
-          FROM "RouteSegment" 
+          SELECT "RouteSegment".id, "RouteSegment".name, ST_AsText(coordinates) AS coordinates
+          FROM "RouteSegment"
           JOIN "Route" ON "RouteSegment"."routeId" = "Route".id
           WHERE "routeId" = ${routeId}`;
     });
@@ -88,7 +88,7 @@ describe('RoutesController (e2e)', () => {
         );
     });
 
-    it('/routes/:id (GET) returns "404" for nonexisting route', () => {
+    it('/routes/:id (GET) returns "404" for nonexistent route', () => {
       return request(app.getHttpServer()).get(`/routes/123456789`).expect(404);
     });
 
@@ -163,21 +163,6 @@ describe('RoutesController (e2e)', () => {
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-
-    /*
-    it('/routes/gpx (POST) sets the route name to "no_name" if not provided within the metadata in the gpx file', () => {
-      return request(app.getHttpServer())
-        .post(`/routes/gpx`)
-        .set('Content-Type', 'multipart/form-data')
-        .field('name', 'no_name')
-        .attach('file', 'src/routes/test/no_name.gpx')
-        .expect(201)
-        .expect(async (res) => {
-          expect(res.body).toHaveProperty('name', 'no_name');
-          await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
-        });
-    });
-    */
 
     it('/routes/gpx (POST) fails with less than two coordinates', () => {
       return request(app.getHttpServer())

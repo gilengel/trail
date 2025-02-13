@@ -5,7 +5,7 @@
         <img
           src="https://randomuser.me/api/portraits/women/51.jpg"
           alt="avatar"
-        />
+        >
 
         <div>
           <span>Anne Traveler</span>
@@ -15,11 +15,11 @@
 
       <div class="social">
         <div class="button">
-          <i class="las la-thumbs-up"></i>
+          <i class="las la-thumbs-up" />
           <span>1k</span>
         </div>
         <div class="button">
-          <i class="las la-comment-dots"></i>
+          <i class="las la-comment-dots" />
           <span>200</span>
         </div>
       </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MapLibreSegment } from "~/data/routes/types";
+import type {MapLibreSegment} from "~/types/route";
 
 export interface TripFeedItemProps {
   segment: MapLibreSegment;
@@ -55,6 +55,7 @@ defineProps<TripFeedItemProps>();
       padding: 0;
       margin: 0;
     }
+
     span:nth-of-type(2) {
       margin-left: 0.3em;
     }

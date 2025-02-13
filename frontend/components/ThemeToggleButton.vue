@@ -1,7 +1,11 @@
 <template>
   <label class="switch">
-    <input type="checkbox"  :checked="isDark" @change="toggle()" >
-    <span class="slider round"></span>
+    <input
+      type="checkbox"
+      :checked="isDark"
+      @change="toggle()"
+    >
+    <span class="slider round" />
   </label>
 </template>
 
@@ -61,7 +65,7 @@ $toggle-padding: 4px;
   position: absolute;
   content: "";
   height: $toggle-height - 2 * $toggle-padding;
-  width: $toggle-width / 2 - $toggle-padding;
+  width: calc($toggle-width / 2) - $toggle-padding;
   left: $toggle-padding;
   bottom: $toggle-padding;
   background-color: #F3C623;
@@ -83,7 +87,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX($toggle-width / 2 - $toggle-padding);
+  transform: translateX(calc($toggle-width / 2) - $toggle-padding);
 }
 
 .slider.round {
