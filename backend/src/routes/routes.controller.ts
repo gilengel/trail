@@ -36,12 +36,8 @@ export class RoutesController {
   @Get()
   async findAll(): Promise<RouteWithoutSegmentsDto[]> {
     try {
-      const routes = await this.routeService.routes();
-
-      return routes;
+      return await this.routeService.routes();
     } catch (e) {
-      this.logger.error(e);
-
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }

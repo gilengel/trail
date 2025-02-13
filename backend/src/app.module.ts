@@ -12,12 +12,14 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RoutesSegmentsModule } from './routes.segments/routes.segments.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { TripsModule } from './trips/trips.module';
 
 @Module({
   imports: [
     RoutesModule,
     ImagesModule,
     RoutesSegmentsModule,
+    TripsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'images'),
     }),

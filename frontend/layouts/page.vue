@@ -1,19 +1,22 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer rail data-cy="page-toolbars">
-      <v-list>
-        <slot name="primary-toolbar" />
-      </v-list>
+    <v-navigation-drawer
+      rail
+      data-cy="page-toolbars"
+    >
+      <slot name="primary-toolbar" />
 
-
-      <v-divider class="mx-3 my-5"></v-divider>
-
+      <v-divider class="mx-3 my-5" />
 
       <slot name="toolbar" />
     </v-navigation-drawer>
 
-    <v-app-bar class="px-3" height="72" flat>
-      <v-spacer></v-spacer>
+    <v-app-bar
+      class="px-3"
+      height="72"
+      flat
+    >
+      <v-spacer />
 
       <v-responsive max-width="156">
         <v-text-field
@@ -22,13 +25,16 @@
           variant="solo-filled"
           flat
           hide-details
-        ></v-text-field>
+        />
       </v-responsive>
 
       <theme-toggle-button />
     </v-app-bar>
 
-    <v-main data-cy="page-content" class="d-flex justify-center ga-7">
+    <v-main
+      data-cy="page-content"
+      class="d-flex justify-center ga-7"
+    >
       <slot name="content" />
     </v-main>
 

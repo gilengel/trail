@@ -19,7 +19,7 @@ import { GPXRoute, GPXRouteSegment } from './routes.parser';
 import { Prisma } from '@prisma/client';
 import { CreateRouteSegmentDto } from '../routes.segments/dto/create-route.segment.dto';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
-import { RouteSegmentDto } from '../../src/routes.segments/dto/route.segment.dto';
+import { RouteSegmentDto } from '../routes.segments/dto/route.segment.dto';
 import { Route } from './entity/route';
 
 export class NoAttributesProvidedError extends Error {}
@@ -34,7 +34,7 @@ export class RoutesService {
     private segments: RoutesSegmentsService,
   ) {}
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Retrieve a route by its ID.
    * @param id - The ID of the route to retrieve.
@@ -63,7 +63,7 @@ export class RoutesService {
     return Promise.resolve(conversion.dbRoute2dto(result));
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Get all stored routes from the database.
    * @returns A Promise that resolves to an array of RouteDto objects.
@@ -76,7 +76,7 @@ export class RoutesService {
     return Promise.resolve(routes);
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Create a new route in the database.
    * @param routeDto - The data for creating the new route.
@@ -157,7 +157,7 @@ export class RoutesService {
     });
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Update an existing route in the database.
    * @param id - The ID of the route to update.
@@ -206,7 +206,7 @@ export class RoutesService {
     return Promise.resolve(routes[0]);
   }
 
-  // eslint-disable-next-line jsdoc/require-example
+   
   /**
    * Delete a route from the database.
    * @param id - The ID of the route to delete.

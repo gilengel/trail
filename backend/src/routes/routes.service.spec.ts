@@ -73,9 +73,7 @@ describe('RoutesService', () => {
       .mockResolvedValueOnce([testData.dbRouteSegment]);
 
     const result: RouteDto = await service.route(0);
-    const expected: RouteDto = testData.route;
-
-    expect(result).toStrictEqual(expected);
+    expect(result).toStrictEqual(testData.route);
   });
 
   it('should throw 404 if a route was requested that does not exist', async () => {
@@ -105,9 +103,7 @@ describe('RoutesService', () => {
       .mockResolvedValueOnce([{ id: testData.routeId }]);
 
     const result: RouteDto = await service.createRoute(testData.route);
-    const expected: RouteDto = testData.route;
-
-    expect(result).toStrictEqual(expected);
+    expect(result).toStrictEqual(testData.route);
   });
 
   it('should fail to create a new route if the db query does not return the newly created entity', async () => {

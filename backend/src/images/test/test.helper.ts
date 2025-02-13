@@ -1,12 +1,15 @@
 /**
- * @file Provide usefull functions for unit testing like mocking a file.
+ * @file Provide useful functions for unit testing like mocking a file.
  */
 import * as fs from 'fs';
+import { Express } from 'express';
+import { Buffer } from 'buffer';
+
 
 /**
  * Creates a fake image in the sense that the content is not valid.
  * Used for unit tests.
- * @param size - Size of the fake image in bytes. Must be larger than 8 and magnitutes of 2.
+ * @param size - Size of the fake image in bytes. Must be larger than 8 and magnitudes of 2.
  */
 /*
 export function mockImage(size: number, name: string): File {
@@ -18,12 +21,13 @@ export function mockImage(size: number, name: string): File {
 }
 */
 
-// eslint-disable-next-line jsdoc/require-example
+ 
 /**
  * Creates a file based on a buffer. This can be useful to unit test upload functionality.
  * @param buffer - The data that should be used to create the file.
  * @param mimetype - The mimetype of the mocked file.
- * @returns File - The file. Be aware that it is not a proper file e.g. Mimetype, encoding and other important
+ * @returns File - The file. Be aware that it is not a proper file e.g. Mimetype, encoding and other important.
+ * @example
  * members are not correctly set.
  */
 export function mockFileFromBuffer(
@@ -44,11 +48,11 @@ export function mockFileFromBuffer(
   };
 }
 
-// eslint-disable-next-line jsdoc/require-example
+ 
 /**
  * Ensure that the storage directory for the images exists.
  */
-export function ensureExistanceOfStorageDirectory(): void {
+export function ensureExistenceOfStorageDirectory(): void {
   fs.mkdir('./images', { recursive: true }, (err) => {
     if (err) throw err;
   });

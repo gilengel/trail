@@ -41,3 +41,4 @@ bin/
 frontend/.nyc_output/out.json
 
 db
+/backend-layout/

@@ -7,11 +7,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { json } from 'express';
 
-BigInt.prototype.toJSON = function () {
-  return { $bigint: this.toString() };
-};
-
-// eslint-disable-next-line jsdoc/require-example
+ 
 /**
  * Starts the backend server.
  */
@@ -22,7 +18,12 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.use(json({ limit: '50mb' }));
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Trail backend')
@@ -33,6 +34,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();

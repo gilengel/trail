@@ -3,6 +3,7 @@
  */
 import { XMLParser } from 'fast-xml-parser';
 import { NotEnoughCoordinatesError } from '../routes.segments/routes.segments.service';
+import { Buffer } from 'buffer';
 
 export interface GPXRoute {
   name?: string;
@@ -14,11 +15,11 @@ export interface GPXRouteSegment {
   coordinates: Array<[number, number, number]>;
 }
 
-// eslint-disable-next-line jsdoc/require-example
+ 
 /**
- * Creates a new route in the database based on a gpx file.
+ * Extracts the geospatial coordinates from a string or file buffer.
  * @param data - The content of the gpx file.
- * @returns A Promise that resolves to a RouteDto object.
+ * @returns The coordinates as a route.
  * @throws {NotEnoughCoordinatesError} If there are no coordinates within the gpx file.
  */
 export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {

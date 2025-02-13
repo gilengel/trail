@@ -1,7 +1,7 @@
 /**
  * @file Provides functionality to create, read, update and delete images.
  */
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CountDto, DbImageDto, ImageDto } from './dto/image.dto';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -42,8 +42,6 @@ export class InvalidCoordinates extends Error {
 
 @Injectable()
 export class ImagesService {
-  private readonly logger = new Logger(ImagesService.name);
-
   constructor(private prisma: PrismaService) {}
 
   private extractCoordinates(image: Express.Multer.File): SphericalCoordinates {
@@ -83,7 +81,7 @@ export class ImagesService {
           image.mimetype,
         ];
       });
-    } catch (e) {
+    } catch {
       return Promise.reject(new NoOrWrongGeoInformationError());
     }
 
@@ -108,7 +106,7 @@ export class ImagesService {
   }
 
   private async multipleImagesQuery(
-    geomertyAsWkt: string,
+    geometryAsWkt: string,
     offset: number,
     maxNumberOfImages?: number,
   ): Promise<Array<ImageDto>> {
@@ -120,7 +118,7 @@ export class ImagesService {
     const query = Prisma.sql`
     SELECT id, name, ST_AsText(coordinates) as coordinates, mime_type
     FROM "Image"
-    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geomertyAsWkt}::text, 4326), ${offset}::int ) 
+    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geometryAsWkt}::text, 4326), ${offset}::int ) 
     LIMIT ${limit}`;
 
     const result: Array<DbImageDto> = await this.prisma.$queryRaw(query);
