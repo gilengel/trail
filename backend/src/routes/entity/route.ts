@@ -12,6 +12,9 @@ export class Route {
   id: number;
 
   @ApiProperty()
+  tripId: number;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()

@@ -129,6 +129,7 @@ export function numberArray2wkt(
 export function dbRoute2dto(route: Route): RouteDto {
   return {
     id: route.id,
+    tripId: route.tripId,
     name: route.name,
     description: route.description,
     segments: route.segments.map(dbRouteSegment2dto),

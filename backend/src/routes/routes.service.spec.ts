@@ -19,6 +19,9 @@ jest.mock('@prisma/client', () => {
     PrismaClient: jest.fn().mockImplementation(() => {
       return {
         $queryRaw: a,
+        route: {
+          create: jest.fn(),
+        },
       };
     }),
 
@@ -28,6 +31,7 @@ jest.mock('@prisma/client', () => {
     },
   };
 });
+
 
 describe('conversion', () => {
   describe('lineString', () => {
@@ -76,6 +80,7 @@ describe('RoutesService', () => {
     expect(result).toStrictEqual(testData.route);
   });
 
+
   it('should throw 404 if a route was requested that does not exist', async () => {
     jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([]);
 
@@ -96,13 +101,23 @@ describe('RoutesService', () => {
     expect(result).toStrictEqual([]);
   });
 
+
   it('should store a route in the database and return it', async () => {
+    jest
+      .spyOn(prisma.route, 'create')
+      .mockResolvedValueOnce({
+        id: testData.routeId,
+        name: testData.route.name,
+        description: testData.route.description,
+        tripId: testData.route.tripId,
+      })
     jest
       .spyOn(prisma, '$queryRaw')
       .mockResolvedValue([{ id: testData.segmentId }])
-      .mockResolvedValueOnce([{ id: testData.routeId }]);
+
 
     const result: RouteDto = await service.createRoute(testData.route);
+
     expect(result).toStrictEqual(testData.route);
   });
 
@@ -136,14 +151,22 @@ describe('RoutesService', () => {
     };
 
     jest
+      .spyOn(prisma.route, 'create')
+      .mockResolvedValueOnce({
+        id: testData.routeId,
+        name: testData.route.name,
+        description: testData.route.description,
+        tripId: testData.route.tripId,
+      })
+    jest
       .spyOn(prisma, '$queryRaw')
       .mockResolvedValue([{ id: 1 }, { id: 2 }]) // segment ids
-      .mockResolvedValueOnce([{ id: 0 }]); // route id
 
-    const result = await service.createRouteFromGPX(route);
+    const result = await service.createRouteFromGPX(route, 0);
 
     expect(result).toStrictEqual({
       id: 0,
+      tripId: 0,
       name: 'gpx_route',
       description: '',
       segments: [
@@ -178,6 +201,7 @@ describe('RoutesService', () => {
 
     const expected = {
       id: testData.routeId,
+      tripId: testData.routeId,
       name: 'updated_test_route',
       description: testData.routeDescription,
     };
@@ -196,6 +220,7 @@ describe('RoutesService', () => {
 
     const expected = {
       id: testData.routeId,
+      tripId: testData.routeId,
       name: testData.routeName,
       description: testData.updatedRouteDescription,
     };
@@ -215,6 +240,7 @@ describe('RoutesService', () => {
 
     const expected = {
       id: testData.routeId,
+      tripId: testData.routeId,
       name: testData.updatedName,
       description: testData.updatedRouteDescription,
     };

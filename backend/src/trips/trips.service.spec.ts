@@ -17,7 +17,9 @@ jest.mock('@prisma/client', () => {
       return {
         $queryRaw: a,
         trip: {
-          update: () => { return Promise.resolve(testData.dbTripWithUpdatedLayout)}
+          update: () => { return Promise.resolve(testData.dbTripWithUpdatedLayout)},
+          create: jest.fn(),
+          findUnique: jest.fn()
         }
       };
     }),
@@ -44,10 +46,14 @@ describe('TripsService', () => {
 
   it('should create an empty trip', async () => {
     const trip: CreateTripDto = {
-      layout: {},
+      name: testData.tripName,
+      layout: {}
     };
 
-    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([{ id: 0 }]); // trip id
+    jest
+      .spyOn(prisma.trip, 'create')
+      .mockResolvedValueOnce({ id: 0, layout: {} })
+
 
     const result = await service.createTrip(trip);
 
@@ -59,20 +65,23 @@ describe('TripsService', () => {
 
   it('should return a route stored in the database by id', async () => {
     jest
-      .spyOn(prisma, '$queryRaw')
-      .mockResolvedValueOnce([testData.dbTrip]);
+      .spyOn(prisma.trip, 'findUnique')
+      .mockResolvedValueOnce(testData.dbTrip);
 
     const result: TripDto = await service.trip(0);
     expect(result).toStrictEqual(testData.dbTrip);
   });
 
   it('should return "404" if no trip is stored in the database by the given id', async () => {
-    jest.spyOn(prisma, '$queryRaw').mockResolvedValueOnce([]);
+    jest
+      .spyOn(prisma.trip, 'findUnique')
+      .mockRejectedValue(new HttpException('', HttpStatus.NOT_FOUND));
+
 
     const result = service.trip(0);
     await expect(result).rejects.toThrow(
       new HttpException(
-        `Route with id 0 does not exist.`,
+        `Trip with id 0 does not exist.`,
         HttpStatus.NOT_FOUND,
       ),
     );

@@ -9,11 +9,13 @@ import * as request from 'supertest';
 import { PrismaService } from '../../src/prisma.service';
 import { RoutesSegmentsModule } from '../../src/routes.segments/routes.segments.module';
 import * as testData from '../data';
+import { createTestTripWithSingleRoute } from '../routes/routes.e2e-spec';
 
 describe('RoutesSegmentsController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
+  let tripId: number;
   let routeId: number;
   let routeSegmentId: number;
 
@@ -30,10 +32,9 @@ describe('RoutesSegmentsController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    const result = await prisma.$queryRaw<[{ id: number }]>`
-      INSERT INTO "Route" (name, description) 
-      VALUES ('e2e_test_route', 'e2e_test_description') RETURNING id`;
-    routeId = result[0].id;
+    const data = await createTestTripWithSingleRoute(prisma);
+    tripId = data.tripId;
+    routeId = data.routeId;
 
     const segmentResult = await prisma.$queryRaw<[{ id: number }]>`
       INSERT INTO "RouteSegment" ("routeId", name, description, coordinates) 
@@ -52,7 +53,9 @@ describe('RoutesSegmentsController (e2e)', () => {
   });
 
   afterEach(async () => {
-    await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${routeId}`;
+    await prisma.trip.delete({
+      where: { id: tripId }
+    });
   });
 
   it('/routes/segment (GET) return the segment', () => {

@@ -9,6 +9,9 @@ export class RouteWithoutSegmentsDto {
   id: number;
 
   @ApiProperty()
+  tripId: number;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
@@ -23,6 +26,9 @@ export class RouteDto extends RouteWithoutSegmentsDto {
 export class RouteWithMultipleFilesDTO {
   @ApiProperty({ description: 'Route name' })
   name: string;
+
+  @ApiProperty()
+  tripId: number;
 
   @ApiProperty({
     description: 'Route segments',

@@ -18,6 +18,7 @@ export const date = new Date('05 Jan 2000 12:15:00 GMT');
 export const wkt = 'LINESTRING Z(30 10 0,10 30 0,40 40 0)';
 export const updatedWkt = 'LINESTRING Z(30 10 0,10 30 0)';
 
+export const tripName = 'test_trip';
 export const routeId = 0;
 export const routeName = 'test_route';
 export const routeDescription = 'test_route_description';
@@ -60,6 +61,7 @@ export const updatedCoordinates: Array<[number, number, number]> = [
 
 export const route: RouteDto = {
   id: routeId,
+  tripId: routeId,
   name: routeName,
   description: routeDescription,
   segments,
@@ -87,6 +89,7 @@ export const newRoute: CreateRouteDto = {
   name: 'new_test_route',
   description: '',
   segments,
+  tripId: 0
 };
 
 export const newRouteSegment: CreateRouteSegmentDto = {
@@ -97,6 +100,7 @@ export const newRouteSegment: CreateRouteSegmentDto = {
 
 export const routeWithEmptyName: RouteDto = {
   id: routeId,
+  tripId: routeId,
   name: '',
   description: '',
   segments,
@@ -134,6 +138,7 @@ export const dbRouteSegmentWithUpdatedDescription: RouteSegment = {
 
 export const dbRoute: Route = {
   id: 0,
+  tripId: 0,
   name: routeName,
   description: routeDescription,
   segments: [dbRouteSegment],
@@ -141,6 +146,7 @@ export const dbRoute: Route = {
 
 export const dbRouteWithUpdatedName: RouteWithoutSegmentsDto = {
   id: routeId,
+  tripId: routeId,
   name: updatedName,
   description: routeDescription,
   //segments: [dbRouteSegment],
@@ -148,18 +154,21 @@ export const dbRouteWithUpdatedName: RouteWithoutSegmentsDto = {
 
 export const dbRouteWithUpdatedDescription: RouteWithoutSegmentsDto = {
   id: routeId,
+  tripId: routeId,
   name: routeName,
   description: updatedRouteDescription,
 };
 
 export const dbRouteWithUpdatedNameAndDescription: RouteWithoutSegmentsDto = {
   id: routeId,
+  tripId: routeId,
   name: updatedName,
   description: updatedRouteDescription,
 };
 
 export const dbRouteWithUpdatedCoordinates: Route = {
   id: routeId,
+  tripId: routeId,
   name: routeName,
   description: routeDescription,
   segments: [dbRouteSegmentWithUpdatedCoordinates],
@@ -167,6 +176,7 @@ export const dbRouteWithUpdatedCoordinates: Route = {
 
 export const dbRouteWithUpdatedNameAndCoordinates: Route = {
   id: routeId,
+  tripId: routeId,
   name: updatedName,
   description: routeDescription,
   segments: [dbRouteSegmentWithUpdatedCoordinates],
@@ -223,6 +233,7 @@ export const dbTrip: Trip = {
 };
 
 export const newTrip: CreateTripDto = {
+  name: tripName,
   layout: {},
 };
 

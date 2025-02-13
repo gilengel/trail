@@ -92,11 +92,11 @@ describe('RoutesController', () => {
       .mockReturnValue(Promise.resolve(testData.route));
 
     const buffer = readFileSync(`src/routes/test/short.gpx`);
-
     const files = [mockFileFromBuffer(buffer)];
     const result = await controller.createFromGPX(
       {
         name: '',
+        tripId: 0,
         files,
       },
       files,
@@ -118,6 +118,7 @@ describe('RoutesController', () => {
     const result = controller.createFromGPX(
       {
         name: 'test_route',
+        tripId: 0,
         files,
       },
       files,
@@ -142,6 +143,7 @@ describe('RoutesController', () => {
     const result = controller.createFromGPX(
       {
         name: 'test_route',
+        tripId: 0,
         files,
       },
       files,
@@ -158,6 +160,7 @@ describe('RoutesController', () => {
 
     const result = controller.create({
       name: 'invalid_route',
+      tripId: 0,
       description: '',
       segments: [
         {
@@ -177,6 +180,7 @@ describe('RoutesController', () => {
   it('should update a route and return its dto', async () => {
     const result: RouteDto = {
       id: 0,
+      tripId: 0,
       description: '',
       name: testData.updatedName,
       segments: testData.segments,

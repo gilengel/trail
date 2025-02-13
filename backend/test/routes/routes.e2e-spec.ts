@@ -11,11 +11,61 @@ import { json } from 'express';
 
 import { env } from 'node:process';
 
+/**
+ * Creates a trip in the database that has no related routes.
+ * @param prisma - Prisma instance.
+ * @returns ID of the created trip.
+ */
+export async function createTestTripWithoutRoutes(prisma) : Promise<number> {
+  const trip = await prisma.trip.create({
+    data: {
+      name: 'e2e trip',
+      layout: {}, // Provide a valid JSON object for layout
+    }
+  });
+
+  return trip.id;
+}
+
+/**
+ * Creates a trip in the database that has no related routes.
+ * @param prisma - Prisma instance.
+ * @returns ID of the created trip.
+ */
+export async function createTestTripWithSingleRoute(prisma) : Promise<{ tripId: number, routeId: number }> {
+  const trip = await prisma.trip.create({
+    data: {
+      name: 'e2e trip',
+      layout: {}, // Provide a valid JSON object for layout
+      routes: {
+        create: [
+          {
+            name: "e2e_test_route",
+            description: "A sample route",
+          }
+        ]
+      }
+    },
+    include: {
+      routes: true
+    }
+  });
+
+  const tripId = trip.id;
+  const routeId = trip.routes[0].id;
+
+  testData.newRoute.tripId = tripId;
+
+  return { tripId, routeId }
+}
+
 describe('RoutesController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
+  let tripId: number;
   let routeId: number;
+
 
   // For testing with a broken database. For example if the schema is not applied.
   describe('without working database', () => {
@@ -59,20 +109,16 @@ describe('RoutesController (e2e)', () => {
     });
 
     beforeEach(async () => {
-      const result = await prisma.$queryRaw<[{ id: number }]>`
-        INSERT INTO "Route" (name, description)
-        VALUES ('e2e_test_route', 'e2e_test_description') RETURNING id`;
-      routeId = result[0].id;
-
-      await prisma.$queryRaw`
-          SELECT "RouteSegment".id, "RouteSegment".name, ST_AsText(coordinates) AS coordinates
-          FROM "RouteSegment"
-          JOIN "Route" ON "RouteSegment"."routeId" = "Route".id
-          WHERE "routeId" = ${routeId}`;
+      const data = await createTestTripWithSingleRoute(prisma);
+      tripId = data.tripId;
+      routeId = data.routeId;
     });
 
+
     afterEach(async () => {
-      await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${routeId}`;
+      await prisma.trip.delete({
+        where: { id: tripId }
+      });
     });
 
     it('/routes/ (GET)', () => {
@@ -91,6 +137,7 @@ describe('RoutesController (e2e)', () => {
     it('/routes/:id (GET) returns "404" for nonexistent route', () => {
       return request(app.getHttpServer()).get(`/routes/123456789`).expect(404);
     });
+
 
     it('/routes/ (POST)', () => {
       return request(app.getHttpServer())
@@ -124,6 +171,7 @@ describe('RoutesController (e2e)', () => {
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Ehrwald Hiking')
+        .field('tripId', tripId)
         .attach('files', 'src/routes/test/short.gpx')
         .expect(201)
         .expect(async (res) => {
@@ -138,6 +186,7 @@ describe('RoutesController (e2e)', () => {
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Ehrwald Hiking')
+        .field('tripId', tripId)
         .attach('files', 'src/routes/test/no_elevation.gpx')
         .expect(201)
         .expect(async (res) => {
@@ -152,6 +201,7 @@ describe('RoutesController (e2e)', () => {
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
+        .field('tripId', tripId)
         .attach('files', 'src/routes/test/long.gpx')
         .expect(201)
         .expect(async (res) => {
@@ -219,7 +269,7 @@ describe('RoutesController (e2e)', () => {
 
     it('/routes (PATCH) fails if no name and no description attribute is send to the backend', () => {
       return request(app.getHttpServer())
-        .patch(`/routes/${routeId}`)
+        .patch(`/routes/${tripId}`)
         .send({})
         .expect(400);
     });
@@ -235,7 +285,7 @@ describe('RoutesController (e2e)', () => {
 
     it('/routes/ (DELETE)', () => {
       return request(app.getHttpServer())
-        .delete(`/routes/${routeId}`)
+        .delete(`/routes/${tripId}`)
         .expect(200);
     });
   });

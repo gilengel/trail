@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { IsInt, IsDefined } from "class-validator";
-import "./";
+import { Route } from "./";
 
 export class Trip {
     @IsDefined()
@@ -9,4 +9,7 @@ export class Trip {
 
     @IsDefined()
     layout!: Prisma.JsonValue;
+
+    @IsDefined()
+    routes!: Route[];
 }

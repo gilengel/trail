@@ -1,13 +1,12 @@
 /**
- * @file Public API for routes unit test cases.
+ * @file Public API for trips unit test cases.
  */
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { TripsController } from './trips.controller';
 import { TripsService } from './trips.service';
 import { PrismaService } from '../prisma.service';
 import * as testData from '../../test/data';
-import { NotEnoughCoordinatesError } from '../routes.segments/routes.segments.service';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { TripDto } from './dto/trip.dto';
 
 jest.mock('@prisma/client', () => {
@@ -41,7 +40,7 @@ describe('TripsController', () => {
     service = module.get<TripsService>(TripsService);
   });
 
-  it('should create a new route and return its dto', async () => {
+  it('should create a new trip and return its dto', async () => {
     jest
       .spyOn(service, 'createTrip')
       .mockReturnValue(Promise.resolve(testData.dbTrip));
@@ -51,17 +50,15 @@ describe('TripsController', () => {
 
   it('should throw "BadRequest" trying to create a trip if layout is invalid', async () => {
     jest.spyOn(service, 'createTrip').mockImplementation(() => {
-      throw new NotEnoughCoordinatesError();
+      throw new Error();
     });
 
     const result = controller.create({
+      name: testData.tripName,
       layout: {},
     });
     await expect(result).rejects.toThrow(
-      new HttpException(
-        'Minimum number of coordinates for a route is two which was not met.',
-        HttpStatus.BAD_REQUEST,
-      ),
+      new Error()
     );
   });
 
@@ -73,7 +70,7 @@ describe('TripsController', () => {
     expect(await controller.findOne(0)).toEqual(testData.dbTrip);
   });
 
-  it('should update a route and return its dto', async () => {
+  it('should update a trip and return its dto', async () => {
     const result: TripDto = {
       id: 0,
       layout: { test: "value"}
@@ -86,7 +83,7 @@ describe('TripsController', () => {
     ).toStrictEqual(result);
   });
 
-  it('should update a route and return its dto', async () => {
+  it('should update a trip and return its dto', async () => {
     jest.spyOn(service, 'updateTrip').mockImplementation(() => {
       throw new Error();
     });

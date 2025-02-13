@@ -55,6 +55,7 @@ export class RoutesService {
     const segments = await this.segments.findAllForRoute(id);
     const result: Route = {
       id,
+      tripId: routes[0].tripId,
       name: routes[0].name,
       description: routes[0].description,
       segments,
@@ -87,16 +88,20 @@ export class RoutesService {
       this.segments.validateCoordinates(e.coordinates),
     );
 
-    const routeIds = await this.prisma.$queryRaw<[{ id: number }]>`
-    INSERT INTO "Route" (name, description) 
-    VALUES (${routeDto.name}::text, ${routeDto.description}::text)
-    RETURNING id`;
-    const routeId = routeIds[0].id;
+    const newRoute = await this.prisma.route.create({
+      data: {
+        name: routeDto.name,
+        description: routeDto.description,
+        trip: {
+          connect: { id: routeDto.tripId }
+        }
+      }
+    });
 
     const values = routeDto.segments.map((segment: CreateRouteSegmentDto) => {
       const coordinatesString = conversion.numberArray2wkt(segment.coordinates);
 
-      return Prisma.sql`(${segment.name}::text, ${routeId}, '', ST_GeomFromText(${coordinatesString}::text, 4326))`;
+      return Prisma.sql`(${segment.name}::text, ${newRoute.id}, '', ST_GeomFromText(${coordinatesString}::text, 4326))`;
     });
 
     const segmentIds = await this.prisma.$queryRaw<[{ id: number }]>`
@@ -113,28 +118,33 @@ export class RoutesService {
     });
 
     return Promise.resolve({
-      id: routeId,
+      id: newRoute.id,
+      tripId: routeDto.tripId,
       name: routeDto.name,
       description: routeDto.description,
       segments,
     });
   }
 
-  async createRouteFromGPX(route: GPXRoute): Promise<RouteDto> {
+  async createRouteFromGPX(route: GPXRoute, tripId: number): Promise<RouteDto> {
     route.segments.forEach((e) =>
       this.segments.validateCoordinates(e.coordinates),
     );
 
-    const ids: [{ id: number }] = await this.prisma.$queryRaw<[{ id: number }]>`
-    INSERT INTO "Route" (name, description) 
-    VALUES (${route.name}::text, '')
-    RETURNING id`;
-    const routeId = ids[0].id;
+    const newRoute = await this.prisma.route.create({
+      data: {
+        name: route.name,
+        description: '',
+        trip: {
+          connect: { id: Number(tripId) }
+        }
+      }
+    });
 
     const values = route.segments.map((segment: GPXRouteSegment) => {
       const coordinatesString = conversion.numberArray2wkt(segment.coordinates);
 
-      return Prisma.sql`(${segment.name}::text, ${routeId}, '', ST_GeomFromText(${coordinatesString}::text, 4326))`;
+      return Prisma.sql`(${segment.name}::text, ${newRoute.id}, '', ST_GeomFromText(${coordinatesString}::text, 4326))`;
     });
 
     const segmentIds = await this.prisma.$queryRaw<{ id: number }[]>`
@@ -150,7 +160,8 @@ export class RoutesService {
     });
 
     return Promise.resolve({
-      id: routeId,
+      id: newRoute.id,
+      tripId: newRoute.tripId,
       name: route.name,
       description: '',
       segments,
@@ -174,6 +185,7 @@ export class RoutesService {
 
     type RouteWithoutSegments = {
       id: number;
+      tripId: number;
       name: string;
       description: string;
     };

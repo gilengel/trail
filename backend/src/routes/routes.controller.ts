@@ -62,7 +62,6 @@ export class RoutesController {
   }
 
   @Post('gpx')
-  //@UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('files'))
   async createFromGPX(
@@ -79,7 +78,7 @@ export class RoutesController {
         mergedRoute.segments.push(...gpxRoute.segments);
       }
 
-      const routeDto = await this.routeService.createRouteFromGPX(mergedRoute);
+      const routeDto = await this.routeService.createRouteFromGPX(mergedRoute, body.tripId);
 
       return Promise.resolve(routeDto);
     } catch (e) {

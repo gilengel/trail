@@ -16,6 +16,7 @@ import { json } from 'express';
 import { RouteDto } from 'src/routes/dto/route.dto';
 import * as async from 'async';
 import { ImageDto } from 'src/images/dto/image.dto';
+import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
 
 describe('ImagesController (e2e)', () => {
   let app: INestApplication;
@@ -114,12 +115,15 @@ describe('ImagesController (e2e)', () => {
 
   describe('GET', () => {
     let route: RouteDto;
+    let tripId: number;
 
     beforeEach(async () => {
+      tripId = await createTestTripWithoutRoutes(prisma)
       const result = await request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'short')
+        .field('tripId', tripId)
         .attach('files', 'src/routes/test/short.gpx');
 
       route = result.body;
@@ -275,7 +279,9 @@ describe('ImagesController (e2e)', () => {
     });
 
     afterEach(async () => {
-      await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${route.id}`;
+      await prisma.trip.delete({
+        where: { id: tripId }
+      });
     });
   });
 });

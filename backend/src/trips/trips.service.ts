@@ -24,14 +24,14 @@ export class TripsService {
    * @returns A Promise that resolves to a RouteDto object.
    */
   async createTrip(tripDto: CreateTripDto): Promise<TripDto> {
-    const tripIds = await this.prisma.$queryRaw<[{ id: number }]>`
-    INSERT INTO "Trip" (layout) 
-    VALUES (${tripDto.layout}::json)
-    RETURNING id`;
-    const tripId = tripIds[0].id;
+    const trip = await this.prisma.trip.create({
+      data: {
+        layout: tripDto.layout
+      },
+    })
 
     return Promise.resolve({
-      id: tripId,
+      id: trip.id,
       layout: tripDto.layout,
     });
   }
@@ -42,18 +42,20 @@ export class TripsService {
    * @returns A Promise that resolves to a TripDto object or null if not found.
    */
   async trip(id: number): Promise<TripDto | null> {
-    const trips = await this.prisma.$queryRaw<
-      TripDto[]
-    >`SELECT * FROM "Trip" WHERE id = ${id}::int`;
+    try {
+      const trip = await this.prisma.trip.findUnique({
+        where: {
+          id
+        },
+      })
 
-    if (!trips || trips.length == 0) {
+      return Promise.resolve(trip as TripDto);
+    }catch{
       throw new HttpException(
-        `Route with id ${id} does not exist.`,
+        `Trip with id ${id} does not exist.`,
         HttpStatus.NOT_FOUND,
       );
     }
-
-    return Promise.resolve(trips[0]);
   }
 
   /**

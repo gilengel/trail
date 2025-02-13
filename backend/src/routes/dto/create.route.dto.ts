@@ -13,4 +13,7 @@ export class CreateRouteDto {
 
   @ApiProperty()
   segments: ConcealedCreateRouteSegmentDto[];
+
+  @ApiProperty()
+  tripId: number;
 }

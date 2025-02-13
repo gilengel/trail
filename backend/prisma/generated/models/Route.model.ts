@@ -1,5 +1,5 @@
 import { IsInt, IsDefined, IsString, IsOptional } from "class-validator";
-import { RouteSegment } from "./";
+import { RouteSegment, Trip } from "./";
 
 export class Route {
     @IsDefined()
@@ -16,4 +16,11 @@ export class Route {
 
     @IsDefined()
     segments!: RouteSegment[];
+
+    @IsDefined()
+    trip!: Trip;
+
+    @IsDefined()
+    @IsInt()
+    tripId!: number;
 }
