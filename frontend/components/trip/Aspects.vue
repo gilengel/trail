@@ -35,6 +35,4 @@ defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>
-.aspects {
-}
 </style>

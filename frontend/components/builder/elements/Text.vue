@@ -1,5 +1,7 @@
 <template>
-  <p>Text</p>
+  <p data-testid="text-element">
+    Text
+  </p>
 </template>
 
 <script setup lang="ts">

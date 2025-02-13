@@ -6,7 +6,6 @@
     <template>
       <v-btn
         data-testid="tooltip-button"
-        icon
         v-bind="props"
         :color="isActive ? 'primary' : 'transparent'"
         variant="flat"

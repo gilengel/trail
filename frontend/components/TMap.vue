@@ -21,7 +21,7 @@ type LineStyle = {
 interface Props {
   trip?: MapLibreTrip | null
   segments?: MapLibreSegment[] | null,
-  lineColor: Color
+  lineColor?: Color
 }
 
 const {trip = null, segments = null, lineColor = 'rgb(75, 192, 192)'} = defineProps<Props>()
@@ -43,9 +43,9 @@ let oldSegments: MapLibreSegment[] = [];
  */
 function onSegmentsChanged() {
 
+
   const removedSegments = oldSegments.filter(x => !segments!.includes(x));
   const addedSegments = segments!.filter(x => !oldSegments.includes(x));
-
 
   for (const segment of removedSegments) {
     removeLine(segment.id);
@@ -58,6 +58,7 @@ function onSegmentsChanged() {
 
 
   for (const segment of addedSegments) {
+
     addLine(
         segment.id,
         segment.coordinates.map((e) => e.toArray()),
@@ -215,14 +216,9 @@ function zoomToSegments(segments: MapLibreSegment[], animate: boolean = true) {
  * @param animate
  */
 function fitBounds(bounds: LngLatBounds, animate: boolean) {
-  console.log("🚀 fitBounds called with:", bounds, "Animate:", animate);
-
   if (bounds.isEmpty()) {
     return;
   }
-
-  const center = bounds.getCenter();
-  console.log('Setting center to:', center);
 
   map.value!.fitBounds(bounds, {
     padding: {top: 10, bottom: 25, left: 15, right: 5},
@@ -231,7 +227,6 @@ function fitBounds(bounds: LngLatBounds, animate: boolean) {
 
   if (!animate) {
     const center = bounds.getCenter();
-    console.log('Setting center to:', center);
     map.value!.setCenter(center);
   }
 }

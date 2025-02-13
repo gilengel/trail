@@ -9,7 +9,7 @@ export function camelCaseToWords(s: string) {
 }
 
 /**
- * Converts a snake case string to single words
+ * Converts a snake case string to single words.
  * @param input - The string in camel case format.
  * @returns The single words.
  */

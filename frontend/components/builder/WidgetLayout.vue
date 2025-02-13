@@ -61,7 +61,7 @@ import * as uuid from 'uuid';
 import {Sortable} from 'sortablejs-vue3';
 import type {SortableEvent} from 'sortablejs';
 
-import {type Grid, Element, type Row} from '~/types/Grid';
+import {type Grid, Element, type Row} from '~/types/grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
 
@@ -70,19 +70,17 @@ const props = defineProps<{
 }>();
 
 defineEmits<{
-  onElementChanged: [element: Element];
+  onElementChanged: [element: Element<unknown>];
 }>();
 
-const selectedElement: Ref<Element | undefined> = ref(undefined);
+const selectedElement: Ref<Element<unknown> | undefined> = ref(undefined);
 
 const gridModuleStore = useGridStore();
-
-//const rowDraggingDisabled: Ref<boolean> = ref(false);
 
 /**
  * @param element
  */
-function onSelectedElementChanged(element: Element) {
+function onSelectedElementChanged(element: Element<unknown>) {
   selectedElement.value = element;
 }
 
@@ -104,14 +102,13 @@ const selectedComponent = computed(() => {
 });
 
 
-const selectedProps = computed((): ElementProps | undefined => {
+const selectedProps = computed((): ElementProps<unknown> | undefined => {
   if (!selectedElement.value) {
     return undefined;
   }
 
   return {
-    element: selectedElement.value,
-    attributes: selectedElement.value.attributes as Record<string, string | number | boolean | string[]>
+    element: selectedElement.value
   };
 });
 </script>

@@ -58,9 +58,9 @@
     >
       <component
         :is="selectedComponent"
-        v-bind="selectedComponentProps"
+        v-bind="selectedComponentProps as object"
         v-if="selectedComponent"
-        @click="() => $emit('selectElement', model.element as Element)"
+        @click="() => $emit('selectElement', model.element as Element<unknown>)"
       />
       <!--
       <component
@@ -143,9 +143,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  selectElement: [element: Element];
+  selectElement: [element: Element<unknown>];
 
-  onElementChanged: [element: Element];
+  onElementChanged: [element: Element<unknown>];
 }>();
 
 const dropContainer = ref(null);

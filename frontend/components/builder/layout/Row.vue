@@ -66,7 +66,7 @@
 <script setup lang="ts" generic="T extends string, S extends string">
 import {type PropType, type Ref, ref} from 'vue';
 
-import {type Row, Element, type Grid} from '~/types/Grid';
+import {type Row, Element, type Grid} from '~/types/grid';
 import {columnValueValidator} from '~/composables/useColumValidator';
 
 const props = defineProps({
@@ -102,9 +102,9 @@ const props = defineProps({
 });
 
 defineEmits<{
-  selectElement: [element: Element];
+  selectElement: [element: Element<unknown>];
 
-  onElementChanged: [element: Element];
+  onElementChanged: [element: Element<unknown>];
 }>();
 
 const gridModuleStore = useGridStore();

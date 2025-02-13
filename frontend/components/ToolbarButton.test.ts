@@ -19,13 +19,20 @@ describe('Component', () => {
             // Mount the component with necessary props
             const wrapper = await mountSuspended(ToolbarButtonComponent, {
                 props: {
-                    icon: 'mdi-home',  // Replace with the actual icon you want
-                    tooltip: 'Test Tooltip',
+                    icon: 'las la-question-circle',
+                    tooltip: '',
                     isActive: true
+                },
+                global: {
+                    stubs: {
+                        VTooltip: {
+                            template: '<span><slot></slot></span>' // Stubbing tooltip to prevent teleporting
+                        }
+                    }
                 }
             })
 
-            const button = wrapper.find('[data-testid="tooltip-button"]')
+            const button = wrapper.findComponent('[data-testid="tooltip-button"]')
             await button.trigger('click')
             expect(wrapper.emitted('click')).toHaveLength(1)
         })

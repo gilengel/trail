@@ -12,6 +12,7 @@ describe('Component', () => {
                     grid: createTestGrid(2, 2)
                 }
             })
+
             expect(component.exists()).toBeTruthy();
         })
     })

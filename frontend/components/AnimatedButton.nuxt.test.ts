@@ -8,45 +8,45 @@ import AnimatedButton from "./AnimatedButton.vue";
 describe("Component", () => {
     describe("AnimatedButton", () => {
         it('should trigger the animate "in" the tree svg elements on mouse over', async () => {
-            const component = await mountSuspended(AnimatedButton, {
+            const wrapper = await mountSuspended(AnimatedButton, {
                 props: {title: "Test Button"},
             });
-            component.get('[data-cy="animated-btn"]').trigger("mouseover");
-            component.vm.$nextTick(() => {
-                expect(component.get("[data-cy=svg-tree]").classes("out")).toBe(true);
+            wrapper.get('[data-cy="animated-btn"]').trigger("mouseover");
+            wrapper.vm.$nextTick(() => {
+                expect(wrapper.get("[data-cy=svg-tree]").classes("out")).toBe(true);
             });
         });
 
         it('should trigger the animate "in" the tree svg elements on focus in', async () => {
-            const component = await mountSuspended(AnimatedButton, {
+            const wrapper = await mountSuspended(AnimatedButton, {
                 props: {title: "Test Button"},
             });
 
-            component.get('[data-cy="animated-btn"]').trigger("focusin");
-            component.vm.$nextTick(() => {
-                expect(component.get("[data-cy=svg-tree]").classes("out")).toBe(true);
+            wrapper.get('[data-cy="animated-btn"]').trigger("focusin");
+            wrapper.vm.$nextTick(() => {
+                expect(wrapper.get("[data-cy=svg-tree]").classes("out")).toBe(true);
             });
         });
 
         it('should trigger the animate "out" the tree svg elements on mouse leave', async () => {
-            const component = await mountSuspended(AnimatedButton, {
+            const wrapper = await mountSuspended(AnimatedButton, {
                 props: {title: "Test Button"},
             });
 
-            component.get('[data-cy="animated-btn"]').trigger("mouseleave");
-            component.vm.$nextTick(() => {
-                expect(component.get("[data-cy=svg-tree]").classes("in")).toBe(true);
+            wrapper.get('[data-cy="animated-btn"]').trigger("mouseleave");
+            wrapper.vm.$nextTick(() => {
+                expect(wrapper.get("[data-cy=svg-tree]").classes("in")).toBe(true);
             });
         });
 
         it('should trigger the animate "out" the tree svg elements on focus out', async () => {
-            const component = await mountSuspended(AnimatedButton, {
+            const wrapper = await mountSuspended(AnimatedButton, {
                 props: {title: "Test Button"},
             });
 
-            component.get('[data-cy="animated-btn"]').trigger("focusout");
-            component.vm.$nextTick(() => {
-                expect(component.get("[data-cy=svg-tree]").classes("in")).toBe(true);
+            wrapper.get('[data-cy="animated-btn"]').trigger("focusout");
+            wrapper.vm.$nextTick(() => {
+                expect(wrapper.get("[data-cy=svg-tree]").classes("in")).toBe(true);
             });
         });
         /*

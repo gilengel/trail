@@ -1,8 +1,8 @@
 <template>
   <h1>Heading Properties</h1>
   <v-btn-toggle
-      v-model="size"
-      @update:model-value="onSizeChange"
+    v-model="size"
+    @update:model-value="onSizeChange"
   >
     <v-btn>
       H1
@@ -22,10 +22,10 @@
   </v-btn-toggle>
 
   <v-color-picker
-      v-model="color"
-      hide-inputs
-      show-swatches
-      @update:model-value="onColorChange"
+    v-model="color"
+    hide-inputs
+    show-swatches
+    @update:model-value="onColorChange"
   />
 </template>
 
