@@ -13,10 +13,10 @@
           variant="outlined"
           @keyup="routeNameChanged"
       />
-      <DropZone
+      <RouteDropZone
           support-text="Trip Files (allowed are files of type gpx)"
           :allowed-file-extensions="['gpx']"
-          @on-files-changed="onFilesChanged"
+          @onFilesChanged="onFilesChanged"
       />
       <span
           v-if="status"
@@ -28,9 +28,9 @@
 
 <script setup lang="ts">
 import {useRouteUpload, useUpload} from "~/composables/useUpload";
-import {useDelete} from "~/composables/useDelete";
-import type {RouteDto} from "~/types/route";
+import {type RouteDto} from "~/types/route";
 import {usePatch} from "~/composables/usePatch";
+import type {GPXFile} from "~/types/gpx";
 
 const status: Ref<string> = ref("");
 
@@ -44,20 +44,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-let emptyRoute: RouteDto;
-
-onMounted(async () => {
-  emptyRoute = await createEmptyRoute();
-})
-
-onUnmounted(async () => {
-  if (emptyRoute.name !== undefined || emptyRoute.segments.length > 0) {
-    return;
-  }
-
-  await useDelete(`/api/routes/${emptyRoute.id}`)
-})
-
+let emptyRoute: Ref<RouteDto | null> = ref(null);
 
 async function createEmptyRoute(): Promise<RouteDto> {
   return await useUpload('/api/routes', {
@@ -68,7 +55,22 @@ async function createEmptyRoute(): Promise<RouteDto> {
 /**
  * @param trips
  */
-function onFilesChanged(trips: File[]) {
+async function onFilesChanged(trips: GPXFile[]): Promise<void> {
+  if (emptyRoute.value === null) {
+    emptyRoute.value = await createEmptyRoute();
+  }
+
+  for (const trip of trips) {
+    const route = trip.routeDto;
+    for (const segment of route!.segments) {
+      await useUpload('/api/routes/segment', {
+        name: segment.name,
+        coordinates: segment.coordinates,
+        routeId: emptyRoute.value.id
+      });
+    }
+  }
+
   files.value = trips;
 }
 
@@ -82,14 +84,12 @@ async function upload() {
 /**
  * @param newValue
  */
-function routeNameChanged() {
-  emptyRoute.name = routeName.value;
-  usePatch(`/api/routes/${emptyRoute.id}`, {name: routeName.value})
-      .then((r) => console.log(routeName.value))
-      .catch((e) => console.error(e));
+async function routeNameChanged() {
+  if (emptyRoute.value === null) {
+    emptyRoute.value = await createEmptyRoute();
+  }
 
-
-
-
+  emptyRoute.value.name = routeName.value;
+  await usePatch(`/api/routes/${emptyRoute.value.id}`, {name: routeName.value});
 }
 </script>

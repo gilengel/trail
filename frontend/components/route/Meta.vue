@@ -1,31 +1,31 @@
 <template>
   <div>
-  <v-row >
-    <v-col cols="12">
-      <v-card
-          class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
-          variant="outlined"
-      >
-        <v-card-item>
-          <v-card-title>{{route.name}}</v-card-title>
-        </v-card-item>
+    <v-row>
+      <v-col cols="12">
+        <v-card
+            class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
+            variant="outlined"
+        >
+          <v-card-item>
+            <v-card-title>{{ route.name }}</v-card-title>
+          </v-card-item>
 
-        <v-card-text>
+          <v-card-text>
 
-        </v-card-text>
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-          <v-btn
-              color="medium-emphasis"
-              icon="las la-trash-alt"
-              @click="confirmDeletion = true"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+            <v-btn
+                color="medium-emphasis"
+                icon="las la-trash-alt"
+                @click="confirmDeletion = true"
+            ></v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <v-dialog
         v-model="confirmDeletion"
@@ -73,7 +73,7 @@ async function deleteRoute() {
     confirmDeletion.value = false;
 
     emit('deleted', props.route.id);
-  }catch(e) {
+  } catch (e) {
     console.log(e)
   }
 }

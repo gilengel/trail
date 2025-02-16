@@ -44,6 +44,10 @@ defineExpose({
 
 let oldSegments: MapLibreSegment[] = [];
 
+function onTripChanged() {
+  console.log("onTripChanged");
+}
+
 /**
  *
  */
@@ -89,6 +93,8 @@ function onSegmentsChanged() {
 // Set up the watcher
 watch(() => segments, onSegmentsChanged, {deep: true});
 
+watch(() => trip, onTripChanged, {deep: true});
+
 onMounted(() => {
   if (!trip) {
     //return;
@@ -97,6 +103,7 @@ onMounted(() => {
     container: mapContainer.value!,
     style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
     zoom: 16,
+    attributionControl: false,
     interactive
   });
 
@@ -253,14 +260,12 @@ function fitBounds(bounds: LngLatBounds, animate: boolean) {
 .map {
   display: block;
   width: 100%;
-  min-height: 300px;
 }
 
 @container (max-width: 699px) {
   .map {
     aspect-ratio: 1/1;
   }
-
 }
 
 @container (min-width: 700px) {

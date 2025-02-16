@@ -41,13 +41,11 @@
               </v-col>
 
               <v-col cols="12">
-                <TripAdd :trip-id="trip!.id"/>
+                <RouteAdd :trip-id="trip!.id"/>
               </v-col>
-
-
             </v-row>
 
-            <MetaRoute v-for="route in routes" :key="route.name" :route @deleted="removeRoute"></MetaRoute>
+            <RouteMeta v-for="route in routes" :key="route.name" :route @deleted="removeRoute"></RouteMeta>
           </v-container>
         </v-form>
       </template>
@@ -67,7 +65,7 @@ const tripStore = useTripStore();
 
 const trip: TripDto | null = await tripStore.get(Number(route.params.id));
 
-const routes : Ref<RouteDto[]> = ref(await getRoutes());
+const routes: Ref<RouteDto[]> = ref(await getRoutes());
 
 const changedRouteData: Ref<{
   name?: string;
@@ -77,9 +75,10 @@ const changedRouteData: Ref<{
 /**
  * Returns all with the current trip associated routes from the backend.
  */
-async function getRoutes() : Promise<RouteDto[]> {
+async function getRoutes(): Promise<RouteDto[]> {
   return await $fetch(`/api/routes/trip/${trip?.id}`);
 }
+
 /**
  *
  */

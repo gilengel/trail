@@ -1,7 +1,7 @@
 <template>
   <IconForm icon="las la-map-signs">
     <div
-        class="v-input-collapse pa-6 d-flex flex-column"
+        class="v-input-collapse pa-6"
         :class="{ focused: isDragging === true }"
         data-cy="drop-zone"
         @dragover="dragover"
@@ -16,7 +16,6 @@
           type="file"
           multiple
           name="file"
-          @change="onChange"
       >
 
       <label
@@ -41,58 +40,50 @@
         File has wrong type.
       </label>
 
-      <v-list v-if="files.length > 0" data-cy="preview-container">
+      <v-list v-if="processedFiles.length > 0" data-cy="preview-container">
         <v-list-item
-            v-for="(file, index) in files"
+            v-for="(file, index) in processedFiles"
             :key="file.name"
             :value="index"
             color="primary"
             rounded="xl"
         >
-          <template v-slot:append>
-            <v-icon icon="las la-trash-alt"></v-icon>
-          </template>
-
-          <v-list-item-title>
-            <TMap :trip="file.route" :interactive="false"/>
-          </v-list-item-title>
+          <slot name="item" :item="file">
+            {{ file }}
+          </slot>
         </v-list-item>
       </v-list>
-
-
     </div>
   </IconForm>
 </template>
 
-<script setup lang="ts">
-import {extractCoordinatesFromGPX, type GPXRoute} from "shared";
-import {Buffer} from 'buffer';
-import {gpxRoute2MapLibreTrip, MapLibreTrip, type TripDto, TripDto2MapLibreTrip} from "~/types/route";
+<script setup lang="ts" generic="CustomFile extends File">
 
 interface Props {
   allowedFileExtensions?: string[];
   supportText?: string;
+
+  processor?: (file: CustomFile) => Promise<void>;
 }
 
-const {allowedFileExtensions = [], supportText = "Support Text"} = defineProps<Props>();
+const {allowedFileExtensions = [], supportText = "Support Text", processor = (file) => file} = defineProps<Props>();
 
-const emit = defineEmits<(e: "onFilesChanged", files: File[]) => void>();
+const emit = defineEmits<(e: "onFilesChanged", files: CustomFile[]) => void>();
 
 const isDragging: Ref<boolean> = ref(false);
 const isWrongFileType: Ref<boolean> = ref(false);
 
-interface GPXFile extends File {
-  route: MapLibreTrip;
-}
 
-const files: Ref<GPXFile[]> = ref([]);
+const files: Ref<CustomFile[]> = ref([]);
 
-/**
- *
- */
-function onChange() {
-  emit("onFilesChanged", files.value);
-}
+const processedFiles = computed(() => {
+  files.value.forEach((file: CustomFile) => {
+    processor(file);
+  });
+
+
+  return files.value;
+})
 
 /**
  * @param e
@@ -110,11 +101,6 @@ function dragleave() {
   isDragging.value = false;
 }
 
-async function fileToBuffer(file: File): Promise<Buffer> {
-  const arrayBuffer = await file.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-}
-
 /**
  * @param e
  */
@@ -124,19 +110,11 @@ async function drop(e: DragEvent) {
   }
 
   e.preventDefault();
-  const gpxFiles = Array.from(e.dataTransfer.files) as GPXFile[];
-  for (const file of gpxFiles) {
-
-    const found = allowedFileExtensions.find((extension) => {
-      return file.name.endsWith(`.${extension}`);
-    });
-
-
-    // extract and extend the file so that we can display the route
-    const buffer = await fileToBuffer(file);
-    const gpxRoute = extractCoordinatesFromGPX(buffer);
-    file.route = gpxRoute2MapLibreTrip(gpxRoute);
-
+  const droppedFiles = Array.from(e.dataTransfer.files) as CustomFile[];
+  for (const file of droppedFiles) {
+    const found = allowedFileExtensions.find((extension) =>
+        file.name.endsWith(`.${extension}`)
+    );
 
     isDragging.value = false;
 
@@ -146,17 +124,15 @@ async function drop(e: DragEvent) {
       setTimeout(() => {
         isWrongFileType.value = false;
       }, 3000);
-
-      console.log(":(");
       return;
     }
 
-
-    files.value.push(file as GPXFile);
-
+    // Await the processor before pushing the file
+    await processor(file);
+    files.value.push(file as CustomFile);
   }
 
-  onChange();
+  emit("onFilesChanged", files.value);
 }
 
 </script>
