@@ -7,7 +7,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 /**
  * Restricts uploading of route files to gpx.
  */
-
 const GPXUploadInterceptor = FileInterceptor('file', {
   fileFilter: (req, file, cb) => {
     if (

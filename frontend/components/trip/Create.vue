@@ -1,6 +1,6 @@
 <template>
   <v-card
-    title="Upload"
+    title="Create new trip"
     variant="outlined"
   >
     <v-card-text>
@@ -9,11 +9,6 @@
         variant="outlined"
         @value-changed="routeNameChanged"
       />
-      <DropZone
-        support-text="Trip Files (allowed are files of type gpx)"
-        :allowed-file-extensions="['gpx']"
-        @on-files-changed="onFilesChanged"
-      />
       <span
         v-if="status"
         data-cy="status-msg"
@@ -21,38 +16,32 @@
     </v-card-text>
     <v-card-actions>
       <v-btn
-        :readonly="files.length === 0"
         variant="outlined"
         data-cy="upload-btn"
         @click="upload"
       >
-        Upload Trip
+        Create
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import {useRouteUpload} from "~/composables/useUpload";
+import {useUpload} from "~/composables/useUpload";
 
 const status: Ref<string> = ref("");
 
-const files: Ref<File[]> = ref([]);
-
 const routeName: Ref<string> = ref("");
 
-/**
- * @param trips
- */
-function onFilesChanged(trips: File[]) {
-  files.value = trips;
-}
 
 /**
  *
  */
 async function upload() {
-  await useRouteUpload(routeName.value, files.value);
+  await useUpload('/api/trips', {
+    name: routeName.value,
+    layout: {}
+  });
 }
 
 /**
@@ -62,3 +51,7 @@ function routeNameChanged(newValue: string) {
   routeName.value = newValue;
 }
 </script>
+
+<style scoped lang="scss">
+
+</style>

@@ -1,6 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <v-row>
+  <v-row no-gutters>
     <v-col sm="9">
       <Sortable
         :options="{ animated: 150}"
@@ -66,7 +66,8 @@ import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
 
 const props = defineProps<{
-  grid: Grid
+  grid: Grid,
+  tripId: number,
 }>();
 
 defineEmits<{
@@ -92,6 +93,10 @@ function onUpdate(event: SortableEvent): void {
 
   gridModuleStore.moveRow(event.oldIndex, event.newIndex, props.grid);
 }
+
+watch(props.grid, async (newValue) => {
+  await useGridSave(newValue, props.tripId)
+})
 
 const selectedComponent = computed(() => {
   if (!selectedElement.value) {

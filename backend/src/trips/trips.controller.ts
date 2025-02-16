@@ -5,6 +5,7 @@ import {
   Body,
   Controller,
   Get,
+  Delete,
   HttpException,
   HttpStatus,
   Logger,
@@ -15,7 +16,7 @@ import {
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripsService } from './trips.service';
 import { TripDto } from './dto/trip.dto';
-import { UpdateTripDto } from './dto/update.trip.dto';
+import { Prisma } from '@prisma/client';
 
 @Controller('trips')
 export class TripsController {
@@ -30,6 +31,11 @@ export class TripsController {
     return Promise.resolve(trip);
   }
 
+  @Get()
+  async findAll(): Promise<TripDto[]> {
+    return await this.tripsService.trips();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<TripDto> {
     const trip = await this.tripsService.trip(id);
@@ -40,7 +46,7 @@ export class TripsController {
   @Patch(':id')
   async update(
     @Param('id') id: number,
-    @Body() updateTripDto: UpdateTripDto,
+    @Body() updateTripDto: Prisma.TripUpdateInput,
   ): Promise<TripDto> {
     try {
       return await this.tripsService.updateTrip(id, updateTripDto);
@@ -52,5 +58,10 @@ export class TripsController {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number): Promise<TripDto> {
+    return this.tripsService.deleteTrip(id);
   }
 }

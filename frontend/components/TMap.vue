@@ -1,8 +1,8 @@
 <template>
   <div
-    ref="mapContainer"
-    data-cy="map-container"
-    class="map"
+      ref="mapContainer"
+      data-cy="map-container"
+      class="map"
   />
 </template>
 
@@ -21,10 +21,16 @@ type LineStyle = {
 interface Props {
   trip?: MapLibreTrip | null
   segments?: MapLibreSegment[] | null,
-  lineColor?: Color
+  lineColor?: Color,
+  interactive?: boolean
 }
 
-const {trip = null, segments = null, lineColor = 'rgb(75, 192, 192)'} = defineProps<Props>()
+const {
+  trip = null,
+  segments = null,
+  lineColor = 'rgb(75, 192, 192)',
+  interactive = true
+} = defineProps<Props>()
 
 const map: Ref<Map | null> = ref(null);
 
@@ -91,6 +97,7 @@ onMounted(() => {
     container: mapContainer.value!,
     style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
     zoom: 16,
+    interactive
   });
 
   /*
@@ -126,6 +133,16 @@ onMounted(() => {
     }
 
     if (trip) {
+      for (const segment of trip.segments) {
+        addLine(
+            segment.id,
+            segment.coordinates.map((e) => e.toArray()),
+            {
+              width: 5,
+              color: lineColor,
+            }
+        );
+      }
       zoomToTrip(trip, false);
     }
   });

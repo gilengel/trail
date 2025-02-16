@@ -1,9 +1,10 @@
 <template>
   <v-container>
     <v-row
+      no-gutters
+      align="center"
       class="border layout-row"
       :class="isDraggingColumnSize ? 'dragging' : ''"
-      no-gutters
       @mouseenter="isHovering=true"
       @mouseleave="isHovering=false"
     >
@@ -26,8 +27,9 @@
           @click="gridModuleStore.deleteRow(rowIndex, props.grid)"
         />
       </v-col>
-      <v-col>
+      <v-col style="align-self: stretch">
         <v-row
+          no-gutters
           ref="container"
           class="fill-height"
           data-testid="layout-row"
@@ -309,6 +311,7 @@ $focus-border: solid $border-width $primary-color;
 
 
 .actions {
+  align-self: flex-start;
   display: flex;
   flex-direction: column;
   width: auto;
@@ -358,12 +361,11 @@ $splitter-handle-width: 1px;
 $splitter-width: 1px;
 .splitter {
   position: absolute;
-  top: $row-offset + $border-width;
   width: $splitter-handle-width;
-  height: 100%;
 
   cursor: ew-resize;
   transform: translateX(-50%);
+  height: 100%;
 
   &::before, &::after {
     position: absolute;
@@ -376,8 +378,6 @@ $splitter-width: 1px;
 
   &::before {
     width: 16px;
-
-
     background: transparent;
   }
 
@@ -395,5 +395,9 @@ $splitter-width: 1px;
   &::after {
     background: rgb(var(--v-theme-primary));
   }
+}
+
+.fill-height {
+  position: relative;
 }
 </style>

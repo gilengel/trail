@@ -6,7 +6,7 @@
     <v-card-text>
       <v-list lines="one">
         <v-list-item
-          v-for="trip in routes"
+          v-for="trip in trips"
           :key="trip.id"
           :title="trip.name"
           @click="onTripClicked(trip)"
@@ -15,7 +15,7 @@
 
 
       <h2
-        v-if="!networkError && routes?.length == 0"
+        v-if="!networkError && trips?.length == 0"
         data-cy="error-empty-text"
       >
         😞 Looks like you don't have any trips stored yet
@@ -31,20 +31,20 @@
 </template>
 
 <script setup lang="ts">
-import type {RouteWithoutSegments} from "~/types/types";
+import type {TripDto} from "~/types/route";
 
 const emit = defineEmits<(e: "selectedTripChanged", id: number) => void>();
 
 /**
  * @param trip
  */
-function onTripClicked(trip: RouteWithoutSegments) {
+function onTripClicked(trip: TripDto) {
   emit('selectedTripChanged', trip.id)
 }
 
 const networkError = ref(false);
 
-const {data: routes} = await useFetch<RouteWithoutSegments[]>("/api/routes")
+const {data: trips} = await useFetch<TripDto[]>("/api/trips")
 
 </script>
 

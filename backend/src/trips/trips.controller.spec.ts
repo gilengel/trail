@@ -62,6 +62,24 @@ describe('TripsController', () => {
     );
   });
 
+  it('should be returning all trips', async () => {
+    jest
+      .spyOn(service, 'trips')
+      .mockReturnValue(Promise.resolve([testData.dbTrip]));
+
+    expect(await controller.findAll()).toEqual([testData.dbTrip]);
+  });
+
+  it('should return "400" if the service produces an error', async () => {
+    jest
+      .spyOn(service, 'trips')
+      .mockRejectedValue(new Error('Some error message'));
+
+    const result = controller.findAll();
+    await expect(result).rejects.toThrow(
+      new HttpException('Some error message', HttpStatus.BAD_REQUEST),
+    );
+  });
   it('should be returning a single trip', async () => {
     jest
       .spyOn(service, 'trip')
@@ -73,6 +91,7 @@ describe('TripsController', () => {
   it('should update a trip and return its dto', async () => {
     const result: TripDto = {
       id: 0,
+      name: testData.tripName,
       layout: { test: "value"}
     };
 
@@ -95,5 +114,12 @@ describe('TripsController', () => {
         HttpStatus.NOT_FOUND,
       ),
     );
+  });
+
+  it('should delete a trip', async () => {
+    jest.spyOn(service, 'deleteTrip').mockReturnValue(Promise.resolve(testData.dbTrip));
+
+    const result = await controller.delete(0);
+    expect(result).toBe(testData.dbTrip);
   });
 });

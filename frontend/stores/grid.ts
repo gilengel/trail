@@ -9,6 +9,45 @@ import {MoveRow} from "~/stores/actions/moveRow";
 import {SetElement} from "~/stores/actions/setElement";
 import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 import {UpdateColumnWidth} from "~/stores/actions/updateColumnWidth";
+import * as uuid from "uuid";
+
+/**
+ * Creates a default grid consisting out of 3 rows with 2, 3 and 2 columns.
+ * Specially useful to show the user something after creating a new trip.
+ * @returns A new instance of a grid with 3 rows and 2, 3 and 2 column.
+ */
+export function createDefaultGrid() : Grid {
+    return {
+        id: uuid.v4(),
+
+            rows: [
+        {
+            id: uuid.v4(),
+            columns: [
+                {width: 4, id: uuid.v4()},
+                {width: 8, id: uuid.v4()},
+            ],
+        },
+
+        {
+            id: uuid.v4(),
+            columns: [
+                {width: 4, id: uuid.v4()},
+                {width: 4, id: uuid.v4()},
+                {width: 4, id: uuid.v4()},
+            ],
+        },
+
+        {
+            id: uuid.v4(),
+            columns: [
+                {width: 6, id: uuid.v4()},
+                {width: 6, id: uuid.v4()},
+            ],
+        },
+    ],
+    }
+}
 
 export const useGridStore = () =>
     defineStore('gridStore', () => {
@@ -76,7 +115,7 @@ export const useGridStore = () =>
          * @param column - The column from which you want to set the element.
          * @param element - The element that shall be displayed.
          */
-        async function setColumnElement(column: Column, element: Element) {
+        async function setColumnElement(column: Column, element: Element<unknown>) {
             await _undoRedoStore.execute(new SetElement(column, element));
         }
 
@@ -88,7 +127,7 @@ export const useGridStore = () =>
          * @param value - The new value for the attribute. Can be either string, number or boolean.
          */
         async function updateElementAttribute(
-            element: Element,
+            element: Element<unknown>,
             attribute: string,
             value: string | number | boolean | string[] | number[],
         ) {

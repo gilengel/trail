@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateRouteSegmentDto } from '../src/routes.segments/dto/create-route.segment.dto';
 import { Route } from '../src/routes/entity/route';
 import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
-import { GPXRoute, GPXRouteSegment } from 'src/routes/routes.parser';
-import { Trip } from '../src/trips/entity/trip';
+import { GPXRoute, GPXRouteSegment } from 'shared';
 import { CreateTripDto } from '../src/trips/dto/create.trip.dto';
+import { TripDto } from '../src/trips/dto/trip.dto'
 
 export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
@@ -20,6 +20,7 @@ export const updatedWkt = 'LINESTRING Z(30 10 0,10 30 0)';
 
 export const tripName = 'test_trip';
 export const routeId = 0;
+export const tripId = 0;
 export const routeName = 'test_route';
 export const routeDescription = 'test_route_description';
 export const updatedRouteDescription = 'updated_test_route_description';
@@ -67,6 +68,21 @@ export const route: RouteDto = {
   segments,
 };
 
+export const routeWithoutSegments: RouteWithoutSegmentsDto = {
+  id: routeId,
+  tripId: routeId,
+  name: routeName,
+  description: routeDescription
+};
+
+export const routeWithEmptySegments: RouteDto = {
+  id: routeId,
+  tripId: routeId,
+  name: routeName,
+  description: routeDescription,
+  segments: []
+};
+
 export const gpxRoute: GPXRoute = {
   name: routeName,
   segments: gpxSegments,
@@ -87,8 +103,14 @@ export const updatedRouteSegment: RouteSegmentDto = {
 
 export const newRoute: CreateRouteDto = {
   name: 'new_test_route',
-  description: '',
+  description: 'new test route description',
   segments,
+  tripId: 0
+};
+
+export const newRouteWithoutSegments: CreateRouteDto = {
+  name: 'new_test_route',
+  description: '',
   tripId: 0
 };
 
@@ -227,8 +249,9 @@ for (let i = 0; i < 3; i++) {
   });
 }
 
-export const dbTrip: Trip = {
+export const dbTrip: TripDto = {
   id: routeId,
+  name: tripName,
   layout: {},
 };
 
@@ -237,8 +260,9 @@ export const newTrip: CreateTripDto = {
   layout: {},
 };
 
-export const dbTripWithUpdatedLayout: Trip = {
+export const dbTripWithUpdatedLayout: TripDto = {
   id: routeId,
+  name: routeName,
   layout: { test: "value" },
 };
 export { multipleImages, multipleDbImages };

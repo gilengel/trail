@@ -11,11 +11,10 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreateRouteDto } from './dto/create.route.dto';
 import { RouteDto, RouteWithoutSegmentsDto } from './dto/route.dto';
-import { UpdateRouteDto } from './dto/update.route.dto';
 
 import * as conversion from '../conversion';
 
-import { GPXRoute, GPXRouteSegment } from './routes.parser';
+import { GPXRoute, GPXRouteSegment } from 'shared';
 import { Prisma } from '@prisma/client';
 import { CreateRouteSegmentDto } from '../routes.segments/dto/create-route.segment.dto';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
@@ -29,12 +28,10 @@ export class NoAttributesProvidedError extends Error {}
 export class RoutesService {
   constructor(
     private prisma: PrismaService,
-
     @Inject(forwardRef(() => RoutesSegmentsService))
     private segments: RoutesSegmentsService,
   ) {}
 
-   
   /**
    * Retrieve a route by its ID.
    * @param id - The ID of the route to retrieve.
@@ -64,7 +61,6 @@ export class RoutesService {
     return Promise.resolve(conversion.dbRoute2dto(result));
   }
 
-   
   /**
    * Get all stored routes from the database.
    * @returns A Promise that resolves to an array of RouteDto objects.
@@ -77,52 +73,83 @@ export class RoutesService {
     return Promise.resolve(routes);
   }
 
-   
+  /**
+   * Get all stored routes from the database that belong to one trip.
+   * @returns A Promise that resolves to an array of RouteDto objects.
+   */
+  async routesOfTrip(id: number): Promise<RouteWithoutSegmentsDto[]> {
+    const routes = await this.prisma.route.findMany({
+      where: {
+        tripId: id
+      },
+    })
+
+    return Promise.resolve(routes);
+  }
+
   /**
    * Create a new route in the database.
    * @param routeDto - The data for creating the new route.
    * @returns A Promise that resolves to a RouteDto object.
    */
   async createRoute(routeDto: CreateRouteDto): Promise<RouteDto> {
-    routeDto.segments.forEach((e) =>
-      this.segments.validateCoordinates(e.coordinates),
-    );
+    if (routeDto.segments) {
+      routeDto.segments.forEach((e) =>
+        this.segments.validateCoordinates(e.coordinates),
+      );
+    }
+
+    const data = {
+      name: routeDto.name ? routeDto.name : '',
+      description: routeDto.description ? routeDto.description : '',
+      trip: {
+        connect: { id: routeDto.tripId },
+      }
+    }
 
     const newRoute = await this.prisma.route.create({
-      data: {
-        name: routeDto.name,
-        description: routeDto.description,
-        trip: {
-          connect: { id: routeDto.tripId }
-        }
-      }
+      data
     });
 
-    const values = routeDto.segments.map((segment: CreateRouteSegmentDto) => {
-      const coordinatesString = conversion.numberArray2wkt(segment.coordinates);
+    if (routeDto.segments) {
+      const values = routeDto.segments.map((segment: CreateRouteSegmentDto) => {
+        const coordinatesString = conversion.numberArray2wkt(
+          segment.coordinates,
+        );
 
-      return Prisma.sql`(${segment.name}::text, ${newRoute.id}, '', ST_GeomFromText(${coordinatesString}::text, 4326))`;
-    });
+        return Prisma.sql`(${segment.name}::text, ${newRoute.id}, '', ST_GeomFromText(${coordinatesString}::text, 4326))`;
+      });
 
-    const segmentIds = await this.prisma.$queryRaw<[{ id: number }]>`
+      const segmentIds = await this.prisma.$queryRaw<[{ id: number }]>`
       INSERT INTO "RouteSegment" (name, "routeId", description, coordinates) 
       VALUES ${Prisma.join(values)} RETURNING id;`;
 
-    const segments: RouteSegmentDto[] = routeDto.segments.map((segment, i) => {
-      return {
-        id: segmentIds[i].id,
-        name: segment.name,
-        description: segment.description,
-        coordinates: segment.coordinates,
-      };
-    });
+      const segments: RouteSegmentDto[] = routeDto.segments.map(
+        (segment, i) => {
+          return {
+            id: segmentIds[i].id,
+            name: segment.name,
+            description: segment.description,
+            coordinates: segment.coordinates,
+          };
+        },
+      );
+
+      return Promise.resolve({
+        id: newRoute.id,
+        tripId: routeDto.tripId,
+        name: routeDto.name,
+        description: routeDto.description,
+        segments,
+      });
+    }
 
     return Promise.resolve({
       id: newRoute.id,
       tripId: routeDto.tripId,
       name: routeDto.name,
       description: routeDto.description,
-      segments,
+      segments: [],
     });
   }
 
@@ -136,9 +163,9 @@ export class RoutesService {
         name: route.name,
         description: '',
         trip: {
-          connect: { id: Number(tripId) }
-        }
-      }
+          connect: { id: Number(tripId) },
+        },
+      },
     });
 
     const values = route.segments.map((segment: GPXRouteSegment) => {
@@ -168,7 +195,6 @@ export class RoutesService {
     });
   }
 
-   
   /**
    * Update an existing route in the database.
    * @param id - The ID of the route to update.
@@ -177,7 +203,7 @@ export class RoutesService {
    */
   async updateRoute(
     id: number,
-    data: UpdateRouteDto,
+    data: Prisma.RouteUpdateInput,
   ): Promise<RouteWithoutSegmentsDto> {
     if (!data.name && !data.description) {
       return Promise.reject(new NoAttributesProvidedError());
@@ -218,7 +244,6 @@ export class RoutesService {
     return Promise.resolve(routes[0]);
   }
 
-   
   /**
    * Delete a route from the database.
    * @param id - The ID of the route to delete.

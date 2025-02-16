@@ -3,14 +3,12 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoutesSegmentsController } from './routes.segments.controller';
-import {
-  NotEnoughCoordinatesError,
-  RoutesSegmentsService,
-} from './routes.segments.service';
+import { NotEnoughCoordinatesError } from 'shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { NoAttributesProvidedError } from '../routes/routes.service';
 import * as testData from '../../test/data';
 import { PrismaService } from '../prisma.service';
+import { RoutesSegmentsService } from './routes.segments.service';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn().mockResolvedValue([]);

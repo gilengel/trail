@@ -9,6 +9,12 @@ import * as testData from '../data';
 import { json } from 'express';
 import { TripsModule } from '../../src/trips/trips.module';
 
+import { env } from 'node:process';
+import {
+  createTestTripWithoutRoutes,
+  createTestTripWithSingleRoute,
+} from '../routes/routes.e2e-spec';
+
 describe('TripsController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -28,15 +34,13 @@ describe('TripsController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    const result = await prisma.$queryRaw<[{ id: number }]>`
-        INSERT INTO "Trip" (layout)
-        VALUES ('{}') RETURNING id`;
-    tripId = Number(result[0].id);
-
+    tripId = await createTestTripWithoutRoutes(prisma);
   });
 
   afterEach(async () => {
-    await prisma.$queryRaw`DELETE FROM "Trip" WHERE id=${tripId}`;
+    await prisma.trip.delete({
+      where: { id: tripId },
+    });
   });
 
   it('/trips/ (POST)', () => {
@@ -51,6 +55,10 @@ describe('TripsController (e2e)', () => {
       });
   });
 
+  it('/trips/ (GET)', () => {
+    return request(app.getHttpServer()).get('/trips').expect(200);
+  });
+
   it('/trips/:id (GET)', () => {
     return request(app.getHttpServer()).get(`/trips/${tripId}`).expect(200);
   });
@@ -63,23 +71,29 @@ describe('TripsController (e2e)', () => {
     return request(app.getHttpServer())
       .patch(`/trips/${tripId}`)
       .send({
-        layout: { row: [ { column: 'id' }, ]}
+        layout: { row: [{ column: 'id' }] },
       })
       .expect(200)
       .expect((res) => {
         expect(res.body).toHaveProperty('layout', {
-          row: [
-            { column: 'id' },
-          ]
+          row: [{ column: 'id' }],
         });
       });
   });
+
 
   it('/trips (PATCH) returns "404" for a non existing trip', () => {
     return request(app.getHttpServer())
       .patch(`/trips/123456789`)
       .send({
-        layout: { row: [ { column: 'id' }, ]}
-      }).expect(404);
+        layout: { row: [{ column: 'id' }] },
+      })
+      .expect(404);
+  });
+
+
+  it('/trips/ (DELETE)', async () => {
+    const tempTripId = await createTestTripWithoutRoutes(prisma);
+    await request(app.getHttpServer()).delete(`/trips/${tempTripId}`).expect(200);
   });
 });

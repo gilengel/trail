@@ -1,0 +1,23 @@
+{
+  "name": "shared",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "description": "",
+  "dependencies": {
+    "fast-xml-parser": "^4.5.1"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.6"
+  }
+}

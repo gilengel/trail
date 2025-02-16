@@ -6,13 +6,13 @@ import { ConcealedCreateRouteSegmentDto } from '../../routes.segments/dto/create
 
 export class CreateRouteDto {
   @ApiProperty()
-  name: string;
+  name?: string;
 
   @ApiProperty()
-  description: string;
+  description?: string;
 
   @ApiProperty()
-  segments: ConcealedCreateRouteSegmentDto[];
+  segments?: ConcealedCreateRouteSegmentDto[];
 
   @ApiProperty()
   tripId: number;

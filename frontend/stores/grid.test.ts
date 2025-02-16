@@ -78,7 +78,7 @@ describe('GridModuleStore', () => {
 
     it('calls execute with SetElement when setting a column element', async () => {
         const column = {} as Column;
-        const element = {} as Element;
+        const element = {} as Element<unknown>;
 
         await store.setColumnElement(column, element);
 
@@ -86,7 +86,7 @@ describe('GridModuleStore', () => {
     });
 
     it('calls execute with UpdateElementAttribute when updating an element attribute', async () => {
-        const element = {} as Element;
+        const element = {} as Element<unknown>;
 
         await store.updateElementAttribute(element, 'testAttribute', 'newValue');
 

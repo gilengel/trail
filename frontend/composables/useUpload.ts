@@ -8,7 +8,7 @@
  * @param body - The data you want to upload.
  */
 export async function useUpload(url: string, body: object) {
-    await $fetch(url, {
+   return await $fetch(url, {
         method: "POST",
         body,
     });

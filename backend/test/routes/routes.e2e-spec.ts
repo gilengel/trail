@@ -10,18 +10,19 @@ import * as testData from '../data';
 import { json } from 'express';
 
 import { env } from 'node:process';
+import { newRouteWithoutSegments } from '../data';
 
 /**
  * Creates a trip in the database that has no related routes.
  * @param prisma - Prisma instance.
  * @returns ID of the created trip.
  */
-export async function createTestTripWithoutRoutes(prisma) : Promise<number> {
+export async function createTestTripWithoutRoutes(prisma): Promise<number> {
   const trip = await prisma.trip.create({
     data: {
       name: 'e2e trip',
       layout: {}, // Provide a valid JSON object for layout
-    }
+    },
   });
 
   return trip.id;
@@ -32,7 +33,9 @@ export async function createTestTripWithoutRoutes(prisma) : Promise<number> {
  * @param prisma - Prisma instance.
  * @returns ID of the created trip.
  */
-export async function createTestTripWithSingleRoute(prisma) : Promise<{ tripId: number, routeId: number }> {
+export async function createTestTripWithSingleRoute(
+  prisma,
+): Promise<{ tripId: number; routeId: number }> {
   const trip = await prisma.trip.create({
     data: {
       name: 'e2e trip',
@@ -40,23 +43,24 @@ export async function createTestTripWithSingleRoute(prisma) : Promise<{ tripId: 
       routes: {
         create: [
           {
-            name: "e2e_test_route",
-            description: "A sample route",
-          }
-        ]
-      }
+            name: 'e2e_test_route',
+            description: 'A sample route',
+          },
+        ],
+      },
     },
     include: {
-      routes: true
-    }
+      routes: true,
+    },
   });
 
   const tripId = trip.id;
   const routeId = trip.routes[0].id;
 
   testData.newRoute.tripId = tripId;
+  testData.newRouteWithoutSegments.tripId = tripId;
 
-  return { tripId, routeId }
+  return { tripId, routeId };
 }
 
 describe('RoutesController (e2e)', () => {
@@ -65,7 +69,6 @@ describe('RoutesController (e2e)', () => {
 
   let tripId: number;
   let routeId: number;
-
 
   // For testing with a broken database. For example if the schema is not applied.
   describe('without working database', () => {
@@ -114,15 +117,20 @@ describe('RoutesController (e2e)', () => {
       routeId = data.routeId;
     });
 
-
     afterEach(async () => {
       await prisma.trip.delete({
-        where: { id: tripId }
+        where: { id: tripId },
       });
     });
 
     it('/routes/ (GET)', () => {
       return request(app.getHttpServer()).get('/routes').expect(200);
+    });
+
+    it('/routes/trip/:id (GET)', () => {
+      return request(app.getHttpServer())
+        .get(`/routes/trip/${tripId}`)
+        .expect(200);
     });
 
     it('/routes/:id (GET)', () => {
@@ -138,7 +146,6 @@ describe('RoutesController (e2e)', () => {
       return request(app.getHttpServer()).get(`/routes/123456789`).expect(404);
     });
 
-
     it('/routes/ (POST)', () => {
       return request(app.getHttpServer())
         .post(`/routes`)
@@ -146,6 +153,22 @@ describe('RoutesController (e2e)', () => {
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('name', 'new_test_route');
+
+          await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+        });
+    });
+
+    it('/routes/ (POST) with empty route', () => {
+      return request(app.getHttpServer())
+        .post(`/routes`)
+        .send({
+          tripId,
+        })
+        .expect(201)
+        .expect(async (res) => {
+          expect(res.body).toHaveProperty('segments', []);
+          expect(res.body).not.toHaveProperty('description', '');
+          expect(res.body).not.toHaveProperty('description', '');
 
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
@@ -285,7 +308,7 @@ describe('RoutesController (e2e)', () => {
 
     it('/routes/ (DELETE)', () => {
       return request(app.getHttpServer())
-        .delete(`/routes/${tripId}`)
+        .delete(`/routes/${routeId}`)
         .expect(200);
     });
   });

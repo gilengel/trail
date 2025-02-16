@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma.service';
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripDto } from './dto/trip.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { dbTripWithUpdatedLayout } from '../../test/data';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');
@@ -19,7 +20,9 @@ jest.mock('@prisma/client', () => {
         trip: {
           update: () => { return Promise.resolve(testData.dbTripWithUpdatedLayout)},
           create: jest.fn(),
-          findUnique: jest.fn()
+          findUnique: jest.fn(),
+          findMany: jest.fn(),
+          delete: jest.fn()
         }
       };
     }),
@@ -52,18 +55,19 @@ describe('TripsService', () => {
 
     jest
       .spyOn(prisma.trip, 'create')
-      .mockResolvedValueOnce({ id: 0, layout: {} })
+      .mockResolvedValueOnce({ id: 0, name: testData.tripName, layout: {} })
 
 
     const result = await service.createTrip(trip);
 
     expect(result).toStrictEqual({
       id: 0,
+      name: testData.tripName,
       layout: {},
     });
   });
 
-  it('should return a route stored in the database by id', async () => {
+  it('should return a trip stored in the database by id', async () => {
     jest
       .spyOn(prisma.trip, 'findUnique')
       .mockResolvedValueOnce(testData.dbTrip);
@@ -72,10 +76,18 @@ describe('TripsService', () => {
     expect(result).toStrictEqual(testData.dbTrip);
   });
 
+  it('should return all trips stored in the database', async () => {
+    jest.spyOn(prisma.trip, 'findMany').mockResolvedValueOnce([]);
+
+    const result = await service.trips();
+
+    expect(result).toStrictEqual([]);
+  });
+
   it('should return "404" if no trip is stored in the database by the given id', async () => {
     jest
       .spyOn(prisma.trip, 'findUnique')
-      .mockRejectedValue(new HttpException('', HttpStatus.NOT_FOUND));
+      .mockResolvedValue(null);
 
 
     const result = service.trip(0);
@@ -89,8 +101,8 @@ describe('TripsService', () => {
 
   it('should update the layout of a trip', async () => {
     jest
-      .spyOn(prisma, '$queryRaw')
-      .mockResolvedValue([testData.dbRouteWithUpdatedName]);
+      .spyOn(prisma.trip, 'update')
+      .mockResolvedValue(testData.dbTripWithUpdatedLayout);
 
     const result = await service.updateTrip(0, {
       layout: { test: "value" }
@@ -98,9 +110,17 @@ describe('TripsService', () => {
 
     const expected = {
       id: testData.routeId,
+      name: testData.routeName,
       layout: { test: "value" }
     };
 
     expect(result).toStrictEqual(expected);
+  });
+
+  it('should delete a trip from the db and return it', async () => {
+    jest.spyOn(prisma.trip, 'delete').mockResolvedValue(testData.dbTrip);
+
+    const result = await service.deleteTrip(0);
+    expect(result).toBe(testData.dbTrip);
   });
 });

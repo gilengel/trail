@@ -22,10 +22,10 @@ import {
   RouteWithMultipleFilesDTO,
   RouteWithoutSegmentsDto,
 } from './dto/route.dto';
-import { UpdateRouteDto } from './dto/update.route.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { GPXRoute, extractCoordinatesFromGPX } from './routes.parser';
+import { GPXRoute, extractCoordinatesFromGPX} from 'shared';
 import { ApiConsumes } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 
 @Controller('routes')
 export class RoutesController {
@@ -40,6 +40,11 @@ export class RoutesController {
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @Get('trip/:id')
+  async findAllOfTrip(@Param('id') id: number) : Promise<RouteWithoutSegmentsDto[]> {
+    return await this.routeService.routesOfTrip(Number(id));
   }
 
   @Get(':id')
@@ -91,14 +96,13 @@ export class RoutesController {
   @Patch(':id')
   async update(
     @Param('id') id: number,
-    @Body() updateRouteDto: UpdateRouteDto,
+    @Body() updateRouteDto: Prisma.RouteUpdateInput,
   ): Promise<RouteWithoutSegmentsDto> {
     try {
-      const updatedRow = await this.routeService.updateRoute(
+      return await this.routeService.updateRoute(
         id,
         updateRouteDto,
       );
-      return updatedRow;
     } catch (e) {
       this.logger.error(e);
 

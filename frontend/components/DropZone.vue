@@ -1,81 +1,73 @@
 <template>
-  <div
-    class="v-input-collapse pa-6 border-thin d-flex flex-column"
-    :class="{ focused: isDragging === true }"
-    data-cy="drop-zone"
-    @dragover="dragover"
-    @dragleave="dragleave"
-    @drop="drop"
-  >
-    <label v-if="supportText">{{ supportText }}</label>
-    <input
-      id="fileInput"
-      ref="file"
-      data-cy="file-input"
-      type="file"
-      multiple
-      name="file"
-      @change="onChange"
+  <IconForm icon="las la-map-signs">
+    <div
+        class="v-input-collapse pa-6 d-flex flex-column"
+        :class="{ focused: isDragging === true }"
+        data-cy="drop-zone"
+        @dragover="dragover"
+        @dragleave="dragleave"
+        @drop="drop"
     >
-
-    <label
-      v-if="isDragging"
-      for="fileInput"
-      data-cy="release-msg"
-    >
-      Release to drop files here.
-    </label>
-    <label
-      v-else
-      for="fileInput"
-      data-cy="release-msg"
-    >
-      Drop files here or <u>click here</u> to upload.
-    </label>
-
-    <label
-      v-if="isWrongFileType"
-      data-cy="wrong-file-extension"
-    >
-      File has wrong type.
-    </label>
-
-    <slot
-      name="container"
-      :files="files"
-    >
-      <ul
-        v-if="files.length"
-        data-cy="preview-container"
-        class="preview-container mt-4"
+      <label v-if="supportText">{{ supportText }}</label>
+      <input
+          id="fileInput"
+          ref="file"
+          data-cy="file-input"
+          type="file"
+          multiple
+          name="file"
+          @change="onChange"
       >
-        <li
-          v-for="(file, index) in files"
-          :key="file.name"
-          class="preview-card"
-          :class="{ deleting: isDragging === true }"
+
+      <label
+          v-if="isDragging"
+          for="fileInput"
+          data-cy="release-msg"
+      >
+        Release to drop files here.
+      </label>
+      <label
+          v-else
+          for="fileInput"
+          data-cy="release-msg"
+      >
+        Drop files here or <u>click here</u> to upload.
+      </label>
+
+      <label
+          v-if="isWrongFileType"
+          data-cy="wrong-file-extension"
+      >
+        File has wrong type.
+      </label>
+
+      <v-list v-if="files.length > 0" data-cy="preview-container">
+        <v-list-item
+            v-for="(file, index) in files"
+            :key="file.name"
+            :value="index"
+            color="primary"
+            rounded="xl"
         >
-          <slot
-            name="item"
-            :file="file"
-            :index="index"
-          >
-            <div>
-              <span>
-                {{ file.name }}
-              </span>
-              <span>
-                {{ Math.round(file.size / 1000) + "kb" }}
-              </span>
-            </div>
-          </slot>
-        </li>
-      </ul>
-    </slot>
-  </div>
+          <template v-slot:append>
+            <v-icon icon="las la-trash-alt"></v-icon>
+          </template>
+
+          <v-list-item-title>
+            <TMap :trip="file.route" :interactive="false"/>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+
+
+    </div>
+  </IconForm>
 </template>
 
 <script setup lang="ts">
+import {extractCoordinatesFromGPX, type GPXRoute} from "shared";
+import {Buffer} from 'buffer';
+import {gpxRoute2MapLibreTrip, MapLibreTrip, type TripDto, TripDto2MapLibreTrip} from "~/types/route";
 
 interface Props {
   allowedFileExtensions?: string[];
@@ -88,7 +80,12 @@ const emit = defineEmits<(e: "onFilesChanged", files: File[]) => void>();
 
 const isDragging: Ref<boolean> = ref(false);
 const isWrongFileType: Ref<boolean> = ref(false);
-const files: Ref<File[]> = ref([]);
+
+interface GPXFile extends File {
+  route: MapLibreTrip;
+}
+
+const files: Ref<GPXFile[]> = ref([]);
 
 /**
  *
@@ -113,21 +110,33 @@ function dragleave() {
   isDragging.value = false;
 }
 
+async function fileToBuffer(file: File): Promise<Buffer> {
+  const arrayBuffer = await file.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
+
 /**
  * @param e
  */
-function drop(e: DragEvent) {
+async function drop(e: DragEvent) {
   if (!e.dataTransfer?.files) {
     return;
   }
 
   e.preventDefault();
-  for (let i = 0; i < e.dataTransfer?.files.length; ++i) {
-    const file: File = e.dataTransfer.files[i];
+  const gpxFiles = Array.from(e.dataTransfer.files) as GPXFile[];
+  for (const file of gpxFiles) {
 
     const found = allowedFileExtensions.find((extension) => {
       return file.name.endsWith(`.${extension}`);
     });
+
+
+    // extract and extend the file so that we can display the route
+    const buffer = await fileToBuffer(file);
+    const gpxRoute = extractCoordinatesFromGPX(buffer);
+    file.route = gpxRoute2MapLibreTrip(gpxRoute);
+
 
     isDragging.value = false;
 
@@ -138,10 +147,13 @@ function drop(e: DragEvent) {
         isWrongFileType.value = false;
       }, 3000);
 
+      console.log(":(");
       return;
     }
 
-    files.value.push(e.dataTransfer.files[i]);
+
+    files.value.push(file as GPXFile);
+
   }
 
   onChange();

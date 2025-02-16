@@ -9,7 +9,7 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripDto } from './dto/trip.dto';
-import { UpdateTripDto } from './dto/update.trip.dto';
+import { Prisma } from '@prisma/client'
 
 
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
@@ -30,10 +30,7 @@ export class TripsService {
       },
     })
 
-    return Promise.resolve({
-      id: trip.id,
-      layout: tripDto.layout,
-    });
+    return Promise.resolve(trip);
   }
 
   /**
@@ -42,20 +39,30 @@ export class TripsService {
    * @returns A Promise that resolves to a TripDto object or null if not found.
    */
   async trip(id: number): Promise<TripDto | null> {
-    try {
-      const trip = await this.prisma.trip.findUnique({
-        where: {
-          id
-        },
-      })
+    const trip = await this.prisma.trip.findUnique({
+      where: {
+        id: Number(id)
+      },
+    })
 
-      return Promise.resolve(trip as TripDto);
-    }catch{
+    if(!trip){
       throw new HttpException(
         `Trip with id ${id} does not exist.`,
         HttpStatus.NOT_FOUND,
       );
     }
+
+    return trip;
+  }
+
+  /**
+   * Get all stored trips from the database.
+   * @returns A Promise that resolves to an array of RouteDto objects.
+   */
+  async trips(): Promise<TripDto[]> {
+    const trips = await this.prisma.trip.findMany()
+
+    return Promise.resolve(trips as TripDto[]);
   }
 
   /**
@@ -66,17 +73,28 @@ export class TripsService {
    */
   async updateTrip(
     id: number,
-    data: UpdateTripDto,
+    data: Prisma.TripUpdateInput,
   ): Promise<TripDto> {
     const updatedTrip = await this.prisma.trip.update({
       where: {
         id: Number(id)
       },
-      data: {
-        layout: data.layout
-      }
+      data
     });
 
-    return Promise.resolve({ id: updatedTrip.id, layout: updatedTrip.layout as object });
+    return Promise.resolve(updatedTrip);
+  }
+
+  /**
+   * Delete a route from the database.
+   * @param id - The ID of the route to delete.
+   * @returns A Promise that resolves to a RouteDto object representing the deleted route.
+   */
+  async deleteTrip(id: number): Promise<TripDto> {
+    return await this.prisma.trip.delete({
+      where: {
+        id: Number(id)
+      },
+    })
   }
 }

@@ -10,8 +10,9 @@ import { PrismaService } from '../prisma.service';
 import * as conversion from '../conversion';
 import { RouteDto } from './dto/route.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { GPXRoute } from './routes.parser';
+import { GPXRoute } from 'shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
+import { routeWithEmptySegments, routeWithoutSegments } from '../../test/data';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');
@@ -21,6 +22,7 @@ jest.mock('@prisma/client', () => {
         $queryRaw: a,
         route: {
           create: jest.fn(),
+          findMany: jest.fn()
         },
       };
     }),
@@ -101,6 +103,13 @@ describe('RoutesService', () => {
     expect(result).toStrictEqual([]);
   });
 
+  it('should return all routes of a trip stored in the database', async () => {
+    jest.spyOn(prisma.route, 'findMany').mockResolvedValueOnce([]);
+
+    const result = await service.routesOfTrip(0);
+
+    expect(result).toStrictEqual([]);
+  });
 
   it('should store a route in the database and return it', async () => {
     jest
@@ -119,6 +128,21 @@ describe('RoutesService', () => {
     const result: RouteDto = await service.createRoute(testData.route);
 
     expect(result).toStrictEqual(testData.route);
+  });
+
+  it('should store a route in the database without segments and return it', async () => {
+    jest
+      .spyOn(prisma.route, 'create')
+      .mockResolvedValueOnce({
+        id: testData.routeId,
+        name: testData.route.name,
+        description: testData.route.description,
+        tripId: testData.route.tripId,
+      })
+
+    const result: RouteDto = await service.createRoute(testData.routeWithoutSegments);
+
+    expect(result).toStrictEqual(testData.routeWithEmptySegments);
   });
 
   it('should fail to create a new route if the db query does not return the newly created entity', async () => {

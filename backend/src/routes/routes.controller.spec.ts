@@ -9,13 +9,21 @@ import * as testData from '../../test/data';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { mockFileFromBuffer } from '../images/test/test.helper';
-
-import * as parser from './routes.parser';
 import { RouteDto } from './dto/route.dto';
-import {
-  NotEnoughCoordinatesError,
-  RoutesSegmentsService,
-} from '../routes.segments/routes.segments.service';
+import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
+import { NotEnoughCoordinatesError } from 'shared';
+
+import * as parser from 'shared';
+
+jest.mock('shared', () => {
+  const actualModule = jest.requireActual('shared');
+  return {
+    __esModule: true,
+    ...actualModule,
+    extractCoordinatesFromGPX: jest.fn(),
+  };
+});
+
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn().mockResolvedValue([]);
@@ -54,6 +62,14 @@ describe('RoutesController', () => {
       .mockReturnValue(Promise.resolve([testData.route]));
 
     expect(await controller.findAll()).toEqual([testData.route]);
+  });
+
+  it('should be returning a list of all routes for one trip', async () => {
+    jest
+      .spyOn(service, 'routesOfTrip')
+      .mockReturnValue(Promise.resolve([testData.route]));
+
+    expect(await controller.findAllOfTrip(testData.route.id)).toEqual([testData.route]);
   });
 
   it('should return "400" if the service produces an error', async () => {

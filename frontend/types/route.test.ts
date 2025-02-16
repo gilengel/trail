@@ -1,9 +1,9 @@
 import {describe, it, expect} from "vitest";
-import {MapLibreTrip, MapLibreSegment, LngLatWithElevation, type TripDto, TripDto2MapLibreTrip} from "~/types/route";
+import {MapLibreTrip, MapLibreSegment, LngLatWithElevation, type RouteDto, TripDto2MapLibreTrip} from "~/types/route";
 
 describe("MapLibreTrip", () => {
     it("converts a trip dto to a MapLibreTrip", () => {
-        const tripDto: TripDto = {
+        const tripDto: RouteDto = {
             id: 0,
             name: 'test trip dto',
             description: 'test trip description',
@@ -28,7 +28,7 @@ describe("MapLibreTrip", () => {
     })
 
     it("sets the name correctly", () => {
-        const tripDto: TripDto = {
+        const tripDto: RouteDto = {
             id: 0,
             name: 'test trip dto',
             description: 'test trip description',
@@ -42,7 +42,7 @@ describe("MapLibreTrip", () => {
     })
 
     it("sets the description correctly", () => {
-        const tripDto: TripDto = {
+        const tripDto: RouteDto = {
             id: 0,
             name: 'test trip dto',
             description: 'test trip description',

@@ -24,7 +24,7 @@ model Location {
 
 model Trip {
   id     Int     @id @default(autoincrement())
-  name   String
+  name   String  @default("")
   layout Json
   routes Route[]
 }

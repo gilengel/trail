@@ -1,14 +1,23 @@
 import {LngLat, LngLatBounds} from "maplibre-gl";
 import {distance} from "@turf/turf";
+import type {Grid} from "~/types/grid";
+import {type GPXRoute, type GPXRouteSegment} from "shared";
+
 
 export interface TripDto {
     id: number;
-    name: string;
-    description?: string;
-    segments: TripSegmentDto[];
+    name?: string;
+    layout: Grid;
 }
 
-export interface TripSegmentDto {
+export interface RouteDto {
+    id: number;
+    name: string;
+    description?: string;
+    segments: RouteSegmentDto[];
+}
+
+export interface RouteSegmentDto {
     id: number;
     name: string;
     description?: string;
@@ -31,7 +40,7 @@ export class LngLatWithElevation extends LngLat {
  * @param trip - The trip DTO as retrieved from the backend.
  * @returns Trip in map component format.
  */
-export function TripDto2MapLibreTrip(trip: TripDto): MapLibreTrip {
+export function TripDto2MapLibreTrip(trip: RouteDto): MapLibreTrip {
     return new MapLibreTrip(
         trip.id,
         trip.name,
@@ -43,12 +52,47 @@ export function TripDto2MapLibreTrip(trip: TripDto): MapLibreTrip {
 }
 
 /**
+ * Converts a route gpx to the internal format so that it can be displayed on the map component.
+ * @param trip - The trip DTO as retrieved from the backend.
+ * @returns Trip in map component format.
+ */
+export function gpxRoute2MapLibreTrip(trip: GPXRoute): MapLibreTrip {
+    return new MapLibreTrip(
+        Math.random(),
+        trip.name ? trip.name : '',
+        trip.segments.map((segment) =>
+            gpxRouteSegmentDto2MapLibreRouteSegment(segment)
+        )
+    );
+}
+
+/**
+ * Converts a trip segment DTO to the internal format so that it can be displayed on the map component.
+ * @param tripSegment - The trip segment DTO as retrieved from the backend.
+ * @returns Segment in map component format.
+ */
+export function gpxRouteSegmentDto2MapLibreRouteSegment(
+    tripSegment: GPXRouteSegment
+): MapLibreSegment {
+    return new MapLibreSegment(
+        Math.random(),
+        tripSegment.name,
+
+        // not sure why but LibreMap switches longitude and latitude...
+        tripSegment.coordinates.map(
+            (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
+        ),
+        "#000"
+    );
+}
+
+/**
  * Converts a trip segment DTO to the internal format so that it can be displayed on the map component.
  * @param tripSegment - The trip segment DTO as retrieved from the backend.
  * @returns Segment in map component format.
  */
 export function RouteSegmentDto2MapLibreRouteSegment(
-    tripSegment: TripSegmentDto
+    tripSegment: RouteSegmentDto
 ): MapLibreSegment {
     return new MapLibreSegment(
         tripSegment.id,
