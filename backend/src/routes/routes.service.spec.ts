@@ -12,7 +12,6 @@ import { RouteDto } from './dto/route.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { GPXRoute } from 'shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
-import { routeWithEmptySegments, routeWithoutSegments } from '../../test/data';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');

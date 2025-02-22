@@ -67,15 +67,15 @@ export class RoutesSegmentsService {
     });
   }
 
-  async findAllForRoute(routeId: number): Promise<RouteSegment[] | null> {
+  async findAllForRoute(routeId: number): Promise<RouteSegmentDto[] | null> {
     const segments = await this.prisma.$queryRaw<
       RouteSegment[]
     >`SELECT "RouteSegment".id, "RouteSegment".name, "RouteSegment".description, ST_AsText(coordinates) AS coordinates 
     FROM "RouteSegment" 
-    JOIN "Route" ON "RouteSegment"."routeId" = "Route".id
-    WHERE "Route".id = ${routeId}::int`;
+    WHERE "routeId" = ${routeId}::int`;
 
-    return Promise.resolve(segments);
+    const segmentDTOs = segments.map((segment) => conversion.dbRouteSegment2dto(segment));
+    return Promise.resolve(segmentDTOs);
   }
 
    

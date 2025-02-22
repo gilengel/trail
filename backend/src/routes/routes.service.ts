@@ -49,16 +49,19 @@ export class RoutesService {
       );
     }
 
-    const segments = await this.segments.findAllForRoute(id);
-    const result: Route = {
+    const segmentDTOs = await this.segments.findAllForRoute(id);
+    const route: Route = {
       id,
       tripId: routes[0].tripId,
       name: routes[0].name,
       description: routes[0].description,
-      segments,
+      segments: [],
     };
 
-    return Promise.resolve(conversion.dbRoute2dto(result));
+    const routeDto = conversion.dbRoute2dto(route);
+    routeDto.segments = segmentDTOs;
+
+    return Promise.resolve(routeDto);
   }
 
   /**
@@ -75,6 +78,7 @@ export class RoutesService {
 
   /**
    * Get all stored routes from the database that belong to one trip.
+   * @param id - The id of the trip you want to get the routes of.
    * @returns A Promise that resolves to an array of RouteDto objects.
    */
   async routesOfTrip(id: number): Promise<RouteWithoutSegmentsDto[]> {

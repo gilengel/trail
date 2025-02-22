@@ -8,9 +8,7 @@ import { RoutesModule } from '../../src/routes/routes.module';
 import { PrismaService } from '../../src/prisma.service';
 import * as testData from '../data';
 import { json } from 'express';
-
 import { env } from 'node:process';
-import { newRouteWithoutSegments } from '../data';
 
 /**
  * Creates a trip in the database that has no related routes.

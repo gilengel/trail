@@ -9,7 +9,6 @@ import { PrismaService } from '../prisma.service';
 import { CreateTripDto } from './dto/create.trip.dto';
 import { TripDto } from './dto/trip.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { dbTripWithUpdatedLayout } from '../../test/data';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');

@@ -42,14 +42,8 @@ describe('RoutesSegmentsController (e2e)', () => {
               'e2e_test_route_segment', 
               'e2e_test_route_segment_description', 
                ST_GeomFromText('LINESTRING Z(-71.160281 42.258729 0, -71.160837 42.259113 0,  -71.161144 42.25932 0)', 4326)
-               ) RETURNING id`;
+               ) RETURNING id, "routeId"`;
     routeSegmentId = segmentResult[0].id;
-
-    await prisma.$queryRaw`
-        SELECT "RouteSegment".id, "RouteSegment".name, ST_AsText(coordinates) AS coordinates 
-        FROM "RouteSegment" 
-        JOIN "Route" ON "RouteSegment"."routeId" = "Route".id
-        WHERE "routeId" = ${routeId}`;
   });
 
   afterEach(async () => {
@@ -71,6 +65,20 @@ describe('RoutesSegmentsController (e2e)', () => {
         ]);
       });
   });
+
+    it('/routes/segment/route (GET) return all the segments related to a route', () => {
+        return request(app.getHttpServer())
+            .get(`/routes/segment/route/${routeId}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body[0]).toHaveProperty('name', 'e2e_test_route_segment');
+                expect(res.body[0]).toHaveProperty('coordinates', [
+                    [-71.160281, 42.258729, 0],
+                    [-71.160837, 42.259113, 0],
+                    [-71.161144, 42.25932, 0],
+                ]);
+            });
+    });
 
   it('/routes/segment (GET) return the segment length', () => {
     return request(app.getHttpServer())

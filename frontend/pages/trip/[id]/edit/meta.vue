@@ -45,6 +45,7 @@
               </v-col>
             </v-row>
 
+
             <RouteMeta v-for="route in routes" :key="route.name" :route @deleted="removeRoute"></RouteMeta>
           </v-container>
         </v-form>
@@ -55,8 +56,8 @@
 
 <script setup lang="ts">
 import {useTripStore} from "~/stores/trip";
-import type {TripDto} from "~/types/route";
-import type {RouteDto} from "~/types/route.dto";
+import {MapLibreSegment, RouteSegmentDto2MapLibreRouteSegment, type TripDto} from "~/types/route";
+import type {RouteDto, RouteSegmentDto} from "~/types/route.dto";
 
 const route = useRoute();
 const router = useRouter();
@@ -66,6 +67,21 @@ const tripStore = useTripStore();
 const trip: TripDto | null = await tripStore.get(Number(route.params.id));
 
 const routes: Ref<RouteDto[]> = ref(await getRoutes());
+const routesWithSegments: Ref<RouteDto[][]> = ref([]);
+
+watch(
+    () => routes.value.map(route => route.id),
+    async () => {
+      if (!routes.value.length) return; // Prevent unnecessary API calls if routes are empty
+
+      const segmentPromises = routes.value.map(async (route: RouteDto) => {
+        const segments = await $fetch<RouteSegmentDto[]>(`/api/routes/segment/route/${route.id}`);
+        return {...route, segments}; // Return a new object instead of mutating directly
+      });
+
+      routes.value = await Promise.all(segmentPromises); // Update the routes list reactively
+    },
+    {deep: true, immediate: true, once: true});
 
 const changedRouteData: Ref<{
   name?: string;

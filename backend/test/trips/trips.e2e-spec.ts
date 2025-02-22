@@ -9,10 +9,8 @@ import * as testData from '../data';
 import { json } from 'express';
 import { TripsModule } from '../../src/trips/trips.module';
 
-import { env } from 'node:process';
 import {
-  createTestTripWithoutRoutes,
-  createTestTripWithSingleRoute,
+  createTestTripWithoutRoutes
 } from '../routes/routes.e2e-spec';
 
 describe('TripsController (e2e)', () => {

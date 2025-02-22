@@ -49,6 +49,14 @@ describe('RoutesSegmentsController', () => {
     expect(await controller.findOne(0)).toEqual(testData.routeSegment);
   });
 
+  it('should be returning all route segments related to a route', async () => {
+    jest
+        .spyOn(service, 'findAllForRoute')
+        .mockReturnValue(Promise.resolve([testData.routeSegment]));
+
+    expect(await controller.findAllForRoute(0)).toEqual([testData.routeSegment]);
+  });
+
   it('should be returning the length of a single route segment', async () => {
     jest.spyOn(service, 'length').mockReturnValue(Promise.resolve(42));
 

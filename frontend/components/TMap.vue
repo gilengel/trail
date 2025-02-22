@@ -22,14 +22,16 @@ interface Props {
   trip?: MapLibreTrip | null
   segments?: MapLibreSegment[] | null,
   lineColor?: Color,
-  interactive?: boolean
+  interactive?: boolean,
+  animated?: boolean
 }
 
 const {
   trip = null,
   segments = null,
   lineColor = 'rgb(75, 192, 192)',
-  interactive = true
+  interactive = true,
+  animated = false
 } = defineProps<Props>()
 
 const map: Ref<Map | null> = ref(null);
@@ -80,7 +82,6 @@ function onSegmentsChanged() {
 
 
     bounds.extend(segment.bounds);
-
   }
 
 
@@ -90,15 +91,11 @@ function onSegmentsChanged() {
 }
 
 
-// Set up the watcher
+// We use watchers to refresh the map if either trip or segments have changed
 watch(() => segments, onSegmentsChanged, {deep: true});
-
 watch(() => trip, onTripChanged, {deep: true});
 
 onMounted(() => {
-  if (!trip) {
-    //return;
-  }
   map.value = new Map({
     container: mapContainer.value!,
     style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
@@ -107,21 +104,7 @@ onMounted(() => {
     interactive
   });
 
-  /*
-  map.value = new Map({
-    container: mapContainer.value!,
-    style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
-    center: props.trip.bounds.getCenter(),
-    zoom: 16,
-  });
-  */
-
   map.value!.on("load", () => {
-    if (!trip && !segments) {
-      return;
-    }
-
-
     if (segments && segments.length > 0) {
       oldSegments = segments;
       for (const segment of segments) {
@@ -135,7 +118,7 @@ onMounted(() => {
         );
       }
 
-      zoomToSegments(segments);
+      zoomToSegments(segments, animated);
       return;
     }
 
@@ -172,9 +155,12 @@ function removeLine(id: number) {
 }
 
 /**
- * @param id
- * @param coordinates
- * @param style
+ * Adds a single line to the map. Be aware that there is no logic here to verify if the same
+ * route or a similar route was already added to the map.
+ *
+ * @param id - Unique number for identification. It will get extended to route_{$id}.
+ * @param coordinates - It is expected that the first coordinate is the start, the last coordinate the end of the line
+ * @param style - The style applied to the line.
  */
 function addLine(id: number, coordinates: number[][], style: LineStyle) {
   const _id = routeId(id);
@@ -207,24 +193,33 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
 }
 
 /**
- * @param trip
- * @param animate
+ * Changes the visible area of the map so that the entire trip (plus a margin) is visible.
+ *
+ * @param trip - The trip you want to focus the view on.
+ * @param animate - If true the "camera" will zoom out fly over and zoom in again. This can be very irritating if
+ *                  often used and/or over longer distances.
  */
 function zoomToTrip(trip: MapLibreTrip, animate: boolean = true) {
   fitBounds(trip.bounds, animate);
 }
 
 /**
- * @param segment
- * @param animate
+ * Changes the visible area of the map so that the segment (plus a margin) is visible.
+ *
+ * @param segment - The segment you want to focus the view on.
+ * @param animate - If true the "camera" will zoom out fly over and zoom in again. This can be very irritating if
+ *                  often used and/or over longer distances.
  */
 function zoomToSegment(segment: MapLibreSegment, animate: boolean = true) {
   fitBounds(segment.bounds, animate);
 }
 
 /**
- * @param segments
- * @param animate
+ * Changes the visible area of the map so that the segments (plus a margin) are visible.
+ *
+ * @param segments - The segments you want to focus the view on.
+ * @param animate - If true the "camera" will zoom out fly over and zoom in again. This can be very irritating if
+ *                  often used and/or over longer distances.
  */
 function zoomToSegments(segments: MapLibreSegment[], animate: boolean = true) {
   const bounds = new LngLatBounds();

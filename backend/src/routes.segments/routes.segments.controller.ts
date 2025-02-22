@@ -42,6 +42,11 @@ export class RoutesSegmentsController {
     return this.routesSegmentsService.findOne(id);
   }
 
+  @Get('route/:id')
+  findAllForRoute(@Param('id') id: number): Promise<RouteSegmentDto[]> {
+    return this.routesSegmentsService.findAllForRoute(id);
+  }
+
   @Get('length/:id')
   async length(@Param() params: { id: number }): Promise<{ length: number }> {
     const length = await this.routesSegmentsService.length(params.id);

@@ -11,7 +11,7 @@
           </v-card-item>
 
           <v-card-text>
-
+            <TMap :segments="mapSegments" :interactive="false" v-if="mapSegments.length > 0"/>
           </v-card-text>
 
           <v-card-actions>
@@ -38,6 +38,7 @@
           text="Please confirm that you want to delete the trip. This action is permanent and cannot be undone."
           title="Confirm Delete Trip"
       >
+
         <template #actions>
           <v-btn @click="confirmDeletion = false">
             Cancel
@@ -56,12 +57,21 @@
 <script setup lang="ts">
 import type {RouteDto} from "~/types/route.dto";
 import {useDelete} from "~/composables/useDelete";
+import {RouteSegmentDto2MapLibreRouteSegment} from "~/types/route";
 
 interface Props {
   route: RouteDto
 }
 
 const props = defineProps<Props>();
+
+const mapSegments = computed(() => {
+  if (!props.route.segments) {
+    return [];
+  }
+
+  return props.route.segments.map((segment) => RouteSegmentDto2MapLibreRouteSegment(segment))
+});
 
 const emit = defineEmits(['deleted']);
 

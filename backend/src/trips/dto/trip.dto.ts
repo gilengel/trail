@@ -16,7 +16,7 @@ export class TripDto {
 
   @ApiProperty()
   @IsObject()
-  layout: any; // Replace `any` with a known structure if possible
+  layout: JsonValue; // Replace `any` with a known structure if possible
 
   @ApiProperty()
   @IsArray()
