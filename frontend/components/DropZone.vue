@@ -48,7 +48,7 @@
             color="primary"
             rounded="xl"
         >
-          <slot name="item" :item="file">
+          <slot name="item" :item="file" :index="index">
             {{ file }}
           </slot>
         </v-list-item>

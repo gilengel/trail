@@ -1,6 +1,6 @@
 <template>
   <DropZone @onFilesChanged="(files) => $emit('onFilesChanged', files)" :processor="extractTrackFromFile">
-    <template #item="{ item }">
+    <template #item="{ item, index }">
       <v-list-item-title>
         <v-container>
           <v-row no-gutters>
@@ -12,19 +12,23 @@
               <v-row no-gutters justify="space-between">
                 <v-col cols="12">
                   <v-text-field
-                      label="Route Name"
+                      v-model="segmentName[index]"
+                      label="Segment Name"
                       prepend-icon="las la-tag"
                       variant="outlined"
+                      @keyup="() => segmentNameChanged(index)"
                   />
                 </v-col>
 
                 <v-col cols="12">
                   <v-textarea
+                      v-model="segmentDescription[index]"
                       class="mb-0"
                       label="Description"
                       prepend-icon="las la-comment"
                       rows="5"
                       variant="outlined"
+                      @keyup="() => segmentDescriptionChanged(index)"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -37,12 +41,27 @@
 </template>
 
 <script setup lang="ts">
-import {gpxRoute2MapLibreTrip, MapLibreTrip} from "~/types/route";
-import {extractCoordinatesFromGPX, type GPXRoute} from "shared";
+import {gpxRoute2MapLibreTrip} from "~/types/route";
+import {extractCoordinatesFromGPX} from "shared";
 import {Buffer} from "buffer";
 import type {GPXFile} from "~/types/gpx";
 
-defineEmits<(e: "onFilesChanged", files: GPXFile[]) => void>();
+const emit = defineEmits<{
+  onFilesChanged: [files: GPXFile[]],
+  onSegmentNameChanged: [index: number, name: string],
+  onSegmentDescriptionChanged: [index: number, name: string]
+}>();
+
+const segmentName = ref([]);
+const segmentDescription = ref([]);
+
+function segmentNameChanged(index: number): void {
+  emit("onSegmentNameChanged", index, segmentName.value[index]);
+}
+
+function segmentDescriptionChanged(index: number): void {
+  emit("onSegmentDescriptionChanged", index, segmentDescription.value[index]);
+}
 
 async function fileToBuffer(file: File): Promise<Buffer> {
   const arrayBuffer = await file.arrayBuffer();
@@ -56,7 +75,6 @@ async function extractTrackFromFile(file: GPXFile) {
   file.routeDto = gpxRoute;
   file.route = gpxRoute2MapLibreTrip(gpxRoute)
 }
-
 </script>
 
 <style scoped lang="scss">

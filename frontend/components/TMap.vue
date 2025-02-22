@@ -47,7 +47,6 @@ defineExpose({
 let oldSegments: MapLibreSegment[] = [];
 
 function onTripChanged() {
-  console.log("onTripChanged");
 }
 
 /**

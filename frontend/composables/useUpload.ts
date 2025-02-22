@@ -7,8 +7,8 @@
  * @param url - The backend api endpoint.
  * @param body - The data you want to upload.
  */
-export async function useUpload(url: string, body: object) {
-   return await $fetch(url, {
+export async function useUpload<T>(url: string, body: object): Promise<T> {
+    return await $fetch(url, {
         method: "POST",
         body,
     });

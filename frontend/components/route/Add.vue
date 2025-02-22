@@ -1,34 +1,39 @@
 <template>
-
-  <v-card
-      title="Add Route"
-      class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
-      variant="outlined"
-  >
-    <v-card-text>
-      <v-text-field
-          v-model="routeName"
-          label="Route Name"
-          prepend-icon="las la-tag"
+  <v-row>
+    <v-col cols="12">
+      <v-card
+          title="Add Route"
+          class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
           variant="outlined"
-          @keyup="routeNameChanged"
-      />
-      <RouteDropZone
-          support-text="Trip Files (allowed are files of type gpx)"
-          :allowed-file-extensions="['gpx']"
-          @onFilesChanged="onFilesChanged"
-      />
-      <span
-          v-if="status"
-          data-cy="status-msg"
-      >{{ status }}</span>
-    </v-card-text>
-  </v-card>
+      >
+        <v-card-text>
+          <v-text-field
+              v-model="routeName"
+              label="Route Name"
+              prepend-icon="las la-tag"
+              variant="outlined"
+              @keyup="routeNameChanged"
+          />
+          <RouteDropZone
+              support-text="Trip Files (allowed are files of type gpx)"
+              :allowed-file-extensions="['gpx']"
+              @onFilesChanged="onFilesChanged"
+              @onSegmentNameChanged="onNameChanged"
+              @onSegmentDescriptionChanged="onDescriptionChanged"
+          />
+          <span
+              v-if="status"
+              data-cy="status-msg"
+          >{{ status }}</span>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup lang="ts">
-import {useRouteUpload, useUpload} from "~/composables/useUpload";
-import {type RouteDto} from "~/types/route";
+import {useUpload} from "~/composables/useUpload";
+import {type RouteDto, type RouteSegmentDto} from "~/types/route";
 import {usePatch} from "~/composables/usePatch";
 import type {GPXFile} from "~/types/gpx";
 
@@ -46,10 +51,12 @@ const props = defineProps<Props>();
 
 let emptyRoute: Ref<RouteDto | null> = ref(null);
 
+let addedSegments: Ref<RouteSegmentDto[]> = ref([]);
+
 async function createEmptyRoute(): Promise<RouteDto> {
-  return await useUpload('/api/routes', {
+  return await useUpload<RouteDto>('/api/routes', {
     tripId: props.tripId
-  }) as Promise<RouteDto>;
+  });
 }
 
 /**
@@ -63,27 +70,31 @@ async function onFilesChanged(trips: GPXFile[]): Promise<void> {
   for (const trip of trips) {
     const route = trip.routeDto;
     for (const segment of route!.segments) {
-      await useUpload('/api/routes/segment', {
+      const newRouteSegment = await useUpload<RouteSegmentDto>('/api/routes/segment', {
         name: segment.name,
         coordinates: segment.coordinates,
         routeId: emptyRoute.value.id
       });
+
+      addedSegments.value.push(newRouteSegment);
     }
   }
 
   files.value = trips;
 }
 
-/**
- *
- */
-async function upload() {
-  await useRouteUpload(routeName.value, files.value);
+async function onNameChanged(index: number, name: string): Promise<void> {
+  await usePatch(`/api/routes/segment/${addedSegments.value[index].id}`, {
+    name
+  })
 }
 
-/**
- * @param newValue
- */
+async function onDescriptionChanged(index: number, description: string): Promise<void> {
+  await usePatch(`/api/routes/segment/${addedSegments.value[index].id}`, {
+    description
+  })
+}
+
 async function routeNameChanged() {
   if (emptyRoute.value === null) {
     emptyRoute.value = await createEmptyRoute();

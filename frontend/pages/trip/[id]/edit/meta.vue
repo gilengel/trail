@@ -32,8 +32,8 @@
                         :readonly="false"
                         class="mb-2"
                         label="Trip Name"
+                        variant="outlined"
                         prepend-icon="las la-tag"
-                        clearable
                     />
 
                   </v-card-text>
@@ -45,8 +45,11 @@
               </v-col>
             </v-row>
 
-
-            <RouteMeta v-for="route in routes" :key="route.name" :route @deleted="removeRoute"></RouteMeta>
+            <v-row v-for="route in routes" :key="route.name">
+              <v-col cols="12">
+                <RouteEdit title="Edit Route" :route @deleted="removeRoute"></RouteEdit>
+              </v-col>
+            </v-row>
           </v-container>
         </v-form>
       </template>
@@ -56,7 +59,7 @@
 
 <script setup lang="ts">
 import {useTripStore} from "~/stores/trip";
-import {MapLibreSegment, RouteSegmentDto2MapLibreRouteSegment, type TripDto} from "~/types/route";
+import {type TripDto} from "~/types/route";
 import type {RouteDto, RouteSegmentDto} from "~/types/route.dto";
 
 const route = useRoute();
@@ -67,19 +70,20 @@ const tripStore = useTripStore();
 const trip: TripDto | null = await tripStore.get(Number(route.params.id));
 
 const routes: Ref<RouteDto[]> = ref(await getRoutes());
-const routesWithSegments: Ref<RouteDto[][]> = ref([]);
 
 watch(
     () => routes.value.map(route => route.id),
     async () => {
-      if (!routes.value.length) return; // Prevent unnecessary API calls if routes are empty
+      if (!routes.value.length) {
+        return;
+      }
 
       const segmentPromises = routes.value.map(async (route: RouteDto) => {
         const segments = await $fetch<RouteSegmentDto[]>(`/api/routes/segment/route/${route.id}`);
-        return {...route, segments}; // Return a new object instead of mutating directly
+        return {...route, segments};
       });
 
-      routes.value = await Promise.all(segmentPromises); // Update the routes list reactively
+      routes.value = await Promise.all(segmentPromises);
     },
     {deep: true, immediate: true, once: true});
 
