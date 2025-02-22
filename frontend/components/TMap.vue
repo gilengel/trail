@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type {MapLibreSegment, MapLibreTrip} from "~/types/route";
+import type {MapLibreSegment, MapLibreRoute} from "~/types/route";
 import {LngLatBounds, Map} from "maplibre-gl";
 import type {Color} from "~/types/color";
 
@@ -19,7 +19,7 @@ type LineStyle = {
 };
 
 interface Props {
-  trip?: MapLibreTrip | null
+  trip?: MapLibreRoute | null
   segments?: MapLibreSegment[] | null,
   lineColor?: Color,
   interactive?: boolean,
@@ -198,7 +198,7 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
  * @param animate - If true the "camera" will zoom out fly over and zoom in again. This can be very irritating if
  *                  often used and/or over longer distances.
  */
-function zoomToTrip(trip: MapLibreTrip, animate: boolean = true) {
+function zoomToTrip(trip: MapLibreRoute, animate: boolean = true) {
   fitBounds(trip.bounds, animate);
 }
 

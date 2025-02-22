@@ -1,6 +1,8 @@
-import {type TripDto} from "~/types/route";
+import {type NewTripDto, type TripDto} from "~/types/route";
 import {createDefaultGrid} from "~/stores/grid";
 import {defineStore} from 'pinia';
+import {useUpload} from "~/composables/useUpload";
+import {useDelete} from "~/composables/useDelete";
 
 /**
  * Store that can catch (multiple) trips. It hides all network related functionality that the user
@@ -19,7 +21,7 @@ export const useTripStore = () =>
          * @param id - The id of the trip as number.
          * @returns Promise with the trip.
          */
-        async function get(id: number) : Promise<TripDto | null> {
+        async function get(id: number): Promise<TripDto | null> {
             if (trips.has(id)) {
                 return trips.get(id) as TripDto;
             }
@@ -41,7 +43,45 @@ export const useTripStore = () =>
             return trip.value;
         }
 
+        async function all(fetch: boolean = true): Promise<Map<number, TripDto>> {
+            if (!fetch) {
+                return trips;
+            }
+
+            const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips')
+            dbTrips.value?.forEach(trip => {
+                if (!trips.has(trip.id)) {
+                    trips.set(trip.id, trip);
+                }
+            })
+
+            return trips;
+        }
+
+        async function create(trip: NewTripDto): Promise<TripDto> {
+            const newTrip = await useUpload<TripDto>('/api/trips', {
+                name: trip.name,
+                layout: {}
+            });
+
+            trips.set(newTrip.id, newTrip);
+
+            return newTrip;
+        }
+
+        async function remove(trip: TripDto): Promise<TripDto> {
+            const deletedTrip = await useDelete<TripDto>(`/api/trips/${trip.id}`);
+
+            trips.delete(trip.id);
+
+            return deletedTrip;
+        }
+
+
         return {
-            get
+            create,
+            get,
+            all,
+            remove
         }
     })();

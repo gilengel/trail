@@ -5,7 +5,7 @@ import {mount, VueWrapper} from '@vue/test-utils'
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest'
 import MapComponent from "~/components/TMap.vue";
 import {LngLatBounds, Map as MockMap} from 'maplibre-gl'
-import {LngLatWithElevation, MapLibreSegment, MapLibreTrip} from "~/types/route";
+import {LngLatWithElevation, MapLibreSegment, MapLibreRoute} from "~/types/route";
 
 // Mock maplibre-gl components and methods
 vi.mock('maplibre-gl', () => {
@@ -54,7 +54,7 @@ describe('MapComponent', () => {
         ],
         "red"
     );
-    const mockTrip = new MapLibreTrip(0, 'test_route', [segment], '');
+    const mockTrip = new MapLibreRoute(0, 'test_route', [segment], '');
 
     describe('without trip and segment props', () => {
         beforeEach(() => {

@@ -1,24 +1,21 @@
 <template>
   <v-card
-    title="Create new trip"
-    variant="outlined"
+      title="Create new trip"
+      variant="outlined"
   >
     <v-card-text>
-      <v-text-field
-        label="Trip Name"
-        variant="outlined"
-        @value-changed="routeNameChanged"
-      />
+      <TextField v-model="routeName" label="Trip Name"/>
       <span
-        v-if="status"
-        data-cy="status-msg"
+          v-if="status"
+          data-cy="status-msg"
       >{{ status }}</span>
     </v-card-text>
     <v-card-actions>
+      <v-spacer></v-spacer>
       <v-btn
-        variant="outlined"
-        data-cy="upload-btn"
-        @click="upload"
+          variant="outlined"
+          data-cy="upload-btn"
+          @click="upload"
       >
         Create
       </v-btn>
@@ -27,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+const tripStore = useTripStore();
+
 import {useUpload} from "~/composables/useUpload";
 
 const status: Ref<string> = ref("");
@@ -38,10 +37,7 @@ const routeName: Ref<string> = ref("");
  *
  */
 async function upload() {
-  await useUpload('/api/trips', {
-    name: routeName.value,
-    layout: {}
-  });
+  await tripStore.create({name: routeName.value})
 }
 
 /**

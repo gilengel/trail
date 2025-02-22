@@ -35,7 +35,6 @@
                         variant="outlined"
                         prepend-icon="las la-tag"
                     />
-
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -45,9 +44,16 @@
               </v-col>
             </v-row>
 
-            <v-row v-for="route in routes" :key="route.name">
+            <v-row
+                v-for="route in routes"
+                :key="route.name"
+            >
               <v-col cols="12">
-                <RouteEdit title="Edit Route" :route @deleted="removeRoute"></RouteEdit>
+                <RouteEdit
+                    title="Edit Route"
+                    :route
+                    @deleted="removeRoute"
+                />
               </v-col>
             </v-row>
           </v-container>
@@ -66,38 +72,16 @@ const route = useRoute();
 const router = useRouter();
 
 const tripStore = useTripStore();
+const routeStore = useRouteStore();
 
 const trip: TripDto | null = await tripStore.get(Number(route.params.id));
 
-const routes: Ref<RouteDto[]> = ref(await getRoutes());
-
-watch(
-    () => routes.value.map(route => route.id),
-    async () => {
-      if (!routes.value.length) {
-        return;
-      }
-
-      const segmentPromises = routes.value.map(async (route: RouteDto) => {
-        const segments = await $fetch<RouteSegmentDto[]>(`/api/routes/segment/route/${route.id}`);
-        return {...route, segments};
-      });
-
-      routes.value = await Promise.all(segmentPromises);
-    },
-    {deep: true, immediate: true, once: true});
+const routes: RouteDto[] | null = await routeStore.getForTrip(trip!.id);
 
 const changedRouteData: Ref<{
   name?: string;
 }> = ref({name: trip!.name});
 
-
-/**
- * Returns all with the current trip associated routes from the backend.
- */
-async function getRoutes(): Promise<RouteDto[]> {
-  return await $fetch(`/api/routes/trip/${trip?.id}`);
-}
 
 /**
  *
@@ -114,7 +98,7 @@ function saveRoute() {
 }
 
 function removeRoute(deletedRouteId: number) {
-  routes.value = routes.value.filter(route => route.id !== deletedRouteId);
+  routes!.filter(route => route.id !== deletedRouteId);
 }
 
 const rules = {

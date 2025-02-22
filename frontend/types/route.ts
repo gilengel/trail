@@ -3,6 +3,10 @@ import {distance} from "@turf/turf";
 import type {Grid} from "~/types/grid";
 import {type GPXRoute, type GPXRouteSegment} from "shared";
 
+export interface NewTripDto {
+    name: string;
+    layout?: Grid;
+}
 
 export interface TripDto {
     id: number;
@@ -37,17 +41,17 @@ export class LngLatWithElevation extends LngLat {
 
 /**
  * Converts a trip DTO to the internal format so that it can be displayed on the map component.
- * @param trip - The trip DTO as retrieved from the backend.
+ * @param route - The trip DTO as retrieved from the backend.
  * @returns Trip in map component format.
  */
-export function TripDto2MapLibreTrip(trip: RouteDto): MapLibreTrip {
-    return new MapLibreTrip(
-        trip.id,
-        trip.name,
-        trip.segments.map((segment) =>
+export function routeDto2MapLibreTrip(route: RouteDto): MapLibreRoute {
+    return new MapLibreRoute(
+        route.id,
+        route.name,
+        route.segments.map((segment) =>
             RouteSegmentDto2MapLibreRouteSegment(segment)
         ),
-        trip.description
+        route.description
     );
 }
 
@@ -56,8 +60,8 @@ export function TripDto2MapLibreTrip(trip: RouteDto): MapLibreTrip {
  * @param trip - The trip DTO as retrieved from the backend.
  * @returns Trip in map component format.
  */
-export function gpxRoute2MapLibreTrip(trip: GPXRoute): MapLibreTrip {
-    return new MapLibreTrip(
+export function gpxRoute2MapLibreTrip(trip: GPXRoute): MapLibreRoute {
+    return new MapLibreRoute(
         Math.random(),
         trip.name ? trip.name : '',
         trip.segments.map((segment) =>
@@ -107,7 +111,7 @@ export function RouteSegmentDto2MapLibreRouteSegment(
     );
 }
 
-export class MapLibreTrip {
+export class MapLibreRoute {
     private readonly _bounds: LngLatBounds;
 
     constructor(

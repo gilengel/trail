@@ -2,28 +2,28 @@
   <v-row>
     <v-col cols="12">
       <v-card
-          title="Add Route"
-          class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
-          variant="outlined"
+        title="Add Route"
+        class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
+        variant="outlined"
       >
         <v-card-text>
           <v-text-field
-              v-model="routeName"
-              label="Route Name"
-              prepend-icon="las la-tag"
-              variant="outlined"
-              @keyup="routeNameChanged"
+            v-model="routeName"
+            label="Route Name"
+            prepend-icon="las la-tag"
+            variant="outlined"
+            @keyup="routeNameChanged"
           />
           <RouteDropZone
-              support-text="Trip Files (allowed are files of type gpx)"
-              :allowed-file-extensions="['gpx']"
-              @onFilesChanged="onFilesChanged"
-              @onSegmentNameChanged="onNameChanged"
-              @onSegmentDescriptionChanged="onDescriptionChanged"
+            support-text="Trip Files (allowed are files of type gpx)"
+            :allowed-file-extensions="['gpx']"
+            @on-files-changed="onFilesChanged"
+            @on-segment-name-changed="onNameChanged"
+            @on-segment-description-changed="onDescriptionChanged"
           />
           <span
-              v-if="status"
-              data-cy="status-msg"
+            v-if="status"
+            data-cy="status-msg"
           >{{ status }}</span>
         </v-card-text>
       </v-card>
@@ -49,9 +49,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-let emptyRoute: Ref<RouteDto | null> = ref(null);
+const emptyRoute: Ref<RouteDto | null> = ref(null);
 
-let addedSegments: Ref<RouteSegmentDto[]> = ref([]);
+const addedSegments: Ref<RouteSegmentDto[]> = ref([]);
 
 async function createEmptyRoute(): Promise<RouteDto> {
   return await useUpload<RouteDto>('/api/routes', {

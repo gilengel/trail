@@ -1,39 +1,43 @@
 <template>
   <v-card
-      :title="title"
-      class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
-      variant="outlined"
+    :title="title"
+    class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
+    variant="outlined"
   >
     <v-card-text>
       <v-text-field
-          v-model="changedRouteData.routeName"
-          label="Route Name"
-          prepend-icon="las la-tag"
-          variant="outlined"
-          @keyup="routeNameChanged"
+        v-model="changedRouteData.routeName"
+        label="Route Name"
+        prepend-icon="las la-tag"
+        variant="outlined"
+        @keyup="routeNameChanged"
       />
 
       <v-textarea
-          v-model="changedRouteData.routeDescription"
-          label="Route Description"
-          prepend-icon="las la-comment"
-          variant="outlined"
-          @keyup="routeDescriptionChanged"
+        v-model="changedRouteData.routeDescription"
+        label="Route Description"
+        prepend-icon="las la-comment"
+        variant="outlined"
+        @keyup="routeDescriptionChanged"
       />
 
       <IconForm icon="las la-map-signs">
-        <TMap :segments="mapSegments" :interactive="false" v-if="mapSegments.length > 0"/>
+        <TMap
+          :segments="mapSegments"
+          :interactive="false"
+          v-if="mapSegments.length > 0"
+        />
       </IconForm>
       <RouteDropZone
-          support-text="Trip Files (allowed are files of type gpx)"
-          :allowed-file-extensions="['gpx']"
-          @onFilesChanged="onFilesChanged"
-          @onSegmentNameChanged="onNameChanged"
-          @onSegmentDescriptionChanged="onDescriptionChanged"
+        support-text="Trip Files (allowed are files of type gpx)"
+        :allowed-file-extensions="['gpx']"
+        @on-files-changed="onFilesChanged"
+        @on-segment-name-changed="onNameChanged"
+        @on-segment-description-changed="onDescriptionChanged"
       />
       <span
-          v-if="status"
-          data-cy="status-msg"
+        v-if="status"
+        data-cy="status-msg"
       >{{ status }}</span>
     </v-card-text>
   </v-card>
@@ -47,8 +51,7 @@ import type {GPXFile} from "~/types/gpx";
 
 const status: Ref<string> = ref("");
 const files: Ref<File[]> = ref([]);
-let emptyRoute: Ref<RouteDto | null> = ref(null);
-let addedSegments: Ref<RouteSegmentDto[]> = ref([]);
+const addedSegments: Ref<RouteSegmentDto[]> = ref([]);
 
 interface Props {
   route: RouteDto,

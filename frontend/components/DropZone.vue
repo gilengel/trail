@@ -1,54 +1,61 @@
 <template>
   <IconForm icon="las la-map-signs">
     <div
-        class="v-input-collapse pa-6"
-        :class="{ focused: isDragging === true }"
-        data-cy="drop-zone"
-        @dragover="dragover"
-        @dragleave="dragleave"
-        @drop="drop"
+      class="v-input-collapse pa-6"
+      :class="{ focused: isDragging === true }"
+      data-cy="drop-zone"
+      @dragover="dragover"
+      @dragleave="dragleave"
+      @drop="drop"
     >
       <label v-if="supportText">{{ supportText }}</label>
       <input
-          id="fileInput"
-          ref="file"
-          data-cy="file-input"
-          type="file"
-          multiple
-          name="file"
+        id="fileInput"
+        ref="file"
+        data-cy="file-input"
+        type="file"
+        multiple
+        name="file"
       >
 
       <label
-          v-if="isDragging"
-          for="fileInput"
-          data-cy="release-msg"
+        v-if="isDragging"
+        for="fileInput"
+        data-cy="release-msg"
       >
         Release to drop files here.
       </label>
       <label
-          v-else
-          for="fileInput"
-          data-cy="release-msg"
+        v-else
+        for="fileInput"
+        data-cy="release-msg"
       >
         Drop files here or <u>click here</u> to upload.
       </label>
 
       <label
-          v-if="isWrongFileType"
-          data-cy="wrong-file-extension"
+        v-if="isWrongFileType"
+        data-cy="wrong-file-extension"
       >
         File has wrong type.
       </label>
 
-      <v-list v-if="processedFiles.length > 0" data-cy="preview-container">
+      <v-list
+        v-if="processedFiles.length > 0"
+        data-cy="preview-container"
+      >
         <v-list-item
-            v-for="(file, index) in processedFiles"
-            :key="file.name"
-            :value="index"
-            color="primary"
-            rounded="xl"
+          v-for="(file, index) in processedFiles"
+          :key="file.name"
+          :value="index"
+          color="primary"
+          rounded="xl"
         >
-          <slot name="item" :item="file" :index="index">
+          <slot
+            name="item"
+            :item="file"
+            :index="index"
+          >
             {{ file }}
           </slot>
         </v-list-item>

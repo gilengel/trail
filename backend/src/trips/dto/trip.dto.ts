@@ -3,6 +3,7 @@
  */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString, IsArray, IsOptional, IsObject } from 'class-validator';
+import { Prisma } from "@prisma/client";
 
 import { RouteDto } from '../../routes/dto/route.dto';
 export class TripDto {
@@ -16,7 +17,7 @@ export class TripDto {
 
   @ApiProperty()
   @IsObject()
-  layout: JsonValue; // Replace `any` with a known structure if possible
+  layout: Prisma.JsonValue;
 
   @ApiProperty()
   @IsArray()

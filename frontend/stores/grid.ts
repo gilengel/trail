@@ -16,36 +16,36 @@ import * as uuid from "uuid";
  * Specially useful to show the user something after creating a new trip.
  * @returns A new instance of a grid with 3 rows and 2, 3 and 2 column.
  */
-export function createDefaultGrid() : Grid {
+export function createDefaultGrid(): Grid {
     return {
         id: uuid.v4(),
 
-            rows: [
-        {
-            id: uuid.v4(),
-            columns: [
-                {width: 4, id: uuid.v4()},
-                {width: 8, id: uuid.v4()},
-            ],
-        },
+        rows: [
+            {
+                id: uuid.v4(),
+                columns: [
+                    {width: 4, id: uuid.v4()},
+                    {width: 8, id: uuid.v4()},
+                ],
+            },
 
-        {
-            id: uuid.v4(),
-            columns: [
-                {width: 4, id: uuid.v4()},
-                {width: 4, id: uuid.v4()},
-                {width: 4, id: uuid.v4()},
-            ],
-        },
+            {
+                id: uuid.v4(),
+                columns: [
+                    {width: 4, id: uuid.v4()},
+                    {width: 4, id: uuid.v4()},
+                    {width: 4, id: uuid.v4()},
+                ],
+            },
 
-        {
-            id: uuid.v4(),
-            columns: [
-                {width: 6, id: uuid.v4()},
-                {width: 6, id: uuid.v4()},
-            ],
-        },
-    ],
+            {
+                id: uuid.v4(),
+                columns: [
+                    {width: 6, id: uuid.v4()},
+                    {width: 6, id: uuid.v4()},
+                ],
+            },
+        ],
     }
 }
 
@@ -129,7 +129,7 @@ export const useGridStore = () =>
         async function updateElementAttribute(
             element: Element<unknown>,
             attribute: string,
-            value: string | number | boolean | string[] | number[],
+            value: string | number | boolean | string[] | number[] | Record<string, unknown>
         ) {
             await _undoRedoStore.execute(
                 new UpdateElementAttribute(element, attribute, value),

@@ -4,8 +4,10 @@
 
 /**
  * Wrapper for a POST request.
+ * @template T - The object type that will be returned.
  * @param url - The backend api endpoint.
  * @param body - The data you want to upload.
+ * @returns Object of type T.
  */
 export async function useUpload<T>(url: string, body: object): Promise<T> {
     return await $fetch(url, {

@@ -25,9 +25,7 @@ export class TripsService {
    */
   async createTrip(tripDto: CreateTripDto): Promise<TripDto> {
     const trip = await this.prisma.trip.create({
-      data: {
-        layout: tripDto.layout
-      },
+      data: tripDto,
     })
 
     return Promise.resolve(trip);

@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import {MapLibreTrip, MapLibreSegment, LngLatWithElevation, type RouteDto, TripDto2MapLibreTrip} from "~/types/route";
+import {MapLibreRoute, MapLibreSegment, LngLatWithElevation, type RouteDto, routeDto2MapLibreTrip} from "~/types/route";
 
 describe("MapLibreTrip", () => {
     it("converts a trip dto to a MapLibreTrip", () => {
@@ -16,7 +16,7 @@ describe("MapLibreTrip", () => {
             }]
         };
 
-        const result = TripDto2MapLibreTrip(tripDto);
+        const result = routeDto2MapLibreTrip(tripDto);
         expect(result.name).toBe('test trip dto');
         expect(result.description).toBe('test trip description');
         expect(result.start).toStrictEqual(new LngLatWithElevation(0, 0, 0))
@@ -35,7 +35,7 @@ describe("MapLibreTrip", () => {
             segments: []
         };
 
-        const result = TripDto2MapLibreTrip(tripDto);
+        const result = routeDto2MapLibreTrip(tripDto);
         expect(result.name).toBe('test trip dto');
         result.name = "new trip dto name";
         expect(result.name).toBe('new trip dto name');
@@ -56,7 +56,7 @@ describe("MapLibreTrip", () => {
             }]
         };
 
-        const result = TripDto2MapLibreTrip(tripDto);
+        const result = routeDto2MapLibreTrip(tripDto);
         expect(result.description).toBe('test trip description');
         result.description = 'new test trip description';
         expect(result.description).toBe('new test trip description');
@@ -72,7 +72,7 @@ describe("MapLibreTrip", () => {
             new LngLatWithElevation(30, 40, 200)
         ], "#ff0000");
 
-        const trip = new MapLibreTrip(1, "Test Trip", [segment]);
+        const trip = new MapLibreRoute(1, "Test Trip", [segment]);
 
         expect(trip.id).toBe(1);
         expect(trip.name).toBe("Test Trip");
@@ -81,7 +81,7 @@ describe("MapLibreTrip", () => {
     });
 
     it("handles an empty trip", () => {
-        const trip = new MapLibreTrip(2, "Empty Trip", []);
+        const trip = new MapLibreRoute(2, "Empty Trip", []);
 
         expect(trip.id).toBe(2);
         expect(trip.name).toBe("Empty Trip");
