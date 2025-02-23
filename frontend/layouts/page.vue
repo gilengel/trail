@@ -1,45 +1,46 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer
-      rail
-      data-cy="page-toolbars"
+        rail
+        permanent
+        data-cy="page-toolbars"
     >
-      <slot name="primary-toolbar" />
+      <slot name="primary-toolbar"/>
 
-      <v-divider class="mx-3 my-5" />
+      <v-divider class="mx-3 my-5"/>
 
-      <slot name="toolbar" />
+      <slot name="toolbar"/>
     </v-navigation-drawer>
 
     <v-app-bar
-      class="px-3"
-      height="72"
-      flat
+        class="px-3"
+        height="72"
+        flat
     >
-      <v-spacer />
+      <v-spacer/>
 
       <v-responsive max-width="156">
         <v-text-field
-          density="compact"
-          rounded="pill"
-          variant="solo-filled"
-          flat
-          hide-details
+            density="compact"
+            rounded="pill"
+            variant="solo-filled"
+            flat
+            hide-details
         />
       </v-responsive>
 
-      <theme-toggle-button />
+      <theme-toggle-button/>
     </v-app-bar>
 
     <v-main
-      data-cy="page-content"
-      class="d-flex justify-center ga-7"
+        data-cy="page-content"
+        class="d-flex justify-center ga-7"
     >
-      <slot name="content" />
+      <slot name="content"/>
     </v-main>
 
 
-    <slot name="overview" />
+    <slot name="overview"/>
   </v-app>
 </template>
 

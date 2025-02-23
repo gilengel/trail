@@ -2,19 +2,21 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list>
+        <v-list density="compact" nav>
           <v-list-item
               color="primary"
               rounded="xl"
               prepend-icon="las la-arrow-left"
               @click="$router.push({ path: '/' })"
+              style="max-width: 200px; width: 100%;"
           />
         </v-list>
       </template>
 
       <template #toolbar>
-        <v-list>
+        <v-list density="compact" nav>
           <v-list-item
+
               color="primary"
               rounded="xl"
               prepend-icon="las la-desktop"
@@ -37,7 +39,7 @@
           />
         </v-list>
         <v-divider class="mx-3 my-5"/>
-        <v-list>
+        <v-list density="compact" nav>
           <v-list-item
               color="primary"
               rounded="xl"
@@ -46,7 +48,7 @@
           />
         </v-list>
         <v-divider class="mx-3 my-5"/>
-        <v-list>
+        <v-list density="compact" nav>
           <v-list-item
               color="primary"
               rounded="xl"

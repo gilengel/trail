@@ -3,7 +3,7 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list>
+        <v-list density="compact" nav>
           <v-list-item
               color="primary"
               rounded="xl"
