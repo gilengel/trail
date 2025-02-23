@@ -13,9 +13,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateTripDto } from './dto/create.trip.dto';
+import { CreateTripDto } from 'shared';
 import { TripsService } from './trips.service';
-import { TripDto } from './dto/trip.dto';
+import { TripDto } from 'shared';
 import { Prisma } from '@prisma/client';
 
 @Controller('trips')

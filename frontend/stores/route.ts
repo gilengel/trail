@@ -1,7 +1,8 @@
-import {MapLibreRoute, routeDto2MapLibreTrip, type TripDto} from "~/types/route";
+import {MapLibreRoute, routeDto2MapLibreTrip} from "~/types/route";
 import {createDefaultGrid} from "~/stores/grid";
 import {defineStore} from 'pinia';
-import type {RouteDto, RouteSegmentDto} from "~/types/route.dto";
+import {RouteDto, RouteSegmentDto} from "shared";
+
 
 /**
  * Store that can catch routes for multiple trips. It hides all network related functionality that the user

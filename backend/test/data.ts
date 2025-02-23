@@ -1,17 +1,17 @@
 /**
  * @file Data that is used for unit tests.
  */
-import { RouteSegmentDto } from '../src/routes.segments/dto/route.segment.dto';
-import { DbImageDto, ImageDto } from '../src/images/dto/image.dto';
-import { CreateRouteDto } from '../src/routes/dto/create.route.dto';
-import { RouteDto, RouteWithoutSegmentsDto } from '../src/routes/dto/route.dto';
+import { RouteSegmentDto } from'shared';
+import { DbImageDto, ImageDto } from'shared';
+import { CreateRouteDto } from'shared';
+import { RouteDto, RouteWithoutSegmentsDto } from'shared';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateRouteSegmentDto } from '../src/routes.segments/dto/create-route.segment.dto';
+import { CreateRouteSegmentDto } from'shared';
 import { Route } from '../src/routes/entity/route';
 import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
 import { GPXRoute, GPXRouteSegment } from 'shared';
-import { CreateTripDto } from '../src/trips/dto/create.trip.dto';
-import { TripDto } from '../src/trips/dto/trip.dto'
+import { CreateTripDto } from 'shared';
+import { TripDto } from'shared'
 
 export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
@@ -252,7 +252,7 @@ for (let i = 0; i < 3; i++) {
 export const dbTrip: TripDto = {
   id: routeId,
   name: tripName,
-  layout: {},
+  layout: {} as unknown,
 };
 
 export const newTrip: CreateTripDto = {

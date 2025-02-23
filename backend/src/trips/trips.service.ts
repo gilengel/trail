@@ -7,8 +7,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateTripDto } from './dto/create.trip.dto';
-import { TripDto } from './dto/trip.dto';
+import { CreateTripDto } from 'shared';
+import { TripDto } from 'shared';
 import { Prisma } from '@prisma/client'
 
 

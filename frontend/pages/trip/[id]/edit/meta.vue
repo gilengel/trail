@@ -1,4 +1,5 @@
 <template>
+
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
@@ -61,12 +62,12 @@
       </template>
     </NuxtLayout>
   </main>
+  
 </template>
 
 <script setup lang="ts">
 import {useTripStore} from "~/stores/trip";
-import {type TripDto} from "~/types/route";
-import type {RouteDto, RouteSegmentDto} from "~/types/route.dto";
+import {RouteDto, TripDto} from "shared";
 
 const route = useRoute();
 const router = useRouter();

@@ -12,9 +12,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { RoutesSegmentsService } from './routes.segments.service';
-import { CreateRouteSegmentDto } from './dto/create-route.segment.dto';
-import { UpdateRouteSegmentDto } from './dto/update-route.segment.dto';
-import { RouteSegmentDto } from './dto/route.segment.dto';
+import { CreateRouteSegmentDto } from 'shared';
+import { UpdateRouteSegmentDto } from 'shared';
+import { RouteSegmentDto } from 'shared';
 import { NoAttributesProvidedError } from '../routes/routes.service';
 
 @Controller('routes/segment')

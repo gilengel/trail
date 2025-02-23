@@ -13,9 +13,9 @@ import { ImagesModule } from '../../src/images/images.module';
 import { ensureExistenceOfStorageDirectory } from '../../src/images/test/test.helper';
 import { ErrorsInterceptor } from '../../src/interceptors/errors.interceptor';
 import { json } from 'express';
-import { RouteDto } from 'src/routes/dto/route.dto';
+import { RouteDto } from'shared';
 import * as async from 'async';
-import { ImageDto } from 'src/images/dto/image.dto';
+import { ImageDto } from'shared';
 import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
 
 describe('ImagesController (e2e)', () => {
