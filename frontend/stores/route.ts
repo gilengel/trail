@@ -1,8 +1,6 @@
 import {MapLibreRoute, routeDto2MapLibreTrip} from "~/types/route";
-import {createDefaultGrid} from "~/stores/grid";
 import {defineStore} from 'pinia';
 import {RouteDto, RouteSegmentDto} from "shared";
-
 
 /**
  * Store that can catch routes for multiple trips. It hides all network related functionality that the user
@@ -13,8 +11,38 @@ import {RouteDto, RouteSegmentDto} from "shared";
 export const useRouteStore = () =>
     defineStore('routeStore', () => {
 
-        const dtoRoutes = reactive(new Map<number, RouteDto[]>());
-        const convertedRoutes = reactive(new Map<number, MapLibreRoute[]>());
+        const dtoRoutesByTripId = reactive(new Map<number, RouteDto[]>());
+        const dtoRoutesByRouteId = reactive(new Map<number, RouteDto>());
+        const convertedRoutesByTripId = reactive(new Map<number, MapLibreRoute[]>());
+        const convertedRoutesByRouteId = reactive(new Map<number, MapLibreRoute>());
+
+        async function getByRouteId(routeId: number): Promise<RouteDto | null> {
+            if (dtoRoutesByRouteId.has(routeId)) {
+                return dtoRoutesByRouteId.get(routeId) as RouteDto;
+            }
+
+            const {data: routeDTO} = await useApiFetch<RouteDto>(
+                `/api/routes/${routeId}`
+            );
+
+            if (!routeDTO.value) {
+                return null;
+            }
+
+            const route = routeDTO.value;
+            if (dtoRoutesByTripId.has(route.tripId)) {
+                const existingRoutesPerTrip: RouteDto[] = dtoRoutesByTripId.get(route.tripId)!;
+                const existing: RouteDto | undefined = existingRoutesPerTrip.find((route) => route.id === route?.id);
+
+                if (!existing) {
+                    existingRoutesPerTrip.push(route);
+                }
+            } else {
+                dtoRoutesByTripId.set(route!.tripId, [route!]);
+            }
+
+            return route;
+        }
 
         /**
          * Returns all associated routes of a trip from the backend.
@@ -22,9 +50,9 @@ export const useRouteStore = () =>
          * @param tripId - The id of the trip as number.
          * @returns Promise with the trip.
          */
-        async function getForTrip(tripId: number): Promise<RouteDto[] | null> {
-            if (dtoRoutes.has(tripId)) {
-                return dtoRoutes.get(tripId) as RouteDto[];
+        async function getByTripId(tripId: number): Promise<RouteDto[] | null> {
+            if (dtoRoutesByTripId.has(tripId)) {
+                return dtoRoutesByTripId.get(tripId) as RouteDto[];
             }
 
             const {data: routeDTOs} = await useApiFetch<RouteDto[]>(
@@ -40,11 +68,16 @@ export const useRouteStore = () =>
                 return {...route, segments};
             }));
 
+            dtoRoutesByTripId.set(tripId, updatedRoutes);
 
-            dtoRoutes.set(tripId, updatedRoutes);
+            updatedRoutes.forEach(route => {
+                dtoRoutesByRouteId.set(route.id, route);
+            })
+
 
             return updatedRoutes;
         }
+
 
         /**
          * Returns all associated routes of a trip from the backend converted in a format that can be displayed by MapLibre.
@@ -53,29 +86,54 @@ export const useRouteStore = () =>
          * @returns Promise with the trip.
          */
         async function getMapLibreRoutesForTrip(tripId: number): Promise<MapLibreRoute[] | null> {
-            if (convertedRoutes.has(tripId)) {
-                return convertedRoutes.get(tripId) as MapLibreRoute[];
+            if (convertedRoutesByTripId.has(tripId)) {
+                return convertedRoutesByTripId.get(tripId) as MapLibreRoute[];
             }
 
-            if (dtoRoutes.has(tripId)) {
-                const routes = dtoRoutes.get(tripId);
-                convertedRoutes.set(tripId, routes!.map(routeDto2MapLibreTrip));
+            if (dtoRoutesByTripId.has(tripId)) {
+                const routes = dtoRoutesByTripId.get(tripId);
+                convertedRoutesByTripId.set(tripId, routes!.map(routeDto2MapLibreTrip));
 
-                return convertedRoutes.get(tripId) as MapLibreRoute[];
+                return convertedRoutesByTripId.get(tripId) as MapLibreRoute[];
             }
 
-            const routes = await getForTrip(tripId);
+            const routes = await getByTripId(tripId);
             if (!routes) {
                 return null;
             }
 
-            convertedRoutes.set(tripId, routes!.map(routeDto2MapLibreTrip));
+            const convertedRoutes = routes!.map(routeDto2MapLibreTrip);
+            convertedRoutesByTripId.set(tripId, convertedRoutes);
+            convertedRoutes.forEach(route => {
+                convertedRoutesByRouteId.set(route.id, route);
+            })
 
-            return convertedRoutes.get(tripId) as MapLibreRoute[];
+            return convertedRoutesByTripId.get(tripId) as MapLibreRoute[];
+        }
+
+        async function getMapLibreRoute(routeId: number): Promise<MapLibreRoute | null> {
+            if (convertedRoutesByRouteId.has(routeId)) {
+                return convertedRoutesByRouteId.get(routeId) as MapLibreRoute;
+            }
+
+            const routeDTO = await getByRouteId(routeId);
+            if (!routeDTO) {
+                return null;
+            }
+
+            const convertedRoute = routeDto2MapLibreTrip(routeDTO);
+            convertedRoutesByRouteId.set(routeDTO.id, convertedRoute);
+            if (!convertedRoutesByTripId.has(routeDTO.tripId)) {
+                convertedRoutesByTripId.set(routeDTO.tripId, [convertedRoute])
+            }
+
+            return convertedRoutesByRouteId.get(routeId) as MapLibreRoute;
         }
 
         return {
-            getForTrip,
+            getByRouteId,
+            getByTripId,
+            getMapLibreRoute,
             getMapLibreRoutesForTrip
         }
     })();

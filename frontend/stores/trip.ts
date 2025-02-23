@@ -34,10 +34,6 @@ export const useTripStore = () =>
                 return null;
             }
 
-            if (JSON.stringify(trip.value.layout) === "{}") {
-                trip.value.layout = createDefaultGrid();
-            }
-
             trips.set(id, trip.value);
 
             return trip.value;
@@ -61,7 +57,7 @@ export const useTripStore = () =>
         async function create(trip: CreateTripDto): Promise<TripDto> {
             const newTrip = await useUpload<TripDto>('/api/trips', {
                 name: trip.name,
-                layout: {}
+                layout: createDefaultGrid()
             });
 
             trips.set(newTrip.id, newTrip);

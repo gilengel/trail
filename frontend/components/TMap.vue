@@ -254,6 +254,7 @@ function fitBounds(bounds: LngLatBounds, animate: boolean) {
 .map {
   display: block;
   width: 100%;
+  min-height: 300px;
 }
 
 @container (max-width: 699px) {

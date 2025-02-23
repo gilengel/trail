@@ -62,7 +62,7 @@
       </template>
     </NuxtLayout>
   </main>
-  
+
 </template>
 
 <script setup lang="ts">
@@ -77,7 +77,7 @@ const routeStore = useRouteStore();
 
 const trip: TripDto | null = await tripStore.get(Number(route.params.id));
 
-const routes: RouteDto[] | null = await routeStore.getForTrip(trip!.id);
+const routes: RouteDto[] | null = await routeStore.getByTripId(trip!.id);
 
 const changedRouteData: Ref<{
   name?: string;
