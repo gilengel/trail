@@ -15,13 +15,13 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateRouteDto } from './dto/create.route.dto';
+import { CreateRouteDto } from'shared';
 import { NoAttributesProvidedError, RoutesService } from './routes.service';
 import {
   RouteDto,
   RouteWithMultipleFilesDTO,
   RouteWithoutSegmentsDto,
-} from './dto/route.dto';
+} from'shared';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { GPXRoute, extractCoordinatesFromGPX} from 'shared';
 import { ApiConsumes } from '@nestjs/swagger';

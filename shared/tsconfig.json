@@ -8,7 +8,10 @@
     "declaration": true,
     "declarationDir": "./dist/types",
     "sourceMap": true,
-    "allowJs": true
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false
   },
   "include": [
     "src/**/*"

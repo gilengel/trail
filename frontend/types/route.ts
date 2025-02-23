@@ -1,33 +1,6 @@
 import {LngLat, LngLatBounds} from "maplibre-gl";
 import {distance} from "@turf/turf";
-import type {Grid} from "~/types/grid";
-import {type GPXRoute, type GPXRouteSegment} from "shared";
-
-export interface NewTripDto {
-    name: string;
-    layout?: Grid;
-}
-
-export interface TripDto {
-    id: number;
-    name?: string;
-    layout: Grid;
-}
-
-export interface RouteDto {
-    id: number;
-    name: string;
-    description?: string;
-    segments: RouteSegmentDto[];
-}
-
-export interface RouteSegmentDto {
-    id: number;
-    name: string;
-    description?: string;
-    coordinates: number[][];
-    color: string;
-}
+import {type GPXRoute, type GPXRouteSegment, RouteDto, RouteSegmentDto} from "shared";
 
 export class LngLatWithElevation extends LngLat {
     constructor(lng: number, lat: number, elevation: number) {
@@ -98,14 +71,15 @@ export function gpxRouteSegmentDto2MapLibreRouteSegment(
 export function RouteSegmentDto2MapLibreRouteSegment(
     tripSegment: RouteSegmentDto
 ): MapLibreSegment {
+    const coordinates = !tripSegment.coordinates ? [] : tripSegment.coordinates.map(
+        // not sure why but LibreMap switches longitude and latitude...
+        (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
+    )
+
     return new MapLibreSegment(
         tripSegment.id,
-        tripSegment.name,
-
-        // not sure why but LibreMap switches longitude and latitude...
-        tripSegment.coordinates.map(
-            (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
-        ),
+        tripSegment.name ?? "Unnamed Segment",
+        coordinates,
         "#000",
         tripSegment.description
     );

@@ -15,6 +15,9 @@
   "license": "AGPL-3.0-or-later",
   "description": "",
   "dependencies": {
+    "@nestjs/swagger": "^11.0.4",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "fast-xml-parser": "^4.5.1"
   },
   "devDependencies": {

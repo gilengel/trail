@@ -1,9 +1,9 @@
 /**
  * @file Provides functionality to convert geo data structures from and related dtos.
  */
-import { DbImageDto, ImageDto } from './images/dto/image.dto';
-import { RouteDto } from './routes/dto/route.dto';
-import { RouteSegmentDto } from './routes.segments/dto/route.segment.dto';
+import { DbImageDto, ImageDto } from'shared';
+import { RouteDto } from'shared';
+import { RouteSegmentDto } from'shared';
 import { RouteSegment } from './routes.segments/entity/routes.segment';
 import { Route } from './routes/entity/route';
 

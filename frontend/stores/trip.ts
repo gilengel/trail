@@ -1,8 +1,8 @@
-import {type NewTripDto, type TripDto} from "~/types/route";
 import {createDefaultGrid} from "~/stores/grid";
 import {defineStore} from 'pinia';
 import {useUpload} from "~/composables/useUpload";
 import {useDelete} from "~/composables/useDelete";
+import {CreateTripDto, TripDto} from "shared";
 
 /**
  * Store that can catch (multiple) trips. It hides all network related functionality that the user
@@ -58,7 +58,7 @@ export const useTripStore = () =>
             return trips;
         }
 
-        async function create(trip: NewTripDto): Promise<TripDto> {
+        async function create(trip: CreateTripDto): Promise<TripDto> {
             const newTrip = await useUpload<TripDto>('/api/trips', {
                 name: trip.name,
                 layout: {}

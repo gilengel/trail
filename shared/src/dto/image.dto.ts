@@ -1,7 +1,7 @@
 /**
  * @file Dto definitions for images, both api and database (internal).
  */
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '../decorators';
 
 export class DbImageDto {
   @ApiProperty()

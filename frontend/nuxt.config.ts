@@ -17,6 +17,15 @@ export default defineNuxtConfig({
         "nuxt-tiptap-editor",
     ],
 
+    build: {
+        transpile: ['class-transformer']
+    },
+    nitro: {
+        externals: {
+            inline: ['class-transformer'],
+            external: ['@nestjs/swagger'],
+        },
+    },
 
     css: [
         "line-awesome/dist/line-awesome/css/line-awesome.css",

@@ -11,7 +11,7 @@ import {
 import * as testData from '../../test/data';
 
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { RouteSegmentDto } from './dto/route.segment.dto';
+import { RouteSegmentDto } from 'shared';
 import { PrismaService } from '../prisma.service';
 
 jest.mock('@prisma/client', () => {
