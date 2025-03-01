@@ -1,75 +1,63 @@
 <template>
   <v-col
-    class="layout-col"
-    :cols="model.width"
+      class="layout-col"
+      :cols="model.width"
   >
     <div
-      v-if="editable"
-      class="actions"
+        v-if="editable"
+        class="actions"
     >
-      <v-toolbar
-        collapse
-        :floating="true"
-      >
-        <v-btn
-          round="0"
+      <v-btn
+          rounded="0"
+          flat
           icon
           data-testid="action-menu-btn"
-        >
-          <v-icon>las la-plus</v-icon>
-          <v-menu
+      >
+        <v-icon>las la-plus</v-icon>
+        <v-menu
             activator="parent"
             data-testid="action-menu"
-          >
-            <v-list>
-              <v-list-item
+        >
+          <v-list>
+            <v-list-item
                 v-for="(element, index) in allowedElements"
                 :key="element"
                 data-testid="column-element"
                 :value="index"
                 @click="() => onElementChanged(element)"
-              >
-                <v-list-item-title>{{ element }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-btn>
-        <v-btn
+            >
+              <v-list-item-title>{{ element }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+      <v-btn
           :disable="splitDisabled"
           flat
-          round
+          rounded="0"
           icon="las la-columns"
           @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
-        />
-        <v-btn
+      />
+      <v-btn
           flat
-          round
+          rounded="0"
           icon="las la-trash-alt"
           :readonly="model.width === 12"
           @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
-        />
-      </v-toolbar>
+      />
     </div>
 
     <div
-      ref="dropContainer"
-      class="element-container"
-      :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
+        ref="dropContainer"
+        class="element-container"
+        :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
     >
       <component
-        :is="selectedComponent"
-        v-bind="selectedComponentProps as object"
-        v-if="selectedComponent"
-        @click="() => $emit('selectElement', model.element as Element<unknown>)"
+          :is="selectedComponent"
+          v-bind="selectedComponentProps as object"
+          v-if="selectedComponent"
+          @click="() => $emit('selectElement', model.element as Element<unknown>)"
       />
-      <!--
-      <component
-          :is="elementComponent"
-          v-bind="{ uuid: '', editable: true, model: model.element }"
-          @onElementChanged="(element: Element) => { console.log(element); $emit('onElementChanged', element) }"
-          @click="() => $emit('selectElement', model.element as Element)"
-      />
-      -->
     </div>
   </v-col>
 </template>
@@ -182,7 +170,7 @@ const selectedComponentProps = computed(() => {
     return undefined;
   }
 
-  return props.model.element.attributes;
+  return {element: props.model.element};
 })
 
 
@@ -249,12 +237,29 @@ function onEnd(event: Sortable.SortableEvent) {
 </script>
 
 <style lang="scss" scoped>
+$actions-size: 52px;
+$border-width: 2px;
+
+$primary-color: rgb(var(--v-theme-primary));
+$focus-border: solid $border-width $primary-color;
 
 .layout-col {
+  position: relative;
+
   .actions {
     visibility: collapse;
     position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 1;
+
+    display: flex;
+    flex-direction: row;
+    width: auto;
+
+    border: solid $border-width $primary-color;
+    margin-top: -$actions-size;
+    margin-bottom: -$border-width;
   }
 }
 
@@ -275,4 +280,6 @@ function onEnd(event: Sortable.SortableEvent) {
   justify-content: center;
   align-items: center;
 }
+
+
 </style>

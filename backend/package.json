@@ -43,7 +43,7 @@
     "prisma-class-validator-generator": "^5.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "shared": "file:../shared",
+    "shared": "workspace:*",
     "uuid": "^11.0.5"
   },
   "devDependencies": {

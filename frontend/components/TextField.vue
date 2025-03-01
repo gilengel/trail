@@ -1,13 +1,13 @@
 <template>
   <v-text-field
-      :model-value="modelValue"
-      @update:model-value="(value) => emit('update:modelValue', value)"
-      :rules="[rules.required, rules.counter]"
-      :readonly
-      class="mb-2"
-      :label
-      variant="outlined"
-      :prepend-icon="icon"
+    :model-value="modelValue"
+    @update:model-value="(value) => emit('update:modelValue', value)"
+    :rules="[rules.required, rules.counter]"
+    :readonly
+    class="mb-2"
+    :label
+    variant="outlined"
+    :prepend-icon="icon"
   />
 </template>
 

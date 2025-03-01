@@ -9,7 +9,7 @@ export class AddRow
     implements UndoRedoAction {
     constructor(
         private row: Row,
-        private grid: Grid,
+        private grid: Grid
     ) {
     }
 

@@ -1,55 +1,64 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
   <v-row no-gutters>
-    <v-col sm="9">
+    <v-col
+        sm="9"
+        no-gutters
+    >
       <Sortable
-        :options="{ animated: 150}"
-        :list="grid.rows"
-        :item-key="(e: Row) => e.id"
-        handle=".drag-handle"
-        class="dragArea list-group"
-        @update="onUpdate($event)"
+          :options="{ animated: 150}"
+          :list="grid.rows"
+          :item-key="(e: Row) => e.id"
+          handle=".drag-handle"
+          class="dragArea list-group"
+          @update="onUpdate($event)"
       >
         <template #item="{ element, index }">
           <transition
-            appear
-            name="list"
+              appear
+              name="list"
           >
             <BuilderLayoutRow
-              data-key="itemId"
-              data-value="Row"
-              :key="index"
-              :model="element"
-              :grid="grid"
-              :row-index="index"
-              :data-testid="`layout-row-${index}`"
-              @select-element="(e) => onSelectedElementChanged(e)"
-              @on-element-changed="(e) => $emit('onElementChanged', e)"
+                data-key="itemId"
+                data-value="Row"
+                :key="index"
+                :model="element"
+                :grid="grid"
+                :row-index="index"
+                :data-testid="`layout-row-${index}`"
+                @select-element="(e) => onSelectedElementChanged(e)"
+                @on-element-changed="(e) => $emit('onElementChanged', e)"
             />
           </transition>
         </template>
       </Sortable>
 
-      <v-btn
-        @click="
-          gridModuleStore.addRow({
-            id: uuid.v4(),
-            columns: [{ width: 12, id: uuid.v4() }],
-          }, props.grid)
-        "
+      <v-row
+          no-gutters
+          style="margin-top: 24px; margin-right: 16px"
       >
-        Add Row
-      </v-btn>
+        <v-spacer/>
+        <v-btn
+            @click="addRow()"
+
+            color="primary"
+            variant="outlined"
+
+            prepend-icon="las la-plus"
+        >
+          Add Row
+        </v-btn>
+      </v-row>
     </v-col>
     <v-col
-      ref="options_container"
-      sm="3"
-      class="options-container"
+        ref="options_container"
+        sm="3"
+        class="options-container"
     >
       <component
-        :is="selectedComponent"
-        v-bind="selectedProps"
-        v-if="selectedComponent"
+          :is="selectedComponent"
+          v-bind="selectedProps"
+          v-if="selectedComponent"
       />
     </v-col>
   </v-row>
@@ -78,6 +87,13 @@ const selectedElement: Ref<Element<unknown> | undefined> = ref(undefined);
 
 const gridModuleStore = useGridStore();
 
+function addRow() {
+  gridModuleStore.addRow({
+    id: uuid.v4(),
+    columns: [{width: 12, id: uuid.v4()}],
+  }, props.grid)
+}
+
 /**
  * @param element
  */
@@ -89,13 +105,20 @@ function onSelectedElementChanged(element: Element<unknown>) {
  * @param event
  */
 function onUpdate(event: SortableEvent): void {
-  if (!event.oldIndex || !event.newIndex) return;
+  if (!event.oldIndex) {
+    return;
+  }
+
+  if (!event.newIndex) {
+    return;
+  }
 
   gridModuleStore.moveRow(event.oldIndex, event.newIndex, props.grid);
 }
 
 watch(props.grid, async (newValue) => {
-  await useGridSave(newValue, props.tripId)
+  newValue.tripId = props.tripId;
+  await useGridSave(newValue)
 })
 
 const selectedComponent = computed(() => {

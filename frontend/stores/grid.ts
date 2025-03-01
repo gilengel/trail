@@ -14,11 +14,12 @@ import * as uuid from "uuid";
 /**
  * Creates a default grid consisting out of 3 rows with 2, 3 and 2 columns.
  * Specially useful to show the user something after creating a new trip.
+ * @param tripId - The id of the trip the grid is associated with.
  * @returns A new instance of a grid with 3 rows and 2, 3 and 2 column.
  */
-export function createDefaultGrid(): Grid {
+export function createDefaultGrid(tripId: number): Grid {
     return {
-        id: uuid.v4(),
+        tripId,
 
         rows: [
             {

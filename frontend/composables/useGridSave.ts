@@ -1,14 +1,13 @@
 import type {Grid} from "~/types/grid";
-import type {RouteDto} from "~/types/route";
+import type {RouteDto} from "shared";
 
 /**
  * Persists the grid to the backend.
  * @param grid - The grid you want to persist.
- * @param tripId - The id of the trip the grid is related to.
  */
-export async function useGridSave(grid: Grid, tripId: number) {
+export async function useGridSave(grid: Grid) {
     await $fetch<RouteDto>(
-        `/api/trips/${tripId}`,
+        `/api/trips/${grid.tripId}`,
         {
             method: "PATCH",
             body: {

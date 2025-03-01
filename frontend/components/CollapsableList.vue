@@ -1,12 +1,13 @@
 <template>
-  <v-select v-if="collapseNumber < items!.length"
-            v-model="selectedItem"
-            :items="items!"
-            :item-title="(item) => text(item)"
-            item-value="id"
-            label="Select a Route"
-            return-object
-            variant="outlined"
+  <v-select
+      v-if="collapseNumber < items!.length"
+      v-model="selectedItem"
+      :items="items!"
+      :item-title="(item) => text(item)"
+      item-value="id"
+      label="Select a Route"
+      return-object
+      variant="outlined"
   />
   <v-list v-else>
     <v-list-item
@@ -14,10 +15,9 @@
         :key="i"
         :value="item"
         color="primary"
-        rounded="xl"
         @click="selectItem(item)"
     >
-      <v-list-item-title v-text="text(item)"></v-list-item-title>
+      <v-list-item-title>{{ text(item) }}</v-list-item-title>
     </v-list-item>
   </v-list>
 </template>

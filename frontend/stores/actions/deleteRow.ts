@@ -11,7 +11,7 @@ export class DeleteRow
 
     constructor(
         private row: Row,
-        private grid: Grid,
+        private grid: Grid
     ) {
         this.rowIndex = this.grid.rows.indexOf(this.row);
     }

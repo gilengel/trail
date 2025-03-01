@@ -7,7 +7,7 @@ export class MoveRow
     constructor(
         private oldRowIndex: number,
         private newRowIndex: number,
-        private grid: Grid,
+        private grid: Grid
     ) {
     }
 

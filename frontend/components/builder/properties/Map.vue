@@ -1,30 +1,40 @@
 <template>
-  <h1>Map Properties</h1>
+  <BuilderPropertiesContainer>
+    <template v-slot:title>
+      Map Properties
+    </template>
 
-  <CollapsableList :collapseNumber="3" :items="routes!" :text="(route: RouteDto) => route.name"
-                   @onSelectionChanged="(e) => selectedRoute = e"/>
-  <v-list
-      v-model:selected="selection"
-      select-strategy="leaf"
-      multiple
-      max-height="600px"
-
-  >
-    <v-list-item
-        v-for="(item, index) in segments"
-        :key="item.id"
-        :title="snakeCaseToWords(item.name ?? 'Untitled')"
-        :value="index"
-    >
-      <template #prepend="{ isSelected }">
-        <v-list-item-action start>
-          <v-checkbox-btn color="primary" :model-value="isSelected"/>
-        </v-list-item-action>
-      </template>
-    </v-list-item>
-  </v-list>
-
-
+    <template v-slot:properties>
+      <CollapsableList
+          :collapse-number="3"
+          :items="routes!"
+          :text="(routeDto: RouteDto) => routeDto.name"
+          @on-selection-changed="(e) => selectedRoute = e"
+      />
+      <v-list
+          v-model:selected="selection"
+          select-strategy="leaf"
+          multiple
+          max-height="600px"
+      >
+        <v-list-item
+            v-for="(item, index) in segments"
+            :key="item.id"
+            :title="snakeCaseToWords(item.name ?? 'Untitled')"
+            :value="index"
+        >
+          <template #prepend="{ isSelected }">
+            <v-list-item-action start>
+              <v-checkbox-btn
+                  color="primary"
+                  :model-value="isSelected"
+              />
+            </v-list-item-action>
+          </template>
+        </v-list-item>
+      </v-list>
+    </template>
+  </BuilderPropertiesContainer>
 </template>
 
 <script setup lang="ts">
@@ -37,7 +47,10 @@ import CollapsableList from "~/components/CollapsableList.vue";
 import {RouteDto} from "shared";
 
 interface Props {
-  segments: number[]
+  segments: {
+    route: number,
+    segments: number[]
+  }
 }
 
 const props = defineProps<ElementProps<Props>>();
@@ -61,9 +74,16 @@ const segments = computed(() => {
   return selectedRoute.value?.segments;
 })
 
-const selection = ref([]);
+const selection = ref(props.element.attributes.segments.segments);
 
-watch(selection, (newVal, oldVal) => {
+watch(props, (newVal) => {
+  selection.value = newVal.element.attributes.segments.segments;
+}, {deep: true, immediate: true})
+
+watch(selection, (newVal) => {
+  if (!selectedRoute.value) {
+    return;
+  }
   gridModuleStore
       .updateElementAttribute(props.element, "segments", {
         route: selectedRoute.value!.id,

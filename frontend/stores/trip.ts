@@ -3,6 +3,7 @@ import {defineStore} from 'pinia';
 import {useUpload} from "~/composables/useUpload";
 import {useDelete} from "~/composables/useDelete";
 import {CreateTripDto, TripDto} from "shared";
+import type {Grid} from "~/types/grid";
 
 /**
  * Store that can catch (multiple) trips. It hides all network related functionality that the user
@@ -34,11 +35,22 @@ export const useTripStore = () =>
                 return null;
             }
 
+            // TripId is not stored inside the grid on database level
+            if (trip.value.layout) {
+                (trip.value.layout as Grid).tripId = trip.value.id;
+            }
+
             trips.set(id, trip.value);
 
             return trip.value;
         }
 
+        /**
+         * Get all trips, either from locale cache or from backend.
+         * @param fetch - If true, will do a backend requests and update the locale cache, otherwise
+         * only local stored trips are returned.
+         * @returns A map containing where the key of each entry is the trip id and the value the dto of the trip.
+         */
         async function all(fetch: boolean = true): Promise<Map<number, TripDto>> {
             if (!fetch) {
                 return trips;
@@ -54,10 +66,15 @@ export const useTripStore = () =>
             return trips;
         }
 
+        /**
+         * Creates a new trip in the locale cache and in the backend.
+         * @param trip - The dto of the new trip to be created.
+         * @returns The dto of newly created trip if successful.
+         */
         async function create(trip: CreateTripDto): Promise<TripDto> {
             const newTrip = await useUpload<TripDto>('/api/trips', {
                 name: trip.name,
-                layout: createDefaultGrid()
+                layout: createDefaultGrid(0)
             });
 
             trips.set(newTrip.id, newTrip);
@@ -65,6 +82,11 @@ export const useTripStore = () =>
             return newTrip;
         }
 
+        /**
+         * Deletes a trip to the locale cache and in the backend.
+         * @param trip - The dto of the trip to be deleted.
+         * @returns The dto of newly created trip if successful.
+         */
         async function remove(trip: TripDto): Promise<TripDto> {
             const deletedTrip = await useDelete<TripDto>(`/api/trips/${trip.id}`);
 

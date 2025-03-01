@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row
       no-gutters
       align="center"
@@ -55,7 +55,7 @@
             :key="e"
             data-testid="row-splitter"
             class="splitter"
-            :class="isDraggingColumnSize ? 'dragging-slider' : ''"
+            :class="isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'"
             :style="splitterStyleFn(i)"
             @mousedown="dragMouseDown($event, i)"
           />
@@ -304,12 +304,13 @@ function closeDragElement() {
 </script>
 
 <style lang="scss" scoped>
+
 $primary-color: rgb(var(--v-theme-primary));
 
 $border-width: 2px;
 $focus-border: solid $border-width $primary-color;
 
-
+$actions-width: 52px;
 .actions {
   align-self: flex-start;
   display: flex;
@@ -317,7 +318,7 @@ $focus-border: solid $border-width $primary-color;
   width: auto;
   visibility: hidden;
 
-  margin-left: -52px;
+  margin-left: -$actions-width;
 
   border: solid $border-width $primary-color;
   margin-top: -$border-width;
@@ -328,18 +329,17 @@ $focus-border: solid $border-width $primary-color;
   border: $focus-border !important;
 }
 
-.dragging-slider {
-  &::before {
-    background: $primary-color;
-  }
+.non-dragging-slider {
+  background: rgba(var(--v-border-color), var(--v-border-opacity));
+}
 
-  &::after {
-    background: $primary-color;
-  }
+.dragging-slider {
+  background: $primary-color;
 }
 
 .layout-row {
-  border: $focus-border;
+  border-width: $border-width !important;
+  margin-left: $actions-width;
 }
 
 .layout-row:hover {
@@ -357,7 +357,7 @@ $focus-border: solid $border-width $primary-color;
 
 $row-margin: 10px;
 $row-offset: $row-margin;
-$splitter-handle-width: 1px;
+$splitter-handle-width: 2px;
 $splitter-width: 1px;
 .splitter {
   position: absolute;
@@ -376,28 +376,24 @@ $splitter-width: 1px;
     margin-left: calc($splitter-handle-width / 2 - $splitter-width / 2);
   }
 
+
   &::before {
-    width: 16px;
-    background: transparent;
+    width: 8px;
+    left: -8px;
   }
 
   &::after {
-    width: 2px;
-    left: 8px;
+    width: 8px;
+    left: $splitter-width;
   }
-}
-
-.splitter:not(.dragging-slider)::after {
-  background: rgba(var(--v-border-color), var(--v-border-opacity));
 }
 
 .splitter:hover {
-  &::after {
-    background: rgb(var(--v-theme-primary));
-  }
+  background: rgb(var(--v-theme-primary));
 }
 
 .fill-height {
   position: relative;
 }
+
 </style>

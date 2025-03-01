@@ -16,6 +16,11 @@ export const useRouteStore = () =>
         const convertedRoutesByTripId = reactive(new Map<number, MapLibreRoute[]>());
         const convertedRoutesByRouteId = reactive(new Map<number, MapLibreRoute>());
 
+        /**
+         * Get a route by its ID.
+         * @param routeId - The ID of the route. Must be positive value.
+         * @returns The route dto if found, null otherwise.
+         */
         async function getByRouteId(routeId: number): Promise<RouteDto | null> {
             if (dtoRoutesByRouteId.has(routeId)) {
                 return dtoRoutesByRouteId.get(routeId) as RouteDto;
@@ -46,7 +51,6 @@ export const useRouteStore = () =>
 
         /**
          * Returns all associated routes of a trip from the backend.
-         *
          * @param tripId - The id of the trip as number.
          * @returns Promise with the trip.
          */
@@ -81,7 +85,6 @@ export const useRouteStore = () =>
 
         /**
          * Returns all associated routes of a trip from the backend converted in a format that can be displayed by MapLibre.
-         *
          * @param tripId - The id of the trip as number.
          * @returns Promise with the trip.
          */
@@ -111,6 +114,11 @@ export const useRouteStore = () =>
             return convertedRoutesByTripId.get(tripId) as MapLibreRoute[];
         }
 
+        /**
+         * Get a route by its ID converted to a map libre object.
+         * @param routeId - The ID of the route. Must be positive value.
+         * @returns The converted route if found, null otherwise.
+         */
         async function getMapLibreRoute(routeId: number): Promise<MapLibreRoute | null> {
             if (convertedRoutesByRouteId.has(routeId)) {
                 return convertedRoutesByRouteId.get(routeId) as MapLibreRoute;

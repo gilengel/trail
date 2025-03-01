@@ -18,10 +18,8 @@ export default defineConfigWithVueTs(
     eslint.configs.recommended,
     tseslint.configs.recommended,
     includeIgnoreFile(gitignorePath),
-    pluginVue.configs[
-        'flat/essential',
-            'flat/strongly-recommended'
-        ],
+    pluginVue.configs['flat/essential'],
+    pluginVue.configs[ 'flat/strongly-recommended'],
     vueTsConfigs.recommended,
     {
         ignores: ['pages/*.vue', 'layouts/**/*.vue'],

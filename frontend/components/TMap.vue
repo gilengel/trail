@@ -53,8 +53,6 @@ function onTripChanged() {
  *
  */
 function onSegmentsChanged() {
-
-
   const removedSegments = oldSegments.filter(x => !segments!.includes(x));
   const addedSegments = segments!.filter(x => !oldSegments.includes(x));
 
@@ -64,12 +62,14 @@ function onSegmentsChanged() {
 
   const bounds = new LngLatBounds();
   for (const segment of oldSegments) {
+    if (removedSegments.includes(segment)) {
+      continue;
+    }
     bounds.extend(segment.bounds);
   }
 
 
   for (const segment of addedSegments) {
-
     addLine(
         segment.id,
         segment.coordinates.map((e) => e.toArray()),
@@ -84,15 +84,40 @@ function onSegmentsChanged() {
   }
 
 
-  fitBounds(bounds, true);
+  fitBounds(bounds, animated);
 
   oldSegments = segments!;
 }
 
 
 // We use watchers to refresh the map if either trip or segments have changed
-watch(() => segments, onSegmentsChanged, {deep: true});
+watch(
+    () => segments,
+    async () => {
+      if (!map.value || !map.value.isStyleLoaded()) {
+        await waitForStyleLoad();
+      }
+      onSegmentsChanged();
+    },
+    {deep: true}
+);
+
+
 watch(() => trip, onTripChanged, {deep: true});
+
+function waitForStyleLoad(): Promise<void> {
+  return new Promise((resolve) => {
+    if (!map.value) {
+      return;
+    }
+
+    if (map.value.isStyleLoaded()) {
+      resolve();
+    } else {
+      map.value.once("style.load", resolve);
+    }
+  });
+}
 
 onMounted(() => {
   map.value = new Map({
@@ -103,7 +128,7 @@ onMounted(() => {
     interactive
   });
 
-  map.value!.on("load", () => {
+  map.value!.on("style.load", () => {
     if (segments && segments.length > 0) {
       oldSegments = segments;
       for (const segment of segments) {

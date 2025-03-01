@@ -35,6 +35,6 @@ export interface Row {
 }
 
 export interface Grid {
-    id: string;
+    tripId: number;
     rows: Row[];
 }

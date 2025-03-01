@@ -1,43 +1,56 @@
 <template>
-  <h1>Heading Properties</h1>
-  <v-btn-toggle
-    v-model="size"
-    @update:model-value="onSizeChange"
-  >
-    <v-btn>
-      H1
-    </v-btn>
+  <BuilderPropertiesContainer>
+    <template v-slot:title>
+      Heading Properties
+    </template>
 
-    <v-btn datatest-id="button-h2">
-      H2
-    </v-btn>
+    <template v-slot:properties>
+      <v-btn-toggle
+          v-model="size"
+          @update:model-value="onSizeChange"
+      >
+        <v-btn>
+          H1
+        </v-btn>
 
-    <v-btn>
-      H3
-    </v-btn>
+        <v-btn datatest-id="button-h2">
+          H2
+        </v-btn>
 
-    <v-btn>
-      H4
-    </v-btn>
-  </v-btn-toggle>
+        <v-btn>
+          H3
+        </v-btn>
 
-  <v-color-picker
-    v-model="color"
-    hide-inputs
-    show-swatches
-    @update:model-value="onColorChange"
-  />
+        <v-btn>
+          H4
+        </v-btn>
+      </v-btn-toggle>
+
+      <v-color-picker
+          v-model="color"
+          hide-inputs
+          show-swatches
+          @update:model-value="onColorChange"
+      />
+    </template>
+  </BuilderPropertiesContainer>
 </template>
 
 <script setup lang="ts">
 
-const props = defineProps<ElementProps>();
+import type {ElementProps} from "~/components/builder/properties/index";
+
+interface Props {
+  level: number,
+  color: string,
+  text?: string
+}
+
+const props = defineProps<ElementProps<Props>>();
 
 
 const gridModuleStore = useGridStore();
 
-
-import type {ElementProps} from "~/components/builder/properties/index";
 
 const size = ref(0);
 

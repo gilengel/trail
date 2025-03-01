@@ -1,14 +1,16 @@
 <template>
-
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
-              color="primary"
-              rounded="xl"
-              prepend-icon="las la-arrow-left"
-              @click="$router.push({ path: '../feed' })"
+            color="primary"
+            rounded="xl"
+            prepend-icon="las la-arrow-left"
+            @click="$router.push({ path: '../feed' })"
           />
         </v-list>
       </template>
@@ -19,8 +21,8 @@
             <v-row>
               <v-col cols="12">
                 <v-card
-                    class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
-                    variant="outlined"
+                  class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
+                  variant="outlined"
                 >
                   <v-card-item>
                     <v-card-title>Edit</v-card-title>
@@ -28,32 +30,32 @@
 
                   <v-card-text>
                     <v-text-field
-                        v-model="changedRouteData.name"
-                        :rules="[rules.required, rules.counter]"
-                        :readonly="false"
-                        class="mb-2"
-                        label="Trip Name"
-                        variant="outlined"
-                        prepend-icon="las la-tag"
+                      v-model="changedRouteData.name"
+                      :rules="[rules.required, rules.counter]"
+                      :readonly="false"
+                      class="mb-2"
+                      label="Trip Name"
+                      variant="outlined"
+                      prepend-icon="las la-tag"
                     />
                   </v-card-text>
                 </v-card>
               </v-col>
 
               <v-col cols="12">
-                <RouteAdd :trip-id="trip!.id"/>
+                <RouteAdd :trip-id="trip!.id" />
               </v-col>
             </v-row>
 
             <v-row
-                v-for="route in routes"
-                :key="route.name"
+              v-for="singleRoute in routes"
+              :key="singleRoute.name"
             >
               <v-col cols="12">
                 <RouteEdit
-                    title="Edit Route"
-                    :route
-                    @deleted="removeRoute"
+                  title="Edit Route"
+                  :route="singleRoute"
+                  @deleted="removeRoute"
                 />
               </v-col>
             </v-row>
@@ -62,7 +64,6 @@
       </template>
     </NuxtLayout>
   </main>
-
 </template>
 
 <script setup lang="ts">
