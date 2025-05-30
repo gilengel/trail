@@ -1,63 +1,64 @@
 <template>
   <v-container fluid>
     <v-row
-      no-gutters
-      align="center"
-      class="border layout-row"
-      :class="isDraggingColumnSize ? 'dragging' : ''"
-      @mouseenter="isHovering=true"
-      @mouseleave="isHovering=false"
+        no-gutters
+        align="center"
+        class="border layout-row"
+        :class="isDraggingColumnSize ? 'dragging' : ''"
+        @mouseenter="isHovering=true"
+        @mouseleave="isHovering=false"
     >
       <v-col
-        cols="auto"
-        class="actions"
+          cols="auto"
+          class="actions"
       >
         <v-btn
-          :ripple="false"
-          rounded="0"
-          class="drag-handle"
-          icon="las la-arrows-alt"
+            :ripple="false"
+            rounded="0"
+            class="drag-handle"
+            icon="las la-arrows-alt"
         />
         <v-btn
-          flat
-          :ripple="false"
-          rounded="0"
-          data-testid="delete-row-button"
-          icon="las la-trash-alt"
-          @click="gridModuleStore.deleteRow(rowIndex, props.grid)"
+            flat
+            :ripple="false"
+            rounded="0"
+            data-testid="delete-row-button"
+            icon="las la-trash-alt"
+            @click="gridModuleStore.deleteRow(rowIndex, props.grid)"
         />
       </v-col>
       <v-col style="align-self: stretch">
         <v-row
-          no-gutters
-          ref="container"
-          class="fill-height"
-          data-testid="layout-row"
+            no-gutters
+            ref="container"
+            class="fill-height"
+            data-testid="layout-row"
         >
           <BuilderLayoutColumn
-            data-key="itemId"
-            :data-testid="`grid-column-${col_index}-${rowIndex}`"
-            :column-index="col_index"
-            :row-index="rowIndex"
-            :model="column"
-            :grid
-            :class="colClass(col_index)"
-            :split-disabled="column.width <= 2"
-            :editable="!isDraggingColumnSize"
-            v-for="(column, col_index) in model.columns"
-            @select-element="(element) => $emit('selectElement', element)"
-            :key="col_index"
-            @on-element-changed="(element) => $emit('onElementChanged', element)"
+              data-key="itemId"
+              :data-testid="`grid-column-${col_index}-${rowIndex}`"
+              :column-index="col_index"
+              :row-index="rowIndex"
+              :model="column"
+              :grid
+              :class="colClass(col_index)"
+              :split-disabled="column.width <= 2"
+              :editable="!isDraggingColumnSize"
+              :selectedElementId="props.selectedElementId"
+              v-for="(column, col_index) in model.columns"
+              @select-element="(element) => $emit('selectElement', element)"
+              :key="col_index"
+              @on-element-changed="(element) => $emit('onElementChanged', element)"
           />
 
           <div
-            v-for="(e, i) in model.columns.length - 1"
-            :key="e"
-            data-testid="row-splitter"
-            class="splitter"
-            :class="isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'"
-            :style="splitterStyleFn(i)"
-            @mousedown="dragMouseDown($event, i)"
+              v-for="(e, i) in model.columns.length - 1"
+              :key="e"
+              data-testid="row-splitter"
+              class="splitter"
+              :class="isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'"
+              :style="splitterStyleFn(i)"
+              @mousedown="dragMouseDown($event, i)"
           />
         </v-row>
       </v-col>
@@ -101,6 +102,12 @@ const props = defineProps({
     type: Object as PropType<Row>,
     required: true,
   },
+
+  selectedElementId: {
+    type: String,
+    default: undefined,
+    required: false
+  }
 });
 
 defineEmits<{

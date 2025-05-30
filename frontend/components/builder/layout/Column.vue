@@ -68,7 +68,7 @@ import {type PropType, computed, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
 import {componentsMap} from "~/components/builder/AllElements";
 import {type Column, Element, ElementType, ElementTypes, type Grid} from "~/types/grid";
-
+import {v4 as uuidv4} from 'uuid';
 
 const props = defineProps({
   /**
@@ -128,6 +128,13 @@ const props = defineProps({
    * enable/disable the corresponding button in the toolbar.
    */
   splitDisabled: Boolean,
+
+
+  selectedElementId: {
+    type: String,
+    default: undefined,
+    required: false
+  }
 });
 
 const emit = defineEmits<{
@@ -170,7 +177,7 @@ const selectedComponentProps = computed(() => {
     return undefined;
   }
 
-  return {element: props.model.element};
+  return {element: props.model.element, selected: props.model.element.id === props.selectedElementId};
 })
 
 
@@ -197,7 +204,7 @@ function getDefaultProps(elementType: ElementType) {
  * @param elementType
  */
 function onElementChanged(elementType: ElementType) {
-  const element = new Element(elementType, getDefaultProps(elementType));
+  const element = new Element(uuidv4(), elementType, getDefaultProps(elementType));
   gridModuleStore.setColumnElement(props.model, element);
   emit('onElementChanged', element);
 }

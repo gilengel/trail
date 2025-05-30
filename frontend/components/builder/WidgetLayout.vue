@@ -1,5 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
+  <div id="editor-primary-toolbar"></div>
   <v-row no-gutters>
     <v-col
         sm="9"
@@ -25,6 +26,7 @@
                 :model="element"
                 :grid="grid"
                 :row-index="index"
+                :selectedElementId="selectedElementId"
                 :data-testid="`layout-row-${index}`"
                 @select-element="(e) => onSelectedElementChanged(e)"
                 @on-element-changed="(e) => $emit('onElementChanged', e)"
@@ -65,12 +67,12 @@
 </template>
 
 <script setup lang="ts" generic="T extends string, S extends string">
-import {type Ref, computed, ref} from 'vue';
-import * as uuid from 'uuid';
+import {computed, type Ref, ref} from 'vue';
+import {v4 as uuidv4} from 'uuid';
 import {Sortable} from 'sortablejs-vue3';
 import type {SortableEvent} from 'sortablejs';
 
-import {type Grid, Element, type Row} from '~/types/grid';
+import {Element, type Grid, type Row} from '~/types/grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
 
@@ -89,8 +91,8 @@ const gridModuleStore = useGridStore();
 
 function addRow() {
   gridModuleStore.addRow({
-    id: uuid.v4(),
-    columns: [{width: 12, id: uuid.v4()}],
+    id: uuidv4(),
+    columns: [{id: uuidv4(), width: 12}],
   }, props.grid)
 }
 
@@ -129,6 +131,13 @@ const selectedComponent = computed(() => {
   return componentsPropertiesMap[selectedElement.value.type];
 });
 
+const selectedElementId = computed(() => {
+  if (!selectedElement.value) {
+    return undefined;
+  }
+
+  return selectedElement.value.id;
+});
 
 const selectedProps = computed((): ElementProps<unknown> | undefined => {
   if (!selectedElement.value) {
@@ -136,7 +145,8 @@ const selectedProps = computed((): ElementProps<unknown> | undefined => {
   }
 
   return {
-    element: selectedElement.value
+    element: selectedElement.value,
+    selected: false
   };
 });
 </script>

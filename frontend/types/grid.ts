@@ -18,7 +18,9 @@ const elementTypeKeys = Object.keys(ElementType);
 export const ElementTypes = elementTypeKeys as ElementType[];
 
 export class Element<T> {
-    constructor(public readonly type: ElementType, public readonly attributes: T) {
+    constructor(public readonly id: string,
+                public readonly type: ElementType,
+                public readonly attributes: T) {
     }
 }
 

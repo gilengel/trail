@@ -1,19 +1,19 @@
 <template>
+  <v-btn
+      data-testid="tooltip-button"
+      :color="isActive ? 'primary' : 'transparent'"
+      variant="flat"
+      rounded="0"
+      @click="onClick"
+  >
+    <v-icon>{{ icon }}</v-icon>
+  </v-btn>
   <v-tooltip
-    :text="props.tooltip"
-    location="bottom"
+      :text="tooltip"
+      location="bottom"
   >
     <template>
-      <v-btn
-        data-testid="tooltip-button"
-        v-bind="props"
-        :color="isActive ? 'primary' : 'transparent'"
-        variant="flat"
-        rounded="0"
-        @click="onClick"
-      >
-        <v-icon>{{ icon }}</v-icon>
-      </v-btn>
+
     </template>
   </v-tooltip>
 </template>
@@ -21,21 +21,13 @@
 <script setup lang="ts">
 import {defineProps, defineEmits} from 'vue';
 
-const props = defineProps({
-  icon: {
-    type: String,
-    required: true, // Optional icon name
-  },
-  isActive: {
-    type: Boolean,
-    default: false, // Button state: active or not
-  },
+interface Props {
+  icon: string;
+  tooltip: string,
+  isActive?: boolean;
+}
 
-  tooltip: {
-    type: String,
-    required: true
-  }
-});
+const {icon, tooltip, isActive = false} = defineProps<Props>();
 
 const emit = defineEmits(['click']);
 
@@ -45,5 +37,7 @@ const onClick = () => {
 </script>
 
 <style scoped lang="scss">
-
+button {
+  height: 100% !important;
+}
 </style>
