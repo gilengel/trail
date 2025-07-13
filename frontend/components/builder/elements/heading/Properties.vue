@@ -1,7 +1,9 @@
 <template>
   <BuilderPropertiesContainer>
+
     <template v-slot:title>
       Heading Properties
+
     </template>
 
     <template v-slot:properties>
@@ -37,8 +39,9 @@
 </template>
 
 <script setup lang="ts">
+import type {ElementProps} from "~/components/builder/properties";
 
-import type {ElementProps} from "~/components/builder/properties/index";
+// ---------------------------------------------------------------------------------------------------------------------
 
 interface Props {
   level: number,
@@ -48,13 +51,13 @@ interface Props {
 
 const props = defineProps<ElementProps<Props>>();
 
+// ---------------------------------------------------------------------------------------------------------------------
 
 const gridModuleStore = useGridStore();
 
+// ---------------------------------------------------------------------------------------------------------------------
 
-const size = ref(0);
-
-const color = ref('ffffff');
+const size = computed(() => props.element.attributes.level);
 
 /**
  * @param newValue
@@ -63,6 +66,10 @@ function onSizeChange(newValue: number) {
   gridModuleStore.updateElementAttribute(props.element, "level", newValue)
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+const color = computed(() => props.element.attributes.color);
+
 /**
  * @param newValue
  */
@@ -70,7 +77,3 @@ function onColorChange(newValue: string) {
   gridModuleStore.updateElementAttribute(props.element, "color", newValue)
 }
 </script>
-
-<style scoped lang="scss">
-
-</style>

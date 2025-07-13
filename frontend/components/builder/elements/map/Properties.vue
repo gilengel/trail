@@ -40,11 +40,13 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
-import type {ElementProps} from "~/components/builder/properties/index";
+import type {ElementProps} from "~/components/builder/properties";
 import {snakeCaseToWords} from "~/utils/text";
 import {useRouteStore} from "~/stores/route";
 import CollapsableList from "~/components/CollapsableList.vue";
-import {RouteDto} from "shared";
+import {RouteDto} from "@trail/shared";
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 interface Props {
   segments: {
@@ -55,11 +57,16 @@ interface Props {
 
 const props = defineProps<ElementProps<Props>>();
 
-const gridModuleStore = useGridStore();
+// ---------------------------------------------------------------------------------------------------------------------
 
-const route = useRoute();
+const gridModuleStore = useGridStore();
 const tripStore = useTripStore();
 const routeStore = useRouteStore();
+
+const route = useRoute();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 
 const trip = await tripStore.get(Number(route.params.id));
 const routes = await routeStore.getByTripId(trip!.id);
@@ -74,7 +81,9 @@ const segments = computed(() => {
   return selectedRoute.value?.segments;
 })
 
-const selection = ref(props.element.attributes.segments.segments);
+
+//const selection = ref(props.element.attributes.segments.segments);
+
 
 watch(props, (newVal) => {
   selection.value = newVal.element.attributes.segments.segments;

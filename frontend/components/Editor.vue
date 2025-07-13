@@ -106,7 +106,7 @@ interface Props {
   alignment?: boolean,
   undoredo?: boolean,
   text?: boolean,
-  customNode?: Node<any, any>
+  customNode?: Node
 }
 
 
@@ -146,16 +146,7 @@ function getCommands() {
   return editor.value.commands;
 }
 
-function setContent(content: string) {
-  if (!editor.value) {
-    return;
-  }
-
-  //editor.value.commands.setContent(content)
-}
-
 defineExpose({
-  setContent,
   setColor,
   setAlignment,
   getCommands,

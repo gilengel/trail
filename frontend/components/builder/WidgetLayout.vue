@@ -59,7 +59,7 @@
     >
       <component
           :is="selectedComponent"
-          v-bind="selectedProps"
+          v-bind="selectedProps as ElementProps<any>"
           v-if="selectedComponent"
       />
     </v-col>
@@ -76,6 +76,8 @@ import {Element, type Grid, type Row} from '~/types/grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 const props = defineProps<{
   grid: Grid,
   tripId: number,
@@ -85,9 +87,51 @@ defineEmits<{
   onElementChanged: [element: Element<unknown>];
 }>();
 
-const selectedElement: Ref<Element<unknown> | undefined> = ref(undefined);
+// ---------------------------------------------------------------------------------------------------------------------
 
 const gridModuleStore = useGridStore();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const selectedElement: Ref<Element<unknown> | undefined> = ref(undefined);
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+watch(props.grid, async (newValue) => {
+  newValue.tripId = props.tripId;
+  await useGridSave(newValue)
+})
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const selectedComponent = computed(() => {
+  if (!selectedElement.value) {
+    return undefined;
+  }
+
+  return componentsPropertiesMap[selectedElement.value.type];
+});
+
+const selectedElementId = computed(() => {
+  if (!selectedElement.value) {
+    return undefined;
+  }
+
+  return selectedElement.value.id;
+});
+
+const selectedProps = computed((): ElementProps<unknown> | undefined => {
+  if (!selectedElement.value) {
+    return undefined;
+  }
+
+  return {
+    element: selectedElement.value,
+    selected: false
+  };
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 function addRow() {
   gridModuleStore.addRow({
@@ -118,56 +162,22 @@ function onUpdate(event: SortableEvent): void {
   gridModuleStore.moveRow(event.oldIndex, event.newIndex, props.grid);
 }
 
-watch(props.grid, async (newValue) => {
-  newValue.tripId = props.tripId;
-  await useGridSave(newValue)
-})
 
-const selectedComponent = computed(() => {
-  if (!selectedElement.value) {
-    return undefined;
-  }
-
-  return componentsPropertiesMap[selectedElement.value.type];
-});
-
-const selectedElementId = computed(() => {
-  if (!selectedElement.value) {
-    return undefined;
-  }
-
-  return selectedElement.value.id;
-});
-
-const selectedProps = computed((): ElementProps<unknown> | undefined => {
-  if (!selectedElement.value) {
-    return undefined;
-  }
-
-  return {
-    element: selectedElement.value,
-    selected: false
-  };
-});
 </script>
 
 <style scoped lang="scss">
 $size: 24px;
 .ghost {
   border-radius: 4px;
-
-  //color: $primary;
 }
 
 line {
-  //stroke: $accent;
+
   stroke-width: 4px;
 }
 
 .linkage-triangle-preview {
   position: absolute;
-  //fill: $accent;
-  //stroke: $accent;
   stroke-width: 6px;
   stroke-linecap: round;
   stroke-linejoin: round;

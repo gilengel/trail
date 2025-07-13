@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import ImageComponent from '@/components/builder/elements/Image.vue'
+import ImageComponent from '~/components/builder/elements/image/Image.vue'
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 
 describe('Component', () => {

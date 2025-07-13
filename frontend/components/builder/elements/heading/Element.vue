@@ -1,5 +1,4 @@
 <template>
-
   <Editor ref="editor"
           :formatting="false"
           :text="false"
@@ -16,6 +15,8 @@ import type {ElementProps} from "~/components/builder/properties";
 import Editor from "~/components/Editor.vue";
 import {DynamicParagraph} from "~/components/DynamicParagraph";
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 const gridModuleStore = useGridStore();
 
 interface Props {
@@ -25,26 +26,31 @@ interface Props {
   alignment: string
 }
 
+const props = defineProps<ElementProps<Props>>();
+
 const editor = useTemplateRef<InstanceType<typeof Editor>>('editor')
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const tag = computed(() => {
   return `h${props.element.attributes.level + 1}`;
 })
 
-
 const text = computed(() => {
   const t = tag.value;
-  return `<${t}>${props.element.attributes.text}</${t}>`
-  /*
-  if (!props.element.attributes.text) {
-    return "Default Heading";
-  }
 
-  return props.element.attributes.text
-  */
+  const content = props.element.attributes.text;
+  return `<${t}>${content}</${t}>`
 })
 
-const props = defineProps<ElementProps<Props>>();
+const style = computed(() => {
+  const color = props.element.attributes.color;
+  const alignment = props.element.attributes.alignment;
+
+  return `color: ${color}; text-align: ${alignment}`;
+})
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 watch(() => props.selected, (selected) => {
   if (!selected || !editor.value) {
@@ -53,6 +59,7 @@ watch(() => props.selected, (selected) => {
 
   editor.value.setColor(props.element.attributes.color);
 });
+
 watch(() => props.element.attributes.color, () => {
   if (!editor.value) {
     return;
@@ -79,13 +86,7 @@ watch(() => props.element.attributes.level, () => {
       .run()
 })
 
-const style = computed(() => {
-  if (!props.element.attributes.color) {
-    return 'color: white';
-  }
-
-  return `color: ${props.element.attributes.color}; text-align: ${props.element.attributes.alignment}`;
-})
+// ---------------------------------------------------------------------------------------------------------------------
 
 function onTextChanged(newContent: string) {
   const parser = new DOMParser();
@@ -112,5 +113,4 @@ input {
 .heading-container {
   width: 100%;
 }
-
 </style>

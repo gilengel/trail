@@ -46,7 +46,6 @@ export const DynamicParagraph = Node.create({
     },
 
     renderHTML({node, HTMLAttributes}) {
-        console.log(mergeAttributes(HTMLAttributes))
         const level = node.attrs.level
         return [
             `h${level}`,

@@ -191,12 +191,15 @@ function getDefaultProps(elementType: ElementType) {
     case ElementType.Heading:
       return {
         level: 0,
-        color: '#F00'
+        color: '#000',
+        text: 'Heading'
       };
     case ElementType.Map:
       return {};
     case ElementType.Image:
-      return {}
+      return {
+        scale: {origin: {x: 0, y: 0}, value: 1}
+      }
   }
 }
 

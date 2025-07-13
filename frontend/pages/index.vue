@@ -10,7 +10,9 @@
         </v-toolbar-title>
 
         <v-spacer/>
+        <!--
         <theme-toggle-button/>
+        -->
       </v-toolbar>
       <v-col>
         <v-sheet
@@ -55,9 +57,11 @@
           />
         </v-sheet>
         <v-sheet class="pa-2 ma-2">
+
           <TripOverview
               @selected-trip-changed="(id: number) => $router.push(`trip/${id}/feed`)"
           />
+
         </v-sheet>
       </v-col>
     </v-row>

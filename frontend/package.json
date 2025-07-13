@@ -65,6 +65,6 @@
     "sass": "^1.83.4",
     "tinyspy": "^3.0.2",
     "vitest": "^3.0.4",
-    "vuetify-nuxt-module": "^0.18.3"
+    "vuetify-nuxt-module": "^0.18.6"
   }
 }

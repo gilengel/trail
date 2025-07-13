@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import TextComponent from '@/components/builder/elements/Text.vue'
+import TextComponent from '~/components/builder/elements/text/Text.vue'
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 
 describe('Component', () => {

@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import HeadingComponent from '@/components/builder/elements/Heading.vue'
+import HeadingComponent from '~/components/builder/elements/heading/Heading.vue'
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 
 describe('Component', () => {
