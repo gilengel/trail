@@ -11,7 +11,7 @@ import ExifReader from 'exifreader';
 import { Prisma } from '@prisma/client';
 import * as conversion from '../conversion';
 import * as fs from 'fs';
-import { RouteSegmentDto } from'shared';
+import { RouteSegmentDto } from '@trail/shared';
 import { generateFileExtensionBasedOnMimeType } from '../conversion';
 
 interface SphericalCoordinates {

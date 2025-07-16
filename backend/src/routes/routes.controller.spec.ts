@@ -9,7 +9,7 @@ import * as testData from '../../test/data';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { mockFileFromBuffer } from '../images/test/test.helper';
-import { RouteDto } from'shared';
+import { RouteDto } from '@trail/shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
 import { NotEnoughCoordinatesError } from 'shared';
 

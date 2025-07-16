@@ -8,7 +8,7 @@ import { RoutesService } from './routes.service';
 import { PrismaService } from '../prisma.service';
 
 import * as conversion from '../conversion';
-import { RouteDto } from'shared';
+import { RouteDto } from '@trail/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { GPXRoute } from 'shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';

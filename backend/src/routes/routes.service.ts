@@ -9,16 +9,16 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateRouteDto } from'shared';
-import { RouteDto, RouteWithoutSegmentsDto } from'shared';
+import { CreateRouteDto } from '@trail/shared';
+import { RouteDto, RouteWithoutSegmentsDto } from '@trail/shared';
 
 import * as conversion from '../conversion';
 
 import { GPXRoute, GPXRouteSegment } from 'shared';
 import { Prisma } from '@prisma/client';
-import { CreateRouteSegmentDto } from'shared';
+import { CreateRouteSegmentDto } from '@trail/shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
-import { RouteSegmentDto } from'shared';
+import { RouteSegmentDto } from '@trail/shared';
 import { Route } from './entity/route';
 
 export class NoAttributesProvidedError extends Error {}

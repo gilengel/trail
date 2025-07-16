@@ -1,17 +1,17 @@
 /**
  * @file Data that is used for unit tests.
  */
-import { RouteSegmentDto } from'shared';
-import { DbImageDto, ImageDto } from'shared';
-import { CreateRouteDto } from'shared';
-import { RouteDto, RouteWithoutSegmentsDto } from'shared';
+import { RouteSegmentDto } from '@trail/shared';
+import { DbImageDto, ImageDto } from '@trail/shared';
+import { CreateRouteDto } from '@trail/shared';
+import { RouteDto, RouteWithoutSegmentsDto } from '@trail/shared';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateRouteSegmentDto } from'shared';
+import { CreateRouteSegmentDto } from '@trail/shared';
 import { Route } from '../src/routes/entity/route';
 import { RouteSegment } from '../src/routes.segments/entity/routes.segment';
 import { GPXRoute, GPXRouteSegment } from 'shared';
 import { CreateTripDto } from 'shared';
-import { TripDto } from'shared'
+import { TripDto } from '@trail/shared'
 
 export const date = new Date('05 Jan 2000 12:15:00 GMT');
 
