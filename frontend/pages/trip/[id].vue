@@ -1,5 +1,5 @@
 <template>
-  <NuxtPage />
+  <NuxtPage/>
 </template>
 
 <script setup lang="ts">
@@ -16,3 +16,4 @@ const tripStore = useTripStore();
 await tripStore.get(Number(route.params.id));
 
 </script>
+

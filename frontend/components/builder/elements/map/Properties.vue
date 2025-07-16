@@ -2,9 +2,11 @@
   <BuilderPropertiesContainer>
     <template v-slot:title>
       Map Properties
+
     </template>
 
     <template v-slot:properties>
+
       <CollapsableList
           :collapse-number="3"
           :items="routes!"
@@ -81,9 +83,9 @@ const segments = computed(() => {
   return selectedRoute.value?.segments;
 })
 
-
-//const selection = ref(props.element.attributes.segments.segments);
-
+/*
+const selection = ref(props.element.attributes.segments.segments);
+const selection = computed(() => props.element.attributes.segments.segments);
 
 watch(props, (newVal) => {
   selection.value = newVal.element.attributes.segments.segments;
@@ -101,9 +103,5 @@ watch(selection, (newVal) => {
       })
       .catch((e) => console.error(e));
 })
-
+*/
 </script>
-
-<style scoped lang="scss">
-
-</style>

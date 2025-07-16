@@ -1,28 +1,28 @@
 <template>
-  <v-card variant="outlined">
+  <v-card variant="flat">
     <template #title>
       <span data-cy="overview-title">My Latest Trips</span>
     </template>
     <v-card-text>
       <v-list lines="one">
         <v-list-item
-          v-for="trip in trips.values()"
-          :key="trip.id"
-          :title="trip.name"
-          @click="onTripClicked(trip)"
+            v-for="trip in trips.values()"
+            :key="trip.id"
+            :title="trip.name"
+            @click="onTripClicked(trip)"
         />
       </v-list>
 
 
       <h2
-        v-if="!networkError && trips.size === 0"
-        data-cy="error-empty-text"
+          v-if="!networkError && trips.size === 0"
+          data-cy="error-empty-text"
       >
         😞 Looks like you don't have any trips stored yet
       </h2>
       <h2
-        v-if="networkError"
-        data-cy="error-network-text"
+          v-if="networkError"
+          data-cy="error-network-text"
       >
         😞 Looks like there was a network problem.
       </h2>
@@ -51,6 +51,7 @@ const trips = await tripStore.all();
 </script>
 
 <style lang="scss" scoped>
+
 ul {
   list-style: none;
   padding: 0;

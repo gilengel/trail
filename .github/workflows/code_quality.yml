@@ -59,7 +59,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies (global)
-        run: npm install
+        run: npm install -- workspaces
 
       # -----------------------------------------------------------------
       # backend

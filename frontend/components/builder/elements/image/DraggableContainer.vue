@@ -233,7 +233,7 @@ function onWheel(event: WheelEvent) {
   width: 100%;
   height: 100%;
   cursor: grab;
-  z-index: 10;
+  z-index: 1;
 }
 
 .zoom-image {

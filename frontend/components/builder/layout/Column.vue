@@ -5,7 +5,7 @@
   >
     <div
         v-if="editable"
-        class="actions"
+        class="actions rounded-xl"
     >
       <v-btn
           rounded="0"
@@ -248,7 +248,7 @@ function onEnd(event: Sortable.SortableEvent) {
 
 <style lang="scss" scoped>
 $actions-size: 52px;
-$border-width: 2px;
+$border-width: 1px;
 
 $primary-color: rgb(var(--v-theme-primary));
 $focus-border: solid $border-width $primary-color;
@@ -258,6 +258,7 @@ $focus-border: solid $border-width $primary-color;
 
   .actions {
     visibility: collapse;
+    overflow: hidden;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -268,7 +269,9 @@ $focus-border: solid $border-width $primary-color;
     width: auto;
 
     border: solid $border-width $primary-color;
-    margin-top: -$actions-size;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-top: -$actions-size + $border-width * 2;
     margin-bottom: -$border-width;
   }
 }
@@ -278,7 +281,6 @@ $focus-border: solid $border-width $primary-color;
     visibility: visible;
   }
 }
-
 
 .v-toolbar--collapse {
   max-width: 52px * 3;
@@ -290,6 +292,5 @@ $focus-border: solid $border-width $primary-color;
   justify-content: center;
   align-items: center;
 }
-
 
 </style>

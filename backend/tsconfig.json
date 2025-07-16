@@ -10,6 +10,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@trail/shared/*": ["../shared/src/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -28,5 +31,7 @@
     "entryPoints": ["src/**/*.ts"],
     "exclude": "**/*+(index|.spec|.e2e).ts",
     "out": "docs"
-  }
+  },
+
+
 }

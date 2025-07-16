@@ -1,8 +1,7 @@
 <template>
   <v-card
       :title="title"
-      class="mx-xxl-auto mx-xl-auto mx-9 w-fill c-inline-size"
-      variant="outlined"
+      class="rounded-xl"
   >
     <v-card-text>
       <v-text-field

@@ -3,7 +3,6 @@
 
     <template v-slot:title>
       Heading Properties
-
     </template>
 
     <template v-slot:properties>

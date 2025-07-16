@@ -1,7 +1,7 @@
 <template>
   <div class="pa-5">
-    <v-card>
-      <v-card-title class="text-h6 text-md-h5 text-lg-h4">
+    <v-card class="rounded-xl" variant="flat">
+      <v-card-title>
         <slot name="title"></slot>
       </v-card-title>
       <v-card-text>

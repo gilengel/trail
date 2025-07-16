@@ -1,24 +1,22 @@
 <template>
-  <v-card
-    title="Create new trip"
-    variant="outlined"
-  >
+  <v-card title="Create new trip" variant="flat">
     <v-card-text>
       <TextField
-        v-model="routeName"
-        label="Trip Name"
+          v-model="routeName"
+          label="Trip Name"
       />
       <span
-        v-if="status"
-        data-cy="status-msg"
+          v-if="status"
+          data-cy="status-msg"
       >{{ status }}</span>
     </v-card-text>
     <v-card-actions>
-      <v-spacer />
+      <v-spacer/>
       <v-btn
-        variant="outlined"
-        data-cy="upload-btn"
-        @click="upload"
+          class="rounded-xl pl-4 pr-4"
+          variant="tonal"
+          data-cy="upload-btn"
+          @click="upload"
       >
         Create
       </v-btn>

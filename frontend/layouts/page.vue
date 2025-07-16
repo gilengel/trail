@@ -1,5 +1,6 @@
 <template>
   <v-app id="inspire">
+    <div class="header-image"></div>
     <v-navigation-drawer
         rail
         permanent
@@ -15,6 +16,7 @@
     <v-app-bar
         class="px-3"
         height="72"
+        style="z-index: 1;"
         flat
     >
       <v-spacer/>
@@ -89,4 +91,5 @@ main {
 
   gap: 24px;
 }
+
 </style>

@@ -3,14 +3,14 @@
     <v-row
         no-gutters
         align="center"
-        class="border layout-row"
+        class="border layout-row rounded-xl"
         :class="isDraggingColumnSize ? 'dragging' : ''"
         @mouseenter="isHovering=true"
         @mouseleave="isHovering=false"
     >
       <v-col
           cols="auto"
-          class="actions"
+          class="actions rounded-xl"
       >
         <v-btn
             :ripple="false"
@@ -314,7 +314,7 @@ function closeDragElement() {
 
 $primary-color: rgb(var(--v-theme-primary));
 
-$border-width: 2px;
+$border-width: 1px;
 $focus-border: solid $border-width $primary-color;
 
 $actions-width: 52px;
@@ -324,12 +324,20 @@ $actions-width: 52px;
   flex-direction: column;
   width: auto;
   visibility: hidden;
+  overflow: hidden;
 
-  margin-left: -$actions-width;
+  z-index: 999;
+
+  margin-left: -$actions-width + $border-width * 2;
 
   border: solid $border-width $primary-color;
   margin-top: -$border-width;
   margin-bottom: -$border-width;
+
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+
+  transition: all ease-in-out 0.3s;
 }
 
 .dragging {
@@ -347,6 +355,8 @@ $actions-width: 52px;
 .layout-row {
   border-width: $border-width !important;
   margin-left: $actions-width;
+
+  transition: all 0.5s ease;
 }
 
 .layout-row:hover {
@@ -355,11 +365,20 @@ $actions-width: 52px;
   }
 
   border: $focus-border !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
 }
 
 .v-row {
   position: relative;
   box-sizing: border-box;
+
+  overflow: hidden;
+  transition: all ease-in-out 0.3s;
+}
+
+.v-row:hover {
+  overflow: visible;
 }
 
 $row-margin: 10px;

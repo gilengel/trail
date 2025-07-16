@@ -42,10 +42,8 @@
         <v-spacer/>
         <v-btn
             @click="addRow()"
-
-            color="primary"
+            color="primary rounded-xl"
             variant="outlined"
-
             prepend-icon="las la-plus"
         >
           Add Row

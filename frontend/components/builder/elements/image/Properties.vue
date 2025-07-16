@@ -5,8 +5,8 @@
     </template>
 
     <template v-slot:properties>
-      <h2>Aspect Ratio</h2>
-      <div class="aspect-ratios border pa-4">
+      <h2 class="text-h6 mt-2 mb-2">Aspect Ratio</h2>
+      <div class="aspect-ratios pb-4">
         <div
             v-for="(ratio, i) in aspectRatios"
             :key="i"
@@ -21,19 +21,26 @@
           </v-responsive>
         </div>
       </div>
+      <v-divider></v-divider>
 
-      <h2>Scaling</h2>
+      <h2 class="text-h6 mt-2 mb-2">Scaling</h2>
       <div>
         <v-row>
           <v-col>
-            <v-slider v-model="scaleValue" min="0.125" max="2"></v-slider>
-            <v-number-input v-model="scaleValue" :precision="2"></v-number-input>
+            <v-row no-gutters align="center">
+              <v-col cols="8">
+                <v-slider v-model="scaleValue" min="0.125" max="2"></v-slider>
+              </v-col>
+              <v-col cols="4">
+                <v-number-input control-variant="stacked" v-model="scaleValue" :precision="2"></v-number-input>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
-
       </div>
+      <v-divider></v-divider>
 
-      <h2>Size</h2>
+      <h2 class="text-h6 mt-2 mb-2">Size</h2>
       <v-col
           class="py-2"
           cols="12"
@@ -53,8 +60,9 @@
           </v-btn>
         </v-btn-toggle>
       </v-col>
+      <v-divider></v-divider>
 
-      <h2>Position</h2>
+      <h2 class="text-h6 mt-2 mb-2">Position</h2>
       <v-col
           class="py-2"
           cols="12"
