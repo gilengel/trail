@@ -6,35 +6,21 @@
         sm="9"
         no-gutters
     >
-      <Sortable
-          :options="{ animated: 150}"
-          :list="grid.rows"
-          :item-key="(e: Row) => e.id"
-          handle=".drag-handle"
-          class="dragArea list-group"
-          @update="onUpdate($event)"
-      >
-        <template #item="{ element, index }">
-          <transition
-              appear
-              name="list"
-          >
-            <BuilderLayoutRow
-                data-key="itemId"
-                data-value="Row"
-                :key="index"
-                :model="element"
-                :grid="grid"
-                :row-index="index"
-                :selectedElementId="selectedElementId"
-                :data-testid="`layout-row-${index}`"
-                @select-element="(e) => onSelectedElementChanged(e)"
-                @on-element-changed="(e) => $emit('onElementChanged', e)"
-            />
-          </transition>
-        </template>
-      </Sortable>
+      <div ref="el">
 
+        <BuilderLayoutRow v-for="(element, index) in grid.rows"
+                          data-key="itemId"
+                          data-value="Row"
+                          :key="element.id"
+                          :model="element"
+                          :grid="grid"
+                          :row-index="index"
+                          :selectedElementId="selectedElementId"
+                          :data-testid="`layout-row-${index}`"
+                          @select-element="(e) => onSelectedElementChanged(e)"
+                          @on-element-changed="(e) => $emit('onElementChanged', e)"
+        />
+      </div>
       <v-row
           no-gutters
           style="margin-top: 24px; margin-right: 16px"
@@ -67,9 +53,8 @@
 <script setup lang="ts" generic="T extends string, S extends string">
 import {computed, type Ref, ref} from 'vue';
 import {v4 as uuidv4} from 'uuid';
-import {Sortable} from 'sortablejs-vue3';
 import type {SortableEvent} from 'sortablejs';
-
+import {useSortable} from '@vueuse/integrations/useSortable'
 import {Element, type Grid, type Row} from '~/types/grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
@@ -98,6 +83,14 @@ const selectedElement: Ref<Element<unknown> | undefined> = ref(undefined);
 watch(props.grid, async (newValue) => {
   newValue.tripId = props.tripId;
   await useGridSave(newValue)
+})
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const el = ref<HTMLElement | null>(null)
+useSortable(el, props.grid.rows, {
+  handle: '.drag-handle',
+  onUpdate
 })
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -149,15 +142,7 @@ function onSelectedElementChanged(element: Element<unknown>) {
  * @param event
  */
 function onUpdate(event: SortableEvent): void {
-  if (!event.oldIndex) {
-    return;
-  }
-
-  if (!event.newIndex) {
-    return;
-  }
-
-  gridModuleStore.moveRow(event.oldIndex, event.newIndex, props.grid);
+  gridModuleStore.moveRow(event.oldIndex!, event.newIndex!, props.grid);
 }
 
 
@@ -165,9 +150,6 @@ function onUpdate(event: SortableEvent): void {
 
 <style scoped lang="scss">
 $size: 24px;
-.ghost {
-  border-radius: 4px;
-}
 
 line {
 
@@ -188,4 +170,5 @@ line {
     height: 42px;
   }
 }
+
 </style>

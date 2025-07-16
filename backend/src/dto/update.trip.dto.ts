@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for updating a route.
  */
-import { ApiProperty } from '../decorators';
+import { ApiProperty } from './decorators';
 
 export class UpdateTripDto {
     @ApiProperty({

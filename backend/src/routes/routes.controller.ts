@@ -15,17 +15,13 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateRouteDto } from '@trail/shared';
 import { NoAttributesProvidedError, RoutesService } from './routes.service';
-import {
-  RouteDto,
-  RouteWithMultipleFilesDTO,
-  RouteWithoutSegmentsDto,
-} from '@trail/shared';
+
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { GPXRoute, extractCoordinatesFromGPX} from 'shared';
 import { ApiConsumes } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
+import { CreateRouteDto, RouteDto, RouteWithMultipleFilesDTO, RouteWithoutSegmentsDto } from '../dto';
+import { extractCoordinatesFromGPX, GPXRoute } from '../dto/convert';
 
 @Controller('routes')
 export class RoutesController {

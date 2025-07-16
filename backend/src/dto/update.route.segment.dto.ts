@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for updating a route segment.
  */
-import { PartialType } from '../partial';
+import { PartialType } from './partial';
 import { ValidateIf } from 'class-validator';
 import { CreateRouteSegment } from './create.route.segment.dto';
 

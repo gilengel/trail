@@ -34,12 +34,6 @@ export default defineNuxtConfig({
     ],
 
     vite: {
-        resolve: {
-            alias: {
-                '@trail/shared': '../shared/src',
-            }
-        },
-
         optimizeDeps: {
             include: ['@yeger/vue-masonry-wall'],
         },

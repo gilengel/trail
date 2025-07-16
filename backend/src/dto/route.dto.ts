@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for a route.
  */
-import { ApiProperty } from '../decorators';
+import { ApiProperty } from './decorators';
 import {RouteSegmentDto} from './route.segment.dto';
 
 export class RouteWithoutSegmentsDto {

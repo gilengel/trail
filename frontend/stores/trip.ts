@@ -2,8 +2,9 @@ import {createDefaultGrid} from "~/stores/grid";
 import {defineStore} from 'pinia';
 import {useUpload} from "~/composables/useUpload";
 import {useDelete} from "~/composables/useDelete";
-import {CreateTripDto, TripDto} from "shared";
 import type {Grid} from "~/types/grid";
+import type {TripDto} from "~/types/dto";
+import type {CreateTripDto} from "~/types/dto";
 
 /**
  * Store that can catch (multiple) trips. It hides all network related functionality that the user

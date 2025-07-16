@@ -13,10 +13,9 @@ import { ImagesModule } from '../../src/images/images.module';
 import { ensureExistenceOfStorageDirectory } from '../../src/images/test/test.helper';
 import { ErrorsInterceptor } from '../../src/interceptors/errors.interceptor';
 import { json } from 'express';
-import { RouteDto } from '@trail/shared';
 import * as async from 'async';
-import { ImageDto } from '@trail/shared';
 import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
+import { ImageDto, RouteDto } from '../../src/dto';
 
 describe('ImagesController (e2e)', () => {
   let app: INestApplication;

@@ -8,10 +8,10 @@ import { RoutesService } from './routes.service';
 import { PrismaService } from '../prisma.service';
 
 import * as conversion from '../conversion';
-import { RouteDto } from '@trail/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { GPXRoute } from 'shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
+import { GPXRoute } from '../dto/convert';
+import { RouteDto } from '../dto';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');

@@ -3,14 +3,12 @@
  * Also, it provides functions for different calculations like the length of a segment.
  */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateRouteSegmentDto } from 'shared';
-import { UpdateRouteSegmentDto } from 'shared';
 import { PrismaService } from '../prisma.service';
 import * as conversion from '../conversion';
 import { Prisma } from '@prisma/client';
 import { NoAttributesProvidedError } from '../routes/routes.service';
-import { RouteSegmentDto } from 'shared';
 import { RouteSegment } from './entity/routes.segment';
+import { CreateRouteSegmentDto, RouteSegmentDto, UpdateRouteSegmentDto } from '../dto';
 
 // If the client tries to create/update routes with less then two coordinates
 export class NotEnoughCoordinatesError extends Error {

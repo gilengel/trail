@@ -15,8 +15,8 @@ import {
 import { ImagesService } from './images.service';
 import { dbimages2dto } from '../conversion';
 import ImagesUploadInterceptor from './helper/images.upload.interceptor';
-import { ImageDto, CountDto } from 'shared';
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
+import { CountDto, ImageDto } from '../dto';
 
 @Controller('images')
 export class ImagesController {

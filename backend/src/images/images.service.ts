@@ -2,7 +2,6 @@
  * @file Provides functionality to create, read, update and delete images.
  */
 import { Injectable } from '@nestjs/common';
-import { CountDto, DbImageDto, ImageDto } from 'shared';
 
 
 import { v4 as uuidv4 } from 'uuid';
@@ -11,8 +10,8 @@ import ExifReader from 'exifreader';
 import { Prisma } from '@prisma/client';
 import * as conversion from '../conversion';
 import * as fs from 'fs';
-import { RouteSegmentDto } from '@trail/shared';
 import { generateFileExtensionBasedOnMimeType } from '../conversion';
+import { CountDto, DbImageDto, ImageDto, RouteSegmentDto } from '../dto';
 
 interface SphericalCoordinates {
   longitude: number;

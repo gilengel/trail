@@ -2,8 +2,8 @@
  * @file Conversion unit test cases.
  */
 import { dbimage2dto, dbimages2dto, point2wkt, wkt2point } from './conversion';
-import { DbImageDto, ImageDto } from '@trail/shared';
 import { v4 as uuidv4 } from 'uuid';
+import { DbImageDto, ImageDto } from './dto';
 
 describe('Conversion', () => {
   it('converts a 2d point to wkt string', () => {

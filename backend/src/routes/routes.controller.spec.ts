@@ -9,21 +9,12 @@ import * as testData from '../../test/data';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { mockFileFromBuffer } from '../images/test/test.helper';
-import { RouteDto } from '@trail/shared';
+
 import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
-import { NotEnoughCoordinatesError } from 'shared';
 
-import * as parser from 'shared';
-
-jest.mock('shared', () => {
-  const actualModule = jest.requireActual('shared');
-  return {
-    __esModule: true,
-    ...actualModule,
-    extractCoordinatesFromGPX: jest.fn(),
-  };
-});
-
+import * as parser from '../dto/convert';
+import { NotEnoughCoordinatesError } from '../dto/convert';
+import { RouteDto } from '../dto';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn().mockResolvedValue([]);

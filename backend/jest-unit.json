@@ -16,7 +16,8 @@
     "prisma.service.ts",
     "entity",
     "images.upload.interceptor.ts",
-    "gpx.upload.interceptor.ts"
+    "gpx.upload.interceptor.ts",
+    "dto/*"
   ],
   "coverageDirectory": "./coverage-unit",
 

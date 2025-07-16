@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for creating a route.
  */
-import { ApiProperty } from '../decorators';
+import { ApiProperty } from './decorators';
 import {CreateRouteSegment} from './create.route.segment.dto';
 
 export class CreateRouteDto {

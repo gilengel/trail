@@ -4,8 +4,7 @@
   "description": "Trail",
   "workspaces": [
     "./backend",
-    "./frontend",
-    "./shared"
+    "./frontend"
   ],
   "scripts": {
     "build": "run-p build:backend build:frontend",

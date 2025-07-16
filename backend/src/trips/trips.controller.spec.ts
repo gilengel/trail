@@ -7,7 +7,7 @@ import { TripsController } from './trips.controller';
 import { TripsService } from './trips.service';
 import { PrismaService } from '../prisma.service';
 import * as testData from '../../test/data';
-import { TripDto } from 'shared';
+import { TripDto } from '../dto';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn().mockResolvedValue([]);

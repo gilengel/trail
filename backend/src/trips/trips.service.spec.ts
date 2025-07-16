@@ -6,9 +6,8 @@ import * as testData from '../../test/data';
 
 import { TripsService } from './trips.service';
 import { PrismaService } from '../prisma.service';
-import { CreateTripDto } from 'shared';
-import { TripDto } from 'shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { CreateTripDto, TripDto } from '../dto';
 
 jest.mock('@prisma/client', () => {
   const a = jest.fn(() => 'MOCKED_QUERY');

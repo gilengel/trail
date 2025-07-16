@@ -7,9 +7,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateTripDto } from 'shared';
-import { TripDto } from 'shared';
 import { Prisma } from '@prisma/client'
+import { CreateTripDto, TripDto } from '../dto';
 
 
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
