@@ -113,6 +113,7 @@ import {useTripStore} from "~/stores/trip";
 const router = useRouter();
 
 const route = useRoute();
+
 const tripStore = useTripStore();
 const trip = await tripStore.get(Number(route.params.id));
 

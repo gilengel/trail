@@ -10,35 +10,24 @@
               color="primary"
               rounded="xl"
               prepend-icon="las la-arrow-left"
-              @click="$router.push({ path: '../feed' })"
+              @click="$router.push({ path: '../edit/desktop' })"
           />
         </v-list>
       </template>
 
 
-      <template #toolbar>
-        <v-list
-            density="compact"
-            nav
-        >
-          <v-list-item
-
-              color="primary"
-              rounded="xl"
-              prepend-icon="las la-glass-cheers"
-              @click="$router.push({ path: '../preview/desktop' })"
-          />
-
-        </v-list>
-
-
-      </template>
       <template #content>
-        <BuilderWidgetLayout
-            v-if="trip?.layout"
-            :grid="trip.layout"
-            :trip-id="trip.id"
-        />
+        <v-row v-for="row in (trip?.layout as Grid).rows" :key="row.id">
+          <v-col v-for="col in row.columns" :key="col.id" :cols="col.width">
+            <component
+                :is="componentsMap[col.element.type]"
+                v-bind="{element: col.element, selected: false} as object"
+                v-if="col.element"
+            />
+
+          </v-col>
+        </v-row>
+
       </template>
     </NuxtLayout>
   </main>
@@ -47,6 +36,8 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
+import {componentsMap} from "~/components/builder/AllElements";
+import type {Grid} from "~/types/grid";
 
 const route = useRoute();
 
@@ -54,3 +45,4 @@ const tripStore = useTripStore();
 const trip = await tripStore.get(Number(route.params.id));
 
 </script>
+
