@@ -2,7 +2,7 @@ import {type Column, type Grid} from '~/types/grid';
 
 export const createTestGrid = (numRows: number = 1, numCols: number = 0): Grid => {
     const grid: Grid = {
-        id: '',
+        tripId: 0,
         rows: []
     };
 
@@ -11,7 +11,7 @@ export const createTestGrid = (numRows: number = 1, numCols: number = 0): Grid =
         for (let j = 0; j < numCols; j++) {
             columns.push({
                 id: `${j}`,
-                width: 0
+                width: 12 / numCols
             });
         }
         grid.rows.push({

@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import MapComponent from '~/components/builder/elements/map/Map.vue'
+import MapComponent from '~/components/builder/elements/map/Element.vue'
 import {shallowMount} from "@vue/test-utils";
 
 describe('Component', () => {

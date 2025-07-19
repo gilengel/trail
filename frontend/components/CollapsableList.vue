@@ -1,21 +1,22 @@
 <template>
   <v-select
-    v-if="collapseNumber < items!.length"
-    v-model="selectedItem"
-    :items="items!"
-    :item-title="(item) => text(item)"
-    item-value="id"
-    label="Select a Route"
-    return-object
-    variant="outlined"
+      v-if="collapseNumber < items!.length"
+      v-model="selectedItem"
+      :items="items!"
+      :item-title="(item) => text(item)"
+      item-value="id"
+      label="Select a Route"
+      return-object
+      variant="outlined"
   />
   <v-list v-else>
     <v-list-item
-      v-for="(item, i) in items"
-      :key="i"
-      :value="item"
-      color="primary"
-      @click="selectItem(item)"
+        v-for="(item, i) in items"
+        :key="i"
+        :value="item"
+        color="primary"
+        @click="selectItem(item)"
+        :data-testid="`list-item-${i}`"
     >
       <v-list-item-title>{{ text(item) }}</v-list-item-title>
     </v-list-item>

@@ -1,6 +1,8 @@
 import {type Row} from '~/types/grid';
 import {expect, describe, it} from 'vitest';
 import {SplitColumn} from './splitColumn';
+import {createTestGrid} from "~/stores/actions/test.helper";
+const grid = createTestGrid();
 
 const createTestRow = (): Row => {
     return {
@@ -21,7 +23,7 @@ const createTestRow = (): Row => {
 describe('splitColumn', () => {
     it('should split a column in two on redo', async () => {
         const row = createTestRow();
-        const splitColumn = new SplitColumn(row, 0);
+        const splitColumn = new SplitColumn(row, grid, 0);
         await splitColumn.redo();
 
         expect(row.columns.length).toBe(3);
@@ -29,7 +31,7 @@ describe('splitColumn', () => {
 
     it('should remove the added column on undo', async () => {
         const row = createTestRow();
-        const splitColumn = new SplitColumn(row, 0);
+        const splitColumn = new SplitColumn(row, grid, 0);
         await splitColumn.redo();
 
         expect(row.columns.length).toBe(3);

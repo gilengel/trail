@@ -4,7 +4,7 @@ import {type Grid} from '~/types/grid';
 
 const createTestGrid = (): Grid => {
     return {
-        id: '',
+        tripId: 0,
         rows: [
             {
                 id: '0',

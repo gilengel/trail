@@ -57,7 +57,7 @@ describe('GridModuleStore', () => {
 
         await store.deleteColumn(0, 0, grid);
 
-        expect(undoRedoStoreMock.execute).toHaveBeenCalledWith(new DeleteColumn(grid.rows[0], 0));
+        expect(undoRedoStoreMock.execute).toHaveBeenCalledWith(new DeleteColumn(grid.rows[0], grid, 0));
     });
 
     it('calls execute with SplitColumn when splitting a column', async () => {
@@ -65,7 +65,7 @@ describe('GridModuleStore', () => {
 
         await store.splitColumn(0, 0, grid);
 
-        expect(undoRedoStoreMock.execute).toHaveBeenCalledWith(new SplitColumn(grid.rows[0], 0));
+        expect(undoRedoStoreMock.execute).toHaveBeenCalledWith(new SplitColumn(grid.rows[0], grid, 0));
     });
 
     it('calls execute with MoveRow when moving a row', async () => {

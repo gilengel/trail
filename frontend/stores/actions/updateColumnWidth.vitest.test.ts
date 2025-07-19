@@ -8,7 +8,7 @@ describe('updateColumnWidth', () => {
       width: 6,
     };
     const splitColumn = new UpdateColumnWidth(column, 12);
-    splitColumn.redo();
+    await splitColumn.redo();
 
     expect(column.width).toBe(12);
   });
@@ -19,10 +19,10 @@ describe('updateColumnWidth', () => {
       width: 6,
     };
     const splitColumn = new UpdateColumnWidth(column, 12);
-    splitColumn.redo();
+    await splitColumn.redo();
 
     expect(column.width).toBe(12);
-    splitColumn.undo();
+    await splitColumn.undo();
     expect(column.width).toBe(6);
   });
 });

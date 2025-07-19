@@ -1,7 +1,7 @@
 /**
  * @file Unit tests for drop zone.
  */
-import {describe, it, expect} from "vitest";
+import {describe, expect, it} from "vitest";
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import DropZone from "@/components//DropZone.vue";
 
@@ -19,12 +19,10 @@ function mockFile(extension: string, size: number) {
     const blob = new Blob([new ArrayBuffer(size)], {type: `application/${extension}`});
 
     // Convert the blob to a File object
-    const file = new File([blob], fileName, {
+    return new File([blob], fileName, {
         type: blob.type,
         lastModified: Date.now(),
     });
-
-    return file;
 }
 
 describe("Component", () => {

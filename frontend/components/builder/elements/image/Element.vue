@@ -4,6 +4,7 @@
     :class="['image-container']"
   >
     <BuilderElementsImageDraggableContainer
+        data-testid="element-img"
       :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
       :aspect-ratio="aspectRatio"
       :position="props.element.attributes.position!"

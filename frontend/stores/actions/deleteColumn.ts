@@ -1,4 +1,4 @@
-import {type Column, type Row} from '~/types/grid';
+import {type Column, type Grid, type Row} from '~/types/grid';
 import {type UndoRedoAction} from '../undoredo';
 import {useGridSave} from "~/composables/useGridSave";
 
@@ -8,6 +8,7 @@ export class DeleteColumn
 
     constructor(
         private row: Row,
+        private grid: Grid,
         private columnIndex: number,
     ) {
     }

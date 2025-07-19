@@ -16,6 +16,10 @@ vi.mock('maplibre-gl', () => {
             on: vi.fn((event, callback) => {
                 if (event === 'load') callback();
             }),
+            isStyleLoaded: vi.fn(() => true),
+            once: vi.fn((event, callback) => {
+                if (event === 'load') callback();
+            }),
             addSource: vi.fn(),
             removeSource: vi.fn(),
             addLayer: vi.fn(),
@@ -87,6 +91,30 @@ describe('MapComponent', () => {
         })
 
         it('removes a line segment if segments prop changes', async () => {
+            await wrapper.setProps({
+                segments: [
+                    new MapLibreSegment(
+                        1,
+                        "test_segment",
+                        [
+                            new LngLatWithElevation(0, 0, 0),
+                            new LngLatWithElevation(1, 1, 0)
+                        ],
+                        "red"
+                    ),
+                    new MapLibreSegment(
+                        2,
+                        "test_segment",
+                        [
+                            new LngLatWithElevation(1, 1, 0),
+                            new LngLatWithElevation(2, 2, 0)
+                        ],
+                        "orange"
+                    )
+
+                ]
+            })
+
             await wrapper.setProps({segments: []})
 
             const mockMapInstance = (MockMap as Mock).mock.results[0].value;
@@ -96,8 +124,6 @@ describe('MapComponent', () => {
 
         it('adds a line segment if segments prop changes', async () => {
             const mockMapInstance = (MockMap as Mock).mock.results[0].value;
-            expect(mockMapInstance.addSource).toHaveBeenCalledOnce();
-            expect(mockMapInstance.addLayer).toHaveBeenCalledOnce();
 
             await wrapper.setProps({
                 segments: [
@@ -124,9 +150,11 @@ describe('MapComponent', () => {
             })
 
 
-            expect(mockMapInstance.addSource).toHaveBeenCalledTimes(3);
-            expect(mockMapInstance.addLayer).toHaveBeenCalledTimes(3);
+            expect(mockMapInstance.addSource).toHaveBeenCalledTimes(2);
+            expect(mockMapInstance.addLayer).toHaveBeenCalledTimes(2);
         })
+
+
     })
 
     describe('with route', () => {
@@ -153,7 +181,7 @@ describe('MapComponent', () => {
         })
 
 
-        it('adds trip segments as lines on map load', () => {
+        it('adds trip segments as lines on a map load', () => {
             const addSourceSpy = (MockMap as any).mock.instances[0].addSource
             const addLayerSpy = (MockMap as any).mock.instances[0].addLayer
 

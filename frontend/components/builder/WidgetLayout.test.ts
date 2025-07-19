@@ -9,6 +9,7 @@ describe('Component', () => {
         it('renders', async () => {
             const component = await mountSuspended(WidgetLayoutComponent, {
                 props: {
+                    tripId: 0,
                     grid: createTestGrid(2, 2)
                 }
             })

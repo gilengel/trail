@@ -15,7 +15,7 @@ import * as uuid from "uuid";
  * Creates a default grid consisting out of 3 rows with 2, 3 and 2 columns.
  * Specially useful to show the user something after creating a new trip.
  * @param tripId - The id of the trip the grid is associated with.
- * @returns A new instance of a grid with 3 rows and 2, 3 and 2 column.
+ * @returns A new instance of a grid with 3 rows and 2, 3 and 2 columns.
  */
 export function createDefaultGrid(tripId: number): Grid {
     return {
@@ -83,7 +83,7 @@ export const useGridStore = () =>
         async function deleteColumn(rowIndex: number, columnIndex: number, grid: Grid) {
             const row = grid.rows[rowIndex];
 
-            await _undoRedoStore.execute(new DeleteColumn(row, columnIndex));
+            await _undoRedoStore.execute(new DeleteColumn(row, grid, columnIndex));
         }
 
         /**
@@ -96,7 +96,7 @@ export const useGridStore = () =>
         async function splitColumn(rowIndex: number, columnIndex: number, grid: Grid) {
             const row = grid.rows[rowIndex];
 
-            await _undoRedoStore.execute(new SplitColumn(row, columnIndex));
+            await _undoRedoStore.execute(new SplitColumn(row, grid, columnIndex));
         }
 
         /**
@@ -125,7 +125,7 @@ export const useGridStore = () =>
          * to be changed is identified by a key.
          * @param element - The element from which you want to set an attribute.
          * @param attribute - The key of the attribute that shall be changed.
-         * @param value - The new value for the attribute. Can be either string, number or boolean.
+         * @param value - The new value for the attribute. It can be either string, number or boolean.
          */
         async function updateElementAttribute(
             element: Element<unknown>,
@@ -138,7 +138,7 @@ export const useGridStore = () =>
         }
 
         /**
-         * Updates the widths of two neighbouring columns.
+         * Updates the widths of two neighboring columns.
          * @param left - The left column.
          * @param left.column - The left column model.
          * @param left.width - The new width for the left column.

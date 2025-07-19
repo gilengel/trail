@@ -1,5 +1,5 @@
 import type {Grid} from "~/types/grid";
-import type {RouteDto} from "shared";
+import {RouteDto} from "~/types/dto";
 
 /**
  * Persists the grid to the backend.

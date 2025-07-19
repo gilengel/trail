@@ -1,4 +1,4 @@
-import {type Column, type Row} from '~/types/grid';
+import {type Column, type Grid, type Row} from '~/types/grid';
 import {type UndoRedoAction} from '../undoredo';
 
 import * as uuid from 'uuid';
@@ -10,6 +10,7 @@ export class SplitColumn
 
     constructor(
         private row: Row,
+        private grid: Grid,
         private columnIndex: number,
     ) {
     }

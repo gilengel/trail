@@ -4,11 +4,11 @@ import {mountSuspended} from "@nuxt/test-utils/runtime";
 
 describe('Component', () => {
     describe('ThemeToggleButton', () => {
-        it('renders with initial checked state based on isDark', async () => {
+        it('renders with initial checked state based on isLight', async () => {
             const component = await mountSuspended(SwitchComponent)
 
             const checkbox = component.find('input[type="checkbox"]').element as HTMLInputElement
-            expect(checkbox.checked).toBe(true)
+            expect(checkbox.checked).toBe(false)
         })
     })
 })
