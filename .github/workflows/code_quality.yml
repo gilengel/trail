@@ -156,3 +156,5 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.github_token }}
+          git-user-name: 'Gil Engel'
+          git-user-email: 'fernwaerts+github@gmail.com'
