@@ -1,10 +1,13 @@
 <template>
   <v-sheet class="pa-2 ma-2 rounded-xl">
     <v-card variant="flat">
-      <template v-slot:title v-if="props.title">
+      <template
+        #title
+        v-if="props.title"
+      >
         {{ props.title }}
       </template>
-      <slot/>
+      <slot />
     </v-card>
   </v-sheet>
 </template>

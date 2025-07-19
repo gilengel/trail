@@ -1,13 +1,20 @@
 <template>
-  <Editor ref="editor"
-          :formatting="false"
-          :text="false"
-          :undoredo="false"
-          :content="text"
-          :customNode="DynamicParagraph"
-          @onTextChanged="onTextChanged"
-          v-if="selected"/>
-  <div class="heading-container" v-else v-html="text" :style/>
+  <Editor
+    ref="editor"
+    :formatting="false"
+    :text="false"
+    :undoredo="false"
+    :content="text"
+    :custom-node="DynamicParagraph"
+    @on-text-changed="onTextChanged"
+    v-if="selected"
+  />
+  <div
+    class="heading-container"
+    v-else
+    v-html="text"
+    :style
+  />
 </template>
 
 <script setup lang="ts">
@@ -91,8 +98,8 @@ watch(() => props.element.attributes.level, () => {
 function onTextChanged(newContent: string) {
   const parser = new DOMParser();
 
-  let document: Document = parser.parseFromString(newContent, "text/html") as Document;
-  let element = (document.body.firstChild as HTMLElement)
+  const document: Document = parser.parseFromString(newContent, "text/html") as Document;
+  const element = (document.body.firstChild as HTMLElement)
   let align = element.style.textAlign;
 
   if (align === undefined) {

@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout :theme="isDark ? 'dark' : 'light'">
-    <NuxtPage/>
+    <NuxtPage />
   </NuxtLayout>
 </template>
 <script setup lang="ts">

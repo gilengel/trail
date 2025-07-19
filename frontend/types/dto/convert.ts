@@ -1,5 +1,5 @@
 /**
- * @file Contains functionality to parse gpx files into typescript objects.
+ * @file Contains functionality to parse gpx files into TypeScript objects.
  */
 import {XMLParser} from 'fast-xml-parser';
 import {Buffer} from 'buffer';
@@ -9,15 +9,6 @@ export class NotEnoughCoordinatesError extends Error {
     constructor() {
         super(
             'Minimum number of coordinates for a route is two which was not met.',
-        );
-    }
-}
-
-// If the client tries to create/update routes with more than one million points
-export class TooManyCoordinatesError extends Error {
-    constructor() {
-        super(
-            `Maximum number of coordinates for a route is 1'000'000 which was exceed.`,
         );
     }
 }
@@ -59,13 +50,19 @@ export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
         names = [obj.gpx.trk.name];
     }
 
-    const convertedSegments: GPXRouteSegment[] = segments.map((segment: any, i: any) => {
+    interface Point {
+        ele?: string,
+        '@_lat': number,
+        '@_lon': number,
+    }
+
+    const convertedSegments: GPXRouteSegment[] = segments.map((segment: { trkpt: Point[] }, i: number) => {
         const name = names[i];
 
-        const coordinates = segment.trkpt.map((point: any): number[] => {
+        const coordinates = segment.trkpt.map((point: Point): number[] => {
             const elevation = point.ele ? `${point.ele}` : '0';
 
-            return [point['@_lat'], point['@_lon'], elevation];
+            return [point['@_lat'], point['@_lon'], parseFloat(elevation)];
         });
 
         return {

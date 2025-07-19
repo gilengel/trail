@@ -1,8 +1,8 @@
 <template>
   <div
-      ref="mapContainer"
-      data-cy="map-container"
-      class="map"
+    ref="mapContainer"
+    data-cy="map-container"
+    class="map"
   />
 </template>
 

@@ -1,35 +1,33 @@
 <template>
   <BuilderPropertiesContainer>
-    <template v-slot:title>
+    <template #title>
       Map Properties
-
     </template>
 
-    <template v-slot:properties>
-
+    <template #properties>
       <CollapsableList
-          :collapse-number="3"
-          :items="routes!"
-          :text="(routeDto: RouteDto) => routeDto.name"
-          @on-selection-changed="(e) => selectedRoute = e"
+        :collapse-number="3"
+        :items="routes!"
+        :text="(routeDto: RouteDto) => routeDto.name"
+        @on-selection-changed="(e) => selectedRoute = e"
       />
       <v-list
-          v-model:selected="selection"
-          select-strategy="leaf"
-          multiple
-          max-height="600px"
+        v-model:selected="selection"
+        select-strategy="leaf"
+        multiple
+        max-height="600px"
       >
         <v-list-item
-            v-for="(item, index) in segments"
-            :key="item.id"
-            :title="snakeCaseToWords(item.name ?? 'Untitled')"
-            :value="index"
+          v-for="(item, index) in segments"
+          :key="item.id"
+          :title="snakeCaseToWords(item.name ?? 'Untitled')"
+          :value="index"
         >
           <template #prepend="{ isSelected }">
             <v-list-item-action start>
               <v-checkbox-btn
-                  color="primary"
-                  :model-value="isSelected"
+                color="primary"
+                :model-value="isSelected"
               />
             </v-list-item-action>
           </template>
@@ -57,11 +55,10 @@ interface Props {
   }
 }
 
-const props = defineProps<ElementProps<Props>>();
+defineProps<ElementProps<Props>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const gridModuleStore = useGridStore();
 const tripStore = useTripStore();
 const routeStore = useRouteStore();
 

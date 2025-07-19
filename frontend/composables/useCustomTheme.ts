@@ -3,6 +3,8 @@ import {useDark, useToggle} from '@vueuse/core'
 /**
  * Composable to toggle between light and dark Vuetify themes,
  * synced with OS/browser preference and toggleable by the user.
+ * @returns Object with isDark which is a changeable ref object of type bool, toggle, which is a function
+ * that toggles the theme from dark to light or vice versa.
  */
 export function useCustomTheme(): {
     isDark: globalThis.WritableComputedRef<boolean, boolean>

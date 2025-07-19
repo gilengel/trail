@@ -1,50 +1,70 @@
-<template>Heading
+<template>
+  Heading
   <BuilderPropertiesContainer>
-    <template v-slot:title>
+    <template #title>
       Image Properties
     </template>
 
-    <template v-slot:properties>
-      <h2 class="text-h6 mt-2 mb-2">Aspect Ratio</h2>
+    <template #properties>
+      <h2 class="text-h6 mt-2 mb-2">
+        Aspect Ratio
+      </h2>
       <div class="aspect-ratios pb-4">
         <div
-            v-for="(ratio, i) in aspectRatios"
-            :key="i"
-            class="ratio-container"
+          v-for="(ratio, i) in aspectRatios"
+          :key="i"
+          class="ratio-container"
         >
-          <v-responsive :aspect-ratio="ratio.value"
-                        :class="['border', props.element.attributes.aspectRatio === ratio.value ? 'selected' : '']"
-                        @click="onAspectRatioChanged(ratio.value)">
+          <v-responsive
+            :aspect-ratio="ratio.value"
+            :class="['border', props.element.attributes.aspectRatio === ratio.value ? 'selected' : '']"
+            @click="onAspectRatioChanged(ratio.value)"
+          >
             <div class="ratio-content">
               <strong>{{ ratio.label }}</strong>
             </div>
           </v-responsive>
         </div>
       </div>
-      <v-divider></v-divider>
+      <v-divider />
 
-      <h2 class="text-h6 mt-2 mb-2">Scaling</h2>
+      <h2 class="text-h6 mt-2 mb-2">
+        Scaling
+      </h2>
       <div>
         <v-row>
           <v-col>
-            <v-row no-gutters align="center">
+            <v-row
+              no-gutters
+              align="center"
+            >
               <v-col cols="8">
-                <v-slider v-model="scaleValue" min="0.125" max="2"></v-slider>
+                <v-slider
+                  v-model="scaleValue"
+                  min="0.125"
+                  max="2"
+                />
               </v-col>
               <v-col cols="4">
-                <v-number-input control-variant="stacked" v-model="scaleValue" :precision="2"></v-number-input>
+                <v-number-input
+                  control-variant="stacked"
+                  v-model="scaleValue"
+                  :precision="2"
+                />
               </v-col>
             </v-row>
           </v-col>
         </v-row>
       </div>
-      <v-divider></v-divider>
+      <v-divider />
 
-      <h2 class="text-h6 mt-2 mb-2">Size</h2>
+      <h2 class="text-h6 mt-2 mb-2">
+        Size
+      </h2>
       <v-col
-          class="py-2"
-          cols="12"
-          sm="6"
+        class="py-2"
+        cols="12"
+        sm="6"
       >
         <v-btn-toggle v-model="imageSizeType">
           <v-btn :value="ImageSize.FitHorizontally">
@@ -60,13 +80,15 @@
           </v-btn>
         </v-btn-toggle>
       </v-col>
-      <v-divider></v-divider>
+      <v-divider />
 
-      <h2 class="text-h6 mt-2 mb-2">Position</h2>
+      <h2 class="text-h6 mt-2 mb-2">
+        Position
+      </h2>
       <v-col
-          class="py-2"
-          cols="12"
-          sm="6"
+        class="py-2"
+        cols="12"
+        sm="6"
       >
         <v-btn-toggle v-model="imagePositionMode">
           <v-btn :value="ImagePosition.Free">

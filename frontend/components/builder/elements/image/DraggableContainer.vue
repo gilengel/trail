@@ -1,19 +1,19 @@
 <template>
   <div
-      ref="container"
-      class="draggable-container"
-      @mousedown="startDrag"
-      @wheel.prevent="onWheel"
-      :style="{ position: 'absolute' }"
+    ref="container"
+    class="draggable-container"
+    @mousedown="startDrag"
+    @wheel.prevent="onWheel"
+    :style="{ position: 'absolute' }"
   >
     <img
-        ref="image"
-        class="zoom-image"
-        :style="imageStyle"
-        :src="source"
-        draggable="false"
-        alt="image"
-    />
+      ref="image"
+      class="zoom-image"
+      :style="imageStyle"
+      :src="source"
+      draggable="false"
+      alt="image"
+    >
   </div>
 </template>
 
@@ -49,11 +49,14 @@ const emit = defineEmits<{
 
 // - REFS- -------------------------------------------------------------------------------------------------------------
 
+const localPosition = ref({...position})
+const localScale = ref({...scale})
+
 const container = ref<HTMLElement | null>(null)
 const image = ref<HTMLImageElement | null>(null) // now a real <img> node
 
 let isDragging = false
-let offset: Point2D = {x: 0, y: 0}
+const offset: Point2D = {x: 0, y: 0}
 
 // Compute CSS‐style for the <img>
 const imageStyle = computed<CSSProperties>(() => {
@@ -62,7 +65,7 @@ const imageStyle = computed<CSSProperties>(() => {
       position: 'absolute',
       left: '50%',
       top: '50%',
-      transform: `translate(-50%, -50%) scale(${scale.value})`,
+      transform: `translate(-50%, -50%) scale(${localScale.value.value})`,
       // no transformOrigin needed for “centered” because translate(−50%,−50%) is used
     }
   } else {
@@ -71,8 +74,8 @@ const imageStyle = computed<CSSProperties>(() => {
       position: 'relative',
       left: 'auto',
       top: 'auto',
-      transform: `translate(${position.x}px, ${position.y}px) scale(${scale.value})`,
-      transformOrigin: `${scale.origin.x}px ${scale.origin.y}px`,
+      transform: `translate(${localPosition.value.x}px, ${localPosition.value.y}px) scale(${localScale.value.value})`,
+      transformOrigin: `${localScale.value.origin.x}px ${localScale.value.origin.y}px`,
     }
   }
 })
@@ -108,11 +111,20 @@ function clampPosition() {
     maxY = 0
   }
 
-  position.x = Math.min(Math.max(position.x, minX), maxX)
-  position.y = Math.min(Math.max(position.y, minY), maxY)
+  localPosition.value.x = Math.min(Math.max(localPosition.value.x, minX), maxX)
+  localPosition.value.y = Math.min(Math.max(localPosition.value.y, minY), maxY)
+  emit('onImagePositionChange', {...localPosition.value})
 }
 
 // - WATCHES -----------------------------------------------------------------------------------------------------------
+
+watch(() => position, (newVal) => {
+  localPosition.value = {...newVal}
+}, {deep: true})
+
+watch(() => scale, (newVal) => {
+  localScale.value = {...newVal}
+}, {deep: true})
 
 watch(
     () => positionType,
@@ -123,8 +135,8 @@ watch(
         const iRect = image.value.getBoundingClientRect()
 
         // Convert that into a new position so that it does not jump
-        position.x = iRect.left - cRect.left
-        position.y = iRect.top - cRect.top
+        localPosition.value.x = iRect.left - cRect.left
+        localPosition.value.y = iRect.top - cRect.top
         // Immediately clamp—just in case the conversion pushed it outside
         clampPosition()
       }
@@ -144,11 +156,13 @@ watch(
 
       function updateScale(newScale: number) {
 
-        scale.value = newScale
-        scale.origin.x = 0
-        scale.origin.y = 0
-        position.x = 0
-        position.y = 0
+        localScale.value.value = newScale
+        localScale.value.origin.x = 0
+        localScale.value.origin.y = 0
+        localPosition.value.x = 0
+        localPosition.value.y = 0
+        emit('onImagePositionChange', {...localPosition.value})
+        emit('onImageScaleChange', scale.value, {...scale.origin})
       }
 
       if (sizeType === ImageSize.FitHorizontally) {
@@ -176,8 +190,9 @@ const startDrag = (event: MouseEvent) => {
   if (container.value && image.value) {
     const cRect = container.value.getBoundingClientRect()
     const iRect = image.value.getBoundingClientRect()
-    position.x = iRect.left - cRect.left
-    position.y = iRect.top - cRect.top
+
+    localPosition.value.x = iRect.left - cRect.left
+    localPosition.value.y = iRect.top - cRect.top
     clampPosition()
   }
 
@@ -191,9 +206,8 @@ const startDrag = (event: MouseEvent) => {
 const onDrag = (event: MouseEvent) => {
   if (!enabled || !isDragging) return
 
-  position.x = event.clientX - offset.x
-  position.y = event.clientY - offset.y
-
+  localPosition.value.x = event.clientX - offset.x
+  localPosition.value.y = event.clientY - offset.y
   clampPosition()
 
   emit('onImagePositionChange', {...position})
@@ -215,10 +229,10 @@ function onWheel(event: WheelEvent) {
 
   const zoomFactor = 0.1
   const delta = -Math.sign(event.deltaY)
-  scale.value = Math.min(4, Math.max(0.125, scale.value + delta * zoomFactor))
+  localScale.value.value = Math.min(4, Math.max(0.125, scale.value + delta * zoomFactor))
 
-  scale.origin.x = position.x
-  scale.origin.y = position.y
+  localScale.value.origin.x = position.x
+  localScale.value.origin.y = position.y
 
   clampPosition()
 

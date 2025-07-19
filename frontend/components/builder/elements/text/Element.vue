@@ -1,6 +1,14 @@
 <template>
-  <Editor :content="text" @onTextChanged="onTextChanged" v-if="selected"></Editor>
-  <div v-else v-html="text" class="tiptap"></div>
+  <Editor
+    :content="text"
+    @on-text-changed="onTextChanged"
+    v-if="selected"
+  />
+  <div
+    v-else
+    v-html="text"
+    class="tiptap"
+  />
 </template>
 
 <script setup lang="ts">

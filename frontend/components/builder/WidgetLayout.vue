@@ -1,50 +1,50 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div id="editor-primary-toolbar"></div>
+  <div id="editor-primary-toolbar" />
   <v-row no-gutters>
     <v-col
-        sm="9"
-        no-gutters
+      sm="9"
+      no-gutters
     >
       <div ref="el">
-
-        <BuilderLayoutRow v-for="(element, index) in grid.rows"
-                          data-key="itemId"
-                          data-value="Row"
-                          :key="element.id"
-                          :model="element"
-                          :grid="grid"
-                          :row-index="index"
-                          :selectedElementId="selectedElementId"
-                          :data-testid="`layout-row-${index}`"
-                          @select-element="(e) => onSelectedElementChanged(e)"
-                          @on-element-changed="(e) => $emit('onElementChanged', e)"
+        <BuilderLayoutRow
+          v-for="(element, index) in grid.rows"
+          data-key="itemId"
+          data-value="Row"
+          :key="element.id"
+          :model="element"
+          :grid="grid"
+          :row-index="index"
+          :selected-element-id="selectedElementId"
+          :data-testid="`layout-row-${index}`"
+          @select-element="(e) => onSelectedElementChanged(e)"
+          @on-element-changed="(e) => $emit('onElementChanged', e)"
         />
       </div>
       <v-row
-          no-gutters
-          style="margin-top: 24px; margin-right: 16px"
+        no-gutters
+        style="margin-top: 24px; margin-right: 16px"
       >
-        <v-spacer/>
+        <v-spacer />
         <v-btn
-            @click="addRow()"
-            color="primary rounded-xl"
-            variant="outlined"
-            prepend-icon="las la-plus"
+          @click="addRow()"
+          color="primary rounded-xl"
+          variant="outlined"
+          prepend-icon="las la-plus"
         >
           Add Row
         </v-btn>
       </v-row>
     </v-col>
     <v-col
-        ref="options_container"
-        sm="3"
-        class="options-container"
+      ref="options_container"
+      sm="3"
+      class="options-container"
     >
       <component
-          :is="selectedComponent"
-          v-bind="selectedProps as ElementProps<any>"
-          v-if="selectedComponent"
+        :is="selectedComponent"
+        v-bind="selectedProps as ElementProps<any>"
+        v-if="selectedComponent"
       />
     </v-col>
   </v-row>
@@ -55,7 +55,7 @@ import {computed, type Ref, ref} from 'vue';
 import {v4 as uuidv4} from 'uuid';
 import type {SortableEvent} from 'sortablejs';
 import {useSortable} from '@vueuse/integrations/useSortable'
-import {Element, type Grid, type Row} from '~/types/grid';
+import {Element, type Grid} from '~/types/grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
 

@@ -1,11 +1,14 @@
 <template>
   <div class="pa-5">
-    <v-card class="rounded-xl" variant="flat">
+    <v-card
+      class="rounded-xl"
+      variant="flat"
+    >
       <v-card-title>
-        <slot name="title"></slot>
+        <slot name="title" />
       </v-card-title>
       <v-card-text>
-        <slot name="properties"></slot>
+        <slot name="properties" />
       </v-card-text>
     </v-card>
   </div>

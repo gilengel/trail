@@ -1,95 +1,109 @@
 <template>
   <div class="editor-container">
     <Teleport to="#editor-primary-toolbar">
-      <v-toolbar density="compact" v-if="editor">
-        <ToolbarButton v-if="formatting"
-                       icon="las la-bold"
-                       tooltip="Bold"
-                       :is-active="editor.isActive('bold')"
-                       @click="editor.chain().focus().toggleBold().run()"
+      <v-toolbar
+        density="compact"
+        v-if="editor"
+      >
+        <ToolbarButton
+          v-if="formatting"
+          icon="las la-bold"
+          tooltip="Bold"
+          :is-active="editor.isActive('bold')"
+          @click="editor.chain().focus().toggleBold().run()"
         />
 
-        <ToolbarButton v-if="formatting"
-                       icon="las la-italic"
-                       tooltip="Italic"
-                       :is-active="editor.isActive('italic')"
-                       @click="editor.chain().focus().toggleItalic().run()"
+        <ToolbarButton
+          v-if="formatting"
+          icon="las la-italic"
+          tooltip="Italic"
+          :is-active="editor.isActive('italic')"
+          @click="editor.chain().focus().toggleItalic().run()"
         />
 
-        <ToolbarButton v-if="formatting"
-                       icon="las la-strikethrough"
-                       tooltip="Strikethrough"
-                       :is-active="editor.isActive('strike')"
-                       @click="editor.chain().focus().toggleStrike().run()"
+        <ToolbarButton
+          v-if="formatting"
+          icon="las la-strikethrough"
+          tooltip="Strikethrough"
+          :is-active="editor.isActive('strike')"
+          @click="editor.chain().focus().toggleStrike().run()"
         />
 
-        <ToolbarButton v-if="text"
-                       icon="las la-list"
-                       tooltip="Bullet List"
-                       :is-active="editor.isActive('bulletList')"
-                       @click="editor.chain().focus().toggleBulletList().run()"
+        <ToolbarButton
+          v-if="text"
+          icon="las la-list"
+          tooltip="Bullet List"
+          :is-active="editor.isActive('bulletList')"
+          @click="editor.chain().focus().toggleBulletList().run()"
         />
 
-        <ToolbarButton v-if="text"
-                       icon="las la-list-ol"
-                       tooltip="Numbered List"
-                       :is-active="editor.isActive('orderedList')"
-                       @click="editor.chain().focus().toggleOrderedList().run()"
+        <ToolbarButton
+          v-if="text"
+          icon="las la-list-ol"
+          tooltip="Numbered List"
+          :is-active="editor.isActive('orderedList')"
+          @click="editor.chain().focus().toggleOrderedList().run()"
         />
 
-        <ToolbarButton v-if="text"
-                       icon="las la-quote-left"
-                       tooltip="Blockquote"
-                       :is-active="editor.isActive('blockquote')"
-                       @click="editor.chain().focus().toggleBlockquote().run()"
+        <ToolbarButton
+          v-if="text"
+          icon="las la-quote-left"
+          tooltip="Blockquote"
+          :is-active="editor.isActive('blockquote')"
+          @click="editor.chain().focus().toggleBlockquote().run()"
         />
 
-        <ToolbarButton v-if="undoredo"
-                       icon="las la-undo-alt"
-                       tooltip="Undo"
-                       :is-active="editor.isActive('undo')"
-                       @click="editor.chain().focus().undo().run()"
+        <ToolbarButton
+          v-if="undoredo"
+          icon="las la-undo-alt"
+          tooltip="Undo"
+          :is-active="editor.isActive('undo')"
+          @click="editor.chain().focus().undo().run()"
         />
 
-        <ToolbarButton v-if="undoredo"
-                       icon="las la-redo-alt"
-                       tooltip="Redo"
-                       :is-active="editor.isActive('redo')"
-                       @click="editor.chain().focus().redo().run()"
+        <ToolbarButton
+          v-if="undoredo"
+          icon="las la-redo-alt"
+          tooltip="Redo"
+          :is-active="editor.isActive('redo')"
+          @click="editor.chain().focus().redo().run()"
         />
 
-        <ToolbarButton v-if="alignment"
-                       icon="las la-align-left"
-                       tooltip="Redo"
-                       :is-active="editor.isActive('left')"
-                       @click="editor.chain().focus().setNodeSelection(1).setTextAlign('left').run()"
+        <ToolbarButton
+          v-if="alignment"
+          icon="las la-align-left"
+          tooltip="Redo"
+          :is-active="editor.isActive('left')"
+          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('left').run()"
         />
 
-        <ToolbarButton v-if="alignment"
-                       icon="las la-align-center"
-                       tooltip="Redo"
-                       :is-active="editor.isActive('center')"
-                       @click="editor.chain().focus().setNodeSelection(1).setTextAlign('center').run()"
+        <ToolbarButton
+          v-if="alignment"
+          icon="las la-align-center"
+          tooltip="Redo"
+          :is-active="editor.isActive('center')"
+          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('center').run()"
         />
 
-        <ToolbarButton v-if="alignment"
-                       icon="las la-align-right"
-                       tooltip="Redo"
-                       :is-active="editor.isActive('right')"
-                       @click="editor.chain().focus().setNodeSelection(1).setTextAlign('right').run()"
+        <ToolbarButton
+          v-if="alignment"
+          icon="las la-align-right"
+          tooltip="Redo"
+          :is-active="editor.isActive('right')"
+          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('right').run()"
         />
 
-        <ToolbarButton v-if="alignment"
-                       icon="las la-align-justify"
-                       tooltip="Redo"
-                       :is-active="editor.isActive('justify')"
-                       @click="editor.chain().focus().setNodeSelection(1).setTextAlign('justify').run()"
+        <ToolbarButton
+          v-if="alignment"
+          icon="las la-align-justify"
+          tooltip="Redo"
+          :is-active="editor.isActive('justify')"
+          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('justify').run()"
         />
       </v-toolbar>
     </Teleport>
-    <TiptapEditorContent :editor="editor"/>
+    <TiptapEditorContent :editor="editor" />
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -161,7 +175,7 @@ const starterKitNoParaOrHeading = StarterKit.configure({
   heading: false,
 })
 
-let defaultExtensions: Extensions = [
+const defaultExtensions: Extensions = [
   starterKitNoParaOrHeading,
   Color,
   TextStyle.configure({mergeNestedSpanStyles: true}),
