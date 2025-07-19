@@ -4,6 +4,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
+/**
+ *
+ */
 async function generateSwagger() {
   const app = await NestFactory.create(AppModule);
 
