@@ -32,6 +32,7 @@
     "@vueuse/integrations": "^13.5.0",
     "@vueuse/nuxt": "^12.5.0",
     "@yeger/vue-masonry-wall": "^5.0.17",
+    "change-case": "^5.4.4",
     "chart.js": "^4.4.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

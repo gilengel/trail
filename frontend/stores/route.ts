@@ -1,6 +1,6 @@
 import {MapLibreRoute, routeDto2MapLibreTrip} from "~/types/route";
 import {defineStore} from 'pinia';
-import {RouteDto, RouteSegmentDto} from "shared";
+import {type RouteDto, type RouteSegmentDto} from "~/types/dto";
 
 /**
  * Store that can catch routes for multiple trips. It hides all network related functionality that the user
@@ -26,6 +26,7 @@ export const useRouteStore = () =>
                 return dtoRoutesByRouteId.get(routeId) as RouteDto;
             }
 
+
             const {data: routeDTO} = await useApiFetch<RouteDto>(
                 `/api/routes/${routeId}`
             );
@@ -43,6 +44,7 @@ export const useRouteStore = () =>
                     existingRoutesPerTrip.push(route);
                 }
             } else {
+                dtoRoutesByRouteId.set(routeId, route);
                 dtoRoutesByTripId.set(route!.tripId, [route!]);
             }
 
@@ -84,7 +86,7 @@ export const useRouteStore = () =>
 
 
         /**
-         * Returns all associated routes of a trip from the backend converted in a format that can be displayed by MapLibre.
+         * Returns all associated routes of a trip from the backend converted in a format that MapLibre can display.
          * @param tripId - The id of the trip as number.
          * @returns Promise with the trip.
          */

@@ -15,7 +15,7 @@ import type {CreateTripDto} from "~/types/dto";
 export const useTripStore = () =>
     defineStore('tripStore', () => {
 
-        const trips = reactive(new Map<number, TripDto>());
+        const cachedTrips = reactive(new Map<number, TripDto>());
 
         /**
          * Returns the trip if it was already loaded before, if not it will try to fetch it
@@ -24,8 +24,8 @@ export const useTripStore = () =>
          * @returns Promise with the trip.
          */
         async function get(id: number): Promise<TripDto | null> {
-            if (trips.has(id)) {
-                return trips.get(id) as TripDto;
+            if (cachedTrips.has(id)) {
+                return cachedTrips.get(id) as TripDto;
             }
 
             const {data: trip} = await useApiFetch<TripDto>(
@@ -36,12 +36,12 @@ export const useTripStore = () =>
                 return null;
             }
 
-            // TripId is not stored inside the grid on database level
+            // TripId is not stored inside the grid on database level and must be patched here
             if (trip.value.layout) {
                 (trip.value.layout as Grid).tripId = trip.value.id;
             }
 
-            trips.set(id, trip.value);
+            cachedTrips.set(id, trip.value);
 
             return trip.value;
         }
@@ -54,17 +54,18 @@ export const useTripStore = () =>
          */
         async function all(fetch: boolean = true): Promise<Map<number, TripDto>> {
             if (!fetch) {
-                return trips;
+                return cachedTrips;
             }
 
             const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips')
+            console.log(dbTrips)
             dbTrips.value?.forEach(trip => {
-                if (!trips.has(trip.id)) {
-                    trips.set(trip.id, trip);
+                if (!cachedTrips.has(trip.id)) {
+                    cachedTrips.set(trip.id, trip);
                 }
             })
 
-            return trips;
+            return cachedTrips;
         }
 
         /**
@@ -78,7 +79,7 @@ export const useTripStore = () =>
                 layout: createDefaultGrid(0)
             });
 
-            trips.set(newTrip.id, newTrip);
+            cachedTrips.set(newTrip.id, newTrip);
 
             return newTrip;
         }
@@ -91,7 +92,7 @@ export const useTripStore = () =>
         async function remove(trip: TripDto): Promise<TripDto> {
             const deletedTrip = await useDelete<TripDto>(`/api/trips/${trip.id}`);
 
-            trips.delete(trip.id);
+            cachedTrips.delete(trip.id);
 
             return deletedTrip;
         }

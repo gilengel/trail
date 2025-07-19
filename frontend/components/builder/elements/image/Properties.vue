@@ -18,6 +18,7 @@
           <v-responsive
             :aspect-ratio="ratio.value"
             :class="['border', props.element.attributes.aspectRatio === ratio.value ? 'selected' : '']"
+            :data-testid="`ratio-${i}`"
             @click="onAspectRatioChanged(ratio.value)"
           >
             <div class="ratio-content">
@@ -67,15 +68,24 @@
         sm="6"
       >
         <v-btn-toggle v-model="imageSizeType">
-          <v-btn :value="ImageSize.FitHorizontally">
+          <v-btn
+            :value="ImageSize.FitHorizontally"
+            data-testid="btn-image-size-h"
+          >
             <v-icon>las la-arrows-alt-h</v-icon>
           </v-btn>
 
-          <v-btn :value="ImageSize.FitVertically">
+          <v-btn
+            :value="ImageSize.FitVertically"
+            data-testid="btn-image-size-v"
+          >
             <v-icon>las la-arrows-alt-v</v-icon>
           </v-btn>
 
-          <v-btn :value="ImageSize.Free">
+          <v-btn
+            :value="ImageSize.Free"
+            data-testid="btn-image-size-f"
+          >
             <v-icon>las la-vector-square</v-icon>
           </v-btn>
         </v-btn-toggle>

@@ -9,7 +9,7 @@ import {MoveRow} from '@/stores/actions/moveRow';
 import {SetElement} from '@/stores/actions/setElement';
 import {UpdateElementAttribute} from '@/stores/actions/updateElementAttribute';
 import {createTestGrid} from "~/stores/actions/test.helper";
-import {useGridStore} from "~/stores/grid";
+import {createDefaultGrid, useGridStore} from "~/stores/grid";
 
 vi.mock('@/stores/undoRedo', () => {
     return {
@@ -35,6 +35,15 @@ describe('GridModuleStore', () => {
 
         undoRedoStoreMock.execute = vi.fn();
     });
+
+    it('creates a default grid with three rows containing 2, 3 and 2 columns', () => {
+        const grid = createDefaultGrid(0);
+
+        expect(grid.rows.length).toBe(3);
+        expect(grid.rows[0].columns.length).toBe(2);
+        expect(grid.rows[1].columns.length).toBe(3);
+        expect(grid.rows[2].columns.length).toBe(2);
+    })
 
     it('calls execute with AddRow when adding a row', async () => {
         const grid = createTestGrid(2, 2);

@@ -20,7 +20,7 @@
         <v-list-item
           v-for="(item, index) in segments"
           :key="item.id"
-          :title="snakeCaseToWords(item.name ?? 'Untitled')"
+          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
           :value="index"
         >
           <template #prepend="{ isSelected }">
@@ -41,10 +41,10 @@
 
 import {useTripStore} from "~/stores/trip";
 import type {ElementProps} from "~/components/builder/properties";
-import {snakeCaseToWords} from "~/utils/text";
 import {useRouteStore} from "~/stores/route";
 import CollapsableList from "~/components/CollapsableList.vue";
-import {RouteDto} from "@trail/shared";
+import {RouteDto} from "~/types/dto";
+import * as changeCase from "change-case";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

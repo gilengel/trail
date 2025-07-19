@@ -1,40 +1,28 @@
 /**
  * @file Dto definitions for images, both api and database (internal).
  */
-import { ApiProperty } from './decorators';
+export interface DbImageDto {
+    id: string;
 
-export class DbImageDto {
-  @ApiProperty()
-  id: string;
+    timestamp: Date;
 
-  @ApiProperty()
-  timestamp: Date;
+    coordinates: string;
 
-  @ApiProperty()
-  coordinates: string;
-
-  @ApiProperty()
-  mime_type: string;
+    mime_type: string;
 }
 
-export class ImageDto {
-  @ApiProperty()
-  id: string;
+export interface ImageDto {
+    id: string;
 
-  @ApiProperty()
-  timestamp: Date;
+    timestamp: Date;
 
-  @ApiProperty()
-  name: string;
+    name: string;
 
-  @ApiProperty()
-  coordinates: Array<number>;
+    coordinates: Array<number>;
 
-  @ApiProperty()
-  url: string;
+    url: string;
 }
 
-export class CountDto {
-  @ApiProperty()
-  count: string;
+export interface CountDto {
+    count: string;
 }
