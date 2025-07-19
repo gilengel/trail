@@ -50,10 +50,10 @@ export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
     names = [obj.gpx.trk.name];
   }
 
-  const convertedSegments: GPXRouteSegment[] = segments.map((segment: any, i: any) => {
+  const convertedSegments: GPXRouteSegment[] = segments.map((segment: Partial<{trkpt: []}>, i: number) => {
     const name = names[i];
 
-    const coordinates = segment.trkpt.map((point: any): number[] => {
+    const coordinates = segment.trkpt.map((point: Partial<{ele: unknown}>): number[] => {
       const elevation = point.ele ? `${point.ele}` : '0';
 
       return [point['@_lat'], point['@_lon'], elevation];

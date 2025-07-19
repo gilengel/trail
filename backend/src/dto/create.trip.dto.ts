@@ -1,4 +1,7 @@
-import { ApiProperty } from './decorators';
+/**
+ * @file DTO for the creation of trips.
+ */
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTripDto {
     @ApiProperty({

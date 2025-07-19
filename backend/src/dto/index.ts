@@ -1,3 +1,6 @@
+/**
+ * @file DTO specifications.
+ */
 export * from './create.route.dto'
 export * from './create.route.segment.dto'
 export * from './image.dto'

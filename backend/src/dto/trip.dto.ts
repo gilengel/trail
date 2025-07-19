@@ -1,7 +1,6 @@
 /**
  * @file DTO specification for a trip.
  */
-import { ApiProperty } from './decorators';
 import {IsInt, IsString, IsArray, IsOptional, IsObject} from 'class-validator';
 
 import {RouteDto} from './route.dto';

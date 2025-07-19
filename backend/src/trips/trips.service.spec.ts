@@ -71,7 +71,7 @@ describe('TripsService', () => {
       .mockResolvedValueOnce({
         id: testData.dbTrip.id,
         name: testData.dbTrip.name,
-        layout: testData.dbTrip.layout as any
+        layout: testData.dbTrip.layout as object
       });
 
     const result: TripDto = await service.trip(0);
@@ -107,7 +107,7 @@ describe('TripsService', () => {
       .mockResolvedValue({
         id: testData.dbTripWithUpdatedLayout.id,
         name: testData.dbTripWithUpdatedLayout.name,
-        layout: testData.dbTripWithUpdatedLayout.layout as any
+        layout: testData.dbTripWithUpdatedLayout.layout as object
       });
 
     const result = await service.updateTrip(0, {
@@ -127,7 +127,7 @@ describe('TripsService', () => {
     jest.spyOn(prisma.trip, 'delete').mockResolvedValue({
       id: testData.dbTrip.id,
       name: testData.dbTrip.name,
-      layout: testData.dbTrip.layout as any
+      layout: testData.dbTrip.layout as object
     });
 
     const result = await service.deleteTrip(0);

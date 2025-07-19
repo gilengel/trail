@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for creating a route segment.
  */
-import { ApiProperty } from './decorators';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRouteSegment {
     @ApiProperty({ type: String, required: false})
