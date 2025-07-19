@@ -53,7 +53,6 @@
   position: relative;
   height: 22vh;
   background-color: #ddf7fa;
-  background-image: url("assets/mountains.svg");
   background-repeat: repeat-x;
 }
 

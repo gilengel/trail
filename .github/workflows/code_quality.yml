@@ -148,3 +148,11 @@ jobs:
           slug: gilengel/trail
           files: ./frontend/coverage/cobertura-coverage.xml
           flags: frontend,unit
+
+      # -----------------------------------------------------------------
+      # release & changelog
+      # -----------------------------------------------------------------
+      - name: Conventional Changelog Action
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.github_token }}
