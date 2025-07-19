@@ -64,12 +64,6 @@ jobs:
       # -----------------------------------------------------------------
       # backend
       # -----------------------------------------------------------------
-      - name: Set up Node.js ${{ matrix.node-version }} (backend)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
       - name: Cache npm dependencies (backend)
         uses: actions/cache@v4
         with:
@@ -78,13 +72,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-backend-
 
-      - name: Install dependencies (backend)
-        run: npm install
-        working-directory: ./backend
-
-      - name: Generate Prisma Client (backend)
-        run: npx prisma generate
-        working-directory: ./backend
+      - name: Setup (backend)
+        uses: ./.github/actions/setup-backend
 
       - name: Build (backend)
         run: npm run build:backend
@@ -129,12 +118,6 @@ jobs:
       # -----------------------------------------------------------------
       # frontend
       # -----------------------------------------------------------------
-      - name: Set up Node.js ${{ matrix.node-version }} (frontend)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
       - name: Cache npm dependencies (frontend)
         uses: actions/cache@v4
         with:

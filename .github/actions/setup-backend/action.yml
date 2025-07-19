@@ -1,0 +1,16 @@
+name: setup-backend
+author: gil
+description: setup-backend
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+      working-directory: ./backend
+
+    - name: Generate Prisma Client
+      run: npx prisma generate
+      shell: bash
+      working-directory: ./backend

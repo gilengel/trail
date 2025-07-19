@@ -17,7 +17,8 @@
     "entity",
     "images.upload.interceptor.ts",
     "gpx.upload.interceptor.ts",
-    "dto/*"
+    "dto/*",
+    "swagger.generation.ts"
   ],
   "coverageDirectory": "./coverage-unit",
 
