@@ -6,28 +6,28 @@
 
     <template #properties>
       <CollapsableList
-          :collapse-number="3"
-          :items="routes!"
-          :text="(routeDto: RouteDto) => routeDto.name"
-          @on-selection-changed="(e) => selectedRoute = e"
+        :collapse-number="3"
+        :items="routes!"
+        :text="(routeDto: RouteDto) => routeDto.name"
+        @on-selection-changed="(e) => selectedRoute = e"
       />
       <v-list
-          v-model:selected="selection"
-          select-strategy="leaf"
-          multiple
-          max-height="600px"
+        v-model:selected="selection"
+        select-strategy="leaf"
+        multiple
+        max-height="600px"
       >
         <v-list-item
-            v-for="item in segments"
-            :key="item.id"
-            :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-            :value="item.id"
+          v-for="item in segments"
+          :key="item.id"
+          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+          :value="item.id"
         >
           <template #prepend="{ isSelected }">
             <v-list-item-action start>
               <v-checkbox-btn
-                  color="primary"
-                  :model-value="isSelected"
+                color="primary"
+                :model-value="isSelected"
               />
             </v-list-item-action>
           </template>
@@ -35,10 +35,10 @@
       </v-list>
 
       <v-color-picker
-          v-model="color"
-          hide-inputs
-          show-swatches
-          @update:model-value="onColorChange"
+        v-model="color"
+        hide-inputs
+        show-swatches
+        @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>

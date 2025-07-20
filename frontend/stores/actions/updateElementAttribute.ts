@@ -1,6 +1,9 @@
 import {type AttributeType, Element} from '~/types/grid';
 
 /**
+ * @template T Object.
+ * @template K Key of T.
+ *
  * Updates an attribute of the element. This is an undoable/redoable action.
  */
 export class UpdateElementAttribute<T extends object, K extends keyof T>

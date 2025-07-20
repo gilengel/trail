@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {type AttributeType, type Column, Element, type Grid, type Row} from '~/types/grid';
+import {type Column, Element, type Grid, type Row} from '~/types/grid';
 import {GroupedUndoRedoAction, useUndoRedoStore} from './undoredo';
 import {DeleteColumn} from "~/stores/actions/deleteColumn";
 import {AddRow} from "~/stores/actions/addRow";
@@ -123,6 +123,8 @@ export const useGridStore = () =>
         /**
          * Updates an attribute of an element. As each element has its own set of attributes, the attribute
          * to be changed is identified by a key.
+         * @template T Object.
+         * @template K Key Of T.
          * @param element - The element from which you want to set an attribute.
          * @param attribute - The key of the attribute that shall be changed.
          * @param value - The new value for the attribute. It can be either string, number or boolean.

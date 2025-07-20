@@ -1,17 +1,19 @@
 <template>
   <div>
-    <v-alert v-if="!props.element.attributes.segmentsIds || props.element.attributes.segmentsIds?.length == 0"
-             type="warning"
-             variant="outlined"
-             prominent
+    <v-alert
+      v-if="!props.element.attributes.segmentsIds || props.element.attributes.segmentsIds?.length == 0"
+      type="warning"
+      variant="outlined"
+      prominent
     >
       No segment is selected for this elevation. Please do so in the property panel on the right side.
     </v-alert>
 
 
-    <Line v-else-if="data"
-          :data
-          :options="chartOptions"
+    <Line
+      v-else-if="data"
+      :data
+      :options="chartOptions"
     />
   </div>
 </template>
@@ -110,7 +112,7 @@ const elevations = computed(() => {
     return;
   }
 
-  let coordinates = segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);
+  const coordinates = segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);
 
   return coordinates.map(coordinate => coordinate![2])
 })
