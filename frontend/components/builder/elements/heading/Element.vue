@@ -1,26 +1,26 @@
 <template>
   <Editor
-    ref="editor"
-    :formatting="false"
-    :text="false"
-    :undoredo="false"
-    :content="text"
-    :custom-node="DynamicParagraph"
-    @on-text-changed="onTextChanged"
-    v-if="selected"
+      ref="editor"
+      :formatting="false"
+      :text="false"
+      :undoredo="false"
+      :content="text"
+      :custom-node="DynamicParagraph"
+      @on-text-changed="onTextChanged"
+      v-if="selected"
   />
   <div
-    class="heading-container"
-    v-else
-    v-html="text"
-    :style
+      class="heading-container"
+      v-else
+      v-html="text"
+      :style
   />
 </template>
 
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
 import Editor from "~/components/Editor.vue";
-import {DynamicParagraph} from "~/components/DynamicParagraph";
+import {DynamicParagraph} from "~/components/builder/elements/heading/DynamicParagraph";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

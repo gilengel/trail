@@ -1,20 +1,20 @@
 <template>
   <v-responsive
-    :aspect-ratio
-    :class="['image-container']"
+      :aspect-ratio
+      :class="['image-container']"
   >
     <BuilderElementsImageDraggableContainer
-      data-testid="element-img"
-      :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
-      :aspect-ratio="aspectRatio"
-      :position="props.element.attributes.position!"
-      :position-type="props.element.attributes.positionType"
-      :scale="props.element.attributes.scale"
-      :size-type="props.element.attributes.sizeType"
-      :enabled="props.selected"
-      @on-image-scale-change="onImageScaleChange"
-      @on-image-position-change="onImagePositionChange"
-      @on-image-size-type-change="onImageSizeTypeChange"
+        data-testid="element-img"
+        :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
+        :aspect-ratio="aspectRatio"
+        :position="props.element.attributes.position!"
+        :position-type="props.element.attributes.positionType"
+        :scale="props.element.attributes.scale"
+        :size-type="props.element.attributes.sizeType"
+        :enabled="props.selected"
+        @on-image-scale-change="onImageScaleChange"
+        @on-image-position-change="onImagePositionChange"
+        @on-image-size-type-change="onImageSizeTypeChange"
     />
   </v-responsive>
 </template>
@@ -50,7 +50,7 @@ function onImageScaleChange(newScale: number, origin: Point2D) {
 
 function onImagePositionChange(position: Point2D) {
   gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Free)
-  gridModuleStore.updateElementAttribute(props.element, "position", position as object as Record<string, unknown>)
+  gridModuleStore.updateElementAttribute(props.element, "position", position)
 }
 
 function onImageSizeTypeChange(imageSizeType: ImageSize) {

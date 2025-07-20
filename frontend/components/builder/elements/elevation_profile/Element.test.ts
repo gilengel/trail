@@ -1,28 +1,22 @@
 import {describe, it, expect} from 'vitest'
-import MapComponent from '~/components/builder/elements/map/Element.vue'
-import {shallowMount} from "@vue/test-utils";
+import ElevationProfileComponent from '~/components/builder/elements/elevation_profile/Element.vue'
+import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {ElementType} from "~/types/grid";
 
 describe('Component', () => {
-    describe('Map', () => {
+    describe('ElevationProfile', () => {
         it('renders', async () => {
-            const component = shallowMount(MapComponent, {
+            const component = await mountSuspended(ElevationProfileComponent, {
                 props: {
                     element: {
                         id: '0',
                         type: ElementType.Image,
                         attributes: {
+                            segmentsIds: [],
                             routeId: 0,
-                            segmentsIds: []
+                            color: 'rgb(255, 0, 0)'
                         }
                     }, selected: true
-                },
-                global: {
-                    stubs: {
-                        TMap: {
-                            template: '<div>Mocked Map</div>'
-                        }
-                    }
                 }
             });
             expect(component.exists).toBeTruthy();
