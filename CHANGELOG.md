@@ -1,4 +1,14 @@
-# 0.1.0 (2025-07-19)
+# [0.2.0](https://github.com/gilengel/trail/compare/v0.1.0...v0.2.0) (2025-07-20)
+
+
+### Features
+
+* mvp elevation profile element ([9549a67](https://github.com/gilengel/trail/commit/9549a675a7c571922badfa9373d23da361e4658e))
+* mvp elevation profile element ([fb5ccf6](https://github.com/gilengel/trail/commit/fb5ccf6081de70fc3a8fb18f5c9fceb95e284361))
+
+
+
+# [0.1.0](https://github.com/gilengel/trail/compare/a360db68ea5441d75c5bccd9b5446744eda4bf87...v0.1.0) (2025-07-19)
 
 
 ### Bug Fixes

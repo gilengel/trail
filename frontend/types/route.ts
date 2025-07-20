@@ -1,6 +1,7 @@
 import {LngLat, LngLatBounds} from "maplibre-gl";
 import {distance} from "@turf/turf";
-import {type GPXRoute, type GPXRouteSegment, RouteDto, RouteSegmentDto} from "shared";
+import type {RouteDto, RouteSegmentDto} from "~/types/dto";
+import type {GPXRoute, GPXRouteSegment} from "~/types/dto/convert";
 
 export class LngLatWithElevation extends LngLat {
     constructor(lng: number, lat: number, elevation: number) {

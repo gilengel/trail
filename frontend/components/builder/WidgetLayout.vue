@@ -1,6 +1,7 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
   <div id="editor-primary-toolbar" />
+
   <v-row no-gutters>
     <v-col
       sm="9"

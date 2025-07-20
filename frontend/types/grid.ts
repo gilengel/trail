@@ -1,7 +1,7 @@
 /**
  * List of all available elements that can be used to create a page.
  *
- * If you need to add a new element just add it to this list, and it will
+ * If you need to add a new element, add it to this list, and it will
  * automatically appear in the ui as the ui iterates over all the values
  * in this list on start.
  */
@@ -10,6 +10,7 @@ export enum ElementType {
     Heading = 'Heading',
     Map = 'Map',
     Image = 'Image',
+    ElevationProfile = 'ElevationProfile'
 }
 
 export type AttributeType = string | number | boolean | string[] | number[] | boolean[] | object | undefined;

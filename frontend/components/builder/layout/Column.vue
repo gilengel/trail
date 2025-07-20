@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 
-import {type PropType, computed, ref} from 'vue';
+import {computed, type PropType, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
 import {componentsMap} from "~/components/builder/AllElements";
 import {type Column, Element, ElementType, ElementTypes, type Grid} from "~/types/grid";
@@ -200,6 +200,8 @@ function getDefaultProps(elementType: ElementType) {
       return {
         scale: {origin: {x: 0, y: 0}, value: 1}
       }
+    case ElementType.ElevationProfile:
+      return {}
   }
 }
 

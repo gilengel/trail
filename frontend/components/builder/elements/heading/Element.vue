@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
 import Editor from "~/components/Editor.vue";
-import {DynamicParagraph} from "~/components/DynamicParagraph";
+import {DynamicParagraph} from "~/components/builder/elements/heading/DynamicParagraph";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

@@ -1,11 +1,10 @@
 <template>
   <BuilderPropertiesContainer>
     <template #title>
-      Map Properties
+      Elevation Profile Properties
     </template>
 
     <template #properties>
-      {{ selection }}
       <CollapsableList
         :collapse-number="3"
         :items="routes!"
@@ -34,6 +33,13 @@
           </template>
         </v-list-item>
       </v-list>
+
+      <v-color-picker
+        v-model="color"
+        hide-inputs
+        show-swatches
+        @update:model-value="onColorChange"
+      />
     </template>
   </BuilderPropertiesContainer>
 </template>
@@ -46,11 +52,13 @@ import {useRouteStore} from "~/stores/route";
 import CollapsableList from "~/components/CollapsableList.vue";
 import * as changeCase from "change-case";
 import type {RouteDto} from "~/types/dto";
-import type {MapProps} from "~/components/builder/elements/map/Props";
+import type {ElevationProfileProps} from "~/components/builder/elements/elevation_profile/Props";
+import type {Color} from "~/types/color";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<MapProps>>();
+
+const props = defineProps<ElementProps<ElevationProfileProps>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -70,11 +78,12 @@ const selectedRoute: Ref<RouteDto | null> = ref(null);
 
 const segments = computed(() => {
   if (!selectedRoute) {
-    return null;
+    return [];
   }
 
   return selectedRoute.value?.segments;
 })
+
 
 const selection = computed({
   get() {
@@ -93,4 +102,14 @@ watch(selectedRoute, () => {
   gridModuleStore
       .updateElementAttribute(props.element, "routeId", selectedRoute.value!.id)
 })
+// ---------------------------------------------------------------------------------------------------------------------
+
+const color = computed(() => props.element.attributes.color);
+
+/**
+ * @param newValue
+ */
+function onColorChange(newValue: Color) {
+  gridModuleStore.updateElementAttribute(props.element, "color", newValue);
+}
 </script>

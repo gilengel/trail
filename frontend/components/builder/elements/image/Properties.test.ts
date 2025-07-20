@@ -13,9 +13,7 @@ const storeMock = {
     splitColumn: vi.fn(),
     moveRow: vi.fn(),
     setColumnElement: vi.fn(),
-    updateElementAttribute: vi.fn(() => {
-        console.log("MU")
-    }),
+    updateElementAttribute: vi.fn(),
     updateColumnsWidth: vi.fn()
 }
 

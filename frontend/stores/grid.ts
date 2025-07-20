@@ -7,9 +7,9 @@ import {DeleteRow} from "~/stores/actions/deleteRow";
 import {SplitColumn} from "~/stores/actions/splitColumn";
 import {MoveRow} from "~/stores/actions/moveRow";
 import {SetElement} from "~/stores/actions/setElement";
-import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 import {UpdateColumnWidth} from "~/stores/actions/updateColumnWidth";
 import * as uuid from "uuid";
+import {UpdateElementAttribute} from "~/stores/actions/updateElementAttribute";
 
 /**
  * Creates a default grid consisting out of 3 rows with 2, 3 and 2 columns.
@@ -123,14 +123,16 @@ export const useGridStore = () =>
         /**
          * Updates an attribute of an element. As each element has its own set of attributes, the attribute
          * to be changed is identified by a key.
+         * @template T Object.
+         * @template K Key Of T.
          * @param element - The element from which you want to set an attribute.
          * @param attribute - The key of the attribute that shall be changed.
          * @param value - The new value for the attribute. It can be either string, number or boolean.
          */
-        async function updateElementAttribute(
-            element: Element<unknown>,
-            attribute: string,
-            value: string | number | boolean | string[] | number[] | Record<string, unknown>
+        async function updateElementAttribute<T extends object, K extends keyof T>(
+            element: Element<T>,
+            attribute: K,
+            value: T[K]
         ) {
             await _undoRedoStore.execute(
                 new UpdateElementAttribute(element, attribute, value),

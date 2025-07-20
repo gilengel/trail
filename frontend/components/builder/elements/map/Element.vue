@@ -6,24 +6,19 @@
 
 <script setup lang="ts">
 import type {MapLibreSegment} from "~/types/route";
+import type {MapProps} from "~/components/builder/elements/map/Props";
+import type {ElementProps} from "~/components/builder/properties";
 
-interface Props {
-  segments?: { route: number, segments: number[] }
-}
 
-const props = defineProps<Props>();
+const props = defineProps<ElementProps<MapProps>>();
 
 const routeStore = useRouteStore();
 
 const mapSegments: Ref<MapLibreSegment[]> = ref([]);
-watch(() => props.segments, async (newSegments) => {
-  if(!newSegments?.route){
-    return;
-  }
+watch(() => props.element.attributes.segmentsIds, async () => {
+  const route = await routeStore.getMapLibreRoute(props.element.attributes.routeId);
 
-  const route = await routeStore.getMapLibreRoute(newSegments?.route);
-
-  const filtered = route?.segments.filter((_, index) => newSegments?.segments.includes(index));
+  const filtered = route?.segments.filter((segment) => props.element.attributes.segmentsIds?.includes(segment.id));
   if (!filtered) {
     return;
   }

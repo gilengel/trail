@@ -50,7 +50,7 @@ function onImageScaleChange(newScale: number, origin: Point2D) {
 
 function onImagePositionChange(position: Point2D) {
   gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Free)
-  gridModuleStore.updateElementAttribute(props.element, "position", position as object as Record<string, unknown>)
+  gridModuleStore.updateElementAttribute(props.element, "position", position)
 }
 
 function onImageSizeTypeChange(imageSizeType: ImageSize) {
