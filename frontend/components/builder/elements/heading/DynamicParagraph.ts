@@ -1,4 +1,4 @@
-import {Node, mergeAttributes} from '@tiptap/core'
+import {Node, mergeAttributes} from '@tiptap/core';
 
 export const DynamicParagraph = Node.create({
     name: 'dynamicParagraph',
@@ -17,7 +17,7 @@ export const DynamicParagraph = Node.create({
                 renderHTML: attributes => {
                     return {
                         'data-level': attributes.level,
-                    }
+                    };
                 },
             },
 
@@ -26,12 +26,12 @@ export const DynamicParagraph = Node.create({
                 parseHTML: element => element.style.textAlign || null,
                 renderHTML: attrs => {
                     if (!attrs.textAlign) {
-                        return {}
+                        return {};
                     }
-                    return {style: `text-align: ${attrs.textAlign}`}
+                    return {style: `text-align: ${attrs.textAlign}`};
                 },
             },
-        }
+        };
     },
 
     parseHTML() {
@@ -42,15 +42,15 @@ export const DynamicParagraph = Node.create({
             {tag: 'h4'},
             {tag: 'h5'},
             {tag: 'h6'},
-        ]
+        ];
     },
 
     renderHTML({node, HTMLAttributes}) {
-        const level = node.attrs.level
+        const level = node.attrs.level;
         return [
             `h${level}`,
             mergeAttributes(HTMLAttributes),
             0,
-        ]
+        ];
     },
-})
+});

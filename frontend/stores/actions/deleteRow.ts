@@ -19,12 +19,12 @@ export class DeleteRow
     async undo() {
         this.grid.rows.splice(this.rowIndex, 0, this.row);
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 
     async redo() {
         this.grid.rows.splice(this.rowIndex, 1);
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 }

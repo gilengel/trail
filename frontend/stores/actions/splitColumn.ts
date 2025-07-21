@@ -19,7 +19,7 @@ export class SplitColumn
         const removedColumn = this.row.columns.splice(this.columnIndex - 2, 1);
         this.row.columns[this.columnIndex].width += removedColumn[0].width;
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 
     async redo() {
@@ -37,6 +37,6 @@ export class SplitColumn
 
         this.row.columns.splice(this.columnIndex, 0, this.addedColumn);
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 }

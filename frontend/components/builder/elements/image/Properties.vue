@@ -130,16 +130,16 @@ const gridModuleStore = useGridStore();
 
 const imagePositionMode = ref<ImagePosition>(
     props.element.attributes.positionType ?? ImagePosition.Free
-)
+);
 
 watch(
     () => props.element.attributes.positionType,
     (newVal) => {
       if (newVal !== imagePositionMode.value) {
-        imagePositionMode.value = newVal
+        imagePositionMode.value = newVal;
       }
     }
-)
+);
 
 watch(
     imagePositionMode,
@@ -149,25 +149,25 @@ watch(
             props.element,
             'positionType',
             newMode
-        )
+        );
       }
     }
-)
+);
 
 // - IMAGE SIZE MODE ---------------------------------------------------------------------------------------------------
 
 const imageSizeType = ref<ImageSize>(
     props.element.attributes.sizeType ?? ImageSize.Free
-)
+);
 
 watch(
     () => props.element.attributes.sizeType,
     (newSizeType) => {
       if (newSizeType !== imageSizeType.value) {
-        imageSizeType.value = newSizeType
+        imageSizeType.value = newSizeType;
       }
     }
-)
+);
 
 watch(
     imageSizeType,
@@ -177,10 +177,10 @@ watch(
             props.element,
             'sizeType',
             newMode
-        )
+        );
       }
     }
-)
+);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -191,12 +191,12 @@ const scaleValue = computed({
   set(newScale) {
     let scale = props.element.attributes.scale;
     if (scale === undefined) {
-      scale = {origin: {x: 0, y: 0}, value: 0}
+      scale = {origin: {x: 0, y: 0}, value: 0};
     } else {
       scale.value = newScale;
     }
 
-    gridModuleStore.updateElementAttribute(props.element, "scale", scale)
+    gridModuleStore.updateElementAttribute(props.element, "scale", scale);
   }
 });
 
@@ -210,10 +210,10 @@ const aspectRatios = [
   {label: '16:9', value: 16 / 9},
   {label: '1:0.85', value: 1 / 0.85},
   {label: '2.35:1', value: 2.35},
-]
+];
 
 function onAspectRatioChanged(newAspectRatio: number) {
-  gridModuleStore.updateElementAttribute(props.element, "aspectRatio", newAspectRatio)
+  gridModuleStore.updateElementAttribute(props.element, "aspectRatio", newAspectRatio);
 }
 
 </script>

@@ -117,7 +117,7 @@ const trip = await tripStore.get(Number(route.params.id));
 
 function deleteTrip() {
   tripStore.remove(trip!).then(() => {
-    router.push('/')
+    router.push('/');
   }).catch((e) => console.error(e));
 }
 

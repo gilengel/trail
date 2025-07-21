@@ -90,7 +90,7 @@ const processedFiles = computed(() => {
 
 
   return files.value;
-})
+});
 
 /**
  * @param e

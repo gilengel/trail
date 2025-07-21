@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import ElevationProfileComponent from '~/components/builder/elements/elevation_profile/Element.vue'
+import {describe, it, expect} from 'vitest';
+import ElevationProfileComponent from '~/components/builder/elements/elevation_profile/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {ElementType} from "~/types/grid";
 
@@ -20,6 +20,6 @@ describe('Component', () => {
                 }
             });
             expect(component.exists).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

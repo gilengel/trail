@@ -78,7 +78,7 @@ export const useRouteStore = () =>
 
             updatedRoutes.forEach(route => {
                 dtoRoutesByRouteId.set(route.id, route);
-            })
+            });
 
 
             return updatedRoutes;
@@ -111,7 +111,7 @@ export const useRouteStore = () =>
             convertedRoutesByTripId.set(tripId, convertedRoutes);
             convertedRoutes.forEach(route => {
                 convertedRoutesByRouteId.set(route.id, route);
-            })
+            });
 
             return convertedRoutesByTripId.get(tripId) as MapLibreRoute[];
         }
@@ -134,7 +134,7 @@ export const useRouteStore = () =>
             const convertedRoute = routeDto2MapLibreTrip(routeDTO);
             convertedRoutesByRouteId.set(routeDTO.id, convertedRoute);
             if (!convertedRoutesByTripId.has(routeDTO.tripId)) {
-                convertedRoutesByTripId.set(routeDTO.tripId, [convertedRoute])
+                convertedRoutesByTripId.set(routeDTO.tripId, [convertedRoute]);
             }
 
             return convertedRoutesByRouteId.get(routeId) as MapLibreRoute;
@@ -145,5 +145,5 @@ export const useRouteStore = () =>
             getByTripId,
             getMapLibreRoute,
             getMapLibreRoutesForTrip
-        }
+        };
     })();

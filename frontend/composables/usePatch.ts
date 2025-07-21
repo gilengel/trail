@@ -8,6 +8,6 @@ export async function usePatch(url: string, body: Record<string, unknown>) {
     return await $fetch(url, {
         method: "PATCH",
         body,
-    })
+    });
 }
 

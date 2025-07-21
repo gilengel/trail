@@ -41,7 +41,7 @@ const routeName: Ref<string> = ref("");
  *
  */
 async function upload() {
-  await tripStore.create({name: routeName.value, layout: createDefaultGrid(0)})
+  await tripStore.create({name: routeName.value, layout: createDefaultGrid(0)});
 }
 
 </script>

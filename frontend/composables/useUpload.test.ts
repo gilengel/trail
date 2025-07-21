@@ -27,7 +27,7 @@ describe('Composables[Upload]', () => {
     });
 
     it('groups multiple files into the correct form data', async () => {
-        const result = useFileFormData([mockFile("gpx", 512), mockFile("gpx", 1024)])
+        const result = useFileFormData([mockFile("gpx", 512), mockFile("gpx", 1024)]);
 
         expect(result.getAll("files").length).toBe(2);
     });

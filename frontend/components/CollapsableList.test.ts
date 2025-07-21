@@ -1,6 +1,6 @@
-import {describe, it, expect} from 'vitest'
-import {mount} from '@vue/test-utils'
-import {nextTick} from 'vue'
+import {describe, it, expect} from 'vitest';
+import {mount} from '@vue/test-utils';
+import {nextTick} from 'vue';
 import CollapsableList from "~/components/CollapsableList.vue";
 
 interface Item {
@@ -15,9 +15,9 @@ const sampleItems: Item[] = [
     {id: 4, name: 'Route D'},
     {id: 5, name: 'Route E'},
     {id: 6, name: 'Route F'},
-]
+];
 
-const text = (item: Item) => item.name
+const text = (item: Item) => item.name;
 
 describe('RouteSelector.vue', () => {
     it('renders v-select when items exceed collapseNumber', () => {
@@ -30,10 +30,10 @@ describe('RouteSelector.vue', () => {
             global: {
                 stubs: ['VSelect', 'VList', 'VListItem', 'VListItemTitle']
             }
-        })
-        expect(wrapper.findComponent({name: 'v-select'}).exists()).toBe(true)
-        expect(wrapper.findComponent({name: 'v-list'}).exists()).toBe(false)
-    })
+        });
+        expect(wrapper.findComponent({name: 'v-select'}).exists()).toBe(true);
+        expect(wrapper.findComponent({name: 'v-list'}).exists()).toBe(false);
+    });
 
     it('renders v-list when items are fewer than collapseNumber', () => {
         const wrapper = mount(CollapsableList<Item>, {
@@ -45,10 +45,10 @@ describe('RouteSelector.vue', () => {
             global: {
                 stubs: ['VSelect', 'VList', 'VListItem', 'VListItemTitle']
             }
-        })
-        expect(wrapper.findComponent({name: 'v-select'}).exists()).toBe(false)
-        expect(wrapper.findComponent({name: 'v-list'}).exists()).toBe(true)
-    })
+        });
+        expect(wrapper.findComponent({name: 'v-select'}).exists()).toBe(false);
+        expect(wrapper.findComponent({name: 'v-list'}).exists()).toBe(true);
+    });
 
     it('emits onSelectionChanged when item is selected from v-select', async () => {
         const wrapper = mount(CollapsableList<Item>, {
@@ -75,18 +75,18 @@ describe('RouteSelector.vue', () => {
                     VListItemTitle: true
                 }
             }
-        })
+        });
 
-        const button = wrapper.find('[data-testid="v-select"] button')
-        expect(button.exists()).toBe(true)
+        const button = wrapper.find('[data-testid="v-select"] button');
+        expect(button.exists()).toBe(true);
 
-        await button.trigger('click')
-        await nextTick()
+        await button.trigger('click');
+        await nextTick();
 
-        const emitted = wrapper.emitted('onSelectionChanged')
-        expect(emitted).toBeTruthy()
-        expect(emitted![0][0]).toEqual(sampleItems[2])
-    })
+        const emitted = wrapper.emitted('onSelectionChanged');
+        expect(emitted).toBeTruthy();
+        expect(emitted![0][0]).toEqual(sampleItems[2]);
+    });
 
     it('selectItem() sets selectedItem and emits onSelectionChanged', async () => {
         const wrapper = mount(CollapsableList<Item>, {
@@ -103,16 +103,16 @@ describe('RouteSelector.vue', () => {
                     VSelect: true
                 }
             }
-        })
+        });
 
         // @ts-expect-error: method exposed by <script setup>
-        wrapper.vm.selectItem(sampleItems[1])
-        await nextTick()
+        wrapper.vm.selectItem(sampleItems[1]);
+        await nextTick();
 
         // @ts-expect-error: internal state
-        expect(wrapper.vm.selectedItem).toEqual(sampleItems[1])
+        expect(wrapper.vm.selectedItem).toEqual(sampleItems[1]);
 
-        expect(wrapper.emitted('onSelectionChanged')).toBeTruthy()
-        expect(wrapper.emitted('onSelectionChanged')![0][0]).toEqual(sampleItems[1])
-    })
-})
+        expect(wrapper.emitted('onSelectionChanged')).toBeTruthy();
+        expect(wrapper.emitted('onSelectionChanged')![0][0]).toEqual(sampleItems[1]);
+    });
+});

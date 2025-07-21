@@ -17,12 +17,12 @@ export class AddRow
         const rowIndex = this.grid.rows.indexOf(this.row);
         this.grid.rows.splice(rowIndex, 1);
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 
     async redo() {
         this.grid.rows.push(this.row);
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 }

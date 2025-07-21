@@ -3,7 +3,7 @@ import ColumnComponent from '~/components/builder/layout/Column.vue';
 import type {VueWrapper} from "@vue/test-utils";
 import {mount} from "@vue/test-utils";
 import {createTestGrid} from "~/stores/actions/test.helper";
-import {createVuetify} from 'vuetify'
+import {createVuetify} from 'vuetify';
 import {Element, ElementType} from "~/types/grid";
 
 const mockUpdateElementAttribute = vi.fn();
@@ -27,7 +27,7 @@ describe('Component', () => {
             }
         }
 
-        mockGrid.rows[0].columns[0].element = new Element(ElementType.Text, {})
+        mockGrid.rows[0].columns[0].element = new Element(ElementType.Text, {});
 
         const props = {
             rowIndex: 0,
@@ -53,7 +53,7 @@ describe('Component', () => {
         });
 
         it('should render', () => {
-            expect(wrapper.exists()).toBeTruthy()
-        })
+            expect(wrapper.exists()).toBeTruthy();
+        });
     });
 });

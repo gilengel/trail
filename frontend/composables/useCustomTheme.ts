@@ -1,4 +1,4 @@
-import {useDark, useToggle} from '@vueuse/core'
+import {useDark, useToggle} from '@vueuse/core';
 
 /**
  * Composable to toggle between light and dark Vuetify themes,
@@ -10,12 +10,12 @@ export function useCustomTheme(): {
     isDark: globalThis.WritableComputedRef<boolean, boolean>
     toggle: (value?: boolean | undefined) => boolean
 } {
-    const {$vuetify} = useNuxtApp()
+    const {$vuetify} = useNuxtApp();
 
     const prefersDark =
         typeof window !== 'undefined'
             ? window.matchMedia('(prefers-color-scheme: dark)').matches
-            : false
+            : false;
 
     const isDark = useDark({
         valueDark: 'dark',
@@ -23,21 +23,21 @@ export function useCustomTheme(): {
         initialValue: prefersDark ? 'dark' : 'light',
         onChanged: (dark: boolean) => {
             if (typeof window !== 'undefined') {
-                $vuetify.theme.global.name.value = dark ? 'dark' : 'light'
+                $vuetify.theme.global.name.value = dark ? 'dark' : 'light';
             }
         },
         storageKey: 'app-theme', // Optional: Persist in localStorage
-    })
+    });
 
-    const toggle = useToggle(isDark)
+    const toggle = useToggle(isDark);
 
     // React to system theme changes
     if (typeof window !== 'undefined') {
-        const media = window.matchMedia('(prefers-color-scheme: dark)')
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
         media.addEventListener('change', (e) => {
-            isDark.value = e.matches
-        })
+            isDark.value = e.matches;
+        });
     }
 
-    return {isDark, toggle}
+    return {isDark, toggle};
 }

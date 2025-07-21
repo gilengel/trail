@@ -43,7 +43,7 @@ describe('GridModuleStore', () => {
         expect(grid.rows[0].columns.length).toBe(2);
         expect(grid.rows[1].columns.length).toBe(3);
         expect(grid.rows[2].columns.length).toBe(2);
-    })
+    });
 
     it('calls execute with AddRow when adding a row', async () => {
         const grid = createTestGrid(2, 2);

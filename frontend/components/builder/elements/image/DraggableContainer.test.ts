@@ -1,8 +1,7 @@
-import {describe, it, expect, vi} from 'vitest'
+import {describe, it, expect} from 'vitest';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import DraggableContainer from "~/components/builder/elements/image/DraggableContainer.vue";
 import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Props";
-import type {Point2D} from "~/types/point";
 
 describe('Component', () => {
     describe('DraggableContainer', () => {
@@ -18,12 +17,12 @@ describe('Component', () => {
                     position: {x: 0, y: 0},
                     positionType: ImagePosition.Free
                 }
-            })
+            });
 
 
             const container = component.find('[data-testid="draggable-container"]');
             expect(container.exists).toBeTruthy();
-        })
+        });
 
         it('emits onImageScaleChange if zoomed in via mouse wheel', async () => {
             const component = await mountSuspended(DraggableContainer, {
@@ -37,12 +36,12 @@ describe('Component', () => {
                     position: {x: 0, y: 0},
                     positionType: ImagePosition.Free
                 }
-            })
-            
+            });
+
             const container = component.find('[data-testid="draggable-container"]');
 
             await container.trigger('wheel', {deltaY: 123});
             expect(component.emitted('onImageScaleChange')).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

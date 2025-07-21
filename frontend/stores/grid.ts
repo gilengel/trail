@@ -47,7 +47,7 @@ export function createDefaultGrid(tripId: number): Grid {
                 ],
             },
         ],
-    }
+    };
 }
 
 export const useGridStore = () =>

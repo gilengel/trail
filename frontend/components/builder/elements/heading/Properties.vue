@@ -6,8 +6,8 @@
 
     <template #properties>
       <v-btn-toggle
-          v-model="size"
-          @update:model-value="onSizeChange"
+        v-model="size"
+        @update:model-value="onSizeChange"
       >
         <v-btn>
           H1
@@ -27,10 +27,10 @@
       </v-btn-toggle>
 
       <v-color-picker
-          v-model="color"
-          hide-inputs
-          show-swatches
-          @update:model-value="onColorChange"
+        v-model="color"
+        hide-inputs
+        show-swatches
+        @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -55,7 +55,7 @@ const size = computed(() => props.element.attributes.level);
  * @param newValue
  */
 function onSizeChange(newValue: number) {
-  gridModuleStore.updateElementAttribute(props.element, "level", newValue)
+  gridModuleStore.updateElementAttribute(props.element, "level", newValue);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -66,6 +66,6 @@ const color = computed(() => props.element.attributes.color);
  * @param newValue
  */
 function onColorChange(newValue: string) {
-  gridModuleStore.updateElementAttribute(props.element, "color", newValue)
+  gridModuleStore.updateElementAttribute(props.element, "color", newValue);
 }
 </script>

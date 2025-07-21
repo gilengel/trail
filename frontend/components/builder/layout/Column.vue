@@ -178,7 +178,7 @@ const selectedComponentProps = computed(() => {
   }
 
   return {element: props.model.element, selected: props.model.element.id === props.selectedElementId};
-})
+});
 
 
 /**
@@ -199,9 +199,9 @@ function getDefaultProps(elementType: ElementType) {
     case ElementType.Image:
       return {
         scale: {origin: {x: 0, y: 0}, value: 1}
-      }
+      };
     case ElementType.ElevationProfile:
-      return {}
+      return {};
   }
 }
 

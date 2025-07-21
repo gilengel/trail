@@ -24,7 +24,7 @@ const text = computed(() => {
   }
 
   return props.element.attributes.text;
-})
+});
 
 const props = defineProps<ElementProps<Props>>();
 

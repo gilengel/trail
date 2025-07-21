@@ -1,5 +1,5 @@
-import {describe, it, expect, vi} from 'vitest'
-import MapProperties from '~/components/builder/elements/map/Properties.vue'
+import {describe, it, expect, vi} from 'vitest';
+import MapProperties from '~/components/builder/elements/map/Properties.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {ElementType} from "~/types/grid";
 
@@ -30,6 +30,6 @@ describe('Component', () => {
                 }
             });
             expect(component.exists).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

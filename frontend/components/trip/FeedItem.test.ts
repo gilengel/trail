@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import FeedItemComponent from '@/components/trip/FeedItem.vue'
+import {describe, it, expect} from 'vitest';
+import FeedItemComponent from '@/components/trip/FeedItem.vue';
 import {MapLibreSegment} from "~/types/route";
 import {shallowMount} from "@vue/test-utils";
 
@@ -22,6 +22,6 @@ describe('Component', () => {
             });
 
             expect(component.exists).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

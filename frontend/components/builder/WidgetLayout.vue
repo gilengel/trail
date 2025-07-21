@@ -55,7 +55,7 @@
 import {computed, type Ref, ref} from 'vue';
 import {v4 as uuidv4} from 'uuid';
 import type {SortableEvent} from 'sortablejs';
-import {useSortable} from '@vueuse/integrations/useSortable'
+import {useSortable} from '@vueuse/integrations/useSortable';
 import {Element, type Grid} from '~/types/grid';
 import {componentsPropertiesMap} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
@@ -83,16 +83,16 @@ const selectedElement: Ref<Element<unknown> | undefined> = ref(undefined);
 
 watch(props.grid, async (newValue) => {
   newValue.tripId = props.tripId;
-  await useGridSave(newValue)
-})
+  await useGridSave(newValue);
+});
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const el = ref<HTMLElement | null>(null)
+const el = ref<HTMLElement | null>(null);
 useSortable(el, props.grid.rows, {
   handle: '.drag-handle',
   onUpdate
-})
+});
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -129,7 +129,7 @@ function addRow() {
   gridModuleStore.addRow({
     id: uuidv4(),
     columns: [{id: uuidv4(), width: 12}],
-  }, props.grid)
+  }, props.grid);
 }
 
 /**

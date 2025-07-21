@@ -25,7 +25,7 @@ watch(() => props.element.attributes.segmentsIds, async () => {
 
   mapSegments.value = filtered;
 
-}, {deep: true, immediate: true})
+}, {deep: true, immediate: true});
 
 </script>
 <style scoped lang="scss">

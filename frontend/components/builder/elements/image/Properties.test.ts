@@ -1,5 +1,5 @@
-import {mount} from '@vue/test-utils'
-import {describe, expect, it, vi, beforeEach} from 'vitest'
+import {mount} from '@vue/test-utils';
+import {describe, expect, it, vi, beforeEach} from 'vitest';
 import {ElementType} from "~/types/grid";
 import Properties from "./Properties.vue";
 import {ImagePosition, ImageSize} from "./Props";
@@ -15,11 +15,11 @@ const storeMock = {
     setColumnElement: vi.fn(),
     updateElementAttribute: vi.fn(),
     updateColumnsWidth: vi.fn()
-}
+};
 
 vi.mock('@/stores/grid', () => ({
     useGridStore: vi.fn(() => storeMock)
-}))
+}));
 
 
 const mockElement = {
@@ -31,7 +31,7 @@ const mockElement = {
         sizeType: ImageSize.Free,
         positionType: ImagePosition.Free,
     }
-}
+};
 
 const vuetifyStubs = {
 
@@ -79,17 +79,17 @@ const vuetifyStubs = {
                           @input="$emit('update:modelValue', Number($event.target.value))"/>`
     },
 
-}
+};
 
 describe('ImagePropertiesComponent', () => {
     let store: ReturnType<typeof useGridStore>;
 
     beforeEach(() => {
-        vi.clearAllMocks()
+        vi.clearAllMocks();
 
         setActivePinia(createPinia());
         store = useGridStore();
-    })
+    });
 
     it('changes aspect ratio when a new one is clicked', async () => {
         const wrapper = mount(Properties, {
@@ -101,16 +101,16 @@ describe('ImagePropertiesComponent', () => {
                 },
                 stubs: vuetifyStubs
             }
-        })
+        });
 
-        const aspectRatioButton = wrapper.findComponent('[data-testid="ratio-0"]')
+        const aspectRatioButton = wrapper.findComponent('[data-testid="ratio-0"]');
         expect(aspectRatioButton.exists()).toBeTruthy();
-        await aspectRatioButton.trigger('click')
+        await aspectRatioButton.trigger('click');
 
         expect(store.updateElementAttribute).toHaveBeenCalledWith(
             mockElement,
             'aspectRatio',
             expect.any(Number)
-        )
-    })
-})
+        );
+    });
+});

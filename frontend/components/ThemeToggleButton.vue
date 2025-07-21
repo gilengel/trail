@@ -10,9 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import { useCustomTheme } from '~/composables/useCustomTheme'
+import { useCustomTheme } from '~/composables/useCustomTheme';
 
-const { toggle, isDark } = useCustomTheme()
+const { toggle, isDark } = useCustomTheme();
 </script>
 <style lang="scss" scoped>
 button {

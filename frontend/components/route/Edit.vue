@@ -1,42 +1,42 @@
 <template>
   <v-card
-      :title="title"
-      class="rounded-xl"
+    :title="title"
+    class="rounded-xl"
   >
     <v-card-text>
       <v-text-field
-          v-model="changedRouteData.routeName"
-          label="Route Name"
-          prepend-icon="las la-tag"
-          variant="outlined"
-          @keyup="routeNameChanged"
+        v-model="changedRouteData.routeName"
+        label="Route Name"
+        prepend-icon="las la-tag"
+        variant="outlined"
+        @keyup="routeNameChanged"
       />
 
       <v-textarea
-          v-model="changedRouteData.routeDescription"
-          label="Route Description"
-          prepend-icon="las la-comment"
-          variant="outlined"
-          @keyup="routeDescriptionChanged"
+        v-model="changedRouteData.routeDescription"
+        label="Route Description"
+        prepend-icon="las la-comment"
+        variant="outlined"
+        @keyup="routeDescriptionChanged"
       />
 
       <IconForm icon="las la-map-signs">
         <TMap
-            :segments="mapSegments"
-            :interactive="false"
-            v-if="mapSegments.length > 0"
+          :segments="mapSegments"
+          :interactive="false"
+          v-if="mapSegments.length > 0"
         />
       </IconForm>
       <RouteDropZone
-          support-text="Trip Files (allowed are files of type gpx)"
-          :allowed-file-extensions="['gpx']"
-          @on-files-changed="onFilesChanged"
-          @on-segment-name-changed="onNameChanged"
-          @on-segment-description-changed="onDescriptionChanged"
+        support-text="Trip Files (allowed are files of type gpx)"
+        :allowed-file-extensions="['gpx']"
+        @on-files-changed="onFilesChanged"
+        @on-segment-name-changed="onNameChanged"
+        @on-segment-description-changed="onDescriptionChanged"
       />
       <span
-          v-if="status"
-          data-cy="status-msg"
+        v-if="status"
+        data-cy="status-msg"
       >{{ status }}</span>
     </v-card-text>
   </v-card>
@@ -70,7 +70,7 @@ const mapSegments = computed(() => {
     return [];
   }
 
-  return props.route.segments.map((segment) => RouteSegmentDto2MapLibreRouteSegment(segment))
+  return props.route.segments.map((segment) => RouteSegmentDto2MapLibreRouteSegment(segment));
 });
 
 /**
@@ -97,13 +97,13 @@ async function onFilesChanged(trips: GPXFile[]): Promise<void> {
 async function onNameChanged(index: number, name: string): Promise<void> {
   await usePatch(`/api/routes/segment/${addedSegments.value[index].id}`, {
     name
-  })
+  });
 }
 
 async function onDescriptionChanged(index: number, description: string): Promise<void> {
   await usePatch(`/api/routes/segment/${addedSegments.value[index].id}`, {
     description
-  })
+  });
 }
 
 async function routeNameChanged() {

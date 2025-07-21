@@ -41,7 +41,7 @@ const emit = defineEmits<(e: "selectedTripChanged", id: number) => void>();
  * @param trip
  */
 function onTripClicked(trip: TripDto) {
-  emit('selectedTripChanged', trip.id)
+  emit('selectedTripChanged', trip.id);
 }
 
 const networkError = ref(false);

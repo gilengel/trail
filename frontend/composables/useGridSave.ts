@@ -14,7 +14,7 @@ export async function useGridSave(grid: Grid) {
                 layout: grid
             }
         }
-    )
+    );
 }
 
 

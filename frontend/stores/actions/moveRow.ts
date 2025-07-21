@@ -16,7 +16,7 @@ export class MoveRow
         this.grid.rows[this.oldRowIndex] = this.grid.rows[this.newRowIndex];
         this.grid.rows[this.newRowIndex] = tempRow;
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 
     async redo() {
@@ -24,6 +24,6 @@ export class MoveRow
         this.grid.rows[this.newRowIndex] = this.grid.rows[this.oldRowIndex];
         this.grid.rows[this.oldRowIndex] = tempRow;
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 }

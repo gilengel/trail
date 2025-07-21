@@ -1,6 +1,6 @@
 import {beforeEach, vi} from 'vitest';
 import {mockFetch} from './fetchMock';
-import 'vuetify/styles'
+import 'vuetify/styles';
 
 beforeEach(() => {
     vi.restoreAllMocks();

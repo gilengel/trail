@@ -107,11 +107,11 @@
 </template>
 
 <script setup lang="ts">
-import TextAlign from '@tiptap/extension-text-align'
+import TextAlign from '@tiptap/extension-text-align';
 import {Color} from "@tiptap/extension-color";
 import {TextStyle} from "@tiptap/extension-text-style";
-import {type Extensions, Node} from '@tiptap/core'
-import StarterKit from '@tiptap/starter-kit'
+import {type Extensions, Node} from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
 
 interface Props {
   content: string,
@@ -134,8 +134,8 @@ function setColor(color: string) {
     return;
   }
 
-  editor.value.commands.setNodeSelection(1)
-  editor.value.commands.setColor(color)
+  editor.value.commands.setNodeSelection(1);
+  editor.value.commands.setColor(color);
 }
 
 function setAlignment(alignment: string) {
@@ -143,12 +143,12 @@ function setAlignment(alignment: string) {
     return;
   }
 
-  editor.value.commands.setNodeSelection(1)
+  editor.value.commands.setNodeSelection(1);
   editor.value.commands.setTextAlign(alignment);
 }
 
 function getChain() {
-  return editor.value?.chain()
+  return editor.value?.chain();
 }
 
 
@@ -165,7 +165,7 @@ defineExpose({
   setAlignment,
   getCommands,
   getChain
-})
+});
 
 const emit = defineEmits<{
   onTextChanged: [newContent: string];
@@ -173,17 +173,17 @@ const emit = defineEmits<{
 
 const starterKitNoParaOrHeading = StarterKit.configure({
   heading: false,
-})
+});
 
 const defaultExtensions: Extensions = [
   starterKitNoParaOrHeading,
   Color,
   TextStyle.configure({mergeNestedSpanStyles: true}),
   TextAlign.configure({types: ['dynamicParagraph', 'paragraph']}),
-]
+];
 
 if (customNode) {
-  defaultExtensions.push(customNode)
+  defaultExtensions.push(customNode);
 }
 
 const editor = useEditor({

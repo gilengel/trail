@@ -57,12 +57,12 @@ export const useTripStore = () =>
                 return cachedTrips;
             }
 
-            const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips')
+            const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips');
             dbTrips.value?.forEach(trip => {
                 if (!cachedTrips.has(trip.id)) {
                     cachedTrips.set(trip.id, trip);
                 }
-            })
+            });
 
             return cachedTrips;
         }
@@ -102,5 +102,5 @@ export const useTripStore = () =>
             get,
             all,
             remove
-        }
+        };
     })();

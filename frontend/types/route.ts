@@ -75,7 +75,7 @@ export function RouteSegmentDto2MapLibreRouteSegment(
     const coordinates = !tripSegment.coordinates ? [] : tripSegment.coordinates.map(
         // not sure why but LibreMap switches longitude and latitude...
         (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
-    )
+    );
 
     return new MapLibreSegment(
         tripSegment.id,

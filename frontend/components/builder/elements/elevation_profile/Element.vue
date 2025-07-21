@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import {computed} from "vue";
-import {Line} from 'vue-chartjs'
+import {Line} from 'vue-chartjs';
 import {addAlphaToColor} from "~/types/color";
 import type {ElevationProfileProps} from "~/components/builder/elements/elevation_profile/Props";
 import type {ElementProps} from "~/components/builder/properties";
@@ -53,7 +53,7 @@ const chartOptions = ref({
       ticks: {
         stepSize: 100,
         callback: function (value: number) {
-          return `${value}m`
+          return `${value}m`;
         }
       },
       grid: {
@@ -63,7 +63,7 @@ const chartOptions = ref({
     y: {
       ticks: {
         callback: function (value: number) {
-          return `${value}m`
+          return `${value}m`;
         },
       },
 
@@ -76,7 +76,7 @@ const chartOptions = ref({
 
   responsive: true,
   maintainAspectRatio: false,
-})
+});
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ const segments = computedAsync(
       return route?.segments.filter((segment) => segmentsIds.includes(segment.id));
     },
     null, // initial state
-)
+);
 
 const color = computed(() => {
   if (!props.element.attributes || !props.element.attributes.color) {
@@ -104,7 +104,7 @@ const color = computed(() => {
   }
 
   return props.element.attributes.color;
-})
+});
 
 
 const elevations = computed(() => {
@@ -114,8 +114,8 @@ const elevations = computed(() => {
 
   const coordinates = segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);
 
-  return coordinates.map(coordinate => coordinate![2])
-})
+  return coordinates.map(coordinate => coordinate![2]);
+});
 
 const data = computed(() => {
   if (!elevations.value) {
@@ -138,8 +138,8 @@ const data = computed(() => {
         radius: 0,
       }
     ]
-  }
-})
+  };
+});
 
 </script>
 

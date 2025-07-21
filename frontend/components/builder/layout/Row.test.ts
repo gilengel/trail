@@ -3,7 +3,7 @@ import RowComponent from '~/components/builder/layout/Row.vue';
 import type {VueWrapper} from "@vue/test-utils";
 import {mount} from "@vue/test-utils";
 import {createTestGrid} from "~/stores/actions/test.helper";
-import {createVuetify} from 'vuetify'
+import {createVuetify} from 'vuetify';
 
 const mockUpdateElementAttribute = vi.fn();
 const mockGridModuleStore = {
@@ -74,8 +74,8 @@ describe('Component', () => {
         });
 
         it('should render', async () => {
-            expect(wrapper.exists()).toBeTruthy()
-        })
+            expect(wrapper.exists()).toBeTruthy();
+        });
 
         describe('column resize', () => {
             let rowSplitter;
@@ -86,7 +86,7 @@ describe('Component', () => {
                     clientX: 100,
                     clientY: 50,
                 });
-            })
+            });
 
             it('should handle dragging the row splitter to the left', async () => {
                 const moveEvent = new MouseEvent('mousemove', {

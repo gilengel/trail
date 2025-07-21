@@ -88,7 +88,7 @@ async function extractTrackFromFile(file: GPXFile) {
   const gpxRoute = extractCoordinatesFromGPX(buffer);
 
   file.routeDto = gpxRoute;
-  file.route = gpxRoute2MapLibreTrip(gpxRoute)
+  file.route = gpxRoute2MapLibreTrip(gpxRoute);
 }
 </script>
 

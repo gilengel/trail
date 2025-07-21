@@ -40,7 +40,7 @@ const aspectRatio = computed(() => {
   }
 
   return props.element.attributes.aspectRatio;
-})
+});
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -49,13 +49,13 @@ function onImageScaleChange(newScale: number, origin: Point2D) {
 }
 
 function onImagePositionChange(position: Point2D) {
-  gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Free)
-  gridModuleStore.updateElementAttribute(props.element, "position", position)
+  gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Free);
+  gridModuleStore.updateElementAttribute(props.element, "position", position);
 }
 
 function onImageSizeTypeChange(imageSizeType: ImageSize) {
-  gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Centered)
-  gridModuleStore.updateElementAttribute(props.element, "sizeType", imageSizeType)
+  gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Centered);
+  gridModuleStore.updateElementAttribute(props.element, "sizeType", imageSizeType);
 }
 </script>
 

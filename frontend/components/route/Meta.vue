@@ -73,7 +73,7 @@ const mapSegments = computed(() => {
     return [];
   }
 
-  return props.route.segments.map((segment) => RouteSegmentDto2MapLibreRouteSegment(segment))
+  return props.route.segments.map((segment) => RouteSegmentDto2MapLibreRouteSegment(segment));
 });
 
 const emit = defineEmits(['deleted']);
@@ -87,7 +87,7 @@ async function deleteRoute() {
 
     emit('deleted', props.route.id);
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 }
 </script>

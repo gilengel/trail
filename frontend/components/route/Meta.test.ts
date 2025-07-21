@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import MetaRoute from './Meta.vue'
+import {describe, it, expect} from 'vitest';
+import MetaRoute from './Meta.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 
 describe('Route', () => {
@@ -18,6 +18,6 @@ describe('Route', () => {
                 }
             });
             expect(component.exists).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

@@ -19,7 +19,7 @@ export default defineConfigWithVueTs(
     tseslint.configs.recommended,
     includeIgnoreFile(gitignorePath),
     pluginVue.configs['flat/essential'],
-    pluginVue.configs[ 'flat/strongly-recommended'],
+    pluginVue.configs['flat/strongly-recommended'],
     vueTsConfigs.recommended,
     {
         ignores: ['pages/*.vue', 'layouts/**/*.vue'],
@@ -27,6 +27,7 @@ export default defineConfigWithVueTs(
     {
         files: ['**/*.vue'],
         rules: {
+            semi: ['error', 'always'],
             "vue/multi-word-component-names": 0 // Usually a good rule but due to nuxt we take care with different directories
         }
     },
@@ -38,6 +39,7 @@ export default defineConfigWithVueTs(
             jsdoc,
         },
         rules: {
+            semi: ['error', 'always'],
             "jsdoc/check-access": 1,
             "jsdoc/check-alignment": 1,
             "jsdoc/check-indentation": 1,

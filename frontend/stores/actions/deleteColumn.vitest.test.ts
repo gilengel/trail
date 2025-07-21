@@ -10,7 +10,7 @@ describe('deleteColumn', () => {
 
     beforeEach(() => {
         grid = createTestGrid(1, 2);
-    })
+    });
     it('should delete a column on redo on the grid', async () => {
 
         const deleteColumn = new DeleteColumn(grid.rows[0], grid,0);

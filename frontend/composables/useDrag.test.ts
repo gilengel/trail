@@ -1,20 +1,20 @@
-import {ref} from 'vue'
-import {describe, it, expect, vi} from 'vitest'
+import {ref} from 'vue';
+import {describe, it, expect, vi} from 'vitest';
 
 describe('Composables[Drag]', () => {
     it('addObjectToDataTransfer calls dataTransfer.setData with JSON payload', () => {
-        const setData = vi.fn()
+        const setData = vi.fn();
         const event = {
             dataTransfer: {setData}
-        } as unknown as DragEvent
+        } as unknown as DragEvent;
 
-        const payload = {foo: 'bar'}
+        const payload = {foo: 'bar'};
 
-        addObjectToDataTransfer(event, payload)
+        addObjectToDataTransfer(event, payload);
 
-        expect(setData).toHaveBeenCalledOnce()
-        expect(setData).toHaveBeenCalledWith('payload', JSON.stringify(payload))
-    })
+        expect(setData).toHaveBeenCalledOnce();
+        expect(setData).toHaveBeenCalledWith('payload', JSON.stringify(payload));
+    });
 
     it('adds JSON data to dataTransfer on ondragstart', () => {
         const element = ref({} as HTMLElement);
@@ -30,4 +30,4 @@ describe('Composables[Drag]', () => {
         expect(setData).toHaveBeenCalledWith('payload', JSON.stringify(data));
     });
 
-})
+});

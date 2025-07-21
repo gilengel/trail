@@ -34,7 +34,7 @@ const {collapseNumber = 5} = defineProps<Props>();
 
 const emit = defineEmits<(e: "onSelectionChanged", item: ItemType) => void>();
 
-const selectedItem: Ref<ItemType | null> = ref(null)
+const selectedItem: Ref<ItemType | null> = ref(null);
 
 const selectItem = (item: ItemType) => {
   selectedItem.value = item;

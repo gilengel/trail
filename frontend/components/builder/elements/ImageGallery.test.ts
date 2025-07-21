@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import ImageGalleryComponent from '@/components/builder/elements/ImageGallery.vue'
+import {describe, it, expect} from 'vitest';
+import ImageGalleryComponent from '@/components/builder/elements/ImageGallery.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import type {ImageDto} from "~/types/image.dto";
 
@@ -22,6 +22,6 @@ describe('Component', () => {
                 }
             });
             expect(component.exists).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

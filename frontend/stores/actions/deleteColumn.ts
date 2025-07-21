@@ -17,7 +17,7 @@ export class DeleteColumn
         this.row.columns[this.columnIndex].width -= this.deletedColumn!.width;
         this.row.columns.splice(this.columnIndex, 0, this.deletedColumn!);
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 
     async redo() {
@@ -30,6 +30,6 @@ export class DeleteColumn
             isLastColumn ? this.columnIndex - 1 : this.columnIndex
             ].width += colSize;
 
-        await useGridSave(this.grid)
+        await useGridSave(this.grid);
     }
 }

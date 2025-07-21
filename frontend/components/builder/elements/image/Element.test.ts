@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import ImageComponent from '~/components/builder/elements/image/Element.vue'
+import {describe, it, expect} from 'vitest';
+import ImageComponent from '~/components/builder/elements/image/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {ElementType} from "~/types/grid";
 import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Props";
@@ -22,9 +22,9 @@ describe('Component', () => {
         };
 
         it('renders', async () => {
-            const component = await mountSuspended(ImageComponent, { props })
+            const component = await mountSuspended(ImageComponent, { props });
 
             expect(component.find('[data-testid="element-img"]').exists()).toBeTruthy();
-        })
-    })
-})
+        });
+    });
+});

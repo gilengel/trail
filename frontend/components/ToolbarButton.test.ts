@@ -1,5 +1,5 @@
-import {describe, expect, it} from 'vitest'
-import ToolbarButtonComponent from '@/components/ToolbarButton.vue'
+import {describe, expect, it} from 'vitest';
+import ToolbarButtonComponent from '@/components/ToolbarButton.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 
 
@@ -11,9 +11,9 @@ describe('Component', () => {
                     icon: 'las la-question-circle',
                     tooltip: ''
                 }
-            })
+            });
             expect(component.exists()).toBeTruthy();
-        })
+        });
 
         it('emits a click event when clicked', async () => {
             // Mount the component with necessary props
@@ -30,11 +30,11 @@ describe('Component', () => {
                         }
                     }
                 }
-            })
+            });
 
-            const button = wrapper.findComponent('[data-testid="tooltip-button"]')
-            await button.trigger('click')
-            expect(wrapper.emitted('click')).toHaveLength(1)
-        })
-    })
-})
+            const button = wrapper.findComponent('[data-testid="tooltip-button"]');
+            await button.trigger('click');
+            expect(wrapper.emitted('click')).toHaveLength(1);
+        });
+    });
+});

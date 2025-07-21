@@ -19,13 +19,13 @@ describe("MapLibreTrip", () => {
         const result = routeDto2MapLibreTrip(tripDto);
         expect(result.name).toBe('test trip dto');
         expect(result.description).toBe('test trip description');
-        expect(result.start).toStrictEqual(new LngLatWithElevation(0, 0, 0))
-        expect(result.end).toStrictEqual(new LngLatWithElevation(90, 90, 0))
+        expect(result.start).toStrictEqual(new LngLatWithElevation(0, 0, 0));
+        expect(result.end).toStrictEqual(new LngLatWithElevation(90, 90, 0));
 
-        expect(result.segments.length).toBe(1)
+        expect(result.segments.length).toBe(1);
         expect(result.segments[0].description).toBe('test trip segment');
 
-    })
+    });
 
     it("sets the name correctly", () => {
         const tripDto: RouteDto = {
@@ -39,7 +39,7 @@ describe("MapLibreTrip", () => {
         expect(result.name).toBe('test trip dto');
         result.name = "new trip dto name";
         expect(result.name).toBe('new trip dto name');
-    })
+    });
 
     it("sets the description correctly", () => {
         const tripDto: RouteDto = {
@@ -64,7 +64,7 @@ describe("MapLibreTrip", () => {
         expect(result.segments[0].description).toBe('test trip segment description');
         result.segments[0].description = 'new test trip segment description';
         expect(result.segments[0].description).toBe('new test trip segment description');
-    })
+    });
 
     it("creates a trip and calculates bounds", () => {
         const segment = new MapLibreSegment(1, "Segment 1", [

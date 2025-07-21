@@ -82,7 +82,7 @@ const segments = computed(() => {
   }
 
   return selectedRoute.value?.segments;
-})
+});
 
 
 const selection = computed({
@@ -91,17 +91,17 @@ const selection = computed({
       return [];
     }
 
-    return props.element.attributes.segmentsIds
+    return props.element.attributes.segmentsIds;
   },
   set(selectedIds: number[]) {
-    gridModuleStore.updateElementAttribute(props.element, "segmentsIds", selectedIds)
+    gridModuleStore.updateElementAttribute(props.element, "segmentsIds", selectedIds);
   }
-})
+});
 
 watch(selectedRoute, () => {
   gridModuleStore
-      .updateElementAttribute(props.element, "routeId", selectedRoute.value!.id)
-})
+      .updateElementAttribute(props.element, "routeId", selectedRoute.value!.id);
+});
 // ---------------------------------------------------------------------------------------------------------------------
 
 const color = computed(() => props.element.attributes.color);

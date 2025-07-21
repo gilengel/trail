@@ -92,7 +92,7 @@ function saveRoute() {
     router.push(`/trip/${route.params.id}/feed`);
   }).catch((e) => {
     console.log(e);
-  })
+  });
 }
 
 function removeRoute(deletedRouteId: number) {
@@ -102,7 +102,7 @@ function removeRoute(deletedRouteId: number) {
 const rules = {
   required: (value: string) => !!value || 'Required.',
   counter: (value: string) => value.length <= 20 || 'Max 20 characters',
-}
+};
 
 </script>
 
