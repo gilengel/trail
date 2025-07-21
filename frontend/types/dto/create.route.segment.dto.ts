@@ -1,13 +1,10 @@
 /**
  * @file DTO specification for creating a route segment.
  */
-import { ApiProperty } from './decorators';
 
-export class CreateRouteSegment {
-    @ApiProperty({ type: String, required: false})
+export interface CreateRouteSegment {
     name?: string;
 
-    @ApiProperty({ type: String, required: false})
     description?: string;
 
     /**
@@ -17,14 +14,9 @@ export class CreateRouteSegment {
      *
      * All coordinates must be either 2d or 3d - mixing is not allowed and shall return an error by the backend.
      */
-    @ApiProperty({
-        type: 'array',
-        items: { type: 'array', items: { type: 'number' } }
-    })
     coordinates?: Array<[number, number, number]>;
 }
 
-export class CreateRouteSegmentDto extends CreateRouteSegment {
-    //@ApiProperty()
+export interface CreateRouteSegmentDto extends CreateRouteSegment {
     routeId: number;
 }

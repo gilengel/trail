@@ -1,18 +1,19 @@
 <template>
   <div
-    ref="container"
-    class="draggable-container"
-    @mousedown="startDrag"
-    @wheel.prevent="onWheel"
-    :style="{ position: 'absolute' }"
+      ref="container"
+      class="draggable-container"
+      data-testid="draggable-container"
+      @mousedown="startDrag"
+      @wheel.prevent="onWheel"
+      :style="{ position: 'absolute' }"
   >
     <img
-      ref="image"
-      class="zoom-image"
-      :style="imageStyle"
-      :src="source"
-      draggable="false"
-      alt="image"
+        ref="image"
+        class="zoom-image"
+        :style="imageStyle"
+        :src="source"
+        draggable="false"
+        alt="image"
     >
   </div>
 </template>
@@ -87,7 +88,9 @@ const imageStyle = computed<CSSProperties>(() => {
  *   - Mutates state.position.x / y so that there is no “blank gap” shown.
  */
 function clampPosition() {
-  if (!container.value || !image.value) return
+  if (!container.value || !image.value) {
+    return
+  }
 
   const containerRect = container.value.getBoundingClientRect()
   const containerWidth = containerRect.width
@@ -224,7 +227,10 @@ const stopDrag = () => {
 // - ZOOMING -----------------------------------------------------------------------------------------------------------
 
 function onWheel(event: WheelEvent) {
-  if (!enabled || !container.value || !image.value) return
+  if (!enabled || !container.value || !image.value) {
+    return
+  }
+
   event.preventDefault()
 
   const zoomFactor = 0.1

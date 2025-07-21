@@ -2,28 +2,28 @@
   <v-row>
     <v-col cols="12">
       <v-card
-        title="Add Route"
-        class="rounded-xl"
-        variant="flat"
+          title="Add Route"
+          class="rounded-xl"
+          variant="flat"
       >
         <v-card-text>
           <v-text-field
-            v-model="routeName"
-            label="Route Name"
-            prepend-icon="las la-tag"
-            variant="outlined"
-            @keyup="routeNameChanged"
+              v-model="routeName"
+              label="Route Name"
+              prepend-icon="las la-tag"
+              variant="outlined"
+              @keyup="routeNameChanged"
           />
           <RouteDropZone
-            support-text="Trip Files (allowed are files of type gpx)"
-            :allowed-file-extensions="['gpx']"
-            @on-files-changed="onFilesChanged"
-            @on-segment-name-changed="onNameChanged"
-            @on-segment-description-changed="onDescriptionChanged"
+              support-text="Trip Files (allowed are files of type gpx)"
+              :allowed-file-extensions="['gpx']"
+              @on-files-changed="onFilesChanged"
+              @on-segment-name-changed="onNameChanged"
+              @on-segment-description-changed="onDescriptionChanged"
           />
           <span
-            v-if="status"
-            data-cy="status-msg"
+              v-if="status"
+              data-cy="status-msg"
           >{{ status }}</span>
         </v-card-text>
       </v-card>
@@ -33,9 +33,9 @@
 
 <script setup lang="ts">
 import {useUpload} from "~/composables/useUpload";
-import {type RouteDto, type RouteSegmentDto} from "~/types/route";
 import {usePatch} from "~/composables/usePatch";
 import type {GPXFile} from "~/types/gpx";
+import type {RouteDto, RouteSegmentDto} from "~/types/dto";
 
 const status: Ref<string> = ref("");
 

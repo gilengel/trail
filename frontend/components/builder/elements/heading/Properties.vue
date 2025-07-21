@@ -6,8 +6,8 @@
 
     <template #properties>
       <v-btn-toggle
-        v-model="size"
-        @update:model-value="onSizeChange"
+          v-model="size"
+          @update:model-value="onSizeChange"
       >
         <v-btn>
           H1
@@ -27,10 +27,10 @@
       </v-btn-toggle>
 
       <v-color-picker
-        v-model="color"
-        hide-inputs
-        show-swatches
-        @update:model-value="onColorChange"
+          v-model="color"
+          hide-inputs
+          show-swatches
+          @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -41,13 +41,7 @@ import type {ElementProps} from "~/components/builder/properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-interface Props {
-  level: number,
-  color: string,
-  text?: string
-}
-
-const props = defineProps<ElementProps<Props>>();
+const props = defineProps<ElementProps<HeadingProps>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

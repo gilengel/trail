@@ -1,6 +1,7 @@
 <template>
   <v-app id="inspire">
     <div class="header-image"></div>
+
     <v-navigation-drawer
         rail
         permanent

@@ -58,7 +58,6 @@ export const useTripStore = () =>
             }
 
             const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips')
-            console.log(dbTrips)
             dbTrips.value?.forEach(trip => {
                 if (!cachedTrips.has(trip.id)) {
                     cachedTrips.set(trip.id, trip);

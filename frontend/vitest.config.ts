@@ -15,6 +15,7 @@ export default defineVitestConfig({
         coverage: {
             include: ['**/*.ts', '**/*.vue'],
             exclude: [
+                "tests/utils.ts",
                 "*.config.ts",
                 "**/.nuxt/**",
                 "**/vitest**",
