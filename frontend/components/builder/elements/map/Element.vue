@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TMap :segments="mapSegments" />
+    <Map :segments="mapSegments"/>
   </div>
 </template>
 

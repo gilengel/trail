@@ -34,7 +34,7 @@ describe('Component', () => {
                 },
                 global: {
                     stubs: {
-                        TMap: {
+                        Map: {
                             template: '<div>Mocked Map</div>'
                         }
                     }
