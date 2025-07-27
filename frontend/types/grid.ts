@@ -1,3 +1,5 @@
+import type {ConsumedProperties, ProvidedProperties} from "~/components/builder/elements/map/Properties";
+
 /**
  * List of all available elements that can be used to create a page.
  *
@@ -18,17 +20,32 @@ const elementTypeKeys = Object.keys(ElementType);
 
 export const ElementTypes = elementTypeKeys as ElementType[];
 
-export class Element<T> {
+
+export class Element<Properties extends object,
+    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+    ConsumedProperties extends readonly (keyof Properties)[] = readonly []> {
     constructor(public readonly id: string,
                 public readonly type: ElementType,
-                public readonly attributes: T) {
+                public readonly attributes: Properties,
+                public readonly providedProperties: ProvidedProperties,
+                public readonly consumedProperties: ConsumedProperties) {
     }
+}
+
+export interface EditorElementProperties<Properties extends object,
+    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+    ConsumedProperties extends readonly (keyof Properties)[] = readonly []> {
+
+    grid: Grid,
+    element: Element<Properties, ProvidedProperties, ConsumedProperties>,
+    selected: boolean,
+    highlighted: boolean
 }
 
 export interface Column {
     id: string;
     width: number;
-    element?: Element<unknown>;
+    element?: Element<object>;
     row?: Row;
 }
 

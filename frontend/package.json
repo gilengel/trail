@@ -14,10 +14,10 @@
     "test:browser:cov": "vitest run  --workspace=vitest.workspace.browser.ts --coverage",
     "test:unit:cov": "vitest run --coverage",
     "test:component:cov": "cypress run --config video=false --component",
+    "test:browser": "vitest --workspace=vitest.workspace.browser.ts",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "test:browser": "vitest --workspace=vitest.workspace.browser.ts"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@nuxtjs/google-fonts": "^3.2.0",

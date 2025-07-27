@@ -1,13 +1,13 @@
 <template>
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer :grid="props.grid">
     <template #title>
       Heading Properties
     </template>
 
     <template #properties>
       <v-btn-toggle
-        v-model="size"
-        @update:model-value="onSizeChange"
+          v-model="size"
+          @update:model-value="onSizeChange"
       >
         <v-btn>
           H1
@@ -27,10 +27,10 @@
       </v-btn-toggle>
 
       <v-color-picker
-        v-model="color"
-        hide-inputs
-        show-swatches
-        @update:model-value="onColorChange"
+          v-model="color"
+          hide-inputs
+          show-swatches
+          @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -38,10 +38,11 @@
 
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
+import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<HeadingProps>>();
+const props = defineProps<ElementProps<HeadingProperties, [], []>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

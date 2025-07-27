@@ -1,20 +1,20 @@
 <template>
   <v-responsive
-    :aspect-ratio
-    :class="['image-container']"
+      :aspect-ratio
+      :class="['image-container']"
   >
     <BuilderElementsImageDraggableContainer
-      data-testid="element-img"
-      :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
-      :aspect-ratio="aspectRatio"
-      :position="props.element.attributes.position!"
-      :position-type="props.element.attributes.positionType"
-      :scale="props.element.attributes.scale"
-      :size-type="props.element.attributes.sizeType"
-      :enabled="props.selected"
-      @on-image-scale-change="onImageScaleChange"
-      @on-image-position-change="onImagePositionChange"
-      @on-image-size-type-change="onImageSizeTypeChange"
+        data-testid="element-img"
+        :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
+        :aspect-ratio="aspectRatio"
+        :position="props.element.attributes.position!"
+        :position-type="props.element.attributes.positionType"
+        :scale="props.element.attributes.scale"
+        :size-type="props.element.attributes.sizeType"
+        :enabled="props.selected"
+        @on-image-scale-change="onImageScaleChange"
+        @on-image-position-change="onImagePositionChange"
+        @on-image-size-type-change="onImageSizeTypeChange"
     />
   </v-responsive>
 </template>
@@ -22,11 +22,11 @@
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
 import type {Point2D} from "~/types/point";
-import {ImagePosition, type ImageProps, ImageSize} from "~/components/builder/elements/image/Props";
+import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ImageProps>>();
+const props = defineProps<ElementProps<ImageProperties>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

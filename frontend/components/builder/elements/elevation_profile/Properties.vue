@@ -1,33 +1,37 @@
 <template>
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer :grid="props.grid"
+                              :id="props.element.id"
+                              :properties="props.element.attributes"
+                              :provided-properties="['routeId', 'segmentsIds']"
+                              :consumed-properties="['routeId', 'segmentsIds']">
     <template #title>
       Elevation Profile Properties
     </template>
 
     <template #properties>
       <CollapsableList
-        :collapse-number="3"
-        :items="routes!"
-        :text="(routeDto: RouteDto) => routeDto.name"
-        @on-selection-changed="(e) => selectedRoute = e"
+          :collapse-number="3"
+          :items="routes!"
+          :text="(routeDto: RouteDto) => routeDto.name"
+          @on-selection-changed="(e) => selectedRoute = e"
       />
       <v-list
-        v-model:selected="selection"
-        select-strategy="leaf"
-        multiple
-        max-height="600px"
+          v-model:selected="selection"
+          select-strategy="leaf"
+          multiple
+          max-height="600px"
       >
         <v-list-item
-          v-for="item in segments"
-          :key="item.id"
-          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-          :value="item.id"
+            v-for="item in segments"
+            :key="item.id"
+            :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+            :value="item.id"
         >
           <template #prepend="{ isSelected }">
             <v-list-item-action start>
               <v-checkbox-btn
-                color="primary"
-                :model-value="isSelected"
+                  color="primary"
+                  :model-value="isSelected"
               />
             </v-list-item-action>
           </template>
@@ -35,10 +39,10 @@
       </v-list>
 
       <v-color-picker
-        v-model="color"
-        hide-inputs
-        show-swatches
-        @update:model-value="onColorChange"
+          v-model="color"
+          hide-inputs
+          show-swatches
+          @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -52,13 +56,12 @@ import {useRouteStore} from "~/stores/route";
 import CollapsableList from "~/components/CollapsableList.vue";
 import * as changeCase from "change-case";
 import type {RouteDto} from "~/types/dto";
-import type {ElevationProfileProps} from "~/components/builder/elements/elevation_profile/Props";
 import type {Color} from "~/types/color";
+import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-
-const props = defineProps<ElementProps<ElevationProfileProps>>();
+const props = defineProps<ElementProps<ElevationProfileProperties, ["routeId", "segmentsIds"], ["routeId", "segmentsIds"]>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

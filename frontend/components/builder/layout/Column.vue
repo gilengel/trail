@@ -1,30 +1,30 @@
 <template>
   <v-col
-    class="layout-col"
-    :cols="model.width"
+      class="layout-col"
+      :cols="model.width"
   >
     <div
-      v-if="editable"
-      class="actions rounded-xl"
+        v-if="editable"
+        class="actions rounded-xl"
     >
       <v-btn
-        rounded="0"
-        flat
-        icon
-        data-testid="action-menu-btn"
+          rounded="0"
+          flat
+          icon
+          data-testid="action-menu-btn"
       >
         <v-icon>las la-plus</v-icon>
         <v-menu
-          activator="parent"
-          data-testid="action-menu"
+            activator="parent"
+            data-testid="action-menu"
         >
           <v-list>
             <v-list-item
-              v-for="(element, index) in allowedElements"
-              :key="element"
-              data-testid="column-element"
-              :value="index"
-              @click="() => onElementChanged(element)"
+                v-for="(element, index) in allowedElements"
+                :key="element"
+                data-testid="column-element"
+                :value="index"
+                @click="() => onElementChanged(element)"
             >
               <v-list-item-title>{{ element }}</v-list-item-title>
             </v-list-item>
@@ -32,31 +32,31 @@
         </v-menu>
       </v-btn>
       <v-btn
-        :disable="splitDisabled"
-        flat
-        rounded="0"
-        icon="las la-columns"
-        @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
+          :disable="splitDisabled"
+          flat
+          rounded="0"
+          icon="las la-columns"
+          @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
       />
       <v-btn
-        flat
-        rounded="0"
-        icon="las la-trash-alt"
-        :readonly="model.width === 12"
-        @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
+          flat
+          rounded="0"
+          icon="las la-trash-alt"
+          :readonly="model.width === 12"
+          @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
       />
     </div>
 
     <div
-      ref="dropContainer"
-      class="element-container"
-      :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
+        ref="dropContainer"
+        class="element-container"
+        :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
     >
       <component
-        :is="selectedComponent"
-        v-bind="selectedComponentProps as object"
-        v-if="selectedComponent"
-        @click="() => $emit('selectElement', model.element as Element<unknown>)"
+          :is="selectedComponent"
+          v-bind="selectedComponentProps!"
+          v-if="selectedComponent"
+          @click="() => selectElement(model.element)"
       />
     </div>
   </v-col>
@@ -66,9 +66,8 @@
 
 import {computed, type PropType, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
-import {componentsMap} from "~/components/builder/AllElements";
-import {type Column, Element, ElementType, ElementTypes, type Grid} from "~/types/grid";
-import {v4 as uuidv4} from 'uuid';
+import {componentsMap, createElement} from "~/components/builder/AllElements";
+import {type Column, type EditorElementProperties, Element, ElementType, ElementTypes, type Grid} from "~/types/grid";
 
 const props = defineProps({
   /**
@@ -114,7 +113,7 @@ const props = defineProps({
   },
 
   /**
-   * Enables/Disables editability of the column. If disabled the toolbar on top is not shown
+   * Enables/Disables editability of the column. If disabled, the toolbar on top is not shown
    * to the user.
    */
   editable: {
@@ -138,9 +137,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  selectElement: [element: Element<unknown>];
+  selectElement: [element: Element<object>];
 
-  onElementChanged: [element: Element<unknown>];
+  onElementChanged: [element: Element<object>];
 }>();
 
 const dropContainer = ref(null);
@@ -163,6 +162,13 @@ type AddEvent = Sortable.SortableEvent & {
 
 const gridModuleStore = useGridStore();
 
+const isHighlighted = computed(() => {
+  if (!props.model.element) {
+    return false;
+  }
+
+  return gridModuleStore.isHighlighted(props.model.element);
+})
 
 const selectedComponent = computed(() => {
   if (!props.model.element) {
@@ -172,80 +178,37 @@ const selectedComponent = computed(() => {
   return componentsMap[props.model.element.type];
 });
 
-const selectedComponentProps = computed(() => {
+const selectedComponentProps = computed<EditorElementProperties<object> | undefined>(() => {
   if (!props.model.element) {
     return undefined;
   }
 
-  return {element: props.model.element, selected: props.model.element.id === props.selectedElementId};
+  return {
+    grid: props.grid,
+    element: props.model.element,
+    selected: props.model.element.id === props.selectedElementId,
+    highlighted: isHighlighted.value,
+  };
 });
 
 
 /**
  * @param elementType
  */
-function getDefaultProps(elementType: ElementType) {
-  switch (elementType) {
-    case ElementType.Text:
-      return {};
-    case ElementType.Heading:
-      return {
-        level: 0,
-        color: '#000',
-        text: 'Heading'
-      };
-    case ElementType.Map:
-      return {};
-    case ElementType.Image:
-      return {
-        scale: {origin: {x: 0, y: 0}, value: 1}
-      };
-    case ElementType.ElevationProfile:
-      return {};
-  }
-}
-
-/**
- * @param elementType
- */
 function onElementChanged(elementType: ElementType) {
-  const element = new Element(uuidv4(), elementType, getDefaultProps(elementType));
+  const element: Element<any> = createElement(elementType) as Element<any>;
   gridModuleStore.setColumnElement(props.model, element);
   emit('onElementChanged', element);
 }
 
-/**
- * Callback that gets called once an "element" is dropped on the container.
- * @param event - The event containing the dropped element. In order to make this work the
- * event must have a value stored in the DataTransfer object with the key
- * 'data-element' and a valid value of a ElementType enum key (but all in lowercase).
- */
-/*
-function elementAdded(event: AddEvent) {
-  console.log(event);
-  event.preventDefault();
+function selectElement(element?: Element<object>) {
+  if (!element) {
+    return;
+  }
 
-  // workaround to directly remove the already dropped and added element. Not the
-  // the best solution :( but it works.
-  event.target.removeChild(event.item);
-
-  // get the type from the DataTransfer object and convert it back to the correct enum key
-  const type = event.originalEvent.dataTransfer?.getData(
-    'data-element',
-  ) as string;
-  const typeKey = type.charAt(0).toUpperCase() + type.slice(1);
-
-  const typeEnum: ElementType =
-    ElementType[typeKey as keyof typeof ElementType];
-
-  gridModuleStore.setColumnElement(props.model, typeEnum);
-  emit('selectElement', props.model.element as Element<T, S>);
+  emit('selectElement', element)
 }
 
-function onEnd(event: Sortable.SortableEvent) {
-  event.item.remove();
-}
-*/
 </script>
 
 <style lang="scss" scoped>

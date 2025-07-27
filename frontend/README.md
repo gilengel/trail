@@ -56,7 +56,7 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+Local preview production build:
 
 ```bash
 # npm

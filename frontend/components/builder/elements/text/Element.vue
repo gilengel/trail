@@ -1,22 +1,19 @@
 <template>
   <Editor
-    :content="text"
-    @on-text-changed="onTextChanged"
-    v-if="selected"
+      :content="text"
+      @on-text-changed="onTextChanged"
+      v-if="selected"
   />
   <div
-    v-else
-    v-html="text"
-    class="tiptap"
+      v-else
+      v-html="text"
+      class="tiptap"
   />
 </template>
 
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
-
-interface Props {
-  text: string;
-}
+import type {TextProperties} from "~/components/builder/elements/text/Properties";
 
 const text = computed(() => {
   if (!props.element.attributes.text) {
@@ -26,7 +23,7 @@ const text = computed(() => {
   return props.element.attributes.text;
 });
 
-const props = defineProps<ElementProps<Props>>();
+const props = defineProps<ElementProps<TextProperties>>();
 
 const gridModuleStore = useGridStore();
 

@@ -1,6 +1,6 @@
 import type {Color} from "~/types/color";
 
-export interface ElevationProfileProps {
+export interface ElevationProfileProperties {
     routeId?: number
     segmentsIds?: number[]
     color?: Color

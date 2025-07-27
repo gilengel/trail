@@ -52,8 +52,40 @@ export function createDefaultGrid(tripId: number): Grid {
 
 export const useGridStore = () =>
     defineStore('gridStore', () => {
+        const highlightedElements: Ref<Set<String>> = ref(new Set([]));
 
         const _undoRedoStore = useUndoRedoStore();
+
+        function clearHighlightedElements() {
+            highlightedElements.value.clear();
+        }
+
+        function addHighlightedElement<Properties extends object,
+            ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+            ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>) {
+            if (isHighlighted(element)) {
+                return;
+            }
+
+            highlightedElements.value.add(element.id);
+        }
+
+        function removeHighlightedElement<Properties extends object,
+            ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+            ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>) {
+            highlightedElements.value.delete(element.id)
+        }
+
+        function getHighlightedElements(): Set<String> {
+            return highlightedElements.value;
+        }
+
+        function isHighlighted<Properties extends object,
+            ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+            ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>): boolean {
+
+            return highlightedElements.value.has(element.id)
+        }
 
         /**
          * Adds a row to the grid.
@@ -116,7 +148,7 @@ export const useGridStore = () =>
          * @param column - The column from which you want to set the element.
          * @param element - The element that shall be displayed.
          */
-        async function setColumnElement(column: Column, element: Element<unknown>) {
+        async function setColumnElement(column: Column, element: Element<any, any, any>) {
             await _undoRedoStore.execute(new SetElement(column, element));
         }
 
@@ -129,10 +161,12 @@ export const useGridStore = () =>
          * @param attribute - The key of the attribute that shall be changed.
          * @param value - The new value for the attribute. It can be either string, number or boolean.
          */
-        async function updateElementAttribute<T extends object, K extends keyof T>(
-            element: Element<T>,
-            attribute: K,
-            value: T[K]
+        async function updateElementAttribute<Properties extends object,
+            ProvidedProperties extends Array<keyof Properties>,
+            ConsumedProperties extends Array<keyof Properties>, Property extends keyof Properties>(
+            element: Element<Properties, ProvidedProperties, ConsumedProperties>,
+            attribute: Property,
+            value: Properties[Property]
         ) {
             await _undoRedoStore.execute(
                 new UpdateElementAttribute(element, attribute, value),
@@ -161,6 +195,12 @@ export const useGridStore = () =>
         }
 
         return {
+            clearHighlightedElements,
+            addHighlightedElement,
+            removeHighlightedElement,
+            getHighlightedElements,
+            isHighlighted,
+
             addRow,
             moveRow,
             deleteRow,
