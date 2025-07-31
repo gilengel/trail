@@ -1,10 +1,10 @@
 import type {TextProperties} from "~/components/builder/elements/text/Properties";
-import type {MapProperties} from "~/components/builder/elements/map/Properties";
 import {Element, ElementType} from "~/types/grid";
 import {v4 as uuidv4} from "uuid";
 import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
+import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 
 
 export const componentsMap = {
@@ -26,7 +26,7 @@ export const componentsPropertiesMap = {
 interface PropertiesMap {
     [ElementType.Text]: TextProperties,
     [ElementType.Heading]: HeadingProperties,
-    [ElementType.Map]: MapProperties,
+    [ElementType.Map]: RouteProperty,
     [ElementType.Image]: ImageProperties,
     [ElementType.ElevationProfile]: ElevationProfileProperties,
 }
@@ -84,6 +84,8 @@ export function createElement<T extends ElementType>(
         type,
         attributes,
         providedProperties,
-        consumedProperties
+        consumedProperties,
+        {},
+        {}
     );
 }

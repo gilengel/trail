@@ -1,11 +1,26 @@
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, vi} from 'vitest';
 import {mount} from '@vue/test-utils';
 import Container from "~/components/builder/properties/Container.vue";
+import {SwitchModeKey} from "~/components/builder/BuilderMode";
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import {createVuetify} from "vuetify";
+
+const vuetify = createVuetify({
+    components,
+    directives,
+})
 
 describe('PropertyCard (with stubs)', () => {
     it('renders title and properties slots', () => {
+        const mockSwitchMode = vi.fn();
+
         const wrapper = mount(Container, {
             global: {
+                plugins: [vuetify],
+                provide: {
+                    [SwitchModeKey]: mockSwitchMode,
+                },
                 stubs: {
                     VCard: {template: '<div class="v-card"><slot /></div>'},
                     VCardTitle: {template: '<div class="v-card-title"><slot /></div>'},

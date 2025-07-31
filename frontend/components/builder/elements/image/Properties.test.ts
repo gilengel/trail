@@ -1,8 +1,8 @@
 import {mount} from '@vue/test-utils';
 import {describe, expect, it, vi, beforeEach} from 'vitest';
-import {ElementType} from "~/types/grid";
+import {Element, ElementType} from "~/types/grid";
 import Properties from "./Properties.vue";
-import {ImagePosition, ImageSize} from "./Props";
+import {ImagePosition, type ImageProperties, ImageSize} from "./Properties";
 import {createPinia, setActivePinia} from "pinia";
 import {useGridStore} from "~/stores/grid";
 
@@ -22,16 +22,12 @@ vi.mock('@/stores/grid', () => ({
 }));
 
 
-const mockElement = {
-    id: '1',
-    type: ElementType.Image,
-    attributes: {
-        aspectRatio: 4 / 3,
-        scale: {origin: {x: 0, y: 0}, value: 1},
-        sizeType: ImageSize.Free,
-        positionType: ImagePosition.Free,
-    }
-};
+const mockElement = new Element<ImageProperties, [], []>('0', ElementType.Image, {
+    aspectRatio: 4 / 3,
+    scale: {origin: {x: 0, y: 0}, value: 1},
+    sizeType: ImageSize.Free,
+    positionType: ImagePosition.Free,
+}, [], [], {}, {});
 
 const vuetifyStubs = {
 
@@ -93,7 +89,7 @@ describe('ImagePropertiesComponent', () => {
 
     it('changes aspect ratio when a new one is clicked', async () => {
         const wrapper = mount(Properties, {
-            props: {element: mockElement, selected: false},
+            props: {element: mockElement, selected: false, highlighted: false, grid: {tripId: 0, rows: []}},
             global: {
                 plugins: [createPinia()],
                 provide: {

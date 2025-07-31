@@ -6,9 +6,9 @@ import {type AttributeType, Element} from '~/types/grid';
  *
  * Updates an attribute of the element. This is an undoable/redoable action.
  */
-export class UpdateElementAttribute<Properties extends object,
-    ProvidedProperties extends Array<keyof Properties>,
-    ConsumedProperties extends Array<keyof Properties>, Property extends keyof Properties>
+export class UpdateElementAttribute<Properties extends object, Property extends keyof Properties,
+    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+    ConsumedProperties extends readonly (keyof Properties)[] = readonly []>
     implements UndoRedoAction {
     private oldValue: AttributeType;
 

@@ -1,19 +1,19 @@
 <template>
   <div
-    ref="container"
-    class="draggable-container"
-    data-testid="draggable-container"
-    @mousedown="startDrag"
-    @wheel.prevent="onWheel"
-    :style="{ position: 'absolute' }"
+      ref="container"
+      class="draggable-container"
+      data-testid="draggable-container"
+      @mousedown="startDrag"
+      @wheel.prevent="onWheel"
+      :style="{ position: 'absolute' }"
   >
     <img
-      ref="image"
-      class="zoom-image"
-      :style="imageStyle"
-      :src="source"
-      draggable="false"
-      alt="image"
+        ref="image"
+        class="zoom-image"
+        :style="imageStyle"
+        :src="source"
+        draggable="false"
+        alt="image"
     >
   </div>
 </template>
@@ -21,11 +21,11 @@
 <script setup lang="ts">
 import {ref, computed, watch, type CSSProperties} from 'vue';
 import type {Point2D} from '~/types/point';
-import {ImagePosition, type ImageProps, ImageSize} from '~/components/builder/elements/image/Props';
+import {ImagePosition, type ImageProperties, ImageSize} from '~/components/builder/elements/image/Properties';
 
 // - PROPS --------------------------------------------------------------------------------------------------------------
 
-interface DraggableContainerProps extends ImageProps {
+interface DraggableContainerProps extends ImageProperties {
   enabled?: boolean
   source: string
   sizeType: ImageSize

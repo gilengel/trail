@@ -161,9 +161,10 @@ export const useGridStore = () =>
          * @param attribute - The key of the attribute that shall be changed.
          * @param value - The new value for the attribute. It can be either string, number or boolean.
          */
-        async function updateElementAttribute<Properties extends object,
-            ProvidedProperties extends Array<keyof Properties>,
-            ConsumedProperties extends Array<keyof Properties>, Property extends keyof Properties>(
+        async function updateElementAttribute<
+            Properties extends object, Property extends keyof Properties,
+            ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+            ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(
             element: Element<Properties, ProvidedProperties, ConsumedProperties>,
             attribute: Property,
             value: Properties[Property]
@@ -194,12 +195,28 @@ export const useGridStore = () =>
             );
         }
 
+        function findElementWithId<Properties extends object>(id: String, grid: Grid)
+
+            : Element<Properties> | undefined {
+            for (let row of grid.rows) {
+                for (let column of row.columns) {
+                    if (column.element && column.element.id === id) {
+                        return column.element as unknown as Element<Properties>;
+                    }
+                }
+            }
+
+            return undefined;
+        }
+
         return {
             clearHighlightedElements,
             addHighlightedElement,
             removeHighlightedElement,
             getHighlightedElements,
             isHighlighted,
+
+            findElementWithId,
 
             addRow,
             moveRow,

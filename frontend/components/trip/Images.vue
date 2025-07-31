@@ -1,6 +1,6 @@
 <template>
   <BuilderElementsImageGallery
-    :images="[
+      :images="[
       { url: 'https://picsum.photos/id/70/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/71/400/600', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/72/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
@@ -17,14 +17,14 @@
       { url: 'https://picsum.photos/id/83/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
 
     ]"
-    :cols="3"
+      :cols="3"
   />
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref, type Ref} from "vue";
-import type {ImageDto} from "~/types/types";
-import type {MapLibreSegment} from "~/types/types";
+import type {ImageDto} from "~/types/dto";
+import type {MapLibreSegment} from "~/types/route";
 
 interface TripImagesProps {
   segment: MapLibreSegment;
@@ -36,9 +36,10 @@ const images: Ref<ImageDto[]> = ref([]);
 const imagesHiddenCount: Ref<number> = ref(0);
 const config = useRuntimeConfig();
 
+
 onMounted(async () => {
   const totalImages: number = await $fetch(`/api/images/route_segment/number`, {
-    baseURL: config.public.baseURL,
+    baseURL: config.public.baseURL as string,
     method: "GET",
     params: {
       routeSegmentId: props.segment.id,
@@ -48,7 +49,7 @@ onMounted(async () => {
 
   imagesHiddenCount.value = totalImages - numberOfVisibleImages;
   images.value = await $fetch(`/api/images/route_segment`, {
-    baseURL: config.public.baseURL,
+    baseURL: config.public.baseURL as string,
     method: "GET",
     params: {
       routeSegmentId: props.segment.id,

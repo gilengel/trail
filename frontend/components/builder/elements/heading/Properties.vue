@@ -1,5 +1,9 @@
 <template>
-  <BuilderPropertiesContainer :grid="props.grid">
+  <BuilderPropertiesContainer :grid="props.grid"
+                              :id="props.element.id"
+                              :properties="props.element.attributes"
+                              :provided-properties="[]"
+                              :consumed-properties="[]">
     <template #title>
       Heading Properties
     </template>
@@ -42,7 +46,7 @@ import type {HeadingProperties} from "~/components/builder/elements/heading/Prop
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<HeadingProperties, [], []>>();
+const props = defineProps<ElementProps<HeadingProperties>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

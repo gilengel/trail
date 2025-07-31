@@ -1,30 +1,19 @@
 <template>
-  <v-col
-      class="layout-col"
-      :cols="model.width"
-  >
+  <v-col class="layout-col" :cols="model.width">
     <div
-        v-if="editable"
-        class="actions rounded-xl"
+        v-if="props.activeMode === BuilderMode.Create && editable"
+        class="actions rounded-sm"
     >
-      <v-btn
-          rounded="0"
-          flat
-          icon
-          data-testid="action-menu-btn"
-      >
+      <v-btn rounded="0" flat icon data-testid="action-menu-btn">
         <v-icon>las la-plus</v-icon>
-        <v-menu
-            activator="parent"
-            data-testid="action-menu"
-        >
+        <v-menu activator="parent" data-testid="action-menu">
           <v-list>
             <v-list-item
                 v-for="(element, index) in allowedElements"
                 :key="element"
                 data-testid="column-element"
                 :value="index"
-                @click="() => onElementChanged(element)"
+                @click="() => createElement(element, props.model)"
             >
               <v-list-item-title>{{ element }}</v-list-item-title>
             </v-list-item>
@@ -56,7 +45,7 @@
           :is="selectedComponent"
           v-bind="selectedComponentProps!"
           v-if="selectedComponent"
-          @click="() => selectElement(model.element)"
+          @click="() => selectElement(model.element!)"
       />
     </div>
   </v-col>
@@ -64,10 +53,16 @@
 
 <script setup lang="ts">
 
-import {computed, type PropType, ref} from 'vue';
+import {computed, inject, type PropType, ref} from 'vue';
 import {columnValueValidator} from '~/composables/useColumValidator';
-import {componentsMap, createElement} from "~/components/builder/AllElements";
-import {type Column, type EditorElementProperties, Element, ElementType, ElementTypes, type Grid} from "~/types/grid";
+import {componentsMap} from "~/components/builder/AllElements";
+import {type Column, type EditorElementProperties, ElementType, ElementTypes, type Grid} from "~/types/grid";
+import {
+  BuilderMode, CreateElementKey,
+  SelectElementKey,
+} from "~/components/builder/BuilderMode";
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps({
   /**
@@ -128,19 +123,30 @@ const props = defineProps({
    */
   splitDisabled: Boolean,
 
-
   selectedElementId: {
     type: String,
     default: undefined,
     required: false
+  },
+
+  activeMode: {
+    type: Number as PropType<BuilderMode>,
+    required: true,
   }
 });
 
-const emit = defineEmits<{
-  selectElement: [element: Element<object>];
+// ---------------------------------------------------------------------------------------------------------------------
 
-  onElementChanged: [element: Element<object>];
-}>();
+const selectElement = inject(SelectElementKey);
+if (!selectElement) {
+  throw new Error("Column component is missing the 'selectElement' injected function.")
+}
+
+const createElement = inject(CreateElementKey);
+if (!createElement) {
+  throw new Error("Column component is missing the 'createElement' injected function.")
+}
+// ---------------------------------------------------------------------------------------------------------------------
 
 const dropContainer = ref(null);
 
@@ -160,7 +166,11 @@ type AddEvent = Sortable.SortableEvent & {
 };
 */
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 const gridModuleStore = useGridStore();
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const isHighlighted = computed(() => {
   if (!props.model.element) {
@@ -191,23 +201,7 @@ const selectedComponentProps = computed<EditorElementProperties<object> | undefi
   };
 });
 
-
-/**
- * @param elementType
- */
-function onElementChanged(elementType: ElementType) {
-  const element: Element<any> = createElement(elementType) as Element<any>;
-  gridModuleStore.setColumnElement(props.model, element);
-  emit('onElementChanged', element);
-}
-
-function selectElement(element?: Element<object>) {
-  if (!element) {
-    return;
-  }
-
-  emit('selectElement', element)
-}
+// ---------------------------------------------------------------------------------------------------------------------
 
 </script>
 

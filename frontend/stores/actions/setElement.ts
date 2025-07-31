@@ -8,12 +8,12 @@ import {type Column, Element} from '~/types/grid';
  */
 export class SetElement
     implements UndoRedoAction {
-    private oldElement: Element<object, never[], never[]> | undefined;
-    private newElement: Element<object, never[], never[]> | undefined;
+    private oldElement: Element<object> | undefined;
+    private newElement: Element<object> | undefined;
 
     constructor(
         private column: Column,
-        private element: Element<object, never[], never[]>,
+        private element: Element<object>,
     ) {
     }
 

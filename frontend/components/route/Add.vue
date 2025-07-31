@@ -2,28 +2,28 @@
   <v-row>
     <v-col cols="12">
       <v-card
-        title="Add Route"
-        class="rounded-xl"
-        variant="flat"
+          title="Add Route"
+          class="rounded-sm"
+          variant="flat"
       >
         <v-card-text>
           <v-text-field
-            v-model="routeName"
-            label="Route Name"
-            prepend-icon="las la-tag"
-            variant="outlined"
-            @keyup="routeNameChanged"
+              v-model="routeName"
+              label="Route Name"
+              prepend-icon="las la-tag"
+              variant="outlined"
+              @keyup="routeNameChanged"
           />
           <RouteDropZone
-            support-text="Trip Files (allowed are files of type gpx)"
-            :allowed-file-extensions="['gpx']"
-            @on-files-changed="onFilesChanged"
-            @on-segment-name-changed="onNameChanged"
-            @on-segment-description-changed="onDescriptionChanged"
+              support-text="Trip Files (allowed are files of type gpx)"
+              :allowed-file-extensions="['gpx']"
+              @on-files-changed="onFilesChanged"
+              @on-segment-name-changed="onNameChanged"
+              @on-segment-description-changed="onDescriptionChanged"
           />
           <span
-            v-if="status"
-            data-cy="status-msg"
+              v-if="status"
+              data-cy="status-msg"
           >{{ status }}</span>
         </v-card-text>
       </v-card>

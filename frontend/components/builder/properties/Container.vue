@@ -1,7 +1,7 @@
 <template>
   <div class="pa-5">
     <v-card
-        class="rounded-xl"
+        class="rounded-sm"
         variant="flat"
     >
       <v-card-title>
@@ -33,7 +33,7 @@
               :key="i"
               :value="item"
               color="primary"
-              @click="select(item)"
+              @click="select(item as string)"
           >
             <template v-slot:prepend>
               <v-icon icon="las la-arrow-circle-left"></v-icon>
@@ -50,9 +50,23 @@
 <script setup lang="ts" generic="Properties extends object,
     ProvidedProperties extends Array<keyof Properties> = [],
     ConsumedProperties extends Array<keyof Properties> = []">
+// ---------------------------------------------------------------------------------------------------------------------
+// This is the parent component for all element property components.
+//
+// ⚠️ It is tightly coupled to the editor (WidgetLayout) as it uses the editors provided functions
+// (like switching the internal active state) which was chosen to avoid (re)emitting events up
+// the component tree.
+// ---------------------------------------------------------------------------------------------------------------------
 
 import {Element, type Grid} from "~/types/grid";
+import {inject} from 'vue';
 
+import {
+  BuilderMode,
+  SwitchModeKey
+} from "~/components/builder/BuilderMode";
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<{
   grid: Grid,
@@ -62,8 +76,19 @@ const props = defineProps<{
   consumedProperties: ConsumedProperties
 }>();
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 const gridModuleStore = useGridStore();
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+
+const switchMode = inject(SwitchModeKey);
+if (!switchMode) {
+  throw new Error("Container component is missing the 'switchMode' injected function.")
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 function findAllElementsWithProvidedProperties(providedProperties: string[], grid: Grid): Element<object>[] {
   function areAllKeysOf<T extends readonly string[]>(arr: string[], obj: T): boolean {
@@ -78,7 +103,6 @@ function findAllElementsWithProvidedProperties(providedProperties: string[], gri
   );
 }
 
-
 function select(e: string) {
   const filtered = findAllElementsWithProvidedProperties([e], props.grid);
 
@@ -86,7 +110,8 @@ function select(e: string) {
   for (let filteredElement of filtered) {
     gridModuleStore.addHighlightedElement(filteredElement);
   }
-}
 
+  switchMode!(BuilderMode.Connect);
+}
 
 </script>

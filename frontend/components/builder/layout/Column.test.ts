@@ -5,6 +5,7 @@ import {mount} from "@vue/test-utils";
 import {createTestGrid} from "~/stores/actions/test.helper";
 import {createVuetify} from 'vuetify';
 import {Element, ElementType} from "~/types/grid";
+import {BuilderMode} from "~/components/builder/BuilderMode";
 
 const mockUpdateElementAttribute = vi.fn();
 const mockGridModuleStore = {
@@ -27,13 +28,14 @@ describe('Component', () => {
             }
         }
 
-        mockGrid.rows[0].columns[0].element = new Element(ElementType.Text, {});
+        mockGrid.rows[0].columns[0].element = new Element('0', ElementType.Text, [], [], [], [], []);
 
         const props = {
             rowIndex: 0,
             columnIndex: 0,
             grid: mockGrid,
             model: mockGrid.rows[0].columns[0],
+            activeMode: BuilderMode.Create
         };
 
         beforeEach(async () => {

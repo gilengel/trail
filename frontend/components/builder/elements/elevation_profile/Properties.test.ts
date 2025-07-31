@@ -1,7 +1,8 @@
 import {describe, it, expect, vi} from 'vitest';
-import ElevationProfileProperties from './Properties.vue';
+import ElevationProfilePropertiesComponent from './Properties.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
+import {Element, ElementType} from "~/types/grid";
+import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -17,16 +18,16 @@ describe('Component', () => {
         it('renders', async () => {
             getByTripId.mockResolvedValue([]);
 
-            const component = await mountSuspended(ElevationProfileProperties, {
+            const element = new Element<ElevationProfileProperties, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"]>('0', ElementType.ElevationProfile, {
+                routeId: 0,
+                segmentsIds: []
+            }, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"], {}, {});
+            const component = await mountSuspended(ElevationProfilePropertiesComponent, {
                 props: {
-                    element: {
-                        id: '0',
-                        type: ElementType.ElevationProfile,
-                        attributes: {
-                            routeId: 0,
-                            segmentsIds: []
-                        }
-                    }, selected: true
+                    element,
+                    selected: true,
+                    highlighted: false,
+                    grid: {tripId: 0, rows: []}
                 }
             });
             expect(component.exists).toBeTruthy();

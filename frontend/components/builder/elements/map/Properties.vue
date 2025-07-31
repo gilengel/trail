@@ -9,6 +9,17 @@
     </template>
 
     <template #properties>
+
+      <v-alert
+          v-if="props.element.connectedConsumedProperties.segmentsIds"
+          type="warning"
+          variant="outlined"
+          prominent
+      >
+        Data is connected to another element. You can change it in that element here.
+      </v-alert>
+
+
       <CollapsableList
           :collapse-number="3"
           :items="routes!"
@@ -17,6 +28,7 @@
       />
       <v-list
           v-model:selected="selection"
+          :disabled="props.element.connectedConsumedProperties.segmentsIds !== undefined"
           select-strategy="leaf"
           multiple
           max-height="600px"
@@ -51,13 +63,13 @@ import * as changeCase from "change-case";
 import type {RouteDto} from "~/types/dto";
 import {
   type ConsumedProperties,
-  type MapProperties,
   type ProvidedProperties
 } from "~/components/builder/elements/map/Properties";
+import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<MapProperties, ProvidedProperties, ConsumedProperties>>();
+const props = defineProps<ElementProps<RouteProperty, ProvidedProperties, ConsumedProperties>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

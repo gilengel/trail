@@ -3,10 +3,7 @@
   <div id="editor-primary-toolbar"/>
 
   <v-row no-gutters>
-    <v-col
-        sm="9"
-        no-gutters
-    >
+    <v-col sm="9" no-gutters>
       <div ref="el">
         <BuilderLayoutRow
             v-for="(element, index) in grid.rows"
@@ -18,18 +15,14 @@
             :row-index="index"
             :selected-element-id="selectedElementId"
             :data-testid="`layout-row-${index}`"
-            @select-element="(e: Element<object>) => onSelectedElementChanged(e)"
-            @on-element-changed="(e: Element<object>) => $emit('onElementChanged', e)"
+            :active-mode
         />
       </div>
-      <v-row
-          no-gutters
-          style="margin-top: 24px; margin-right: 16px"
-      >
+      <v-row no-gutters style="margin-top: 24px; margin-right: 16px">
         <v-spacer/>
         <v-btn
             @click="addRow()"
-            color="primary rounded-xl"
+            color="primary rounded-sm"
             variant="outlined"
             prepend-icon="las la-plus"
         >
@@ -37,12 +30,7 @@
         </v-btn>
       </v-row>
     </v-col>
-    <v-col
-        ref="options_container"
-        sm="3"
-        class="options-container"
-    >
-      {{ selectedProps?.highlighted }}
+    <v-col ref="options_container" sm="3" class="options-container">
       <component
           :is="selectedComponent"
           v-bind="selectedProps as ElementProps<object>"
@@ -57,9 +45,10 @@ import {computed, type Ref, ref} from 'vue';
 import {v4 as uuidv4} from 'uuid';
 import type {SortableEvent} from 'sortablejs';
 import {useSortable} from '@vueuse/integrations/useSortable';
-import {type EditorElementProperties, Element, type Grid} from '~/types/grid';
-import {componentsPropertiesMap} from "~/components/builder/AllElements";
+import {type Column, type EditorElementProperties, Element, ElementType, type Grid} from '~/types/grid';
+import {componentsPropertiesMap, createElement} from "~/components/builder/AllElements";
 import type {ElementProps} from "~/components/builder/properties";
+import {BuilderMode, CreateElementKey, SelectElementKey, SwitchModeKey} from "~/components/builder/BuilderMode";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -68,7 +57,7 @@ const props = defineProps<{
   tripId: number,
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   onElementChanged: [element: Element<object>];
 }>();
 
@@ -79,6 +68,52 @@ const gridModuleStore = useGridStore();
 // ---------------------------------------------------------------------------------------------------------------------
 
 const selectedElement: Ref<Element<object> | undefined> = ref(undefined);
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const activeMode: Ref<BuilderMode> = ref(BuilderMode.Create);
+
+provide(SwitchModeKey, (newMode: BuilderMode) => {
+  activeMode.value = newMode;
+})
+
+function handleSelectElement<
+    Props extends object,
+    Provided extends readonly (keyof Props)[],
+    Consumed extends readonly (keyof Props)[]
+>(
+    element: Element<Props, Provided, Consumed>
+): void {
+  if (activeMode.value === BuilderMode.Connect && selectedElement.value) {
+    const sel = selectedElement.value as unknown as Element<Props, Provided, Consumed>;
+
+    const key1 = sel.providedProperties[0];
+    if (key1) {
+      sel.connectedProvidedProperties[key1] = element.id;
+      element.connectedConsumedProperties[key1] = element.id;
+    }
+
+    const key2 = sel.providedProperties[1];
+    if (key2) {
+      sel.connectedProvidedProperties[key2] = element.id;
+      element.connectedConsumedProperties[key2] = element.id;
+    }
+
+    activeMode.value = BuilderMode.Create;
+  }
+
+  selectedElement.value = element as unknown as Element<object>;
+}
+
+provide(SelectElementKey, (element: Element<any, readonly string[]>) => {
+  handleSelectElement(element);
+})
+
+provide(CreateElementKey, (elementType: ElementType, column: Column) => {
+  const element: Element<any> = createElement(elementType) as Element<any>;
+  gridModuleStore.setColumnElement(column, element);
+  emit('onElementChanged', element)
+})
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -133,13 +168,6 @@ function addRow() {
     id: uuidv4(),
     columns: [{id: uuidv4(), width: 12}],
   }, props.grid);
-}
-
-/**
- * @param element
- */
-function onSelectedElementChanged(element: Element<object>) {
-  selectedElement.value = element;
 }
 
 /**

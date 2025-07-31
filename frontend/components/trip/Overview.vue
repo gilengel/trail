@@ -6,23 +6,23 @@
     <v-card-text>
       <v-list lines="one">
         <v-list-item
-          v-for="trip in trips.values()"
-          :key="trip.id"
-          :title="trip.name"
-          @click="onTripClicked(trip)"
+            v-for="trip in trips.values()"
+            :key="trip.id"
+            :title="trip.name"
+            @click="onTripClicked(trip)"
         />
       </v-list>
 
 
       <h2
-        v-if="!networkError && trips.size === 0"
-        data-cy="error-empty-text"
+          v-if="!networkError && trips.size === 0"
+          data-cy="error-empty-text"
       >
         😞 Looks like you don't have any trips stored yet
       </h2>
       <h2
-        v-if="networkError"
-        data-cy="error-network-text"
+          v-if="networkError"
+          data-cy="error-network-text"
       >
         😞 Looks like there was a network problem.
       </h2>
@@ -31,7 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import type {TripDto} from "~/types/route";
+
+import type {TripDto} from "~/types/dto";
 
 const tripStore = useTripStore();
 

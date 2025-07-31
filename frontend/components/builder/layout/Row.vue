@@ -3,14 +3,14 @@
     <v-row
         no-gutters
         align="center"
-        class="border layout-row rounded-xl"
+        class="border layout-row"
         :class="isDraggingColumnSize ? 'dragging' : ''"
         @mouseenter="isHovering=true"
         @mouseleave="isHovering=false"
     >
-      <v-col
-          cols="auto"
-          class="actions rounded-xl"
+      <v-col v-if="props.activeMode === BuilderMode.Create"
+             cols="auto"
+             class="actions rounded-sm"
       >
         <v-btn
             :ripple="false"
@@ -40,15 +40,14 @@
               :column-index="col_index"
               :row-index="rowIndex"
               :model="column"
+              :active-mode
               :grid
               :class="colClass(col_index)"
               :split-disabled="column.width <= 2"
               :editable="!isDraggingColumnSize"
               :selected-element-id="props.selectedElementId"
               v-for="(column, col_index) in model.columns"
-              @select-element="(element) => $emit('selectElement', element)"
               :key="col_index"
-              @on-element-changed="(element) => $emit('onElementChanged', element)"
           />
 
           <div
@@ -66,11 +65,11 @@
   </v-container>
 </template>
 
-<script setup lang="ts" generic="T extends string, S extends string">
+<script setup lang="ts">
 import {type PropType, type Ref, ref} from 'vue';
-
-import {type Row, Element, type Grid} from '~/types/grid';
+import {type Grid, type Row} from '~/types/grid';
 import {columnValueValidator} from '~/composables/useColumValidator';
+import {BuilderMode} from "~/components/builder/BuilderMode";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -109,16 +108,13 @@ const props = defineProps({
     type: String,
     default: undefined,
     required: false
+  },
+
+  activeMode: {
+    type: Number as PropType<BuilderMode>,
+    required: true,
   }
 });
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-defineEmits<{
-  selectElement: [element: Element<object>];
-
-  onElementChanged: [element: Element<object>];
-}>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -376,8 +372,6 @@ $actions-width: 52px;
   }
 
   border: $focus-border !important;
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
 }
 
 .v-row {

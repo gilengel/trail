@@ -6,12 +6,12 @@
 
 <script setup lang="ts">
 import type {MapLibreSegment} from "~/types/route";
-import type {MapProperties} from "~/components/builder/elements/map/Properties";
 import type {ElementProps} from "~/components/builder/properties";
+import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<MapProperties>>();
+const props = defineProps<ElementProps<RouteProperty>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

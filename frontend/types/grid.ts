@@ -20,7 +20,6 @@ const elementTypeKeys = Object.keys(ElementType);
 
 export const ElementTypes = elementTypeKeys as ElementType[];
 
-
 export class Element<Properties extends object,
     ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
     ConsumedProperties extends readonly (keyof Properties)[] = readonly []> {
@@ -28,7 +27,9 @@ export class Element<Properties extends object,
                 public readonly type: ElementType,
                 public readonly attributes: Properties,
                 public readonly providedProperties: ProvidedProperties,
-                public readonly consumedProperties: ConsumedProperties) {
+                public readonly consumedProperties: ConsumedProperties,
+                public readonly connectedProvidedProperties: Partial<Record<ProvidedProperties[number], string>>,
+                public readonly connectedConsumedProperties: Partial<Record<ConsumedProperties[number], string>>) {
     }
 }
 

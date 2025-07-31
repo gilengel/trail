@@ -29,8 +29,14 @@ describe('Component', () => {
                         attributes: {
                             routeId: 0,
                             segmentsIds: []
-                        }
-                    }, selected: true
+                        },
+                        providedProperties: [],
+                        consumedProperties: [],
+                        connectedProvidedProperties: {},
+                        connectedConsumedProperties: {}
+                    }, selected: true,
+                    highlighted: false,
+                    grid: {tripId: 0, rows: []}
                 },
                 global: {
                     stubs: {

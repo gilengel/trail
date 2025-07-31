@@ -3,7 +3,7 @@
  */
 import {mount, VueWrapper} from '@vue/test-utils';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
-import MapComponent from "~/components/TMap.vue";
+import MapComponent from "~/components/Map.vue";
 import {LngLatBounds, Map as MockMap} from 'maplibre-gl';
 import {LngLatWithElevation, MapLibreSegment, MapLibreRoute} from "~/types/route";
 

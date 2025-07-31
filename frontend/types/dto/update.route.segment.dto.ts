@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for updating a route segment.
  */
-import {CreateRouteSegment} from './create.route.segment.dto';
+import type {CreateRouteSegment} from "~/types/dto/create.route.segment.dto";
 
-export class UpdateRouteSegmentDto extends CreateRouteSegment {
+export interface UpdateRouteSegmentDto extends CreateRouteSegment {
 }

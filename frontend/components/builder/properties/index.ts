@@ -9,8 +9,9 @@ import {type Element, type Grid} from '~/types/grid';
  * the consumed property, which must be a key in Properties.
  */
 export interface ElementProps<Properties extends object,
-    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
-    ConsumedProperties extends readonly (keyof Properties)[] = readonly []> {
+    ProvidedProperties extends readonly (keyof Properties)[] = [],
+    ConsumedProperties extends readonly (keyof Properties)[] = []
+> {
     /**
      * The element instance containing the properties and metadata.
      */

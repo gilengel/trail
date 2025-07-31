@@ -9,34 +9,15 @@
     </template>
 
     <template #properties>
-      <CollapsableList
-          :collapse-number="3"
-          :items="routes!"
-          :text="(routeDto: RouteDto) => routeDto.name"
-          @on-selection-changed="(e) => selectedRoute = e"
+      {{ element.attributes.segmentsIds }}
+      <BuilderPropertiesSegments :routes
+                                 :route-id="element.attributes.routeId"
+                                 :segments-ids="element.attributes.segmentsIds"
+                                 :is-consumed="element.connectedConsumedProperties.segmentsIds !== undefined"
+                                 @update:selected-segment-ids="onSelectionChanged"
+                                 @update:selected-route-id="onRouteIdChanged"
       />
-      <v-list
-          v-model:selected="selection"
-          select-strategy="leaf"
-          multiple
-          max-height="600px"
-      >
-        <v-list-item
-            v-for="item in segments"
-            :key="item.id"
-            :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-            :value="item.id"
-        >
-          <template #prepend="{ isSelected }">
-            <v-list-item-action start>
-              <v-checkbox-btn
-                  color="primary"
-                  :model-value="isSelected"
-              />
-            </v-list-item-action>
-          </template>
-        </v-list-item>
-      </v-list>
+
 
       <v-color-picker
           v-model="color"
@@ -53,15 +34,14 @@
 import {useTripStore} from "~/stores/trip";
 import type {ElementProps} from "~/components/builder/properties";
 import {useRouteStore} from "~/stores/route";
-import CollapsableList from "~/components/CollapsableList.vue";
-import * as changeCase from "change-case";
-import type {RouteDto} from "~/types/dto";
+
 import type {Color} from "~/types/color";
 import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
+import type {ConsumedPropertiesRoute, ProvidedPropertiesRoute} from "~/components/builder/elements/RouteProperty";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ElevationProfileProperties, ["routeId", "segmentsIds"], ["routeId", "segmentsIds"]>>();
+const props = defineProps<ElementProps<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -77,34 +57,17 @@ const route = useRoute();
 const trip = await tripStore.get(Number(route.params.id));
 const routes = await routeStore.getByTripId(trip!.id);
 
-const selectedRoute: Ref<RouteDto | null> = ref(null);
 
-const segments = computed(() => {
-  if (!selectedRoute) {
-    return [];
-  }
-
-  return selectedRoute.value?.segments;
-});
-
-
-const selection = computed({
-  get() {
-    if (!props.element.attributes || props.element.attributes.segmentsIds === undefined) {
-      return [];
-    }
-
-    return props.element.attributes.segmentsIds;
-  },
-  set(selectedIds: number[]) {
-    gridModuleStore.updateElementAttribute(props.element, "segmentsIds", selectedIds);
-  }
-});
-
-watch(selectedRoute, () => {
+function onRouteIdChanged(routeId: number) {
   gridModuleStore
-      .updateElementAttribute(props.element, "routeId", selectedRoute.value!.id);
-});
+      .updateElementAttribute<ElevationProfileProperties, "routeId", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(props.element, "routeId", routeId);
+}
+
+function onSelectionChanged(segmentIds: number[]) {
+  gridModuleStore
+      .updateElementAttribute<ElevationProfileProperties, "segmentsIds", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(props.element, "segmentsIds", segmentIds);
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 
 const color = computed(() => props.element.attributes.color);

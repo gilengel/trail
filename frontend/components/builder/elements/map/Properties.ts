@@ -1,7 +1,4 @@
-export interface MapProperties {
-    routeId?: number,
-    segmentsIds?: number[],
-}
+import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 
-export type ProvidedProperties = (keyof MapProperties)[];
-export type ConsumedProperties = (keyof MapProperties)[];
+export type ProvidedProperties = (keyof RouteProperty)[];
+export type ConsumedProperties = (keyof RouteProperty)[];

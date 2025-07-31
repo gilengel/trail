@@ -7,11 +7,11 @@ import {SetElement} from "~/stores/actions/setElement";
 
 describe("SetElement", () => {
     let mockColumn: Column;
-    let mockElement: Element<unknown>;
+    let mockElement: Element<object, [], []>;
 
     beforeEach(() => {
         mockColumn = {id: '0', width: 0, element: undefined};
-        mockElement = new Element('0', ElementType.Heading, {});
+        mockElement = new Element<{}, [], []>('0', ElementType.Heading, {}, [], [], {}, {});
     });
 
     it("should set a new element and store the old one", async () => {
@@ -52,10 +52,10 @@ describe("SetElement", () => {
     });
 
     it("should cache the old element if one exists", async () => {
-        const existingElement = new Element('0', ElementType.Image, {}); // Different element for testing
+        const existingElement = new Element<object, [], []>('0', ElementType.Image, {}, [], [], [], []); // Different element for testing
         mockColumn.element = existingElement;
 
-        const newElement = new Element('0', ElementType.Text, {});
+        const newElement = new Element<object, [], []>('0', ElementType.Text, {}, [], [], [], []);
         const setElementAction = new SetElement(mockColumn, newElement);
 
         await setElementAction.redo();

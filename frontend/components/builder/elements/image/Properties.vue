@@ -1,6 +1,10 @@
 <template>
   Heading
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer :grid="props.grid"
+                              :id="props.element.id"
+                              :properties="props.element.attributes"
+                              :provided-properties="[]"
+                              :consumed-properties="[]">
     <template #title>
       Image Properties
     </template>
@@ -11,15 +15,15 @@
       </h2>
       <div class="aspect-ratios pb-4">
         <div
-          v-for="(ratio, i) in aspectRatios"
-          :key="i"
-          class="ratio-container"
+            v-for="(ratio, i) in aspectRatios"
+            :key="i"
+            class="ratio-container"
         >
           <v-responsive
-            :aspect-ratio="ratio.value"
-            :class="['border', props.element.attributes.aspectRatio === ratio.value ? 'selected' : '']"
-            :data-testid="`ratio-${i}`"
-            @click="onAspectRatioChanged(ratio.value)"
+              :aspect-ratio="ratio.value"
+              :class="['border', props.element.attributes.aspectRatio === ratio.value ? 'selected' : '']"
+              :data-testid="`ratio-${i}`"
+              @click="onAspectRatioChanged(ratio.value)"
           >
             <div class="ratio-content">
               <strong>{{ ratio.label }}</strong>
@@ -27,7 +31,7 @@
           </v-responsive>
         </div>
       </div>
-      <v-divider />
+      <v-divider/>
 
       <h2 class="text-h6 mt-2 mb-2">
         Scaling
@@ -36,69 +40,69 @@
         <v-row>
           <v-col>
             <v-row
-              no-gutters
-              align="center"
+                no-gutters
+                align="center"
             >
               <v-col cols="8">
                 <v-slider
-                  v-model="scaleValue"
-                  min="0.125"
-                  max="2"
+                    v-model="scaleValue"
+                    min="0.125"
+                    max="2"
                 />
               </v-col>
               <v-col cols="4">
                 <v-number-input
-                  control-variant="stacked"
-                  v-model="scaleValue"
-                  :precision="2"
+                    control-variant="stacked"
+                    v-model="scaleValue"
+                    :precision="2"
                 />
               </v-col>
             </v-row>
           </v-col>
         </v-row>
       </div>
-      <v-divider />
+      <v-divider/>
 
       <h2 class="text-h6 mt-2 mb-2">
         Size
       </h2>
       <v-col
-        class="py-2"
-        cols="12"
-        sm="6"
+          class="py-2"
+          cols="12"
+          sm="6"
       >
         <v-btn-toggle v-model="imageSizeType">
           <v-btn
-            :value="ImageSize.FitHorizontally"
-            data-testid="btn-image-size-h"
+              :value="ImageSize.FitHorizontally"
+              data-testid="btn-image-size-h"
           >
             <v-icon>las la-arrows-alt-h</v-icon>
           </v-btn>
 
           <v-btn
-            :value="ImageSize.FitVertically"
-            data-testid="btn-image-size-v"
+              :value="ImageSize.FitVertically"
+              data-testid="btn-image-size-v"
           >
             <v-icon>las la-arrows-alt-v</v-icon>
           </v-btn>
 
           <v-btn
-            :value="ImageSize.Free"
-            data-testid="btn-image-size-f"
+              :value="ImageSize.Free"
+              data-testid="btn-image-size-f"
           >
             <v-icon>las la-vector-square</v-icon>
           </v-btn>
         </v-btn-toggle>
       </v-col>
-      <v-divider />
+      <v-divider/>
 
       <h2 class="text-h6 mt-2 mb-2">
         Position
       </h2>
       <v-col
-        class="py-2"
-        cols="12"
-        sm="6"
+          class="py-2"
+          cols="12"
+          sm="6"
       >
         <v-btn-toggle v-model="imagePositionMode">
           <v-btn :value="ImagePosition.Free">
@@ -116,11 +120,11 @@
 
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
-import {ImagePosition, type ImageProps, ImageSize} from "~/components/builder/elements/image/Props";
+import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ImageProps>>();
+const props = defineProps<ElementProps<ImageProperties>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

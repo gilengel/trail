@@ -28,7 +28,9 @@ export default defineConfigWithVueTs(
         files: ['**/*.vue'],
         rules: {
             semi: ['error', 'always'],
-            "vue/multi-word-component-names": 0 // Usually a good rule but due to nuxt we take care with different directories
+            "vue/multi-word-component-names": 0, // Usually a good rule but due to nuxt we take care with different directories
+            "singleline": "never",
+            "multiline": "always"
         }
     },
     {

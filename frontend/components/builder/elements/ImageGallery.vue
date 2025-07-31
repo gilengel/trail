@@ -1,20 +1,20 @@
 <template>
   <masonry-wall
-    :items="images"
-    :ssr-columns="1"
-    :column-width="300"
-    :gap="16"
+      :items="images"
+      :ssr-columns="1"
+      :column-width="300"
+      :gap="16"
   >
     <template #default="{ item }">
       <div
-        class="bg-surface-variant rounded-sm mx-auto"
-        border="solid 2px white"
-      >
-        <v-img
           class="bg-surface-variant rounded-sm mx-auto"
           border="solid 2px white"
-          cover
-          :src="item.url"
+      >
+        <v-img
+            class="bg-surface-variant rounded-sm mx-auto"
+            border="solid 2px white"
+            cover
+            :src="item.url"
         />
       </div>
     </template>
@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import type {ImageDto} from "~/types/types";
 import {columnValueValidator} from "~/composables/useColumValidator";
+import type {ImageDto} from "~/types/dto";
 
 
 defineProps({

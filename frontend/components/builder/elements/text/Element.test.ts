@@ -1,7 +1,8 @@
-import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import TextComponent from '~/components/builder/elements/text/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
+import {Element, ElementType} from "~/types/grid";
+import type {TextProperties} from "~/components/builder/elements/text/Properties";
 
 describe('Component', () => {
     describe('Text', () => {
@@ -17,18 +18,14 @@ describe('Component', () => {
         });
 
         const props = {
-            element: {
-                id: '0',
-                type: ElementType.Image,
-                attributes: {
-                    text: 'Text'
-
-                }
-            }, selected: true
+            element: new Element<TextProperties, [], []>('0', ElementType.Text, {text: 'Text'}, [], [], {}, {}),
+            selected: true,
+            highlighted: false,
+            grid: {tripId: 0, rows: []}
         };
 
         it('renders', async () => {
-            const component = await mountSuspended(TextComponent, { props });
+            const component = await mountSuspended(TextComponent, {props});
             expect(component.text()).toContain('Text');
         });
     });
