@@ -7,6 +7,7 @@
       >
         <ToolbarButton
           v-if="formatting"
+          data-testid="editor-bold-button"
           icon="las la-bold"
           tooltip="Bold"
           :is-active="editor.isActive('bold')"
@@ -15,6 +16,7 @@
 
         <ToolbarButton
           v-if="formatting"
+          data-testid="editor-italic-button"
           icon="las la-italic"
           tooltip="Italic"
           :is-active="editor.isActive('italic')"
@@ -23,6 +25,7 @@
 
         <ToolbarButton
           v-if="formatting"
+          data-testid="editor-strikethrough-button"
           icon="las la-strikethrough"
           tooltip="Strikethrough"
           :is-active="editor.isActive('strike')"
@@ -31,6 +34,7 @@
 
         <ToolbarButton
           v-if="text"
+          data-testid="editor-bullet-list-button"
           icon="las la-list"
           tooltip="Bullet List"
           :is-active="editor.isActive('bulletList')"
@@ -39,6 +43,7 @@
 
         <ToolbarButton
           v-if="text"
+          data-testid="editor-numbered-list-button"
           icon="las la-list-ol"
           tooltip="Numbered List"
           :is-active="editor.isActive('orderedList')"
@@ -47,6 +52,7 @@
 
         <ToolbarButton
           v-if="text"
+          data-testid="editor-blockquote-button"
           icon="las la-quote-left"
           tooltip="Blockquote"
           :is-active="editor.isActive('blockquote')"
@@ -55,6 +61,7 @@
 
         <ToolbarButton
           v-if="undoredo"
+          data-testid="editor-undo-button"
           icon="las la-undo-alt"
           tooltip="Undo"
           :is-active="editor.isActive('undo')"
@@ -63,6 +70,7 @@
 
         <ToolbarButton
           v-if="undoredo"
+          data-testid="editor-redo-button"
           icon="las la-redo-alt"
           tooltip="Redo"
           :is-active="editor.isActive('redo')"
@@ -71,22 +79,25 @@
 
         <ToolbarButton
           v-if="alignment"
+          data-testid="editor-align-left-button"
           icon="las la-align-left"
-          tooltip="Redo"
+          tooltip="Align Left"
           :is-active="editor.isActive('left')"
           @click="editor.chain().focus().setNodeSelection(1).setTextAlign('left').run()"
         />
 
         <ToolbarButton
           v-if="alignment"
+          data-testid="editor-align-center-button"
           icon="las la-align-center"
-          tooltip="Redo"
+          tooltip="Align Right"
           :is-active="editor.isActive('center')"
           @click="editor.chain().focus().setNodeSelection(1).setTextAlign('center').run()"
         />
 
         <ToolbarButton
           v-if="alignment"
+          data-testid="editor-align-right-button"
           icon="las la-align-right"
           tooltip="Redo"
           :is-active="editor.isActive('right')"
@@ -95,6 +106,7 @@
 
         <ToolbarButton
           v-if="alignment"
+          data-testid="editor-align-justify-button"
           icon="las la-align-justify"
           tooltip="Redo"
           :is-active="editor.isActive('justify')"

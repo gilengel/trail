@@ -1,19 +1,30 @@
 <template>
-  <v-col class="layout-col" :cols="model.width">
+  <v-col
+    class="layout-col"
+    :cols="model.width"
+  >
     <div
-        v-if="props.activeMode === BuilderMode.Create && editable"
-        class="actions rounded-sm"
+      v-if="props.activeMode === BuilderMode.Create && editable"
+      class="actions rounded-sm"
     >
-      <v-btn rounded="0" flat icon data-testid="action-menu-btn">
+      <v-btn
+        rounded="0"
+        flat
+        icon
+        data-testid="action-menu-btn"
+      >
         <v-icon>las la-plus</v-icon>
-        <v-menu activator="parent" data-testid="action-menu">
+        <v-menu
+          activator="parent"
+          data-testid="action-menu"
+        >
           <v-list>
             <v-list-item
-                v-for="(element, index) in allowedElements"
-                :key="element"
-                data-testid="column-element"
-                :value="index"
-                @click="() => createElement(element, props.model)"
+              v-for="(element, index) in allowedElements"
+              :key="element"
+              data-testid="column-element"
+              :value="index"
+              @click="() => createElement(element, props.model)"
             >
               <v-list-item-title>{{ element }}</v-list-item-title>
             </v-list-item>
@@ -21,31 +32,31 @@
         </v-menu>
       </v-btn>
       <v-btn
-          :disable="splitDisabled"
-          flat
-          rounded="0"
-          icon="las la-columns"
-          @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
+        :disable="splitDisabled"
+        flat
+        rounded="0"
+        icon="las la-columns"
+        @click="gridModuleStore.splitColumn(rowIndex, columnIndex, props.grid)"
       />
       <v-btn
-          flat
-          rounded="0"
-          icon="las la-trash-alt"
-          :readonly="model.width === 12"
-          @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
+        flat
+        rounded="0"
+        icon="las la-trash-alt"
+        :readonly="model.width === 12"
+        @click="gridModuleStore.deleteColumn(rowIndex, columnIndex, props.grid)"
       />
     </div>
 
     <div
-        ref="dropContainer"
-        class="element-container"
-        :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
+      ref="dropContainer"
+      class="element-container"
+      :data-testid="`layout-column-element-container-${columnIndex}-${rowIndex}`"
     >
       <component
-          :is="selectedComponent"
-          v-bind="selectedComponentProps!"
-          v-if="selectedComponent"
-          @click="() => selectElement(model.element!)"
+        :is="selectedComponent"
+        v-bind="selectedComponentProps!"
+        v-if="selectedComponent"
+        @click="() => selectElement(model.element!)"
       />
     </div>
   </v-col>
@@ -139,12 +150,12 @@ const props = defineProps({
 
 const selectElement = inject(SelectElementKey);
 if (!selectElement) {
-  throw new Error("Column component is missing the 'selectElement' injected function.")
+  throw new Error("Column component is missing the 'selectElement' injected function.");
 }
 
 const createElement = inject(CreateElementKey);
 if (!createElement) {
-  throw new Error("Column component is missing the 'createElement' injected function.")
+  throw new Error("Column component is missing the 'createElement' injected function.");
 }
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -178,7 +189,7 @@ const isHighlighted = computed(() => {
   }
 
   return gridModuleStore.isHighlighted(props.model.element);
-})
+});
 
 const selectedComponent = computed(() => {
   if (!props.model.element) {

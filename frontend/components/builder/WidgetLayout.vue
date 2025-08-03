@@ -1,40 +1,50 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div id="editor-primary-toolbar"/>
+  <div id="editor-primary-toolbar" />
 
   <v-row no-gutters>
-    <v-col sm="9" no-gutters>
+    <v-col
+      sm="9"
+      no-gutters
+    >
       <div ref="el">
         <BuilderLayoutRow
-            v-for="(element, index) in grid.rows"
-            data-key="itemId"
-            data-value="Row"
-            :key="element.id"
-            :model="element"
-            :grid="grid"
-            :row-index="index"
-            :selected-element-id="selectedElementId"
-            :data-testid="`layout-row-${index}`"
-            :active-mode
+          v-for="(element, index) in grid.rows"
+          data-key="itemId"
+          data-value="Row"
+          :key="element.id"
+          :model="element"
+          :grid="grid"
+          :row-index="index"
+          :selected-element-id="selectedElementId"
+          :data-testid="`layout-row-${index}`"
+          :active-mode
         />
       </div>
-      <v-row no-gutters style="margin-top: 24px; margin-right: 16px">
-        <v-spacer/>
+      <v-row
+        no-gutters
+        style="margin-top: 24px; margin-right: 16px"
+      >
+        <v-spacer />
         <v-btn
-            @click="addRow()"
-            color="primary rounded-sm"
-            variant="outlined"
-            prepend-icon="las la-plus"
+          @click="addRow()"
+          color="primary rounded-sm"
+          variant="outlined"
+          prepend-icon="las la-plus"
         >
           Add Row
         </v-btn>
       </v-row>
     </v-col>
-    <v-col ref="options_container" sm="3" class="options-container">
+    <v-col
+      ref="options_container"
+      sm="3"
+      class="options-container"
+    >
       <component
-          :is="selectedComponent"
-          v-bind="selectedProps as ElementProps<object>"
-          v-if="selectedComponent"
+        :is="selectedComponent"
+        v-bind="selectedProps as ElementProps<object>"
+        v-if="selectedComponent"
       />
     </v-col>
   </v-row>
@@ -75,7 +85,7 @@ const activeMode: Ref<BuilderMode> = ref(BuilderMode.Create);
 
 provide(SwitchModeKey, (newMode: BuilderMode) => {
   activeMode.value = newMode;
-})
+});
 
 function handleSelectElement<
     Props extends object,
@@ -107,13 +117,13 @@ function handleSelectElement<
 
 provide(SelectElementKey, (element: Element<any, readonly string[]>) => {
   handleSelectElement(element);
-})
+});
 
 provide(CreateElementKey, (elementType: ElementType, column: Column) => {
   const element: Element<any> = createElement(elementType) as Element<any>;
   gridModuleStore.setColumnElement(column, element);
-  emit('onElementChanged', element)
-})
+  emit('onElementChanged', element);
+});
 
 // ---------------------------------------------------------------------------------------------------------------------
 

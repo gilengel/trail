@@ -11,7 +11,7 @@ describe("SetElement", () => {
 
     beforeEach(() => {
         mockColumn = {id: '0', width: 0, element: undefined};
-        mockElement = new Element<{}, [], []>('0', ElementType.Heading, {}, [], [], {}, {});
+        mockElement = new Element<object, [], []>('0', ElementType.Heading, {}, [], [], {}, {});
     });
 
     it("should set a new element and store the old one", async () => {

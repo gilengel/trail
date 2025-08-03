@@ -1,36 +1,36 @@
 <template>
   <v-alert
-      v-if="isConsumed"
-      type="warning"
-      variant="outlined"
-      prominent
+    v-if="isConsumed"
+    type="warning"
+    variant="outlined"
+    prominent
   >
     Data is connected to another element. You can change it in that element here.
   </v-alert>
   <CollapsableList
-      :collapse-number="3"
-      :items="routes!"
-      :text="(routeDto: RouteDto) => routeDto.name"
-      @on-selection-changed="(e) => selectedRoute = e"
+    :collapse-number="3"
+    :items="routes"
+    :text="(routeDto: RouteDto) => routeDto.name"
+    @on-selection-changed="selectedRouteChanged"
   />
   <v-list
-      :disabled="isConsumed"
-      v-model:selected="selection"
-      select-strategy="leaf"
-      multiple
-      max-height="600px"
+    :disabled="isConsumed"
+    v-model:selected="selection"
+    select-strategy="leaf"
+    multiple
+    max-height="600px"
   >
     <v-list-item
-        v-for="item in segments"
-        :key="item.id"
-        :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-        :value="item.id"
+      v-for="item in segments"
+      :key="item.id"
+      :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+      :value="item.id"
     >
       <template #prepend="{ isSelected }">
         <v-list-item-action start>
           <v-checkbox-btn
-              color="primary"
-              :model-value="isSelected"
+            color="primary"
+            :model-value="isSelected"
           />
         </v-list-item-action>
       </template>
@@ -47,7 +47,7 @@ import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 // ---------------------------------------------------------------------------------------------------------------------
 
 interface Props extends RouteProperty {
-  routes: RouteDto[] | null,
+  routes: RouteDto[],
   isConsumed: boolean
 }
 
@@ -64,10 +64,6 @@ const emit = defineEmits<{
 const selectedRoute: Ref<RouteDto | null> = ref(null);
 
 const segments = computed(() => {
-  if (!routes) {
-    return [];
-  }
-
   if (routeId && segmentsIds) {
 
     const route = routes.find((route) => route.id === routeId);
@@ -79,10 +75,6 @@ const segments = computed(() => {
     return route.segments;
   }
 
-  if (!selectedRoute) {
-    return [];
-  }
-
   return selectedRoute.value?.segments;
 });
 
@@ -91,36 +83,19 @@ const selection = ref([...segmentsIds]);
 
 watch(selection, (selectedSegments) => {
   if (!routeId) {
-    throw new Error(`SegmentsComponent set selectedSegments without a valid routeID`)
+    throw new Error(`SegmentsComponent set selectedSegments without a valid routeID`);
   }
 
   emit("update:selectedRouteId", routeId);
   emit("update:selectedSegmentIds", selectedSegments);
 });
 
+function selectedRouteChanged(route: RouteDto): void {
+  selectedRoute.value = route;
 
-/*
-const selection = computed({
-  get() {
-    if (!element.attributes || element.attributes.segmentsIds === undefined) {
-      return [];
-    }
+  emit("update:selectedRouteId", route.id);
+}
 
-    return element.attributes.segmentsIds;
-  },
-  set(selectedIds: number[]) {
-
-    const connectedElementIdForSegmentsIds = element.connectedProvidedProperties.segmentsIds;
-    if (connectedElementIdForSegmentsIds) {
-      const element = gridModuleStore.findElementWithId(connectedElementIdForSegmentsIds, grid)!;
-
-      gridModuleStore.updateElementAttribute<RouteProperty, "segmentsIds">(element, "segmentsIds", selectedIds);
-    }
-
-    gridModuleStore.updateElementAttribute<RouteProperty, "segmentsIds">(element, "segmentsIds", selectedIds);
-  }
-});
- */
 </script>
 
 <style scoped lang="scss">

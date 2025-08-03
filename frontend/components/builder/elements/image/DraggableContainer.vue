@@ -1,19 +1,19 @@
 <template>
   <div
-      ref="container"
-      class="draggable-container"
-      data-testid="draggable-container"
-      @mousedown="startDrag"
-      @wheel.prevent="onWheel"
-      :style="{ position: 'absolute' }"
+    ref="container"
+    class="draggable-container"
+    data-testid="draggable-container"
+    @mousedown="startDrag"
+    @wheel.prevent="onWheel"
+    :style="{ position: 'absolute' }"
   >
     <img
-        ref="image"
-        class="zoom-image"
-        :style="imageStyle"
-        :src="source"
-        draggable="false"
-        alt="image"
+      ref="image"
+      class="zoom-image"
+      :style="imageStyle"
+      :src="source"
+      draggable="false"
+      alt="image"
     >
   </div>
 </template>

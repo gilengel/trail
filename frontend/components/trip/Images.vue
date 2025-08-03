@@ -1,6 +1,6 @@
 <template>
   <BuilderElementsImageGallery
-      :images="[
+    :images="[
       { url: 'https://picsum.photos/id/70/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/71/400/600', name: '', id: '0', timestamp: new Date(), coordinates: []},
       { url: 'https://picsum.photos/id/72/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
@@ -17,7 +17,7 @@
       { url: 'https://picsum.photos/id/83/400/300', name: '', id: '0', timestamp: new Date(), coordinates: []},
 
     ]"
-      :cols="3"
+    :cols="3"
   />
 </template>
 

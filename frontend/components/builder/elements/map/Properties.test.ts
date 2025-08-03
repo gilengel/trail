@@ -1,6 +1,5 @@
 import {describe, it, expect, vi} from 'vitest';
 import MapProperties from '~/components/builder/elements/map/Properties.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {ElementType} from "~/types/grid";
 import {createVuetify} from "vuetify";
 import * as components from "vuetify/components";
@@ -20,7 +19,7 @@ vi.mock('@/stores/route', () => {
 const vuetify = createVuetify({
     components,
     directives,
-})
+});
 
 describe('Component', () => {
     describe('Map[Properties]', () => {

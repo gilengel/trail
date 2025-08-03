@@ -3,6 +3,7 @@ import ElevationProfilePropertiesComponent from './Properties.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {Element, ElementType} from "~/types/grid";
 import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
+import {SwitchModeKey} from "~/components/builder/BuilderMode";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -15,6 +16,8 @@ vi.mock('@/stores/route', () => {
 
 describe('Component', () => {
     describe('ElevationProfileProperties[Properties]', () => {
+        const mockSwitchMode = vi.fn();
+        
         it('renders', async () => {
             getByTripId.mockResolvedValue([]);
 
@@ -23,6 +26,9 @@ describe('Component', () => {
                 segmentsIds: []
             }, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"], {}, {});
             const component = await mountSuspended(ElevationProfilePropertiesComponent, {
+                provide: {
+                    [SwitchModeKey]: mockSwitchMode,
+                },
                 props: {
                     element,
                     selected: true,

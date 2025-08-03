@@ -18,7 +18,7 @@ export type CreateElement = (elementType: ElementType, column: Column) => void
 export type SelectElement = (element: Element<object>) => void
 export type SelectedElementChanged = (element: Element<object>) => void
 
-export const SwitchModeKey: InjectionKey<SwitchMode> = Symbol(ProvidedMethods.SwitchMode)
-export const CreateElementKey: InjectionKey<CreateElement> = Symbol(ProvidedMethods.CreateElement)
-export const SelectElementKey: InjectionKey<SelectElement> = Symbol(ProvidedMethods.SelectElement)
-export const SelectedElementChangedKey: InjectionKey<SelectedElementChanged> = Symbol(ProvidedMethods.SelectedElementChanged)
+export const SwitchModeKey: InjectionKey<SwitchMode> = Symbol(ProvidedMethods.SwitchMode);
+export const CreateElementKey: InjectionKey<CreateElement> = Symbol(ProvidedMethods.CreateElement);
+export const SelectElementKey: InjectionKey<SelectElement> = Symbol(ProvidedMethods.SelectElement);
+export const SelectedElementChangedKey: InjectionKey<SelectedElementChanged> = Symbol(ProvidedMethods.SelectedElementChanged);

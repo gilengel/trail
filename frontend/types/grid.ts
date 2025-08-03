@@ -1,5 +1,3 @@
-import type {ConsumedProperties, ProvidedProperties} from "~/components/builder/elements/map/Properties";
-
 /**
  * List of all available elements that can be used to create a page.
  *

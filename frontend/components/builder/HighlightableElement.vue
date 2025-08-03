@@ -1,6 +1,6 @@
 <template>
   <div :class="isHighlighted ? 'border-xl' : 'border-thin'">
-    <slot/>
+    <slot />
   </div>
 </template>
 

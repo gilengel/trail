@@ -5,7 +5,7 @@ import {mount} from "@vue/test-utils";
 import {createTestGrid} from "~/stores/actions/test.helper";
 import {createVuetify} from 'vuetify';
 import {Element, ElementType} from "~/types/grid";
-import {BuilderMode} from "~/components/builder/BuilderMode";
+import {BuilderMode, CreateElementKey, SelectElementKey} from "~/components/builder/BuilderMode";
 
 const mockUpdateElementAttribute = vi.fn();
 const mockGridModuleStore = {
@@ -18,6 +18,9 @@ vi.mock('@/stores/gridModuleStore', () => ({
 
 
 describe('Component', () => {
+    const mockSelectElement = vi.fn();
+    const mockCreateElement = vi.fn();
+
     describe('Column', () => {
         let wrapper: VueWrapper<InstanceType<typeof ColumnComponent>>;
 
@@ -46,6 +49,10 @@ describe('Component', () => {
                 props,
                 global: {
                     plugins: [createVuetify()],
+                    provide: {
+                        [SelectElementKey]: mockSelectElement,
+                        [CreateElementKey]: mockCreateElement
+                    },
                     mocks: {
                         gridModuleStore: mockGridModuleStore, // Mock the store if needed
                     },

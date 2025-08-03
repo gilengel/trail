@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import ElevationProfileComponent from '~/components/builder/elements/elevation_profile/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType, type Grid} from "~/types/grid";
+import {ElementType} from "~/types/grid";
 
 describe('Component', () => {
     describe('ElevationProfile', () => {

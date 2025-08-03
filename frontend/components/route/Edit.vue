@@ -1,42 +1,42 @@
 <template>
   <v-card
-      :title="title"
-      class="rounded-sm"
+    :title="title"
+    class="rounded-sm"
   >
     <v-card-text>
       <v-text-field
-          v-model="changedRouteData.routeName"
-          label="Route Name"
-          prepend-icon="las la-tag"
-          variant="outlined"
-          @keyup="routeNameChanged"
+        v-model="changedRouteData.routeName"
+        label="Route Name"
+        prepend-icon="las la-tag"
+        variant="outlined"
+        @keyup="routeNameChanged"
       />
 
       <v-textarea
-          v-model="changedRouteData.routeDescription"
-          label="Route Description"
-          prepend-icon="las la-comment"
-          variant="outlined"
-          @keyup="routeDescriptionChanged"
+        v-model="changedRouteData.routeDescription"
+        label="Route Description"
+        prepend-icon="las la-comment"
+        variant="outlined"
+        @keyup="routeDescriptionChanged"
       />
 
       <IconForm icon="las la-map-signs">
         <Map
-            :segments="mapSegments"
-            :interactive="false"
-            v-if="mapSegments.length > 0"
+          :segments="mapSegments"
+          :interactive="false"
+          v-if="mapSegments.length > 0"
         />
       </IconForm>
       <RouteDropZone
-          support-text="Trip Files (allowed are files of type gpx)"
-          :allowed-file-extensions="['gpx']"
-          @on-files-changed="onFilesChanged"
-          @on-segment-name-changed="onNameChanged"
-          @on-segment-description-changed="onDescriptionChanged"
+        support-text="Trip Files (allowed are files of type gpx)"
+        :allowed-file-extensions="['gpx']"
+        @on-files-changed="onFilesChanged"
+        @on-segment-name-changed="onNameChanged"
+        @on-segment-description-changed="onDescriptionChanged"
       />
       <span
-          v-if="status"
-          data-cy="status-msg"
+        v-if="status"
+        data-cy="status-msg"
       >{{ status }}</span>
     </v-card-text>
   </v-card>

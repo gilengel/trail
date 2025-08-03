@@ -66,6 +66,12 @@ const defaultConsumedPropertiesMap: {
     [ElementType.ElevationProfile]: ["routeId", "segmentsIds"],
 };
 
+/**
+ * Creates a new element with its default attributes.
+ * @template T
+ * @param type - The type of the element.
+ * @returns The new element.
+ */
 export function createElement<T extends ElementType>(
     type: T
 ): Element<

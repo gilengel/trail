@@ -6,4 +6,3 @@ export * from './route.segment.dto';
 export * from './create.trip.dto';
 export * from './trip.dto';
 export * from './update.trip.dto';
-export * from './update.route.segment.dto';

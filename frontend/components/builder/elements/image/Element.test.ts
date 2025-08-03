@@ -10,7 +10,7 @@ const attributes: ImageProperties = {
     sizeType: ImageSize.Free,
     position: {x: 0, y: 0},
     positionType: ImagePosition.Centered
-}
+};
 
 describe('Component', () => {
     describe('Image', () => {

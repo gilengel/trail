@@ -1,19 +1,19 @@
 <template>
   <Editor
-      ref="editor"
-      :formatting="false"
-      :text="false"
-      :undoredo="false"
-      :content="text"
-      :custom-node="DynamicParagraph"
-      @on-text-changed="onTextChanged"
-      v-if="selected"
+    ref="editor"
+    :formatting="false"
+    :text="false"
+    :undoredo="false"
+    :content="text"
+    :custom-node="DynamicParagraph"
+    @on-text-changed="onTextChanged"
+    v-if="selected"
   />
   <div
-      class="heading-container"
-      v-else
-      v-html="text"
-      :style
+    class="heading-container"
+    v-else
+    v-html="text"
+    :style
   />
 </template>
 

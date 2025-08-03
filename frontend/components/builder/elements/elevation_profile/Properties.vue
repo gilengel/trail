@@ -1,29 +1,32 @@
 <template>
-  <BuilderPropertiesContainer :grid="props.grid"
-                              :id="props.element.id"
-                              :properties="props.element.attributes"
-                              :provided-properties="['routeId', 'segmentsIds']"
-                              :consumed-properties="['routeId', 'segmentsIds']">
+  <BuilderPropertiesContainer
+    :grid="props.grid"
+    :id="props.element.id"
+    :properties="props.element.attributes"
+    :provided-properties="['routeId', 'segmentsIds']"
+    :consumed-properties="['routeId', 'segmentsIds']"
+  >
     <template #title>
       Elevation Profile Properties
     </template>
 
     <template #properties>
       {{ element.attributes.segmentsIds }}
-      <BuilderPropertiesSegments :routes
-                                 :route-id="element.attributes.routeId"
-                                 :segments-ids="element.attributes.segmentsIds"
-                                 :is-consumed="element.connectedConsumedProperties.segmentsIds !== undefined"
-                                 @update:selected-segment-ids="onSelectionChanged"
-                                 @update:selected-route-id="onRouteIdChanged"
+      <BuilderPropertiesSegments
+        :routes
+        :route-id="element.attributes.routeId"
+        :segments-ids="element.attributes.segmentsIds"
+        :is-consumed="element.connectedConsumedProperties.segmentsIds !== undefined"
+        @update:selected-segment-ids="onSelectionChanged"
+        @update:selected-route-id="onRouteIdChanged"
       />
 
 
       <v-color-picker
-          v-model="color"
-          hide-inputs
-          show-swatches
-          @update:model-value="onColorChange"
+        v-model="color"
+        hide-inputs
+        show-swatches
+        @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>

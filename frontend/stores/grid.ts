@@ -52,14 +52,24 @@ export function createDefaultGrid(tripId: number): Grid {
 
 export const useGridStore = () =>
     defineStore('gridStore', () => {
-        const highlightedElements: Ref<Set<String>> = ref(new Set([]));
+        const highlightedElements: Ref<Set<string>> = ref(new Set([]));
 
         const _undoRedoStore = useUndoRedoStore();
 
+        /**
+         * Resets all highlighted elements to not highlight.
+         */
         function clearHighlightedElements() {
             highlightedElements.value.clear();
         }
 
+        /**
+         * Highlights an element.
+         * @template Properties
+         * @template ProvidedProperties
+         * @template ConsumedProperties
+         * @param element - The element that shall be highlighted.
+         */
         function addHighlightedElement<Properties extends object,
             ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
             ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>) {
@@ -70,21 +80,40 @@ export const useGridStore = () =>
             highlightedElements.value.add(element.id);
         }
 
+        /**
+         * Resets an element to not be highlighted.
+         * @template Properties
+         * @template ProvidedProperties
+         * @template ConsumedProperties
+         * @param element - The element from which the highlighted flag shall be removed.
+         */
         function removeHighlightedElement<Properties extends object,
             ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
             ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>) {
-            highlightedElements.value.delete(element.id)
+            highlightedElements.value.delete(element.id);
         }
 
-        function getHighlightedElements(): Set<String> {
+        /**
+         * Returns a set with the ids of all highlighted elements.
+         * @returns The set of ids of highlighted elements.
+         */
+        function getHighlightedElements(): Set<string> {
             return highlightedElements.value;
         }
 
+        /**
+         * Checks for an element if it is highlighted or not.
+         * @template Properties
+         * @template ProvidedProperties
+         * @template ConsumedProperties
+         * @param element - The element to be checked if it has the highlighted flag or not.
+         * @returns True if the element is highlighted, false otherwise.
+         */
         function isHighlighted<Properties extends object,
             ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
             ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>): boolean {
 
-            return highlightedElements.value.has(element.id)
+            return highlightedElements.value.has(element.id);
         }
 
         /**
@@ -143,6 +172,8 @@ export const useGridStore = () =>
             );
         }
 
+
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
         /**
          * Sets the displayed element of a column.
          * @param column - The column from which you want to set the element.
@@ -155,8 +186,10 @@ export const useGridStore = () =>
         /**
          * Updates an attribute of an element. As each element has its own set of attributes, the attribute
          * to be changed is identified by a key.
-         * @template T Object.
-         * @template K Key Of T.
+         * @template Property
+         * @template Properties
+         * @template ProvidedProperties
+         * @template ConsumedProperties
          * @param element - The element from which you want to set an attribute.
          * @param attribute - The key of the attribute that shall be changed.
          * @param value - The new value for the attribute. It can be either string, number or boolean.
@@ -195,11 +228,18 @@ export const useGridStore = () =>
             );
         }
 
-        function findElementWithId<Properties extends object>(id: String, grid: Grid)
+        /**
+         * Searches within the grid for the element with the given ID.
+         * @template Properties
+         * @param id - ID of the element to be searched for.
+         * @param grid - The grid where the element shall be located from.
+         * @returns The element if found, is otherwise undefined.
+         */
+        function findElementWithId<Properties extends object>(id: string, grid: Grid)
 
             : Element<Properties> | undefined {
-            for (let row of grid.rows) {
-                for (let column of row.columns) {
+            for (const row of grid.rows) {
+                for (const column of row.columns) {
                     if (column.element && column.element.id === id) {
                         return column.element as unknown as Element<Properties>;
                     }

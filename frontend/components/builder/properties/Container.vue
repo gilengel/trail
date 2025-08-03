@@ -1,45 +1,45 @@
 <template>
   <div class="pa-5">
     <v-card
-        class="rounded-sm"
-        variant="flat"
+      class="rounded-sm"
+      variant="flat"
     >
       <v-card-title>
-        <slot name="title"/>
+        <slot name="title" />
       </v-card-title>
       <v-card-text>
-        <slot name="properties"/>
+        <slot name="properties" />
 
         Provided
         <v-list>
           <v-list-item
-              v-for="(item, i) in props.providedProperties"
-              :key="i"
-              :value="item"
-              color="primary"
+            v-for="(item, i) in props.providedProperties"
+            :key="i"
+            :value="item"
+            color="primary"
           >
-            <template v-slot:prepend>
-              <v-icon icon="las la-arrow-circle-right"></v-icon>
+            <template #prepend>
+              <v-icon icon="las la-arrow-circle-right" />
             </template>
 
-            <v-list-item-title v-text="item"></v-list-item-title>
+            <v-list-item-title v-text="item" />
           </v-list-item>
         </v-list>
 
         Consumed
         <v-list>
           <v-list-item
-              v-for="(item, i) in props.consumedProperties"
-              :key="i"
-              :value="item"
-              color="primary"
-              @click="select(item as string)"
+            v-for="(item, i) in props.consumedProperties"
+            :key="i"
+            :value="item"
+            color="primary"
+            @click="select(item as string)"
           >
-            <template v-slot:prepend>
-              <v-icon icon="las la-arrow-circle-left"></v-icon>
+            <template #prepend>
+              <v-icon icon="las la-arrow-circle-left" />
             </template>
 
-            <v-list-item-title v-text="item"></v-list-item-title>
+            <v-list-item-title v-text="item" />
           </v-list-item>
         </v-list>
       </v-card-text>
@@ -49,7 +49,8 @@
 
 <script setup lang="ts" generic="Properties extends object,
     ProvidedProperties extends Array<keyof Properties> = [],
-    ConsumedProperties extends Array<keyof Properties> = []">
+    ConsumedProperties extends Array<keyof Properties> = []"
+>
 // ---------------------------------------------------------------------------------------------------------------------
 // This is the parent component for all element property components.
 //
@@ -70,7 +71,7 @@ import {
 
 const props = defineProps<{
   grid: Grid,
-  id: String,
+  id: string,
   properties: Properties,
   providedProperties: ProvidedProperties,
   consumedProperties: ConsumedProperties
@@ -85,7 +86,7 @@ const gridModuleStore = useGridStore();
 
 const switchMode = inject(SwitchModeKey);
 if (!switchMode) {
-  throw new Error("Container component is missing the 'switchMode' injected function.")
+  throw new Error("Container component is missing the 'switchMode' injected function.");
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -107,7 +108,7 @@ function select(e: string) {
   const filtered = findAllElementsWithProvidedProperties([e], props.grid);
 
   gridModuleStore.clearHighlightedElements();
-  for (let filteredElement of filtered) {
+  for (const filteredElement of filtered) {
     gridModuleStore.addHighlightedElement(filteredElement);
   }
 

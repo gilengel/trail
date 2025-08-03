@@ -1,13 +1,13 @@
 <template>
   <Editor
-      :content="text"
-      @on-text-changed="onTextChanged"
-      v-if="selected"
+    :content="text"
+    @on-text-changed="onTextChanged"
+    v-if="selected"
   />
   <div
-      v-else
-      v-html="text"
-      class="tiptap"
+    v-else
+    v-html="text"
+    class="tiptap"
   />
 </template>
 
