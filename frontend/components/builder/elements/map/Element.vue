@@ -1,7 +1,7 @@
 <template>
-  {{ props.element.attributes.segmentsIds }}
+
   <BuilderHighlightableElement :is-highlighted="props.highlighted">
-    <Map :segments="mapSegments" />
+    <Map :segments="mapSegments"/>
   </BuilderHighlightableElement>
 </template>
 
@@ -22,7 +22,7 @@ const routeStore = useRouteStore();
 
 const mapSegments: Ref<MapLibreSegment[]> = ref([]);
 watch(() => props.element.attributes.segmentsIds, async () => {
-  const route = await routeStore.getMapLibreRoute(props.element.attributes.routeId!);
+  const route = await routeStore.getMapLibreRoute(Number(props.element.attributes.routeId!));
 
   const filtered = route?.segments.filter((segment) => props.element.attributes.segmentsIds?.includes(segment.id));
   if (!filtered) {

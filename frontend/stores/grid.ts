@@ -231,17 +231,22 @@ export const useGridStore = () =>
         /**
          * Searches within the grid for the element with the given ID.
          * @template Properties
+         * @template ProvidedProperties
+         * @template ConsumedProperties
          * @param id - ID of the element to be searched for.
          * @param grid - The grid where the element shall be located from.
          * @returns The element if found, is otherwise undefined.
          */
-        function findElementWithId<Properties extends object>(id: string, grid: Grid)
+        function findElementWithId<
+            Properties extends object,
+            ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+            ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(id: string, grid: Grid)
+            : Element<Properties, ProvidedProperties, ConsumedProperties> | undefined {
 
-            : Element<Properties> | undefined {
             for (const row of grid.rows) {
                 for (const column of row.columns) {
                     if (column.element && column.element.id === id) {
-                        return column.element as unknown as Element<Properties>;
+                        return column.element as unknown as Element<Properties, ProvidedProperties, ConsumedProperties>;
                     }
                 }
             }
@@ -268,3 +273,5 @@ export const useGridStore = () =>
             updateElementAttribute,
         };
     })();
+
+export type GridStore = ReturnType<typeof useGridStore>

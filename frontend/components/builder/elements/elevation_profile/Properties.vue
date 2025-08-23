@@ -1,32 +1,34 @@
 <template>
   <BuilderPropertiesContainer
-    :grid="props.grid"
-    :id="props.element.id"
-    :properties="props.element.attributes"
-    :provided-properties="['routeId', 'segmentsIds']"
-    :consumed-properties="['routeId', 'segmentsIds']"
+      :grid="props.grid"
+      :id="props.element.id"
+      :properties="props.element.attributes"
+      :provided-properties="['routeId', 'segmentsIds']"
+      :consumed-properties="['routeId', 'segmentsIds']"
+      :connected-provided-properties="element.connectedProvidedProperties"
+      :connected-consumed-properties="element.connectedConsumedProperties"
+      @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
   >
     <template #title>
       Elevation Profile Properties
+
     </template>
 
     <template #properties>
-      {{ element.attributes.segmentsIds }}
-      <BuilderPropertiesSegments
-        :routes
-        :route-id="element.attributes.routeId"
-        :segments-ids="element.attributes.segmentsIds"
-        :is-consumed="element.connectedConsumedProperties.segmentsIds !== undefined"
-        @update:selected-segment-ids="onSelectionChanged"
-        @update:selected-route-id="onRouteIdChanged"
+      <BuilderPropertiesSegments v-if="routes"
+                                 :routes
+                                 :route-id="element.attributes.routeId"
+                                 :segments-ids="element.attributes.segmentsIds"
+                                 :is-consumed="element.connectedProvidedProperties.segmentsIds !== undefined"
+                                 @update:selected-segment-ids="onSelectionChanged"
+                                 @update:selected-route-id="onRouteIdChanged"
       />
-
-
+      
       <v-color-picker
-        v-model="color"
-        hide-inputs
-        show-swatches
-        @update:model-value="onColorChange"
+          v-model="color"
+          hide-inputs
+          show-swatches
+          @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -41,6 +43,7 @@ import {useRouteStore} from "~/stores/route";
 import type {Color} from "~/types/color";
 import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
 import type {ConsumedPropertiesRoute, ProvidedPropertiesRoute} from "~/components/builder/elements/RouteProperty";
+import {Element} from "~/types/grid";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -50,7 +53,7 @@ const props = defineProps<ElementProps<ElevationProfileProperties, ProvidedPrope
 
 const tripStore = useTripStore();
 const routeStore = useRouteStore();
-const gridModuleStore = useGridStore();
+const gridStore = useGridStore();
 
 const route = useRoute();
 
@@ -60,15 +63,67 @@ const route = useRoute();
 const trip = await tripStore.get(Number(route.params.id));
 const routes = await routeStore.getByTripId(trip!.id);
 
+function onConsumedPropertyRemoved(property: "segmentsIds" | "routeId") {
+  if (!(property in props.element.connectedProvidedProperties)) {
+    console.error("Cannot remove consumed properties.");
+  }
+
+  const providerElementId = props.element.connectedProvidedProperties[property];
+  const providerElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(providerElementId!, props.grid)!;
+
+  // Necessary to reconstruct here as connected[Provided|Consumed]Properties are not reactive
+  const {[property]: _, ...rest} = props.element.connectedProvidedProperties;
+  props.element.connectedProvidedProperties = rest;
+
+  const {[property]: __, ...restProvider} = providerElement.connectedConsumedProperties;
+  providerElement.connectedConsumedProperties = restProvider;
+}
 
 function onRouteIdChanged(routeId: number) {
-  gridModuleStore
+  gridStore
       .updateElementAttribute<ElevationProfileProperties, "routeId", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(props.element, "routeId", routeId);
+
+  const consumedProperties = props.element.connectedConsumedProperties;
+  if (!consumedProperties.routeId) {
+    return;
+  }
+
+  const consumerId = consumedProperties.routeId;
+  const consumingElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumerId, props.grid);
+  gridStore
+      .updateElementAttribute<ElevationProfileProperties, "routeId", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumingElement!, "routeId", routeId);
+
+}
+
+/**
+ * Recursively applies the changed segment ids to all connected elements (via consumed property)
+ *
+ * @param segmentIds
+ * @param element
+ */
+function propagateChangedSegmentIds(segmentIds: number[], element: Element<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>) {
+  gridStore
+      .updateElementAttribute<ElevationProfileProperties, "segmentsIds", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(element, "segmentsIds", segmentIds);
+
+  const consumedProperties = element.connectedConsumedProperties;
+  if (!consumedProperties.segmentsIds) {
+    return;
+  }
+
+  const consumerId = consumedProperties.segmentsIds;
+  const consumingElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumerId, props.grid);
+  if (!consumingElement) {
+    console.error(`Consuming element with id ${consumerId} not found in grid`)
+    return;
+  }
+  gridStore
+      .updateElementAttribute<ElevationProfileProperties, "segmentsIds", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumingElement, "segmentsIds", segmentIds);
+
+  propagateChangedSegmentIds(segmentIds, consumingElement);
 }
 
 function onSelectionChanged(segmentIds: number[]) {
-  gridModuleStore
-      .updateElementAttribute<ElevationProfileProperties, "segmentsIds", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(props.element, "segmentsIds", segmentIds);
+  propagateChangedSegmentIds(segmentIds, props.element)
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -79,6 +134,6 @@ const color = computed(() => props.element.attributes.color);
  * @param newValue
  */
 function onColorChange(newValue: Color) {
-  gridModuleStore.updateElementAttribute(props.element, "color", newValue);
+  gridStore.updateElementAttribute(props.element, "color", newValue);
 }
 </script>

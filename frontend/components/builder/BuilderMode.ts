@@ -3,7 +3,7 @@ import {type Column, Element, ElementType} from "~/types/grid";
 
 export enum BuilderMode {
     Create,
-    Connect
+    ConnectProperty
 }
 
 export enum ProvidedMethods {
@@ -13,7 +13,7 @@ export enum ProvidedMethods {
     SelectedElementChanged = 'selectedElementChanged'
 }
 
-export type SwitchMode = (newMode: BuilderMode) => void
+export type SwitchMode = (newMode: BuilderMode, meta: Record<string, unknown>) => void
 export type CreateElement = (elementType: ElementType, column: Column) => void
 export type SelectElement = (element: Element<object>) => void
 export type SelectedElementChanged = (element: Element<object>) => void

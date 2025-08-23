@@ -99,8 +99,7 @@ describe('Component', () => {
                 },
             });
 
-            // Simulate selecting a segment
-            wrapper.vm.selection = [10, 20];
+            (wrapper.vm as any).selection = [10, 20];
             await wrapper.vm.$nextTick();
 
             expect(wrapper.emitted('update:selectedRouteId')).toEqual([[1]]);
@@ -120,7 +119,7 @@ describe('Component', () => {
                 },
             });
 
-            wrapper.vm.selectedRouteChanged(mockRoutes[1]);
+            (wrapper.vm as any).selectedRouteChanged(mockRoutes[1]);
 
             expect(wrapper.emitted('update:selectedRouteId')).toEqual([[2]]);
         });
@@ -142,7 +141,7 @@ describe('Component', () => {
                 },
             });
 
-            wrapper.vm.selection = [10];
+            (wrapper.vm as any).selection = [10];
             await wrapper.vm.$nextTick();
 
             expect(errorSpy).toHaveBeenCalled();

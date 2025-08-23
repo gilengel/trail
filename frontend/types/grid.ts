@@ -26,8 +26,8 @@ export class Element<Properties extends object,
                 public readonly attributes: Properties,
                 public readonly providedProperties: ProvidedProperties,
                 public readonly consumedProperties: ConsumedProperties,
-                public readonly connectedProvidedProperties: Partial<Record<ProvidedProperties[number], string>>,
-                public readonly connectedConsumedProperties: Partial<Record<ConsumedProperties[number], string>>) {
+                public connectedProvidedProperties: Partial<Record<ProvidedProperties[number], string>>,
+                public connectedConsumedProperties: Partial<Record<ConsumedProperties[number], string>>) {
     }
 }
 

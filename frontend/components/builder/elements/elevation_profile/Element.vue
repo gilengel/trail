@@ -1,20 +1,22 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="props.highlighted">
     <v-alert
-      v-if="!props.element.attributes.segmentsIds || props.element.attributes.segmentsIds?.length == 0"
-      type="warning"
-      variant="outlined"
-      prominent
+        v-if="!props.element.attributes.segmentsIds || props.element.attributes.segmentsIds?.length == 0"
+        type="warning"
+        variant="outlined"
+        prominent
     >
       No segment is selected for this elevation. Please do so in the property panel on the right side.
+      <hr>
+      {{ element.id }}
     </v-alert>
 
-
     <Line
-      v-else-if="data"
-      :data
-      :options="chartOptions"
+        v-else-if="data"
+        :data
+        :options="chartOptions"
     />
+
   </BuilderHighlightableElement>
 </template>
 
