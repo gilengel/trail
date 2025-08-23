@@ -5,6 +5,9 @@
       :properties="props.element.attributes"
       :provided-properties="['routeId', 'segmentsIds']"
       :consumed-properties="['routeId', 'segmentsIds']"
+      :connected-provided-properties="element.connectedProvidedProperties"
+      :connected-consumed-properties="element.connectedConsumedProperties"
+      @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
   >
     <template #title>
       Map Properties

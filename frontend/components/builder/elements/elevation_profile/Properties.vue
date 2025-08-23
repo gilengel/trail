@@ -11,7 +11,6 @@
   >
     <template #title>
       Elevation Profile Properties
-
     </template>
 
     <template #properties>
@@ -23,7 +22,7 @@
                                  @update:selected-segment-ids="onSelectionChanged"
                                  @update:selected-route-id="onRouteIdChanged"
       />
-      
+
       <v-color-picker
           v-model="color"
           hide-inputs
@@ -71,7 +70,7 @@ function onConsumedPropertyRemoved(property: "segmentsIds" | "routeId") {
   const providerElementId = props.element.connectedProvidedProperties[property];
   const providerElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(providerElementId!, props.grid)!;
 
-  // Necessary to reconstruct here as connected[Provided|Consumed]Properties are not reactive
+  // Necessary to reconstruct here as connected
   const {[property]: _, ...rest} = props.element.connectedProvidedProperties;
   props.element.connectedProvidedProperties = rest;
 
@@ -80,50 +79,39 @@ function onConsumedPropertyRemoved(property: "segmentsIds" | "routeId") {
 }
 
 function onRouteIdChanged(routeId: number) {
-  gridStore
-      .updateElementAttribute<ElevationProfileProperties, "routeId", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(props.element, "routeId", routeId);
-
-  const consumedProperties = props.element.connectedConsumedProperties;
-  if (!consumedProperties.routeId) {
-    return;
-  }
-
-  const consumerId = consumedProperties.routeId;
-  const consumingElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumerId, props.grid);
-  gridStore
-      .updateElementAttribute<ElevationProfileProperties, "routeId", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumingElement!, "routeId", routeId);
-
+  propagateChangedProperty("routeId", routeId, props.element)
 }
 
 /**
- * Recursively applies the changed segment ids to all connected elements (via consumed property)
+ * Recursively applies the changed property to all connected elements (via consumed property)
  *
- * @param segmentIds
+ * @param property
+ * @param value
  * @param element
  */
-function propagateChangedSegmentIds(segmentIds: number[], element: Element<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>) {
+function propagateChangedProperty(property: ProvidedPropertiesRoute[number], value: any, element: Element<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>) {
   gridStore
-      .updateElementAttribute<ElevationProfileProperties, "segmentsIds", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(element, "segmentsIds", segmentIds);
+      .updateElementAttribute<ElevationProfileProperties, typeof property, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(element, property, value);
 
   const consumedProperties = element.connectedConsumedProperties;
-  if (!consumedProperties.segmentsIds) {
+  if (!consumedProperties[property]) {
     return;
   }
 
-  const consumerId = consumedProperties.segmentsIds;
+  const consumerId = consumedProperties[property];
   const consumingElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumerId, props.grid);
   if (!consumingElement) {
     console.error(`Consuming element with id ${consumerId} not found in grid`)
     return;
   }
   gridStore
-      .updateElementAttribute<ElevationProfileProperties, "segmentsIds", ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumingElement, "segmentsIds", segmentIds);
+      .updateElementAttribute<ElevationProfileProperties, typeof property, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumingElement, property, value);
 
-  propagateChangedSegmentIds(segmentIds, consumingElement);
+  propagateChangedProperty(property, value, consumingElement);
 }
 
 function onSelectionChanged(segmentIds: number[]) {
-  propagateChangedSegmentIds(segmentIds, props.element)
+  propagateChangedProperty("segmentsIds", segmentIds, props.element)
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

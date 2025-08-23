@@ -11,6 +11,7 @@
       {{ element.id }}
     </v-alert>
 
+
     <Line
         v-else-if="data"
         :data
@@ -105,6 +106,7 @@ const routeStore = useRouteStore();
 
 const segments = computedAsync(
     async () => {
+
       const segmentsIds = props.element.attributes.segmentsIds;
       const routeId = props.element.attributes.routeId;
       if (!segmentsIds || !routeId) {
@@ -128,7 +130,7 @@ const color = computed(() => {
 
 const elevations = computed(() => {
   if (!segments.value) {
-    return;
+    return [];
   }
 
   const coordinates = segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);

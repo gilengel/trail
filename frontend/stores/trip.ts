@@ -15,7 +15,7 @@ import type {CreateTripDto} from "~/types/dto";
 export const useTripStore = () =>
     defineStore('tripStore', () => {
 
-        const cachedTrips = reactive(new Map<number, Ref<TripDto>>());
+        const cachedTrips = reactive(new Map<number, TripDto>());
 
         /**
          * Returns the trip if it was already loaded before, if not, it will try to fetch it
@@ -23,9 +23,9 @@ export const useTripStore = () =>
          * @param id - The id of the trip as number.
          * @returns Promise with the trip.
          */
-        async function get(id: number): Promise<Ref<TripDto> | null> {
+        async function get(id: number): Promise<TripDto | null> {
             if (cachedTrips.has(id)) {
-                return cachedTrips.get(id)!;
+                return cachedTrips.get(id) as TripDto;
             }
 
             const {data: trip} = await useApiFetch<TripDto>(
@@ -36,16 +36,14 @@ export const useTripStore = () =>
                 return null;
             }
 
-            const t = ref(trip.value);
-
             // TripId is not stored inside the grid on database level and must be patched here
-            if (t.value.layout) {
-                (t.value.layout as Grid).tripId = trip.value.id;
+            if (trip.value.layout) {
+                (trip.value.layout as Grid).tripId = trip.value.id;
             }
 
-            cachedTrips.set(id, t);
+            cachedTrips.set(id, trip.value);
 
-            return t;
+            return trip.value;
         }
 
         /**
@@ -54,7 +52,7 @@ export const useTripStore = () =>
          * only local stored trips are returned.
          * @returns A map containing where the key of each entry is the trip id and the value the dto of the trip.
          */
-        async function all(fetch: boolean = true): Promise<Map<number, Ref<TripDto>>> {
+        async function all(fetch: boolean = true): Promise<Map<number, TripDto>> {
             if (!fetch) {
                 return cachedTrips;
             }
@@ -62,7 +60,7 @@ export const useTripStore = () =>
             const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips');
             dbTrips.value?.forEach(trip => {
                 if (!cachedTrips.has(trip.id)) {
-                    cachedTrips.set(trip.id, ref(trip));
+                    cachedTrips.set(trip.id, trip);
                 }
             });
 
@@ -80,7 +78,7 @@ export const useTripStore = () =>
                 layout: createDefaultGrid(0)
             });
 
-            cachedTrips.set(newTrip.id, ref(newTrip));
+            cachedTrips.set(newTrip.id, newTrip);
 
             return newTrip;
         }
