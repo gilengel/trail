@@ -1,17 +1,18 @@
 import {describe, it, expect} from "vitest";
-import {MapLibreRoute, MapLibreSegment, LngLatWithElevation, type RouteDto, routeDto2MapLibreTrip} from "~/types/route";
+import {MapLibreRoute, MapLibreSegment, LngLatWithElevation, routeDto2MapLibreTrip} from "~/types/route";
+import type {RouteDto} from "~/types/dto";
 
 describe("MapLibreTrip", () => {
     it("converts a trip dto to a MapLibreTrip", () => {
         const tripDto: RouteDto = {
             id: 0,
+            tripId: 0,
             name: 'test trip dto',
             description: 'test trip description',
             segments: [{
                 id: 0,
                 name: 'test trip segment',
                 coordinates: [[0, 0, 0], [90, 90, 0]],
-                color: 'white',
                 description: 'test trip segment'
             }]
         };
@@ -30,6 +31,7 @@ describe("MapLibreTrip", () => {
     it("sets the name correctly", () => {
         const tripDto: RouteDto = {
             id: 0,
+            tripId: 0,
             name: 'test trip dto',
             description: 'test trip description',
             segments: []
@@ -44,6 +46,7 @@ describe("MapLibreTrip", () => {
     it("sets the description correctly", () => {
         const tripDto: RouteDto = {
             id: 0,
+            tripId: 0,
             name: 'test trip dto',
             description: 'test trip description',
 
@@ -51,7 +54,6 @@ describe("MapLibreTrip", () => {
                 id: 0,
                 name: 'test trip segment',
                 coordinates: [[0, 0, 0], [90, 90, 0]],
-                color: 'white',
                 description: 'test trip segment description'
             }]
         };

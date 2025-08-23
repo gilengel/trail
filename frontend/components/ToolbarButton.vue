@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    data-testid="tooltip-button"
+    :data-testid
     :color="isActive ? 'primary' : 'transparent'"
     variant="flat"
     rounded="0"
@@ -23,9 +23,10 @@ interface Props {
   icon: string;
   tooltip: string,
   isActive?: boolean;
+  dataTestid?: string;
 }
 
-const {icon, tooltip, isActive = false} = defineProps<Props>();
+const {icon, tooltip, isActive = false, dataTestid = "tooltip-button"} = defineProps<Props>();
 
 const emit = defineEmits(['click']);
 

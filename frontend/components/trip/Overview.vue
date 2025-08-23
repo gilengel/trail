@@ -31,7 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import type {TripDto} from "~/types/route";
+
+import type {TripDto} from "~/types/dto";
 
 const tripStore = useTripStore();
 

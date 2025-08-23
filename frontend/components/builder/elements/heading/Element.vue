@@ -21,14 +21,17 @@
 import type {ElementProps} from "~/components/builder/properties";
 import Editor from "~/components/Editor.vue";
 import {DynamicParagraph} from "~/components/builder/elements/heading/DynamicParagraph";
-import type {HeadingProps} from "~/components/builder/elements/heading/Props";
+import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const gridModuleStore = useGridStore();
 
+// ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<HeadingProps>>();
+const props = defineProps<ElementProps<HeadingProperties, [], []>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const editor = useTemplateRef<InstanceType<typeof Editor>>('editor');
 

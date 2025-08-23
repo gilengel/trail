@@ -113,11 +113,11 @@ describe('useRouteStore (no internal state access)', () => {
         const store = useRouteStore();
 
         const routesForTripWithIdFirstCall = await store.getMapLibreRoutesForTrip(1);
-        expect(routesForTripWithIdFirstCall).not.toBeNull()
+        expect(routesForTripWithIdFirstCall).not.toBeNull();
         expect(spy).toBeCalledTimes(1);
 
         const routesForTripWithIdSecondCall = await store.getMapLibreRoutesForTrip(1);
-        expect(routesForTripWithIdSecondCall).not.toBeNull()
+        expect(routesForTripWithIdSecondCall).not.toBeNull();
         expect(spy).toBeCalledTimes(1);
     });
 
@@ -144,7 +144,7 @@ describe('useRouteStore (no internal state access)', () => {
         expect(spy).toBeCalledTimes(1);
 
         const routesForTripWithIdFirstCall = await store.getMapLibreRoutesForTrip(tripId);
-        expect(routesForTripWithIdFirstCall).not.toBeNull()
+        expect(routesForTripWithIdFirstCall).not.toBeNull();
         expect(spy).toBeCalledTimes(1);
     });
 

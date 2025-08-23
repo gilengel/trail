@@ -1,7 +1,8 @@
 import {describe, it, expect, beforeEach, afterEach} from 'vitest';
 import HeadingComponent from '~/components/builder/elements/heading/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
+import {Element, ElementType} from "~/types/grid";
+import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
 describe('Component', () => {
     describe('Heading', () => {
@@ -16,12 +17,16 @@ describe('Component', () => {
             if (target) target.remove();
         });
 
+
+        const defaultElement = new Element<HeadingProperties, [], []>(
+            '0',
+            ElementType.Heading,
+            {level: 0, color: '#F00', text: 'Heading', alignment: 'left'}, [], [], {}, {});
         const defaultProps = {
-            element: {
-                id: '0',
-                type: ElementType.Heading,
-                attributes: {level: 0, color: '#F00', text: 'Heading', alignment: 'left'}
-            }, selected: true
+            element: defaultElement,
+            selected: true,
+            highlighted: false,
+            grid: {tripId: 0, rows: []}
         };
 
         it('renders', async () => {

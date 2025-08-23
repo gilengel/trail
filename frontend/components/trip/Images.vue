@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 import {onMounted, ref, type Ref} from "vue";
-import type {ImageDto} from "~/types/types";
-import type {MapLibreSegment} from "~/types/types";
+import type {ImageDto} from "~/types/dto";
+import type {MapLibreSegment} from "~/types/route";
 
 interface TripImagesProps {
   segment: MapLibreSegment;
@@ -36,9 +36,10 @@ const images: Ref<ImageDto[]> = ref([]);
 const imagesHiddenCount: Ref<number> = ref(0);
 const config = useRuntimeConfig();
 
+
 onMounted(async () => {
   const totalImages: number = await $fetch(`/api/images/route_segment/number`, {
-    baseURL: config.public.baseURL,
+    baseURL: config.public.baseURL as string,
     method: "GET",
     params: {
       routeSegmentId: props.segment.id,
@@ -48,7 +49,7 @@ onMounted(async () => {
 
   imagesHiddenCount.value = totalImages - numberOfVisibleImages;
   images.value = await $fetch(`/api/images/route_segment`, {
-    baseURL: config.public.baseURL,
+    baseURL: config.public.baseURL as string,
     method: "GET",
     params: {
       routeSegmentId: props.segment.id,

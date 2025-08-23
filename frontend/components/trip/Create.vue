@@ -16,7 +16,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn
-        class="rounded-xl pl-4 pr-4"
+        class="rounded-sm pl-4 pr-4"
         variant="tonal"
         data-cy="upload-btn"
         @click="upload"

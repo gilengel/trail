@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-card
         title="Add Route"
-        class="rounded-xl"
+        class="rounded-sm"
         variant="flat"
       >
         <v-card-text>

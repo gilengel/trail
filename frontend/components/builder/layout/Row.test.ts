@@ -4,6 +4,7 @@ import type {VueWrapper} from "@vue/test-utils";
 import {mount} from "@vue/test-utils";
 import {createTestGrid} from "~/stores/actions/test.helper";
 import {createVuetify} from 'vuetify';
+import {BuilderMode, CreateElementKey, SelectElementKey} from "~/components/builder/BuilderMode";
 
 const mockUpdateElementAttribute = vi.fn();
 const mockGridModuleStore = {
@@ -16,6 +17,9 @@ vi.mock('@/stores/gridModuleStore', () => ({
 
 
 describe('Component', () => {
+    const mockSelectElement = vi.fn();
+    const mockCreateElement = vi.fn();
+
     describe('Row', () => {
         let wrapper: VueWrapper<InstanceType<typeof RowComponent>>;
 
@@ -32,7 +36,7 @@ describe('Component', () => {
             model: mockGrid.rows[0],
             minColSize: 2,
             maxColSize: 4,
-
+            activeMode: BuilderMode.Create
         };
 
         beforeEach(async () => {
@@ -57,11 +61,16 @@ describe('Component', () => {
                 },
             });
 
+
             // Mount the component
             wrapper = mount(RowComponent, {
                 props,
                 global: {
                     plugins: [createVuetify()],
+                    provide: {
+                        [SelectElementKey]: mockSelectElement,
+                        [CreateElementKey]: mockCreateElement
+                    },
                     mocks: {
                         gridModuleStore: mockGridModuleStore, // Mock the store if needed
                     },
@@ -69,7 +78,7 @@ describe('Component', () => {
             });
             await wrapper.vm.$nextTick();
 
-            const result = wrapper.vm.containerWidth();
+            const result = (wrapper.vm as any).containerWidth();
             expect(result).toBe(800);
         });
 
@@ -99,7 +108,7 @@ describe('Component', () => {
                 document.dispatchEvent(upEvent);
 
                 // Assertions
-                expect(wrapper.vm.isDraggingColumnSize).toBe(false);
+                expect((wrapper.vm as any).isDraggingColumnSize).toBe(false);
 
             });
 
@@ -113,7 +122,7 @@ describe('Component', () => {
                 const upEvent = new MouseEvent('mouseup');
                 document.dispatchEvent(upEvent);
 
-                expect(wrapper.vm.isDraggingColumnSize).toBe(false);
+                expect((wrapper.vm as any).isDraggingColumnSize).toBe(false);
             });
 
             it('should set the left column width to the min prop size on dragging', async () => {
@@ -126,7 +135,7 @@ describe('Component', () => {
                 const upEvent = new MouseEvent('mouseup');
                 document.dispatchEvent(upEvent);
 
-                expect(wrapper.vm.isDraggingColumnSize).toBe(false);
+                expect((wrapper.vm as any).isDraggingColumnSize).toBe(false);
             });
         });
     });

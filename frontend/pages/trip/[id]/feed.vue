@@ -73,9 +73,7 @@
       <template
         #content
         v-if="trip"
-      >
-        {{ trip.grid }}
-      </template>
+      />
     </NuxtLayout>
 
     <v-dialog

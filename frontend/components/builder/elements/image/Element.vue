@@ -22,11 +22,11 @@
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
 import type {Point2D} from "~/types/point";
-import {ImagePosition, type ImageProps, ImageSize} from "~/components/builder/elements/image/Props";
+import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ImageProps>>();
+const props = defineProps<ElementProps<ImageProperties>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 

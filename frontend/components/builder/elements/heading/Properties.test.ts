@@ -1,7 +1,9 @@
 import {describe, it, expect, vi} from 'vitest';
-import HeadingProperties from './Properties.vue';
+import HeadingPropertiesComponent from './Properties.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
+import {Element, ElementType} from "~/types/grid";
+import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
+import {SwitchModeKey} from "~/components/builder/BuilderMode";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -14,17 +16,23 @@ vi.mock('@/stores/route', () => {
 
 describe('Component', () => {
     describe('Map[Properties]', () => {
+        const mockSwitchMode = vi.fn();
+
         it('renders', async () => {
-            const component = await mountSuspended(HeadingProperties, {
+            const element = new Element<HeadingProperties, [], []>(
+                '0',
+                ElementType.Heading,
+
+                {level: 0, color: '#F00', text: 'Heading', alignment: 'left'}, [], [], {}, {});
+            const component = await mountSuspended(HeadingPropertiesComponent, {
+                provide: {
+                    [SwitchModeKey]: mockSwitchMode,
+                },
                 props: {
-                    element: {
-                        id: '0',
-                        type: ElementType.Map,
-                        attributes: {
-                            routeId: 0,
-                            segmentsIds: []
-                        }
-                    }, selected: true
+                    element,
+                    selected: true,
+                    highlighted: false,
+                    grid: {tripId: 0, rows: []}
                 }
             });
             expect(component.exists).toBeTruthy();

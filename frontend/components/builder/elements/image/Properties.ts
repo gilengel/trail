@@ -11,7 +11,7 @@ export enum ImageSize {
     Free
 }
 
-export interface ImageProps {
+export interface ImageProperties {
     aspectRatio: number;
     scale: { origin: Point2D, value: number };
     sizeType: ImageSize;

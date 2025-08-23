@@ -11,12 +11,21 @@ describe('Component', () => {
                     element: {
                         id: '0',
                         type: ElementType.Image,
+
+
                         attributes: {
                             segmentsIds: [],
                             routeId: 0,
                             color: 'rgb(255, 0, 0)'
-                        }
-                    }, selected: true
+                        },
+                        providedProperties: [],
+                        consumedProperties: [],
+                        connectedProvidedProperties: [],
+                        connectedConsumedProperties: []
+                    },
+                    selected: true,
+                    highlighted: false,
+                    grid: {tripId: 0, rows: []}
                 }
             });
             expect(component.exists).toBeTruthy();

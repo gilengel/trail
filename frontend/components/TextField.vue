@@ -15,7 +15,7 @@
 const rules = {
   required: (value: string) => !!value || 'Required.',
   counter: (value: string) => value.length <= 20 || 'Max 20 characters',
-}
+};
 
 interface Props {
   modelValue: string; // This will act as v-model

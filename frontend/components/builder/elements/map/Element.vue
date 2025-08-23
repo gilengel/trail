@@ -1,22 +1,28 @@
 <template>
-  <div>
+
+  <BuilderHighlightableElement :is-highlighted="props.highlighted">
     <Map :segments="mapSegments"/>
-  </div>
+  </BuilderHighlightableElement>
 </template>
 
 <script setup lang="ts">
 import type {MapLibreSegment} from "~/types/route";
-import type {MapProps} from "~/components/builder/elements/map/Props";
 import type {ElementProps} from "~/components/builder/properties";
+import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 
+// ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<MapProps>>();
+const props = defineProps<ElementProps<RouteProperty>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const routeStore = useRouteStore();
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 const mapSegments: Ref<MapLibreSegment[]> = ref([]);
 watch(() => props.element.attributes.segmentsIds, async () => {
-  const route = await routeStore.getMapLibreRoute(props.element.attributes.routeId);
+  const route = await routeStore.getMapLibreRoute(Number(props.element.attributes.routeId!));
 
   const filtered = route?.segments.filter((segment) => props.element.attributes.segmentsIds?.includes(segment.id));
   if (!filtered) {

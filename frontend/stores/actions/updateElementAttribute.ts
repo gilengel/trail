@@ -1,19 +1,22 @@
 import {type AttributeType, Element} from '~/types/grid';
 
 /**
- * @template T Object.
- * @template K Key of T.
- *
  * Updates an attribute of the element. This is an undoable/redoable action.
+ * @template Property
+ * @template Properties
+ * @template ProvidedProperties
+ * @template ConsumedProperties
  */
-export class UpdateElementAttribute<T extends object, K extends keyof T>
+export class UpdateElementAttribute<Properties extends object, Property extends keyof Properties,
+    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
+    ConsumedProperties extends readonly (keyof Properties)[] = readonly []>
     implements UndoRedoAction {
     private oldValue: AttributeType;
 
     constructor(
-        private element: Element<T>,
-        private attribute: K,
-        private value: T[K],
+        private element: Element<Properties, ProvidedProperties, ConsumedProperties>,
+        private attribute: Property,
+        private value: Properties[Property],
     ) {
     }
 

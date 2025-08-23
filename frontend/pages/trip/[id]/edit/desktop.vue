@@ -33,7 +33,7 @@
       <template #content>
         <BuilderWidgetLayout
           v-if="trip?.layout"
-          :grid="trip.layout"
+          :grid="trip.layout as Grid"
           :trip-id="trip.id"
         />
       </template>
@@ -44,6 +44,7 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
+import type {Grid} from "~/types/grid";
 
 const route = useRoute();
 

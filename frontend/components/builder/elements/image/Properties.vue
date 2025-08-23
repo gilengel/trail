@@ -1,6 +1,12 @@
 <template>
   Heading
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer
+    :grid="props.grid"
+    :id="props.element.id"
+    :properties="props.element.attributes"
+    :provided-properties="[]"
+    :consumed-properties="[]"
+  >
     <template #title>
       Image Properties
     </template>
@@ -116,11 +122,11 @@
 
 <script setup lang="ts">
 import type {ElementProps} from "~/components/builder/properties";
-import {ImagePosition, type ImageProps, ImageSize} from "~/components/builder/elements/image/Props";
+import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ImageProps>>();
+const props = defineProps<ElementProps<ImageProperties>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
