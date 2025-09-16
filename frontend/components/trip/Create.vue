@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {createDefaultGrid} from "~/stores/grid";
+import {createDefaultGrid} from "~/stores/editor/grid";
 
 const tripStore = useTripStore();
 

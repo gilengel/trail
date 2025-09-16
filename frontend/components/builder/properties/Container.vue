@@ -69,13 +69,11 @@
 // the component tree.
 // ---------------------------------------------------------------------------------------------------------------------
 
-import {Element, type Grid} from "~/types/grid";
 import {inject} from 'vue';
+import type {Grid} from "~/components/GridEditor/grid";
+import {BuilderMode, EditorInjectionKey} from "~/components/GridEditor/editor";
+import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
 
-import {
-  BuilderMode,
-  SwitchModeKey
-} from "~/components/builder/BuilderMode";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -95,12 +93,7 @@ const emit = defineEmits<(e: "connectedConsumedPropertyRemoved", property: strin
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const switchMode = inject(SwitchModeKey);
-if (!switchMode) {
-  throw new Error("Container component is missing the 'switchMode' injected function.");
-}
-
-const editor: Editor = inject("editor")
+const editor = inject(EditorInjectionKey);
 if (!editor) {
   throw new Error("Container component is missing the 'editor' injected object.");
 }
@@ -135,7 +128,8 @@ function clearConnection(item: string) {
  *
  * @returns All the elements that have the properties
  */
-function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direction: PropertyDirection): Element<object>[] {
+function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direction: PropertyDirection): EditorElementInstance<any>[] {
+  /*
   function areAllKeysOf<T extends readonly string[]>(arr: string[], obj: T): boolean {
     return arr.every(key => obj.includes(key));
   }
@@ -144,19 +138,22 @@ function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direc
       row.columns
           .map(column => column.element)
           .filter(element => element &&
-              element.id != props.id &&
-              areAllKeysOf(propertyKeys, direction == PropertyDirection.Provided ? element.providedProperties : element.consumedProperties))
-          .filter(Boolean) as Element<object>[]
+              element.instanceId != props.id &&
+              areAllKeysOf(propertyKeys, direction == PropertyDirection.Provided ? element.connections.provided : element.connections.consumed))
+          .filter(Boolean) as EditorElementInstance<any>[]
   );
+  */
+
+  return [];
 }
 
 function propertySelected(propertyKey: string, direction: PropertyDirection) {
   const filtered = findAllElementsWithProperties([propertyKey], props.grid, direction)
 
-  editor.highlightHandler.clear();
-  editor.highlightHandler.push(filtered);
+  editor!.highlightHandler.clear();
+  editor!.highlightHandler.add(filtered);
 
-  editor.switchMode(BuilderMode.ConnectProperty, {property: propertyKey})
+  editor!.switchMode(BuilderMode.ConnectProperty, {property: propertyKey})
 }
 
 </script>

@@ -7,12 +7,12 @@
 
 <script setup lang="ts">
 import type {MapLibreSegment} from "~/types/route";
-import type {ElementProps} from "~/components/builder/properties";
-import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
+import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import type {MapElement} from "~/components/builder/elements/map/index";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<RouteProperty>>();
+const props = defineProps<EditorElementProperties<typeof MapElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -21,10 +21,10 @@ const routeStore = useRouteStore();
 // ---------------------------------------------------------------------------------------------------------------------
 
 const mapSegments: Ref<MapLibreSegment[]> = ref([]);
-watch(() => props.element.attributes.segmentsIds, async () => {
-  const route = await routeStore.getMapLibreRoute(Number(props.element.attributes.routeId!));
+watch(() => props.element.properties.segmentsIds, async () => {
+  const route = await routeStore.getMapLibreRoute(Number(props.element.properties.routeId!));
 
-  const filtered = route?.segments.filter((segment) => props.element.attributes.segmentsIds?.includes(segment.id));
+  const filtered = route?.segments.filter((segment) => props.element.properties.segmentsIds?.includes(segment.id));
   if (!filtered) {
     return;
   }

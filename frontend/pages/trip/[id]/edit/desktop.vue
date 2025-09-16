@@ -31,10 +31,11 @@
         </v-list>
       </template>
       <template #content>
-        <BuilderWidgetLayout
+        <GridEditor
           v-if="trip?.layout"
           :grid="trip.layout as Grid"
           :trip-id="trip.id"
+          :save
         />
       </template>
     </NuxtLayout>
@@ -44,11 +45,16 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
-import type {Grid} from "~/types/grid";
+import type {Grid} from "~/components/GridEditor/grid";
+
 
 const route = useRoute();
 
 const tripStore = useTripStore();
 const trip = await tripStore.get(Number(route.params.id));
+
+const save = async (): Promise<boolean> => {
+  return Promise.resolve(true);
+}
 
 </script>

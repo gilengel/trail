@@ -1,4 +1,4 @@
-import {type Element, type Grid} from '~/types/grid';
+import {type Element, type Grid} from '~/components/GridEditor/grid';
 
 /**
  * Properties for a grid element for a trip or route.
@@ -8,13 +8,12 @@ import {type Element, type Grid} from '~/types/grid';
  * Type is a map where the key is the id of the provided element and the value
  * the consumed property, which must be a key in Properties.
  */
+/*
 export interface ElementProps<Properties extends object,
     ProvidedProperties extends readonly (keyof Properties)[] = [],
     ConsumedProperties extends readonly (keyof Properties)[] = []
 > {
-    /**
-     * The element instance containing the properties and metadata.
-     */
+
     element: Element<Properties, ProvidedProperties, ConsumedProperties>;
 
     selected: boolean;
@@ -23,3 +22,4 @@ export interface ElementProps<Properties extends object,
 
     grid: Grid;
 }
+*/

@@ -2,7 +2,7 @@
   <BuilderPropertiesContainer
       :grid="props.grid"
       :id="props.element.id"
-      :properties="props.element.attributes"
+      :properties="props.element.properties"
       :provided-properties="['routeId', 'segmentsIds']"
       :consumed-properties="['routeId', 'segmentsIds']"
       :connected-provided-properties="element.connectedProvidedProperties"
@@ -16,8 +16,8 @@
     <template #properties>
       <BuilderPropertiesSegments v-if="routes"
                                  :routes
-                                 :route-id="element.attributes.routeId"
-                                 :segments-ids="element.attributes.segmentsIds"
+                                 :route-id="element.properties.routeId"
+                                 :segments-ids="element.properties.segmentsIds"
                                  :is-consumed="element.connectedProvidedProperties.segmentsIds !== undefined"
                                  @update:selected-segment-ids="onSelectionChanged"
                                  @update:selected-route-id="onRouteIdChanged"
@@ -36,23 +36,29 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
-import type {ElementProps} from "~/components/builder/properties";
 import {useRouteStore} from "~/stores/route";
 
 import type {Color} from "~/types/color";
-import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
 import type {ConsumedPropertiesRoute, ProvidedPropertiesRoute} from "~/components/builder/elements/RouteProperty";
-import {Element} from "~/types/grid";
+import {inject} from "vue";
+import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
+import {type EditorElementProperties} from "~/components/GridEditor/grid"
+import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
+import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>>();
+const props = defineProps<EditorElementProperties<typeof ElevationProfileElement>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const editor = inject(EditorInjectionKey);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const tripStore = useTripStore();
 const routeStore = useRouteStore();
-const gridStore = useGridStore();
 
 const route = useRoute();
 
@@ -68,7 +74,7 @@ function onConsumedPropertyRemoved(property: "segmentsIds" | "routeId") {
   }
 
   const providerElementId = props.element.connectedProvidedProperties[property];
-  const providerElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(providerElementId!, props.grid)!;
+  const providerElement = editor!.findElementWithId<typeof ElevationProfileElement>(providerElementId!, props.grid)!;
 
   // Necessary to reconstruct here as connected
   const {[property]: _, ...rest} = props.element.connectedProvidedProperties;
@@ -89,9 +95,8 @@ function onRouteIdChanged(routeId: number) {
  * @param value
  * @param element
  */
-function propagateChangedProperty(property: ProvidedPropertiesRoute[number], value: any, element: Element<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>) {
-  gridStore
-      .updateElementAttribute<ElevationProfileProperties, typeof property, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(element, property, value);
+function propagateChangedProperty(property: ProvidedPropertiesRoute[number], value: any, element: EditorElementInstance<typeof ElevationProfileElement>) {
+  editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(element, property, value));
 
   const consumedProperties = element.connectedConsumedProperties;
   if (!consumedProperties[property]) {
@@ -99,13 +104,12 @@ function propagateChangedProperty(property: ProvidedPropertiesRoute[number], val
   }
 
   const consumerId = consumedProperties[property];
-  const consumingElement = gridStore.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumerId, props.grid);
+  const consumingElement = editor!.findElementWithId<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumerId, props.grid);
   if (!consumingElement) {
     console.error(`Consuming element with id ${consumerId} not found in grid`)
     return;
   }
-  gridStore
-      .updateElementAttribute<ElevationProfileProperties, typeof property, ProvidedPropertiesRoute, ConsumedPropertiesRoute>(consumingElement, property, value);
+  editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(consumingElement, property, value));
 
   propagateChangedProperty(property, value, consumingElement);
 }
@@ -116,12 +120,13 @@ function onSelectionChanged(segmentIds: number[]) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const color = computed(() => props.element.attributes.color);
+const color = computed(() => props.element.properties.color);
 
 /**
  * @param newValue
  */
 function onColorChange(newValue: Color) {
-  gridStore.updateElementAttribute(props.element, "color", newValue);
+
+  editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(props.element, "color", newValue));
 }
 </script>

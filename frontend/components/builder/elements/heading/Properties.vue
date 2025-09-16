@@ -1,8 +1,8 @@
 <template>
   <BuilderPropertiesContainer
     :grid="props.grid"
-    :id="props.element.id"
-    :properties="props.element.attributes"
+    :id="props.element.instanceId"
+    :properties="props.element.properties"
     :provided-properties="[]"
     :consumed-properties="[]"
   >
@@ -43,36 +43,42 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
+import {inject} from "vue";
+import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile";
+import type {HeadingElement} from "~/components/builder/elements/heading/index";
+import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<HeadingProperties>>();
+const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const gridModuleStore = useGridStore();
+const editor = inject(EditorInjectionKey);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const size = computed(() => props.element.attributes.level);
+const size = computed(() => props.element.properties.level);
 
 /**
  * @param newValue
  */
 function onSizeChange(newValue: number) {
-  gridModuleStore.updateElementAttribute(props.element, "level", newValue);
+  editor?.executeAction(new UpdateElementAttribute<typeof HeadingElement>(props.element, "level", newValue));
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const color = computed(() => props.element.attributes.color);
+const color = computed(() => props.element.properties.color);
 
 /**
  * @param newValue
  */
 function onColorChange(newValue: string) {
-  gridModuleStore.updateElementAttribute(props.element, "color", newValue);
+  editor?.executeAction(new UpdateElementAttribute<typeof HeadingElement>(props.element, "color", newValue));
 }
 </script>

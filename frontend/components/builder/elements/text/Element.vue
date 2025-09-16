@@ -12,25 +12,21 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
-import type {TextProperties} from "~/components/builder/elements/text/Properties";
+import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {TextElement} from "~/components/builder/elements/text/index";
 
 const text = computed(() => {
-  if (!props.element.attributes.text) {
+  if (!props.element.properties.content) {
     return "Default Text";
   }
 
-  return props.element.attributes.text;
+  return props.element.properties.content;
 });
 
-const props = defineProps<ElementProps<TextProperties>>();
-
-const gridModuleStore = useGridStore();
-
-//
+const props = defineProps<EditorElementProperties<typeof TextElement>>();
 
 function onTextChanged(newContent: string) {
-  gridModuleStore.updateElementAttribute(props.element, "text", newContent);
+  //gridModuleStore.updateElementAttribute(props.element, "text", newContent);
 }
 </script>
 

@@ -4,7 +4,7 @@ import {Element, ElementType} from "~/types/grid";
 import Properties from "./Properties.vue";
 import {ImagePosition, type ImageProperties, ImageSize} from "./Properties";
 import {createPinia, setActivePinia} from "pinia";
-import {useGridStore} from "~/stores/grid";
+import {useGridStore} from "~/stores/editor/grid";
 import {SwitchModeKey} from "~/components/builder/BuilderMode";
 import {createVuetify} from "vuetify";
 

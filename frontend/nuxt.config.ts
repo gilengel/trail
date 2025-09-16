@@ -7,7 +7,11 @@ export default defineNuxtConfig({
     },
 
     compatibilityDate: "2025-01-28",
-
+    components: [
+        {
+            path: '~/components',
+            extensions: ['.vue'],    }
+    ],
     modules: [
         "@pinia/nuxt",
         '@vueuse/nuxt',

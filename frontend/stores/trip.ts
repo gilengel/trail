@@ -1,4 +1,4 @@
-import {createDefaultGrid} from "~/stores/grid";
+import {createDefaultGrid} from "~/stores/editor/grid";
 import {defineStore} from 'pinia';
 import {useUpload} from "~/composables/useUpload";
 import {useDelete} from "~/composables/useDelete";

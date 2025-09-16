@@ -1,5 +1,5 @@
-import type {Grid} from "~/types/grid";
 import type {RouteDto} from "~/types/dto";
+import type {Grid} from "~/components/GridEditor/grid";
 
 /**
  * Persists the grid to the backend.
