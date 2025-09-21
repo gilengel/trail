@@ -1,7 +1,5 @@
-import type {GridHandler} from "~/stores/editor/grid";
-import {Editor, type EditorMode} from "../editor";
-import type {Grid, Element} from "../grid";
-
+import {BuilderMode, Editor, type EditorMode} from "../editor";
+import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
 
 /**
  * Checks if connected elements would form a loop that is that the provided data is feed back into
@@ -10,93 +8,82 @@ import type {Grid, Element} from "../grid";
  *
  * The check is performed on property level therefore it does not guarantee if an element has such a loop
  * on another property than the one provided as the argument.
- * @template Props The properties of the elements.
- * @template Provided The provided properties of the elements.
- * @template Consumed The consumed properties of the elements.
+ *
+ * @template Element type of the target element
+ *
  * @param property - The property you want to check.
  * @param target - The last element that you want to prevent to form a loop.
- * @param gridHandler - The grid persistence store.
- * @param grid - The currently used grid.
+ * @param editor - Editor instance for element lookup
  * @param visitedElementIds - All ids of already visited elements.
+ *
  * @returns A list of the ids of all elements that form a loop if a loop was found, undefined otherwise.
  */
-function findLoop<
-    
-  Props extends object,
-  Provided extends readonly (keyof Props)[],
-  Consumed extends readonly (keyof Props)[]
->(property: keyof Props,
-  target: Element< Props, Provided, Consumed>,
-  gridHandler: GridHandler,
-  grid: Grid,
+export function findLoop<Element extends EditorElementInstance
+>(property: string,
+  target: Element,
+  editor: Editor,
   visitedElementIds: string[] = []): string[] | undefined {
 
-  const elementIdOfConnectedConsumedProperty = target.connectedConsumedProperties[property];
-  if (!elementIdOfConnectedConsumedProperty) {
-    return;
-  }
+    const elementIdOfConnectedConsumedProperty = target.connections.consumed[property];
+    if (!elementIdOfConnectedConsumedProperty) {
+        return;
+    }
 
-  if (visitedElementIds.find((id) => id === elementIdOfConnectedConsumedProperty)) {
-    return visitedElementIds;
-  }
+    if (visitedElementIds.find((id) => id === elementIdOfConnectedConsumedProperty)) {
+        return visitedElementIds;
+    }
 
-  const consumer = gridHandler.findElementWithId<Props, Provided, Consumed>(elementIdOfConnectedConsumedProperty, grid);
-  if (!consumer) {
-    console.error(`Element with id ${elementIdOfConnectedConsumedProperty} not found.`);
-    return;
-  }
+    const consumer = editor.findElementWithId(elementIdOfConnectedConsumedProperty, editor.grid);
+    if (!consumer) {
+        console.error(`Element with id ${elementIdOfConnectedConsumedProperty} not found.`);
+        return;
+    }
 
 
-  visitedElementIds.push(elementIdOfConnectedConsumedProperty);
+    visitedElementIds.push(elementIdOfConnectedConsumedProperty);
 
-  return findLoop(property, target, gridHandler, grid, visitedElementIds);
+    return findLoop(property, target, editor, visitedElementIds);
 }
 
 export type ConnectElementPropertiesMeta = {
-  property: string
+    property: string
 }
 
-export class ConnectElementProperties<ElementRegistry> implements EditorMode<ConnectElementPropertiesMeta> {
-  private meta: ConnectElementPropertiesMeta | undefined = undefined;
+export class ConnectElementProperties implements EditorMode<ConnectElementPropertiesMeta> {
+    private meta: ConnectElementPropertiesMeta | undefined = undefined;
 
-  constructor(private _gridHandler: GridHandler, private _editor: Editor<ElementRegistry>) {
-  }
-
-  onSelectElement<
-  
-    Props extends object,
-    Provided extends readonly (keyof Props)[],
-    Consumed extends readonly (keyof Props)[]
-  >(newSelectedElement: Element< Props, Provided, Consumed>): void {
-    if (!this._editor.selectedElement.value || !this.meta || !this.meta.property) {
-      return;
+    constructor(private _editor: Editor) {
     }
 
-    const providingElement = this._editor.selectedElement.value as unknown as Element< Props, Provided, Consumed>;
+    onSelectElement<Element extends EditorElementInstance>(newSelectedElement: Element): void {
+        if (!this._editor.selectedElement.value || !this.meta || !this.meta.property) {
+            return;
+        }
 
-    const foundLoop = findLoop(providingElement.providedProperties[0]!, newSelectedElement, this._gridHandler, this._editor.grid);
+        const providingElement = this._editor.selectedElement.value;
 
-    if (foundLoop) {
-      this._editor.pushWarning("The data of the connected elements form a loop which is not allowed. The connection is not set.");
-      this._editor.clearSelectedElements();
-      this._editor.switchMode(BuilderMode.Create, {});
+        const foundLoops = Object.keys(providingElement.connections.provided).filter((value: string) => {
+            return findLoop(value, newSelectedElement, this._editor);
+        })
 
-      return;
+        if (foundLoops.length > 0) {
+            this._editor.pushWarning("The data of the connected elements form a loop which is not allowed. The connection is not set.");
+            this._editor.clearSelectedElements();
+            this._editor.switchMode(BuilderMode.Create, {});
+
+            return;
+        }
+
+        providingElement.connections.consumed[this.meta.property] = newSelectedElement.instanceId;
+        newSelectedElement.connections.provided[this.meta.property] = providingElement.instanceId;
+
+
+        this._editor.clearSelectedElements();
+        this._editor.switchMode(BuilderMode.Create, {});
     }
 
-
-    const propertyKey = this.meta.property as Consumed[number];
-
-    providingElement.connectedConsumedProperties[propertyKey] = newSelectedElement.id;
-    newSelectedElement.connectedProvidedProperties[propertyKey] = providingElement.id;
-
-
-    this._editor.clearSelectedElements();
-    this._editor.switchMode(BuilderMode.Create, {});
-  }
-
-  activate(meta: ConnectElementPropertiesMeta): void {
-    this.meta = meta;
-  }
+    activate(meta: ConnectElementPropertiesMeta): void {
+        this.meta = meta;
+    }
 
 }

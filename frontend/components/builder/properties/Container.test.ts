@@ -1,43 +1,59 @@
-import {describe, it, expect, vi} from 'vitest';
+import {describe, it, expect, beforeEach} from 'vitest';
 import {mount} from '@vue/test-utils';
 import Container from "~/components/builder/properties/Container.vue";
-import {SwitchModeKey} from "~/components/builder/BuilderMode";
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import {createVuetify} from "vuetify";
+import {createGlobal} from "~/components/builder/elements/__mocks__";
+import {EditorInjectionKey} from "~/components/GridEditor/editor";
 
 const vuetify = createVuetify({
     components,
     directives,
 });
 
-describe('PropertyCard (with stubs)', () => {
-    it('renders title and properties slots', () => {
-        const mockSwitchMode = vi.fn();
+describe('Component', () => {
+    let global: ReturnType<typeof createGlobal>;
 
+    beforeEach(() => {
+        global = createGlobal();
+    });
+
+    it('renders title and properties slots', () => {
+        const now = new Date();
         const wrapper = mount(Container, {
+
+
             props: {
-                grid: {
-                    tripId: 0,
-                    rows: []
-                },
+
+                grid: global.provide[EditorInjectionKey].grid,
 
                 id: '0',
-                properties: {},
-                providedProperties: [],
-                consumedProperties: [],
+                element: {
+                    instanceId: '',
+                    elementId: '',
+                    defaults: {
+                        properties: {},
+                        providedProperties: {},
+                        consumedProperties: {}
+                    },
+                    connections: {
+                        consumed: {},
+                        provided: {}
+                    },
+                    properties: {},
+                    selected: true,
+                    highlighted: false,
+
+                    created: now,
+                    modified: now
+                }
+
             },
-            
+
             global: {
+                ...global,
                 plugins: [vuetify],
-                provide: {
-                    [SwitchModeKey]: mockSwitchMode,
-                },
-                stubs: {
-                    VCard: {template: '<div class="v-card"><slot /></div>'},
-                    VCardTitle: {template: '<div class="v-card-title"><slot /></div>'},
-                    VCardText: {template: '<div class="v-card-text"><slot /></div>'},
-                },
             },
             slots: {
                 title: '<div>Mock Title</div>',

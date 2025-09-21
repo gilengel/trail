@@ -27,6 +27,7 @@
       >
         <v-spacer/>
         <v-btn
+            data-testid="grid-editor-add-row-btn"
             @click="addRow()"
             color="primary rounded-sm"
             variant="outlined"
@@ -43,7 +44,7 @@
     >
       <component
           :is="selectedElementPropertiesComponent"
-          v-bind="selectedProps as ElementProps<object>"
+          v-bind="selectedProps"
           v-if="selectedElementPropertiesComponent"
       />
     </v-col>
@@ -60,13 +61,13 @@ import {computed, type Ref, ref, provide, watch} from 'vue';
 import {v4 as uuidv4} from 'uuid';
 import type {SortableEvent} from 'sortablejs';
 import {useSortable} from '@vueuse/integrations/useSortable';
-import type {Grid, Element, EditorElementProperties} from "./grid";
+import type {Grid, EditorElementProperties} from "./grid";
 import {Editor, EditorInjectionKey} from "./editor";
-import type {ElementProps} from "~/components/builder/properties";
 import {useGridSave} from "~/composables/useGridSave";
 import type {ISaveGridFn} from "~/components/GridEditor/editorConfiguration";
 import {MoveRow} from "~/stores/editor/actions/moveRow";
 import {AddRow} from "~/stores/editor/actions/addRow";
+import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
 // ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<{
@@ -77,12 +78,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  onElementChanged: [element: Element<object>];
+  onElementChanged: [element: EditorElementInstance];
 }>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const { registry } = useElementRegistry()
+const {registry} = useElementRegistry()
 
 const editor = new Editor(props.grid, useGridSave)
 
@@ -114,7 +115,7 @@ const selectedElementPropertiesComponent = computed(() => {
     return undefined;
   }
 
-  return registry.getPropertyComponent(editor.selectedElement.value.type);
+  return registry.getPropertyComponent(editor.selectedElement.value.elementId);
 });
 
 const selectedElementId = computed(() => {
@@ -122,20 +123,21 @@ const selectedElementId = computed(() => {
     return undefined;
   }
 
-  return editor.selectedElement.value.id;
+  return editor.selectedElement.value.instanceId;
 });
 
-const selectedProps = computed<EditorElementProperties<object> | undefined>(() => {
+const selectedProps = computed<EditorElementProperties<any> | undefined>(() => {
   if (!editor.selectedElement.value) {
     return undefined;
   }
 
   return {
-    grid: props.grid,
+    grid: editor.grid,
     element: editor.selectedElement.value,
+
     selected: true,
     highlighted: editor.highlightHandler.isHighlighted(editor.selectedElement.value)
-  };
+  } as EditorElementProperties<any>
 });
 
 // ---------------------------------------------------------------------------------------------------------------------

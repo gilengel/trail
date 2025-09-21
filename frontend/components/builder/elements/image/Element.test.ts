@@ -1,33 +1,36 @@
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, beforeEach} from 'vitest';
 import ImageComponent from '~/components/builder/elements/image/Element.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {Element, ElementType} from "~/types/grid";
-import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
-
-const attributes: ImageProperties = {
-    aspectRatio: 1,
-    scale: {origin: {x: 1, y: 1}, value: 1},
-    sizeType: ImageSize.Free,
-    position: {x: 0, y: 0},
-    positionType: ImagePosition.Centered
-};
+import {createGlobal} from "~/components/builder/elements/__mocks__";
+import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
+import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {mount} from "@vue/test-utils";
+import {createVuetify} from "vuetify";
 
 describe('Component', () => {
     describe('Image', () => {
-        const props = {
-            element: new Element<ImageProperties, [], []>('0', ElementType.Image, attributes, [], [], {}, {}),
-            selected: true,
-            highlighted: false,
-            grid: {tripId: 0, rows: []}
-        };
+        let global: ReturnType<typeof createGlobal>;
+        let props: EditorElementProperties<any>;
 
-        it('renders', async () => {
-            const component = await mountSuspended(ImageComponent, {props});
+        beforeEach(() => {
+            global = createGlobal();
+
+            props = {
+                element: createMockElement(),
+                grid: global.provide[EditorInjectionKey].grid
+            };
+        });
+
+        it('renders', () => {
+            const component = mount(ImageComponent, {
+                global: {
+                    ...global,
+                    plugins: [createVuetify()]
+                },
+                props
+            });
 
             expect(component.find('[data-testid="element-img"]').exists()).toBeTruthy();
         });
     });
 });
-
-//{ element: { id: string; type: ElementType; attributes: { aspectRatio: number; scale: { origin: { x: number; y: number; }; value: number; }; sizeType: ImageSize; position: { x: number; y: number; }; positionType: ImagePosition; }; }; selected: boolean; highlighted: boolean; grid: { ...; }; }
-//{ readonly element: Element<ImageProperties, [], []>; readonly selected: boolean; readonly highlighted: boolean; readonly grid: Grid; }'.

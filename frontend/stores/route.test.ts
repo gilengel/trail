@@ -18,22 +18,22 @@ describe('useRouteStore (no internal state access)', () => {
     it('getByRouteId fetches route and caches it implicitly', async () => {
         const spy = vi.spyOn(apiFetchModule, 'useApiFetch');
 
-        mockUseApiFetch.mockResolvedValue({data: {id: 1, tripId: 10, value: {}}});
+        mockUseApiFetch.mockResolvedValue({data: {value: {id: 0}}});
         const store = useRouteStore();
 
         const firstCallGoingToRemote = await store.getByRouteId(1);
-        expect(firstCallGoingToRemote).toEqual({});
+        expect(firstCallGoingToRemote).toEqual({id: 0});
         expect(spy).toBeCalledTimes(1);
 
         const secondCallGoingToLocalCache = await store.getByRouteId(1);
-        expect(secondCallGoingToLocalCache).toEqual({});
+        expect(secondCallGoingToLocalCache).toEqual({id: 0});
         expect(spy).toBeCalledTimes(1);
     });
 
     it('getByRouteId fetches nothing if the trip is empty', async () => {
         const spy = vi.spyOn(apiFetchModule, 'useApiFetch');
 
-        mockUseApiFetch.mockResolvedValue({data: {id: 1, tripId: 10}});
+        mockUseApiFetch.mockResolvedValue({data: {}});
         const store = useRouteStore();
 
         const firstCallGoingToRemote = await store.getByRouteId(1);
@@ -44,11 +44,11 @@ describe('useRouteStore (no internal state access)', () => {
     it('getByTripId caches nothing if the trip has no routes', async () => {
         const spy = vi.spyOn(apiFetchModule, 'useApiFetch');
 
-        mockUseApiFetch.mockResolvedValue({data: {id: 1, tripId: 10}});
+        mockUseApiFetch.mockResolvedValue({data: {value: []}});
         const store = useRouteStore();
 
         const routesForTripWithId = await store.getByTripId(1);
-        expect(routesForTripWithId).toEqual(null);
+        expect(routesForTripWithId).toEqual([]);
         expect(spy).toBeCalledTimes(1);
     });
 

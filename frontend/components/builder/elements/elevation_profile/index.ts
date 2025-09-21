@@ -6,7 +6,7 @@ export interface ElevationProfileProperties extends RouteProperty {
     color?: Color
 }
 
-export const ElevationProfileElement: EditorElementDefinition<ElevationProfileProperties, [], []> =  createEditorElementDefinition({
+export const ElevationProfileElement: EditorElementDefinition<ElevationProfileProperties, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"]> = createEditorElementDefinition({
     id: 'elevation_profile',
     name: 'Elevation Profile',
     category: 'content',
@@ -18,8 +18,8 @@ export const ElevationProfileElement: EditorElementDefinition<ElevationProfilePr
 
     defaults: {
         properties: {} as ElevationProfileProperties,
-        providedProperties: [],
-        consumedProperties: [],
+        providedProperties: ["segmentsIds", "routeId"],
+        consumedProperties: ["segmentsIds", "routeId"],
     },
 
     metadata: {

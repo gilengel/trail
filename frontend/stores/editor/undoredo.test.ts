@@ -1,23 +1,21 @@
-import {setActivePinia, createPinia} from 'pinia';
 import {describe, it, beforeEach, expect, vi} from 'vitest';
-import {GroupedUndoRedoAction, type IUndoRedoAction} from "~/stores/editor/undoredo";
+import {GroupedUndoRedoAction, type IUndoRedoAction, UndoRedoHandler} from "~/stores/editor/undoredo";
 
 const mockSave = () => {
-    return Promise.resolve(true)
+    return Promise.resolve()
 };
 
 describe('UndoRedo', () => {
-    let store: ReturnType<ReturnType<typeof useUndoRedoStore>>;
+    let undoRedoHandler: UndoRedoHandler;
 
     beforeEach(() => {
-        setActivePinia(createPinia());
-        store = useUndoRedoStore(vi.fn())();
+        undoRedoHandler = new UndoRedoHandler(mockSave);
     });
 
     it('initially has no undoable or redoable actions', () => {
 
-        expect(store.hasUnduable()).toBe(false);
-        expect(store.hasReduable()).toBe(false);
+        expect(undoRedoHandler.hasUnduable()).toBe(false);
+        expect(undoRedoHandler.hasReduable()).toBe(false);
     });
 
     it('executes an action and adds it to the undo stack', async () => {
@@ -26,11 +24,11 @@ describe('UndoRedo', () => {
             undo: vi.fn().mockResolvedValue(undefined),
         };
 
-        await store.execute(mockAction);
+        await undoRedoHandler.execute(mockAction);
 
         expect(mockAction.redo).toHaveBeenCalled();
-        expect(store.hasUnduable()).toBe(true);
-        expect(store.hasReduable()).toBe(false);
+        expect(undoRedoHandler.hasUnduable()).toBe(true);
+        expect(undoRedoHandler.hasReduable()).toBe(false);
     });
 
     it('undoes an action and moves it to the redo stack', async () => {
@@ -39,12 +37,12 @@ describe('UndoRedo', () => {
             undo: vi.fn().mockResolvedValue(undefined),
         };
 
-        await store.execute(mockAction);
-        await store.undo();
+        await undoRedoHandler.execute(mockAction);
+        await undoRedoHandler.undo();
 
         expect(mockAction.undo).toHaveBeenCalled();
-        expect(store.hasUnduable()).toBe(false);
-        expect(store.hasReduable()).toBe(true);
+        expect(undoRedoHandler.hasUnduable()).toBe(false);
+        expect(undoRedoHandler.hasReduable()).toBe(true);
     });
 
     it('redoes an action and moves it back to the undo stack', async () => {
@@ -53,27 +51,27 @@ describe('UndoRedo', () => {
             undo: vi.fn().mockResolvedValue(undefined),
         };
 
-        await store.execute(mockAction);
-        await store.undo();
-        await store.redo();
+        await undoRedoHandler.execute(mockAction);
+        await undoRedoHandler.undo();
+        await undoRedoHandler.redo();
 
         expect(mockAction.redo).toHaveBeenCalledTimes(2);
-        expect(store.hasUnduable()).toBe(true);
-        expect(store.hasReduable()).toBe(false);
+        expect(undoRedoHandler.hasUnduable()).toBe(true);
+        expect(undoRedoHandler.hasReduable()).toBe(false);
     });
 
     it('does nothing if redo is called with no redoable actions', async () => {
-        await store.redo(); // No action in redo stack
+        await undoRedoHandler.redo(); // No action in redo stack
 
-        expect(store.hasUnduable()).toBe(false);
-        expect(store.hasReduable()).toBe(false);
+        expect(undoRedoHandler.hasUnduable()).toBe(false);
+        expect(undoRedoHandler.hasReduable()).toBe(false);
     });
 
     it('does nothing if undo is called with no undoable actions', async () => {
-        await store.undo(); // No action in undo stack
+        await undoRedoHandler.undo(); // No action in undo stack
 
-        expect(store.hasUnduable()).toBe(false);
-        expect(store.hasReduable()).toBe(false);
+        expect(undoRedoHandler.hasUnduable()).toBe(false);
+        expect(undoRedoHandler.hasReduable()).toBe(false);
     });
 
     it('clears the redo stack when executing a new action', async () => {
@@ -87,12 +85,12 @@ describe('UndoRedo', () => {
             undo: vi.fn().mockResolvedValue(undefined),
         };
 
-        await store.execute(mockAction1);
-        await store.undo(); // Moves to redo stack
-        await store.execute(mockAction2); // Clears redo stack
+        await undoRedoHandler.execute(mockAction1);
+        await undoRedoHandler.undo(); // Moves to redo stack
+        await undoRedoHandler.execute(mockAction2); // Clears redo stack
 
-        expect(store.hasUnduable()).toBe(true);
-        expect(store.hasReduable()).toBe(false);
+        expect(undoRedoHandler.hasUnduable()).toBe(true);
+        expect(undoRedoHandler.hasReduable()).toBe(false);
     });
 });
 

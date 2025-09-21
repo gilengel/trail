@@ -75,13 +75,13 @@ import {
   type Grid,
   type Row
 } from "./grid";
-import {columnValueValidator} from "~/composables/editor/useColumValidator";
+import {columnValueValidator} from "~/composables/useColumValidator";
 import type {EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
 import {DeleteColumn} from "~/stores/editor/actions/deleteColumn";
 import {SplitColumn} from "~/stores/editor/actions/splitColumn";
 import {SetElement} from "~/stores/editor/actions/setElement";
 
-const { definitions, instances, registry } = useElementRegistry()
+const {definitions, instances, registry} = useElementRegistry()
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -190,7 +190,7 @@ const selectedComponent = computed(() => {
   return registry.getComponent(props.model.element.elementId);
 });
 
-const selectedComponentProps = computed<EditorElementProperties<object> | undefined>(() => {
+const selectedComponentProps = computed<EditorElementProperties<any> | undefined>(() => {
   if (!props.model.element) {
     return undefined;
   }
@@ -198,15 +198,15 @@ const selectedComponentProps = computed<EditorElementProperties<object> | undefi
   return {
     grid: props.grid,
     element: props.model.element,
-    selected: props.model.element.id === props.selectedElementId,
+    selected: props.model.element.instanceId === props.selectedElementId,
     highlighted: isHighlighted.value,
   };
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function createElement(definition: EditorElementDefinition<any, any, any>, column: Column) {
-  editor!.executeAction(new SetElement(column, instances.create(definition)));
+function createElement(definition: EditorElementDefinition<any>, column: Column) {
+  editor!.executeAction<any>(new SetElement(column, instances.create(definition)!));
 }
 </script>
 

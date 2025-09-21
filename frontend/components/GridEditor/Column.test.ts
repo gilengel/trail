@@ -1,19 +1,19 @@
 import {describe, it, expect, beforeEach} from 'vitest';
-import ElevationProfileComponent from '~/components/builder/elements/elevation_profile/Element.vue';
 import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
 import {mount} from "@vue/test-utils";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {createDefaultGrid, type EditorElementProperties} from "~/components/GridEditor/grid";
+import {BuilderMode, EditorInjectionKey} from "~/components/GridEditor/editor";
 import {createVuetify} from "vuetify";
+import {GridEditorColumn} from "#components";
 
 describe('Component', () => {
-    describe('ElevationProfile', () => {
+    describe('Column', () => {
         let global: ReturnType<typeof createGlobal>;
         let props: EditorElementProperties<any>;
 
         beforeEach(() => {
-            global = createGlobal();
+            global = createGlobal(createDefaultGrid(0));
 
             props = {
                 element: createMockElement(),
@@ -22,12 +22,18 @@ describe('Component', () => {
         });
 
         it('renders', () => {
-            const component = mount(ElevationProfileComponent, {
+            const component = mount(GridEditorColumn, {
                 global: {
                     ...global,
                     plugins: [createVuetify()]
                 },
-                props
+                props: {
+                    row: props.grid.rows[0],
+                    model: props.grid.rows[0].columns[0],
+                    grid: props.grid,
+
+                    activeMode: BuilderMode.Create
+                }
             });
             expect(component.exists).toBeTruthy();
         });

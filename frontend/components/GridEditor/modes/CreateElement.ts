@@ -1,4 +1,4 @@
-import {Editor, type EditorMode} from "../editor";
+import {type EditorMode} from "../editor";
 
 export type CreateElementMeta = object
 

@@ -1,9 +1,10 @@
-import {describe, it, expect, vi} from 'vitest';
+import {describe, it, expect, vi, beforeEach} from 'vitest';
 import ElevationProfilePropertiesComponent from './Properties.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {Element, ElementType} from "~/types/grid";
-import type {ElevationProfileProperties} from "~/components/builder/elements/elevation_profile/Properties";
-import {SwitchModeKey} from "~/components/builder/BuilderMode";
+import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
+import {createGlobal} from "~/components/builder/elements/__mocks__";
+import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {mount} from "@vue/test-utils";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -16,25 +17,24 @@ vi.mock('@/stores/route', () => {
 
 describe('Component', () => {
     describe('ElevationProfileProperties[Properties]', () => {
-        const mockSwitchMode = vi.fn();
+        let global: ReturnType<typeof createGlobal>;
+        let props: EditorElementProperties<any>;
 
-        it('renders', async () => {
+        beforeEach(() => {
+            global = createGlobal();
+
+            props = {
+                element: createMockElement(),
+                grid: global.provide[EditorInjectionKey].grid
+            };
+        });
+
+        it('renders', () => {
             getByTripId.mockResolvedValue([]);
 
-            const element = new Element<ElevationProfileProperties, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"]>('0', ElementType.ElevationProfile, {
-                routeId: '0',
-                segmentsIds: []
-            }, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"], {}, {});
-            const component = await mountSuspended(ElevationProfilePropertiesComponent, {
-                provide: {
-                    [SwitchModeKey]: mockSwitchMode,
-                },
-                props: {
-                    element,
-                    selected: true,
-                    highlighted: false,
-                    grid: {tripId: 0, rows: []}
-                }
+            const component = mount(ElevationProfilePropertiesComponent, {
+                global,
+                props
             });
             expect(component.exists).toBeTruthy();
         });

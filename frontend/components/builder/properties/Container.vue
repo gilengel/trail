@@ -13,7 +13,7 @@
         Provided
         <v-list>
           <v-list-item
-              v-for="(item, i) in props.providedProperties"
+              v-for="(item, i) in props.element.defaults.providedProperties"
               :key="i"
               :value="item"
               color="primary"
@@ -30,19 +30,19 @@
         Consumed
         <v-list>
           <v-list-item
-              v-for="(item, i) in props.consumedProperties"
+              v-for="(item, i) in props.element.defaults.consumedProperties"
               :key="i"
               :value="item"
 
           >
             <template v-slot:prepend>
-              <v-icon icon="las la-arrow-circle-left" :color="isConnected(item) ? 'warning' : ''"/>
+              <v-icon icon="las la-arrow-circle-left" :color="isConnected(item as string) ? 'warning' : ''"/>
             </template>
 
-            <v-list-item-title :class="isConnected(item) ? 'text-warning' : ''"
+            <v-list-item-title :class="isConnected(item as string) ? 'text-warning' : ''"
                                v-text="item"/>
 
-            <template v-slot:append v-if="isConnected(item)">
+            <template v-slot:append v-if="isConnected(item as string)">
               <v-btn
                   color="warning"
                   icon="las la-trash-alt"
@@ -57,10 +57,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="Properties extends object,
-    ProvidedProperties extends Array<keyof Properties> = [],
-    ConsumedProperties extends Array<keyof Properties> = []"
->
+<script setup lang="ts" generic="Element extends EditorElementDefinition<any, any, any>">
 // ---------------------------------------------------------------------------------------------------------------------
 // This is the parent component for all element property components.
 //
@@ -73,6 +70,7 @@ import {inject} from 'vue';
 import type {Grid} from "~/components/GridEditor/grid";
 import {BuilderMode, EditorInjectionKey} from "~/components/GridEditor/editor";
 import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
+import type {EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -80,11 +78,7 @@ import type {EditorElementInstance} from "~/components/GridEditor/editorElementI
 const props = defineProps<{
   grid: Grid,
   id: string,
-  properties: Properties,
-  providedProperties: ProvidedProperties,
-  consumedProperties: ConsumedProperties,
-  connectedProvidedProperties: Partial<Record<ProvidedProperties[number], string>>,
-  connectedConsumedProperties: Partial<Record<ConsumedProperties[number], string>>,
+  element: EditorElementInstance<Element>
 }>();
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -108,11 +102,7 @@ enum PropertyDirection {
 // ---------------------------------------------------------------------------------------------------------------------
 
 function isConnected(item: string | number | symbol) {
-  if (!props.connectedProvidedProperties) {
-    return false
-  }
-
-  return item in props.connectedProvidedProperties;
+  return item in props.element.connections.consumed;
 }
 
 function clearConnection(item: string) {
@@ -129,29 +119,27 @@ function clearConnection(item: string) {
  * @returns All the elements that have the properties
  */
 function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direction: PropertyDirection): EditorElementInstance<any>[] {
-  /*
-  function areAllKeysOf<T extends readonly string[]>(arr: string[], obj: T): boolean {
-    return arr.every(key => obj.includes(key));
+
+  function areAllKeysOf(arr: string[], obj: Partial<Record<string, string>> | undefined): boolean {
+    if (!obj) return false;
+    return arr.every(key => key in obj);
   }
 
   return grid.rows.flatMap(row =>
       row.columns
           .map(column => column.element)
           .filter(element => element &&
-              element.instanceId != props.id &&
-              areAllKeysOf(propertyKeys, direction == PropertyDirection.Provided ? element.connections.provided : element.connections.consumed))
+              element.instanceId !== props.id &&
+              areAllKeysOf(propertyKeys, direction === PropertyDirection.Provided ? element.connections.provided : element.connections.consumed))
           .filter(Boolean) as EditorElementInstance<any>[]
   );
-  */
-
-  return [];
 }
 
 function propertySelected(propertyKey: string, direction: PropertyDirection) {
   const filtered = findAllElementsWithProperties([propertyKey], props.grid, direction)
 
   editor!.highlightHandler.clear();
-  editor!.highlightHandler.add(filtered);
+  editor!.highlightHandler.add<any>(filtered);
 
   editor!.switchMode(BuilderMode.ConnectProperty, {property: propertyKey})
 }

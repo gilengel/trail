@@ -1,9 +1,9 @@
 import {describe, it, expect, vi} from 'vitest';
 import HeadingPropertiesComponent from './Properties.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {Element, ElementType} from "~/types/grid";
-import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
-import {SwitchModeKey} from "~/components/builder/BuilderMode";
+import {createMockElement} from "~/stores/editor/actions/__mocks__";
+import {Editor, EditorInjectionKey} from "~/components/GridEditor/editor";
+import {mount} from "@vue/test-utils";
+import {createVuetify} from "vuetify";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -15,24 +15,20 @@ vi.mock('@/stores/route', () => {
 });
 
 describe('Component', () => {
-    describe('Map[Properties]', () => {
-        const mockSwitchMode = vi.fn();
-
+    describe('Heading[Properties]', () => {
         it('renders', async () => {
-            const element = new Element<HeadingProperties, [], []>(
-                '0',
-                ElementType.Heading,
-
-                {level: 0, color: '#F00', text: 'Heading', alignment: 'left'}, [], [], {}, {});
-            const component = await mountSuspended(HeadingPropertiesComponent, {
-                provide: {
-                    [SwitchModeKey]: mockSwitchMode,
+            const component = mount(HeadingPropertiesComponent, {
+                global: {
+                    plugins: [createVuetify()],
+                    provide: {
+                        [EditorInjectionKey]: new Editor({tripId: 0, rows: []}, () => {
+                            return Promise.resolve();
+                        }),
+                    }
                 },
                 props: {
-                    element,
-                    selected: true,
-                    highlighted: false,
-                    grid: {tripId: 0, rows: []}
+                    grid: {tripId: 0, rows: []},
+                    element: createMockElement(),
                 }
             });
             expect(component.exists).toBeTruthy();

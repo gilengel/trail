@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import {inject, type PropType, type Ref, ref} from 'vue';
-import {columnValueValidator} from "~/composables/editor/useColumValidator";
+import {columnValueValidator} from "~/composables/useColumValidator";
 import type {Grid, Row} from "./grid";
 import {BuilderMode, EditorInjectionKey} from "./editor";
 import {GroupedUndoRedoAction} from "~/stores/editor/undoredo";

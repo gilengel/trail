@@ -1,10 +1,8 @@
 <template>
   <BuilderPropertiesContainer
-    :grid="props.grid"
-    :id="props.element.instanceId"
-    :properties="props.element.properties"
-    :provided-properties="[]"
-    :consumed-properties="[]"
+      :grid="props.grid"
+      :id="props.element.instanceId"
+      :element="props.element"
   >
     <template #title>
       Heading Properties
@@ -12,8 +10,8 @@
 
     <template #properties>
       <v-btn-toggle
-        v-model="size"
-        @update:model-value="onSizeChange"
+          v-model="size"
+          @update:model-value="onSizeChange"
       >
         <v-btn>
           H1
@@ -33,27 +31,27 @@
       </v-btn-toggle>
 
       <v-color-picker
-        v-model="color"
-        hide-inputs
-        show-swatches
-        @update:model-value="onColorChange"
+          v-model="color"
+          hide-inputs
+          show-swatches
+          @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
 </template>
 
 <script setup lang="ts">
-import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 import {inject} from "vue";
 import {EditorInjectionKey} from "~/components/GridEditor/editor";
 import type {EditorElementProperties} from "~/components/GridEditor/grid";
-import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile";
 import type {HeadingElement} from "~/components/builder/elements/heading/index";
 import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
+
+console.log(props);
 
 
 // ---------------------------------------------------------------------------------------------------------------------

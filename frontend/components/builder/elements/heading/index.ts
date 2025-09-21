@@ -1,7 +1,7 @@
 import {createEditorElementDefinition, type EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
-export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> = createEditorElementDefinition<HeadingProperties, [], []>({
+export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> = createEditorElementDefinition({
     id: 'heading-element',
     name: 'Heading Element',
     category: 'content',
@@ -17,7 +17,7 @@ export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> 
             color: '#000',
             text: 'Heading',
             alignment: 'left'
-        } satisfies HeadingProperties,
+        } as HeadingProperties,
         providedProperties: [] as const,
         consumedProperties: [] as const,
     },

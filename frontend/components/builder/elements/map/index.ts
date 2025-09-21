@@ -1,7 +1,7 @@
 import {createEditorElementDefinition, type EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
 import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
 
-export const MapElement: EditorElementDefinition<RouteProperty, [], []> = createEditorElementDefinition({
+export const MapElement: EditorElementDefinition<RouteProperty, ["routeId", "segmentsIds"], ["routeId", "segmentsIds"]> = createEditorElementDefinition({
     id: 'map',
     name: 'Map',
     category: 'content',
@@ -13,8 +13,8 @@ export const MapElement: EditorElementDefinition<RouteProperty, [], []> = create
 
     defaults: {
         properties: {} as RouteProperty,
-        providedProperties: [],
-        consumedProperties: [],
+        providedProperties: ["routeId", "segmentsIds"],
+        consumedProperties: ["routeId", "segmentsIds"],
     },
 
     metadata: {

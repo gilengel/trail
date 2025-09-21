@@ -2,23 +2,21 @@
   <BuilderPropertiesContainer
       :grid="props.grid"
       :id="props.element.instanceId"
-      :properties="props.element.properties"
-      :provided-properties="['routeId', 'segmentsIds']"
-      :consumed-properties="['routeId', 'segmentsIds']"
-      :connected-provided-properties="element.connections.provided"
-      :connected-consumed-properties="element.connections.consumed"
+      :element="props.element"
       @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
   >
     <template #title>
       Map Properties
     </template>
 
+
     <template #properties>
+      {{ element.connections }}
       <BuilderPropertiesSegments v-if="routes"
                                  :routes
                                  :route-id="element.properties.routeId"
                                  :segments-ids="element.properties.segmentsIds"
-                                 :is-consumed="element.connections.provided.get('segmentIds') !== undefined"
+                                 :is-consumed="'segmentsIds' in element.connections.provided"
                                  @update:selected-segment-ids="onSelectionChanged"
                                  @update:selected-route-id="onRouteIdChanged"
       />

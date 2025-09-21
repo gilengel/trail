@@ -1,19 +1,20 @@
 <template>
-  <textEditor
-    ref="textEditor"
-    :formatting="false"
-    :text="false"
-    :undoredo="false"
-    :content="text"
-    :custom-node="DynamicParagraph"
-    @on-text-changed="onTextChanged"
-    v-if="selected"
+  {{ props.element }}
+  <Editor
+      ref="textEditor"
+      :formatting="false"
+      :text="false"
+      :undoredo="false"
+      :content="text"
+      :custom-node="DynamicParagraph"
+      @on-text-changed="onTextChanged"
+      v-if="props.element.selected"
   />
   <div
-    class="heading-container"
-    v-else
-    v-html="text"
-    :style
+      class="heading-container"
+      v-else
+      v-html="text"
+      :style
   />
 </template>
 
@@ -29,15 +30,14 @@ import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttri
 // ---------------------------------------------------------------------------------------------------------------------
 
 const editor = inject(EditorInjectionKey);
-if (!editor) {
-  throw new Error("Editor instance was not injected in Row");
-}
 
+if (!editor) {
+  throw new Error("Editor instance was not injected in Heading");
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
-
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ const style = computed(() => {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-watch(() => props.selected, (selected) => {
+watch(() => props.element.selected, (selected) => {
   if (!selected || !textEditor.value) {
     return;
   }

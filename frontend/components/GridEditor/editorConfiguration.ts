@@ -45,9 +45,13 @@ export type EditorElementDefinition<
 
 export type ElementProperties<T> = T extends EditorElementDefinition<infer P, any, any> ? P : never;
 
-export type ElementProvidedProperties<T> = T extends EditorElementDefinition<any, infer PP, any> ? PP : never;
+export type ElementProvidedProperties<T> = T extends EditorElementDefinition<any, infer P, any>
+    ? P[number]  // This extracts the union type from the tuple
+    : never;
 
-export type ElementConsumedProperties<T> = T extends EditorElementDefinition<any, any, infer CP> ? CP : never;
+export type ElementConsumedProperties<T> = T extends EditorElementDefinition<any, infer P, any>
+    ? P[number]  // This extracts the union type from the tuple
+    : never;
 
 export type EditorConfiguration<Elements extends readonly EditorElementDefinition<any, any, any>[] = EditorElementDefinition[]> = {
     elements: Elements;

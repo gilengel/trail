@@ -12,10 +12,16 @@ export type EditorElementInstance<T extends EditorElementDefinition = EditorElem
     // Instance-specific data - properly typed based on element definition
     properties: ElementProperties<T>;
 
+    defaults: T['defaults'];
+
     connections: {
-      consumed: Map<ElementConsumedProperties<T>, string>
-      provided: Map<ElementProvidedProperties<T>, string>,
-    },
+        consumed: Partial<Record<ElementConsumedProperties<T>, string>>;
+        provided: Partial<Record<ElementProvidedProperties<T>, string>>;
+    };
+
+    selected: boolean;
+
+    highlighted: boolean;
 
     // Instance metadata
     created: Date;
@@ -27,7 +33,7 @@ export class EditorElementInstanceRegistry {
 
 
     // Create type-safe instance from definition
-    createInstance<T extends EditorElementDefinition>(
+    public createInstance<T extends EditorElementDefinition>(
         definition: EditorElementDefinition<any, any, any>,
         config: {
             properties?: Partial<ElementProperties<T>>;
@@ -46,10 +52,15 @@ export class EditorElementInstanceRegistry {
                 ...config.properties
             } as ElementProperties<T>,
 
+            defaults: definition.defaults,
+
             connections: {
-                consumed: new Map(),
-                provided: new Map()
+                consumed: {},
+                provided: {}
             },
+
+            selected: false,
+            highlighted: false,
 
             created: now,
             modified: now,

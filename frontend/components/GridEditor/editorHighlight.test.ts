@@ -1,10 +1,10 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import {Element} from "~/types/editor/grid";
-import {HighlightHandler} from "~/types/editor/editor.highlight";
+import {createMockElement} from "~/stores/editor/actions/__mocks__";
+import {HighlightHandler} from "~/components/GridEditor/editorHighlight";
 
 
 describe('EditorHighlight', () => {
-    const mockElement = new Element<object, [], []>('0', "heading" as never, {}, [], [], {}, {});
+    const mockElement = createMockElement()
     let highlightHandler: HighlightHandler;
 
     beforeEach(() => {

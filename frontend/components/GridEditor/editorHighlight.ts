@@ -1,67 +1,59 @@
 import {ref, type Ref} from "vue";
-import {Element} from './grid';
+import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
 
 export class HighlightHandler {
-  private _highlightedElements: Ref<Set<string>> = ref(new Set([]));
+    private _highlightedElements: Ref<Set<string>> = ref(new Set([]));
 
-  constructor() {
-  }
-
-  /**
-   * Highlights all provided elements
-   *
-   * @template Properties
-   * @template ProvidedProperties
-   * @template ConsumedProperties
-   * @param elements
-   */
-  public add<
-    Props extends object,
-    Provided extends readonly (keyof Props)[],
-    Consumed extends readonly (keyof Props)[]
-  >(...elements: Element<Props, Provided, Consumed>[]) {
-    for (const element of elements) {
-      this._highlightedElements.value.add(element.id);
+    constructor() {
     }
-  }
 
-  /**
-   * Resets an element to not be highlighted.
-   * @template Properties
-   * @template ProvidedProperties
-   * @template ConsumedProperties
-   * @param element - The element from which the highlighted flag shall be removed.
-   */
-  public remove<Properties extends object,
-    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
-    ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>) {
-    this._highlightedElements.value.delete(element.id);
-  }
+    /**
+     * Highlights all provided elements
+     *
+     * @template Element
+     *
+     * @param elements
+     */
+    public add<Element extends EditorElementInstance<any>>(...elements: Element[]) {
+        for (const element of elements) {
+            this._highlightedElements.value.add(element.instanceId);
+        }
+    }
 
-  /**
-   * Returns a set with the ids of all highlighted elements.
-   * @returns The set of ids of highlighted elements.
-   */
-  public get(): Set<string> {
-    return this._highlightedElements.value;
-  }
+    /**
+     * Resets an element to not be highlighted.
+     *
+     * @template Element
+     *
+     * @param element - The element from which the highlighted flag shall be removed.
+     */
+    public remove<Element extends EditorElementInstance>(element: Element) {
+        this._highlightedElements.value.delete(element.instanceId);
+    }
 
-  /**
-   * Checks for an element if it is highlighted or not.
-   * @template Properties
-   * @template ProvidedProperties
-   * @template ConsumedProperties
-   * @param element - The element to be checked if it has the highlighted flag or not.
-   * @returns True if the element is highlighted, false otherwise.
-   */
-  public isHighlighted<Properties extends object,
-    ProvidedProperties extends readonly (keyof Properties)[] = readonly [],
-    ConsumedProperties extends readonly (keyof Properties)[] = readonly []>(element: Element<Properties, ProvidedProperties, ConsumedProperties>): boolean {
+    /**
+     * Returns a set with the ids of all highlighted elements.
+     * @returns The set of ids of highlighted elements.
+     */
+    public get(): Set<string> {
+        return this._highlightedElements.value;
+    }
 
-    return this._highlightedElements.value.has(element.id);
-  }
+    /**
+     * Checks for an element if it is highlighted or not.
+     *
+     * @template Element
+     *
+     * @param element - The element to be checked if it has the highlighted flag or not.
+     *
+     * @returns True if the element is highlighted, false otherwise.
+     */
+    public isHighlighted<Element extends EditorElementInstance>(element: Element): boolean {
 
-  public clear(): void {
-    this._highlightedElements.value.clear();
-  }
+        return this._highlightedElements.value.has(element.instanceId);
+    }
+
+    public clear(): void {
+        this._highlightedElements.value.clear();
+    }
 }

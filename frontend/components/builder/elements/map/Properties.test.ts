@@ -1,11 +1,10 @@
 import {describe, it, expect, vi} from 'vitest';
 import MapProperties from '~/components/builder/elements/map/Properties.vue';
-import {ElementType} from "~/types/grid";
 import {createVuetify} from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import {SwitchModeKey} from "~/components/builder/BuilderMode";
 import {mount} from "@vue/test-utils";
+import {createMockElement} from "~/components/builder/elements/map/__mocks__";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -30,22 +29,8 @@ describe('Component', () => {
 
                 props: {
                     plugins: [vuetify],
-                    provide: {
-                        [SwitchModeKey]: vi.fn(),
-                    },
-                    element: {
-                        id: '0',
-                        type: ElementType.Map,
-                        attributes: {
-                            routeId: 0,
-                            segmentsIds: []
-                        },
-                        providedProperties: [],
-                        consumedProperties: [],
-                        connectedProvidedProperties: {},
-                        connectedConsumedProperties: {}
-                    }, selected: true,
-                    highlighted: false,
+                    provide: {},
+                    element: createMockElement(),
                     grid: {tripId: 0, rows: []}
                 }
             });

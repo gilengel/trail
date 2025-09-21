@@ -1,5 +1,5 @@
 <template>
-  <BuilderHighlightableElement :is-highlighted="props.highlighted">
+  <BuilderHighlightableElement :is-highlighted="props.element.highlighted">
     <v-alert
         v-if="!props.element.properties.segmentsIds || props.element.properties.segmentsIds?.length == 0"
         type="warning"
