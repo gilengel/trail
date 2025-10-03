@@ -3,11 +3,13 @@
   "version": "0.3.0",
   "description": "Trail",
   "workspaces": [
-    "./backend",
-    "./frontend"
+    "./editor",
+    "./frontend",
+    "./backend"
   ],
   "scripts": {
     "build": "run-p build:backend build:frontend",
+    "build:editor" : "npm run -w @trail/grid-editor build",
     "build:backend": "npm run -w @trail/backend build",
     "start:backend": "npm run -w @trail/backend start",
     "start:backend:dev": "npm run -w @trail/backend start:prod",
