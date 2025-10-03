@@ -1,54 +1,65 @@
 <template>
   <div class="pa-5">
     <v-card
-        class="rounded-sm"
-        variant="flat"
+      class="rounded-sm"
+      variant="flat"
     >
       <v-card-title>
-        <slot name="title"/>
+        <slot name="title" />
       </v-card-title>
       <v-card-text>
-        <slot name="properties"/>
+        <slot name="properties" />
 
         Provided
         <v-list>
           <v-list-item
-              v-for="(item, i) in props.element.defaults.providedProperties"
-              :key="i"
-              :value="item"
-              color="primary"
-              @click="propertySelected(item as string, PropertyDirection.Consumed)"
+            v-for="(item, i) in props.element.defaults.providedProperties"
+            :key="i"
+            :value="item"
+            color="primary"
+            @click="propertySelected(item as string, PropertyDirection.Consumed)"
           >
             <template #prepend>
-              <v-icon icon="las la-arrow-circle-right"/>
+              <v-icon
+                icon="las la-arrow-circle-right"
+                :color="isProvided(item as string) ? 'warning' : ''"
+              />
             </template>
 
-            <v-list-item-title v-text="item"/>
+            <v-list-item-title :class="isProvided(item as string) ? 'text-warning' : ''">
+              {{ item }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
 
         Consumed
         <v-list>
           <v-list-item
-              v-for="(item, i) in props.element.defaults.consumedProperties"
-              :key="i"
-              :value="item"
-
+            v-for="(item, i) in props.element.defaults.consumedProperties"
+            :key="i"
+            :value="item"
           >
-            <template v-slot:prepend>
-              <v-icon icon="las la-arrow-circle-left" :color="isConnected(item as string) ? 'warning' : ''"/>
+            <template #prepend>
+              <v-icon
+                icon="las la-arrow-circle-left"
+                :color="isConsumed(item as string) ? 'warning' : ''"
+              />
             </template>
 
-            <v-list-item-title :class="isConnected(item as string) ? 'text-warning' : ''"
-                               v-text="item"/>
+            <v-list-item-title :class="isConsumed(item as string) ? 'text-warning' : ''">
+              {{ item }}
+            </v-list-item-title>
 
-            <template v-slot:append v-if="isConnected(item as string)">
+            <template
+              #append
+              v-if="isConsumed(item as string)"
+            >
               <v-btn
-                  color="warning"
-                  icon="las la-trash-alt"
-                  variant="text"
-                  @click="clearConnection(item as string)"
-              ></v-btn>
+                color="warning"
+                icon="las la-trash-alt"
+                variant="text"
+                @click="clearConnection(item as string)"
+              />
             </template>
           </v-list-item>
         </v-list>
@@ -101,7 +112,12 @@ enum PropertyDirection {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function isConnected(item: string | number | symbol) {
+
+function isProvided(item: string | number | symbol) {
+  return item in props.element.connections.provided;
+}
+
+function isConsumed(item: string | number | symbol) {
   return item in props.element.connections.consumed;
 }
 
@@ -136,12 +152,12 @@ function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direc
 }
 
 function propertySelected(propertyKey: string, direction: PropertyDirection) {
-  const filtered = findAllElementsWithProperties([propertyKey], props.grid, direction)
+  const filtered = findAllElementsWithProperties([propertyKey], props.grid, direction);
 
   editor!.highlightHandler.clear();
   editor!.highlightHandler.add<any>(filtered);
 
-  editor!.switchMode(BuilderMode.ConnectProperty, {property: propertyKey})
+  editor!.switchMode(BuilderMode.ConnectProperty, {property: propertyKey});
 }
 
 </script>

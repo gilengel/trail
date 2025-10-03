@@ -9,7 +9,7 @@ export type RouteProperty = {
     segmentsIds?: number[]
 } & ColoredProperty;
 
-const RoutePropertyKeys = ["segmentsIds", "routeId"] as const;
-export type ProvidedPropertiesRoute = typeof RoutePropertyKeys;
-export type ConsumedPropertiesRoute = typeof RoutePropertyKeys;
+type RoutePropertyKeys = ["segmentsIds", "routeId"];
+export type ProvidedPropertiesRoute = RoutePropertyKeys;
+export type ConsumedPropertiesRoute = RoutePropertyKeys;
 

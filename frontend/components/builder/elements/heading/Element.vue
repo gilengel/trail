@@ -1,20 +1,20 @@
 <template>
   {{ props.element }}
   <Editor
-      ref="textEditor"
-      :formatting="false"
-      :text="false"
-      :undoredo="false"
-      :content="text"
-      :custom-node="DynamicParagraph"
-      @on-text-changed="onTextChanged"
-      v-if="props.element.selected"
+    ref="textEditor"
+    :formatting="false"
+    :text="false"
+    :undoredo="false"
+    :content="text"
+    :custom-node="DynamicParagraph"
+    @on-text-changed="onTextChanged"
+    v-if="props.element.selected"
   />
   <div
-      class="heading-container"
-      v-else
-      v-html="text"
-      :style
+    class="heading-container"
+    v-else
+    v-html="text"
+    :style
   />
 </template>
 

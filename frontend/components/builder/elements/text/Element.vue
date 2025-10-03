@@ -1,13 +1,13 @@
 <template>
   <Editor
-      :content="text"
-      @on-text-changed="onTextChanged"
-      v-if="props.element.selected"
+    :content="text"
+    @on-text-changed="onTextChanged"
+    v-if="props.element.selected"
   />
   <div
-      v-else
-      v-html="text"
-      class="tiptap"
+    v-else
+    v-html="text"
+    class="tiptap"
   />
 </template>
 
@@ -25,7 +25,7 @@ const text = computed(() => {
 
 const props = defineProps<EditorElementProperties<typeof TextElement>>();
 
-function onTextChanged(newContent: string) {
+function onTextChanged() {
   //gridModuleStore.updateElementAttribute(props.element, "text", newContent);
 }
 </script>

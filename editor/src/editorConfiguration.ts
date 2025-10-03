@@ -12,7 +12,7 @@ export interface ISaveGridFn {
 
 // Main EditorElement type with improved constraints
 export type EditorElementDefinition<
-    Properties extends Record<string, any> = Record<string, any>,
+    Properties extends Record<string, unknown> = Record<string, unknown>,
     ProvidedProperties extends ReadonlyArray<keyof Properties> = ReadonlyArray<keyof Properties>,
     ConsumedProperties extends ReadonlyArray<keyof Properties> = ReadonlyArray<keyof Properties>
 > = {

@@ -5,6 +5,10 @@ import {
 } from "~/components/builder/elements/elevation_profile/index";
 import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 
+/**
+ * Creates a mock elevation profile element to be used in unit tests.
+ * @returns The mock instance.
+ */
 export function createMockElement(): EditorElementInstance<typeof ElevationProfileElement> {
     const now = new Date();
     return {
@@ -34,5 +38,5 @@ export function createMockElement(): EditorElementInstance<typeof ElevationProfi
 
         created: now,
         modified: now
-    }
+    };
 }

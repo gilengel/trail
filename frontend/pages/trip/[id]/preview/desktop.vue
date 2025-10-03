@@ -3,14 +3,14 @@
     <NuxtLayout name="page">
       <template #primary-toolbar>
         <v-list
-            density="compact"
-            nav
+          density="compact"
+          nav
         >
           <v-list-item
-              color="primary"
-              rounded="xl"
-              prepend-icon="las la-arrow-left"
-              @click="$router.push({ path: '../edit/desktop' })"
+            color="primary"
+            rounded="xl"
+            prepend-icon="las la-arrow-left"
+            @click="$router.push({ path: '../edit/desktop' })"
           />
         </v-list>
       </template>
@@ -18,13 +18,13 @@
 
       <template #content>
         <v-row
-            v-for="row in (trip?.layout as Grid).rows"
-            :key="row.id"
+          v-for="row in (trip?.layout as Grid).rows"
+          :key="row.id"
         >
           <v-col
-              v-for="col in row.columns"
-              :key="col.id"
-              :cols="col.width"
+            v-for="col in row.columns"
+            :key="col.id"
+            :cols="col.width"
           >
             <!--
             TODO enable this with the new editor registration system

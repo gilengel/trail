@@ -1,7 +1,6 @@
 <template>
-
   <BuilderHighlightableElement :is-highlighted="props.element.highlighted">
-    <Map :segments="mapSegments"/>
+    <Map :segments="mapSegments" />
   </BuilderHighlightableElement>
 </template>
 

@@ -1,18 +1,18 @@
 <template>
   <v-btn
-      :data-testid
-      :color="isActive ? 'primary' : 'transparent'"
-      variant="flat"
-      rounded="0"
-      @click="onClick"
+    :data-testid
+    :color="isActive ? 'primary' : 'transparent'"
+    variant="flat"
+    rounded="0"
+    @click="onClick"
   >
     <v-icon>{{ icon }}</v-icon>
   </v-btn>
   <v-tooltip
-      :text="tooltip"
-      location="bottom"
+    :text="tooltip"
+    location="bottom"
   >
-    <template/>
+    <template />
   </v-tooltip>
 </template>
 

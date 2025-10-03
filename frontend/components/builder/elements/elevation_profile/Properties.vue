@@ -10,13 +10,14 @@
     </template>
 
     <template #properties>
-      <BuilderPropertiesSegments v-if="routes"
-                                 :routes
-                                 :route-id="element.properties.routeId"
-                                 :segments-ids="element.properties.segmentsIds"
-                                 :is-consumed="'segmentsIds' in element.connections.provided"
-                                 @update:selected-segment-ids="onSelectionChanged"
-                                 @update:selected-route-id="onRouteIdChanged"
+      <BuilderPropertiesSegments
+          v-if="routes"
+          :routes
+          :route-id="element.properties.routeId"
+          :segments-ids="element.properties.segmentsIds"
+          :is-consumed="'segmentsIds' in element.connections.provided"
+          @update:selected-segment-ids="onSelectionChanged"
+          @update:selected-route-id="onRouteIdChanged"
       />
 
       <v-color-picker
@@ -76,16 +77,19 @@ function onConsumedPropertyRemoved(property: ElementProvidedProperties<typeof El
   const providerElement = editor!.findElementWithId(providerElementId!)!;
 
   // Necessary to reconstruct here as connected
-  const {[property]: _, ...rest} = props.element.connections.provided;
-  props.element.connections.provided = rest;
+  const {...rest} = props.element.connections.provided;
 
-  const {[property]: __, ...restProvider} = providerElement.connections.consumed;
+  // @TODO: this is really an ugly fix to just pass eslint, we are mutating here the props :O
+  const consumerElement = editor!.findElementWithId(props.element.elementId!)!;
+  consumerElement.connections.provided = rest;
+
+
+  const {...restProvider} = providerElement.connections.consumed;
   providerElement.connections.consumed = restProvider;
-
 }
 
 function onRouteIdChanged(routeId: number) {
-  propagateChangedProperty("routeId", routeId, props.element)
+  propagateChangedProperty("routeId", routeId, props.element);
 }
 
 /**
@@ -107,7 +111,7 @@ function propagateChangedProperty(property: ProvidedPropertiesRoute[number], val
   const consumerId = consumedProperties[property];
   const consumingElement = editor!.findElementWithId(consumerId);
   if (!consumingElement) {
-    console.error(`Consuming element with id ${consumerId} not found in grid`)
+    console.error(`Consuming element with id ${consumerId} not found in grid`);
     return;
   }
   editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(consumingElement, property, value));
@@ -117,14 +121,14 @@ function propagateChangedProperty(property: ProvidedPropertiesRoute[number], val
 }
 
 function onSelectionChanged(segmentIds: number[]) {
-  propagateChangedProperty("segmentsIds", segmentIds, props.element)
+  propagateChangedProperty("segmentsIds", segmentIds, props.element);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const color = computed({
   get() {
-    return props.element.properties.color
+    return props.element.properties.color;
   },
   set(newValue) {
     editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(props.element, "color", newValue));

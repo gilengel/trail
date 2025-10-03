@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {globalElementRegistry} from "~/components/builder/editor.configuration";
 import type {EditorElementDefinition, ElementProperties} from "@trail/grid-editor/editorConfiguration";
 
+/**
+ * Convenience wrapper that provides access to the editors element registry. Use it to add or get editor element
+ * definitions or instances.
+ * @returns Object where the definition and instances are further grouped separately.
+ */
 export function useElementRegistry() {
     return {
         registry: globalElementRegistry,

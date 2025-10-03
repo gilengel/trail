@@ -1,4 +1,4 @@
-import { EditorElements, globalElementRegistry } from '~/components/builder/editor.configuration'
+import { EditorElements, globalElementRegistry } from '~/components/builder/editor.configuration';
 
 export default defineNuxtPlugin(() => {
     // Clear existing registrations on refresh/HMR

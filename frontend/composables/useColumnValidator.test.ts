@@ -1,4 +1,4 @@
-import {describe, it, expect, vi} from 'vitest';
+import {describe, it, expect} from 'vitest';
 import {columnValueValidator} from "~/composables/useColumValidator";
 
 describe('Composables[ColumnValidator]', () => {

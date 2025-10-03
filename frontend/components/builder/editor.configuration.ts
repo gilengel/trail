@@ -4,11 +4,17 @@ import {MapElement} from "~/components/builder/elements/map";
 import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile";
 import {ImageElement} from "~/components/builder/elements/image";
 import {IntegratedEditorRegistry} from "@trail/grid-editor/editorElementRegistry";
-import type {EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 
 export const globalElementRegistry = new IntegratedEditorRegistry();
 
-export const EditorElements: EditorElementDefinition<any, any, any>[] = [
+export type AnyEditorElement =
+    | typeof TextElement
+    | typeof HeadingElement
+    | typeof MapElement
+    | typeof ElevationProfileElement
+    | typeof ImageElement;
+
+export const EditorElements: AnyEditorElement[] = [
     TextElement,
     HeadingElement,
     MapElement,

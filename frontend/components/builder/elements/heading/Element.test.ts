@@ -27,10 +27,10 @@ describe('Component', () => {
                             updateAttributes: vi.fn().mockReturnThis(),
                             run: vi.fn()
                         }))
-                    }
+                    };
                 }
             }
-        }))
+        }));
 
         beforeEach(() => {
             global = createGlobal();
@@ -58,9 +58,9 @@ describe('Component', () => {
                     ...global
                 },
                 props: defaultProps
-            })
+            });
 
-            console.log(component.html())
+            console.log(component.html());
             expect(component.text()).toContain('Heading');
         });
 

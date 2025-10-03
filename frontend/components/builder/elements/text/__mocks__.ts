@@ -1,6 +1,10 @@
 import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 import type {TextElement} from "~/components/builder/elements/text/index";
 
+/**
+ * Creates a mock text element to be used in unit tests.
+ * @returns The mock instance.
+ */
 export function createMockElement(): EditorElementInstance<typeof TextElement> {
     const now = new Date();
     return {
@@ -36,5 +40,5 @@ export function createMockElement(): EditorElementInstance<typeof TextElement> {
 
         created: now,
         modified: now
-    }
+    };
 }

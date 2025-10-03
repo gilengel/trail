@@ -22,7 +22,7 @@ describe('Component', () => {
 
             executeActionSpy = vi.spyOn(Editor.prototype, 'executeAction')
                 .mockImplementation(async () => {
-                })
+                });
 
 
             props = {
@@ -51,15 +51,15 @@ describe('Component', () => {
         });
 
         it('calls executeAction with AddRow when add row button is clicked', async () => {
-            const addButton = component.find('[data-testid="grid-editor-add-row-btn"]')
-            expect(addButton.exists()).toBe(true)
+            const addButton = component.find('[data-testid="grid-editor-add-row-btn"]');
+            expect(addButton.exists()).toBe(true);
 
-            await addButton.trigger('click')
+            await addButton.trigger('click');
 
-            expect(executeActionSpy).toHaveBeenCalledTimes(1)
+            expect(executeActionSpy).toHaveBeenCalledTimes(1);
 
-            const callArg = executeActionSpy.mock.calls[0][0]
-            expect(callArg).toBeInstanceOf(AddRow)
-        })
+            const callArg = executeActionSpy.mock.calls[0][0];
+            expect(callArg).toBeInstanceOf(AddRow);
+        });
     });
 });

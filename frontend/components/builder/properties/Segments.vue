@@ -1,36 +1,36 @@
 <template>
   <v-alert
-      v-if="isConsumed"
-      type="warning"
-      variant="outlined"
-      prominent
+    v-if="isConsumed"
+    type="warning"
+    variant="outlined"
+    prominent
   >
     Data is connected to another element. You can change it in that element here.
   </v-alert>
   <CollapsableList
-      :collapse-number="3"
-      :items="routes"
-      :text="(routeDto: RouteDto) => routeDto.name"
-      @on-selection-changed="selectedRouteChanged"
+    :collapse-number="3"
+    :items="routes"
+    :text="(routeDto: RouteDto) => routeDto.name"
+    @on-selection-changed="selectedRouteChanged"
   />
   <v-list
-      :disabled="isConsumed"
-      v-model:selected="selection"
-      select-strategy="leaf"
-      multiple
-      max-height="600px"
+    :disabled="isConsumed"
+    v-model:selected="selection"
+    select-strategy="leaf"
+    multiple
+    max-height="600px"
   >
     <v-list-item
-        v-for="item in segments"
-        :key="item.id"
-        :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-        :value="item.id"
+      v-for="item in segments"
+      :key="item.id"
+      :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+      :value="item.id"
     >
       <template #prepend="{ isSelected }">
         <v-list-item-action start>
           <v-checkbox-btn
-              color="primary"
-              :model-value="isSelected"
+            color="primary"
+            :model-value="isSelected"
           />
         </v-list-item-action>
       </template>

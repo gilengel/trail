@@ -2,6 +2,10 @@ import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstan
 import type {ImageElement} from "~/components/builder/elements/image/index";
 import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
+/**
+ * Creates a mock image element to be used in unit tests.
+ * @returns The mock instance.
+ */
 export function createMockElement(): EditorElementInstance<typeof ImageElement> {
     const now = new Date();
     return {
@@ -37,5 +41,5 @@ export function createMockElement(): EditorElementInstance<typeof ImageElement> 
 
         created: now,
         modified: now
-    }
+    };
 }

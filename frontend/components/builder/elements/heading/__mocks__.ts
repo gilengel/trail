@@ -2,6 +2,11 @@ import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstan
 import {HeadingElement} from "~/components/builder/elements/heading/index";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
+/**
+ * Creates a mock heading element to be used in unit tests.
+ * @param "properties" - Can be used to pass non default properties necessary for single tests.
+ * @returns The mock instance.
+ */
 export function createMockElement(properties: HeadingProperties = {
     level: 0,
     color: '#000',
@@ -32,5 +37,5 @@ export function createMockElement(properties: HeadingProperties = {
 
         created: now,
         modified: now
-    }
+    };
 }

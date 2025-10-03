@@ -1,9 +1,9 @@
 <template>
   <BuilderPropertiesContainer
-      :grid="props.grid"
-      :id="props.element.instanceId"
-      :element="props.element"
-      @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
+    @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
   >
     <template #title>
       Map Properties
@@ -11,13 +11,14 @@
 
 
     <template #properties>
-      <BuilderPropertiesSegments v-if="routes"
-                                 :routes
-                                 :route-id="element.properties.routeId"
-                                 :segments-ids="element.properties.segmentsIds"
-                                 :is-consumed="'segmentsIds' in element.connections.provided"
-                                 @update:selected-segment-ids="onSelectionChanged"
-                                 @update:selected-route-id="onRouteIdChanged"
+      <BuilderPropertiesSegments
+        v-if="routes"
+        :routes
+        :route-id="element.properties.routeId"
+        :segments-ids="element.properties.segmentsIds"
+        :is-consumed="'segmentsIds' in element.connections.provided"
+        @update:selected-segment-ids="onSelectionChanged"
+        @update:selected-route-id="onRouteIdChanged"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -61,17 +62,17 @@ const selectedRoute: Ref<RouteDto | null> = ref(null);
 // ---------------------------------------------------------------------------------------------------------------------
 
 watch(selectedRoute, () => {
-  editor.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "routeId", selectedRoute.value!.id))
+  editor.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "routeId", selectedRoute.value!.id));
 
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 function onRouteIdChanged(routeId: number) {
-  editor!.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "routeId", routeId))
+  editor!.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "routeId", routeId));
 }
 
 function onSelectionChanged(segmentIds: number[]) {
-  editor!.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "segmentsIds", segmentIds))
+  editor!.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "segmentsIds", segmentIds));
 }
 </script>

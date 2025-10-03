@@ -1,58 +1,58 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div id="editor-primary-toolbar"/>
+  <div id="editor-primary-toolbar" />
 
   <v-row no-gutters>
     <v-col
-        sm="9"
-        no-gutters
+      sm="9"
+      no-gutters
     >
       <div ref="el">
         <GridEditorRow
-            v-for="(element, index) in grid.rows"
-            data-key="itemId"
-            data-value="Row"
-            :key="element.id"
-            :model="element"
-            :grid="grid"
-            :row-index="index"
-            :selected-element-id="selectedElementId"
-            :data-testid="`layout-row-${index}`"
-            :active-mode="editor.activeMode"
+          v-for="(element, index) in grid.rows"
+          data-key="itemId"
+          data-value="Row"
+          :key="element.id"
+          :model="element"
+          :grid="grid"
+          :row-index="index"
+          :selected-element-id="selectedElementId"
+          :data-testid="`layout-row-${index}`"
+          :active-mode="editor.activeMode"
         />
       </div>
       <v-row
-          no-gutters
-          style="margin-top: 24px; margin-right: 16px"
+        no-gutters
+        style="margin-top: 24px; margin-right: 16px"
       >
-        <v-spacer/>
+        <v-spacer />
         <v-btn
-            data-testid="grid-editor-add-row-btn"
-            @click="addRow()"
-            color="primary rounded-sm"
-            variant="outlined"
-            prepend-icon="las la-plus"
+          data-testid="grid-editor-add-row-btn"
+          @click="addRow()"
+          color="primary rounded-sm"
+          variant="outlined"
+          prepend-icon="las la-plus"
         >
           Add Row
         </v-btn>
       </v-row>
     </v-col>
     <v-col
-        ref="options_container"
-        sm="3"
-        class="options-container"
+      ref="options_container"
+      sm="3"
+      class="options-container"
     >
       <component
-          :is="selectedElementPropertiesComponent"
-          v-bind="selectedProps"
-          v-if="selectedElementPropertiesComponent"
+        :is="selectedElementPropertiesComponent"
+        v-bind="selectedProps"
+        v-if="selectedElementPropertiesComponent"
       />
     </v-col>
   </v-row>
 
   <v-snackbar-queue
-      v-model="messages"
-      color="warning"
+    v-model="messages"
+    color="warning"
   />
 </template>
 
@@ -78,15 +78,15 @@ const props = defineProps<{
   save: ISaveGridFn,
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   onElementChanged: [element: EditorElementInstance];
 }>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const {registry} = useElementRegistry()
+const {registry} = useElementRegistry();
 
-const editor = new Editor(props.grid, useGridSave)
+const editor = new Editor(props.grid, useGridSave);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -138,7 +138,7 @@ const selectedProps = computed<EditorElementProperties<any> | undefined>(() => {
 
     selected: true,
     highlighted: editor.highlightHandler.isHighlighted(editor.selectedElement.value)
-  } as EditorElementProperties<any>
+  } as EditorElementProperties<any>;
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ function addRow() {
   editor.executeAction(new AddRow({
     id: uuidv4(),
     columns: [{id: uuidv4(), width: 12}],
-  }, props.grid))
+  }, props.grid));
 }
 
 /**
