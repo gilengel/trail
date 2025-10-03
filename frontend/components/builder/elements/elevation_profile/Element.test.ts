@@ -3,8 +3,8 @@ import ElevationProfileComponent from '~/components/builder/elements/elevation_p
 import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
 import {mount} from "@vue/test-utils";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import {createVuetify} from "vuetify";
 
 describe('Component', () => {

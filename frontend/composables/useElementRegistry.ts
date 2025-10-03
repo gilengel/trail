@@ -1,6 +1,5 @@
 import {globalElementRegistry} from "~/components/builder/editor.configuration";
-import type {EditorElementDefinition} from "~/components/GridEditor/editor.config";
-import type {ElementProperties} from "~/components/GridEditor/editorConfiguration";
+import type {EditorElementDefinition, ElementProperties} from "@trail/grid-editor/editorConfiguration";
 
 export function useElementRegistry() {
     return {

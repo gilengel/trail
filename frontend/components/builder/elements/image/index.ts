@@ -1,4 +1,4 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
+import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
 export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = createEditorElementDefinition({

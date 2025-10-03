@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 
-import {createDefaultGrid} from "~/components/GridEditor/grid";
+import {createDefaultGrid} from "@trail/grid-editor/grid";
 
 const tripStore = useTripStore();
 

@@ -1,8 +1,4 @@
-import {
-    type ElevationProfileProperties
-} from "~/components/builder/elements/elevation_profile/index";
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
-import type {MapElement} from "~/components/builder/elements/map/index";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 import type {TextElement} from "~/components/builder/elements/text/index";
 
 export function createMockElement(): EditorElementInstance<typeof TextElement> {

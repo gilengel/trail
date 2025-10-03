@@ -5,7 +5,7 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import {createVuetify} from "vuetify";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 
 const vuetify = createVuetify({
     components,
@@ -26,7 +26,7 @@ describe('Component', () => {
 
             props: {
 
-                grid: global.provide[EditorInjectionKey].grid,
+                grid: global.provide[EditorInjectionKey as unknown as number].grid,
 
                 id: '0',
                 element: {

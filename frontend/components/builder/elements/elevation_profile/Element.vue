@@ -27,7 +27,7 @@ import {Line} from 'vue-chartjs';
 import {addAlphaToColor} from "~/types/color";
 import {useRouteStore} from "~/stores/route";
 import {type ChartOptions, type ChartData, Scale, type CoreScaleOptions} from 'chart.js';
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
 
 type DeepPartial<T> = {

@@ -1,9 +1,9 @@
 import {describe, it, expect, vi} from 'vitest';
 import HeadingPropertiesComponent from './Properties.vue';
-import {createMockElement} from "~/stores/editor/actions/__mocks__";
-import {Editor, EditorInjectionKey} from "~/components/GridEditor/editor";
 import {mount} from "@vue/test-utils";
 import {createVuetify} from "vuetify";
+import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
+import {createMockElement} from "@trail/grid-editor/undoredo/actions/__mocks__";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {

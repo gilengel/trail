@@ -45,7 +45,7 @@
           rounded="0"
           icon="las la-trash-alt"
           :readonly="model.width === 12"
-          @click="editor.executeAction(new DeleteColumn(row, columnIndex, props.grid))"
+          @click="editor.executeAction(new DeleteColumn(row, columnIndex))"
       />
     </div>
 
@@ -68,18 +68,13 @@
 <script setup lang="ts">
 
 import {computed, inject, type PropType, ref} from 'vue';
-import {BuilderMode, EditorInjectionKey} from "./editor";
-import {
-  type Column,
-  type EditorElementProperties,
-  type Grid,
-  type Row
-} from "./grid";
 import {columnValueValidator} from "~/composables/useColumValidator";
-import type {EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
-import {DeleteColumn} from "~/stores/editor/actions/deleteColumn";
-import {SplitColumn} from "~/stores/editor/actions/splitColumn";
-import {SetElement} from "~/stores/editor/actions/setElement";
+import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {Column, EditorElementProperties, Grid, Row} from "@trail/grid-editor/grid";
+import {SetElement} from "@trail/grid-editor/undoredo/actions/setElement";
+import {DeleteColumn} from "@trail/grid-editor/undoredo/actions/deleteColumn";
+import {SplitColumn} from "@trail/grid-editor/undoredo/actions/splitColumn";
 
 const {definitions, instances, registry} = useElementRegistry()
 

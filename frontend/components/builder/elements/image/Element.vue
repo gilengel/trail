@@ -23,10 +23,10 @@
 import type {Point2D} from "~/types/point";
 import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
 import {inject} from "vue";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
-import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {ImageElement} from "~/components/builder/elements/image/index";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

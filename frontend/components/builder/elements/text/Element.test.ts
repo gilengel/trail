@@ -1,7 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import TextComponent from '~/components/builder/elements/text/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
-import type {TextProperties} from "~/components/builder/elements/text/Properties";
 import {createMockElement} from "~/components/builder/elements/text/__mocks__";
 
 describe('Component', () => {

@@ -35,12 +35,13 @@ import {useRouteStore} from "~/stores/route";
 
 import type {ProvidedPropertiesRoute} from "~/components/builder/elements/RouteProperty";
 import {inject} from "vue";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
-import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
-import {type EditorElementProperties} from "~/components/GridEditor/grid"
-import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
-import type {ElementProvidedProperties} from "~/components/GridEditor/editorConfiguration";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {ElementProvidedProperties} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +73,7 @@ function onConsumedPropertyRemoved(property: ElementProvidedProperties<typeof El
 
   const providerElementId = props.element.connections.provided[property];
 
-  const providerElement = editor!.findElementWithId(providerElementId!, props.grid)!;
+  const providerElement = editor!.findElementWithId(providerElementId!)!;
 
   // Necessary to reconstruct here as connected
   const {[property]: _, ...rest} = props.element.connections.provided;
@@ -104,7 +105,7 @@ function propagateChangedProperty(property: ProvidedPropertiesRoute[number], val
   }
 
   const consumerId = consumedProperties[property];
-  const consumingElement = editor!.findElementWithId(consumerId, props.grid);
+  const consumingElement = editor!.findElementWithId(consumerId);
   if (!consumingElement) {
     console.error(`Consuming element with id ${consumerId} not found in grid`)
     return;

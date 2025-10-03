@@ -1,22 +1,11 @@
 import {mount} from '@vue/test-utils';
-import {describe, expect, it, vi, beforeEach} from 'vitest';
+import {describe, expect, it, beforeEach} from 'vitest';
 import Properties from "./Properties.vue";
 import {createVuetify} from "vuetify";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {createMockElement} from "~/components/builder/elements/image/__mocks__";
-
-const storeMock = {
-    addRow: vi.fn(),
-    deleteRow: vi.fn(),
-    deleteColumn: vi.fn(),
-    splitColumn: vi.fn(),
-    moveRow: vi.fn(),
-    setColumnElement: vi.fn(),
-    updateElementAttribute: vi.fn(),
-    updateColumnsWidth: vi.fn()
-};
 
 describe('ImagePropertiesComponent', () => {
     let global: ReturnType<typeof createGlobal>;

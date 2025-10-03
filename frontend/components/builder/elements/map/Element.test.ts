@@ -3,9 +3,9 @@ import MapComponent from '~/components/builder/elements/map/Element.vue';
 import {shallowMount} from "@vue/test-utils";
 import {createPinia, setActivePinia} from "pinia";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
 import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 
 vi.mock('@/stores/route', () => {
     return {

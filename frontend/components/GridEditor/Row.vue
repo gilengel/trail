@@ -70,11 +70,11 @@
 <script setup lang="ts">
 import {inject, type PropType, type Ref, ref} from 'vue';
 import {columnValueValidator} from "~/composables/useColumValidator";
-import type {Grid, Row} from "./grid";
-import {BuilderMode, EditorInjectionKey} from "./editor";
-import {GroupedUndoRedoAction} from "~/stores/editor/undoredo";
-import {DeleteRow} from "~/stores/editor/actions/deleteRow";
-import {UpdateColumnWidth} from "~/stores/editor/actions/updateColumnWidth";
+import type {Grid, Row} from "@trail/grid-editor/grid";
+import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
+import {DeleteRow} from "@trail/grid-editor/undoredo/actions/deleteRow";
+import {UpdateColumnWidth} from "@trail/grid-editor/undoredo/actions/updateColumnWidth";
+import {GroupedUndoRedoAction} from "@trail/grid-editor/undoredo";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

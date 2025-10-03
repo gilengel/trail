@@ -1,10 +1,10 @@
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
 import HeadingComponent from '~/components/builder/elements/heading/Element.vue';
 import {createMockElement} from "~/components/builder/elements/heading/__mocks__";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import {mount} from "@vue/test-utils";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {createVuetify} from "vuetify";
 
 describe('Component', () => {

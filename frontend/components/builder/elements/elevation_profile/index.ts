@@ -1,10 +1,7 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
 import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
-import type {Color} from "~/types/color";
+import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 
-export interface ElevationProfileProperties extends RouteProperty {
-    color?: Color
-}
+export type ElevationProfileProperties = RouteProperty;
 
 export const ElevationProfileElement: EditorElementDefinition<ElevationProfileProperties, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"]> = createEditorElementDefinition({
     id: 'elevation_profile',

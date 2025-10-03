@@ -1,5 +1,5 @@
-import {Editor, EditorInjectionKey} from "~/components/GridEditor/editor";
-import type {Grid} from "~/components/GridEditor/grid";
+import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {Grid} from "@trail/grid-editor/grid";
 
 export function createGlobal(grid: Grid = {tripId: 0, rows: []}) {
     return {

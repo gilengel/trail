@@ -1,5 +1,5 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
 import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
+import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 
 export const MapElement: EditorElementDefinition<RouteProperty, ["routeId", "segmentsIds"], ["routeId", "segmentsIds"]> = createEditorElementDefinition({
     id: 'map',

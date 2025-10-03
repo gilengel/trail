@@ -1,4 +1,4 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
+import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
 export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> = createEditorElementDefinition({

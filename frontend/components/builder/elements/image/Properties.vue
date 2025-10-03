@@ -119,13 +119,13 @@
 </template>
 
 <script setup lang="ts">
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import {
   ImageElement
 } from "~/components/builder/elements/image/index";
-import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

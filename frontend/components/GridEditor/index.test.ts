@@ -2,11 +2,11 @@ import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
 import {mount} from "@vue/test-utils";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import {createDefaultGrid, type EditorElementProperties} from "~/components/GridEditor/grid";
-import {Editor, EditorInjectionKey} from "~/components/GridEditor/editor";
 import {createVuetify} from "vuetify";
 import {GridEditor} from "#components";
-import {AddRow} from "~/stores/editor/actions/addRow";
+import {createDefaultGrid, type EditorElementProperties} from "@trail/grid-editor/grid";
+import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
+import {AddRow} from "@trail/grid-editor/undoredo/actions/addRow";
 
 
 describe('Component', () => {
@@ -27,7 +27,7 @@ describe('Component', () => {
 
             props = {
                 element: createMockElement(),
-                grid: global.provide[EditorInjectionKey].grid
+                grid: global.provide[EditorInjectionKey as unknown as number].grid
             };
 
             component = mount(GridEditor, {

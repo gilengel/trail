@@ -67,10 +67,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 import {inject} from 'vue';
-import type {Grid} from "~/components/GridEditor/grid";
-import {BuilderMode, EditorInjectionKey} from "~/components/GridEditor/editor";
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "~/components/GridEditor/editorConfiguration";
+import type {Grid} from "@trail/grid-editor/grid";
+import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import type {EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 
 
 // ---------------------------------------------------------------------------------------------------------------------

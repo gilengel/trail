@@ -61,13 +61,14 @@ import {computed, type Ref, ref, provide, watch} from 'vue';
 import {v4 as uuidv4} from 'uuid';
 import type {SortableEvent} from 'sortablejs';
 import {useSortable} from '@vueuse/integrations/useSortable';
-import type {Grid, EditorElementProperties} from "./grid";
-import {Editor, EditorInjectionKey} from "./editor";
 import {useGridSave} from "~/composables/useGridSave";
-import type {ISaveGridFn} from "~/components/GridEditor/editorConfiguration";
-import {MoveRow} from "~/stores/editor/actions/moveRow";
-import {AddRow} from "~/stores/editor/actions/addRow";
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
+import type {ISaveGridFn} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties, Grid} from "@trail/grid-editor/grid";
+import {MoveRow} from "@trail/grid-editor/undoredo/actions/moveRow";
+import {AddRow} from "@trail/grid-editor/undoredo/actions/addRow";
+
 // ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<{

@@ -22,10 +22,10 @@
 import Editor from "~/components/Editor.vue";
 import {DynamicParagraph} from "~/components/builder/elements/heading/DynamicParagraph";
 import {inject} from "vue";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import type {HeadingElement} from "~/components/builder/elements/heading/index";
-import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

@@ -11,7 +11,6 @@
 
 
     <template #properties>
-      {{ element.connections }}
       <BuilderPropertiesSegments v-if="routes"
                                  :routes
                                  :route-id="element.properties.routeId"
@@ -30,10 +29,10 @@ import {useTripStore} from "~/stores/trip";
 import {useRouteStore} from "~/stores/route";
 import type {RouteDto} from "~/types/dto";
 import {inject} from "vue";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
-import {UpdateElementAttribute} from "~/stores/editor/actions/updateElementAttribute";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import type {MapElement} from "~/components/builder/elements/map/index";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 

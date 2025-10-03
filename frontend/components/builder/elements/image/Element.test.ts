@@ -1,11 +1,11 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import ImageComponent from '~/components/builder/elements/image/Element.vue';
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
 import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
 import {mount} from "@vue/test-utils";
 import {createVuetify} from "vuetify";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 
 describe('Component', () => {
     describe('Image', () => {

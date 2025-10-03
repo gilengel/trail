@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import type {MapLibreSegment} from "~/types/route";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import type {MapElement} from "~/components/builder/elements/map/index";
 
 // ---------------------------------------------------------------------------------------------------------------------

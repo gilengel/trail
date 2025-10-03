@@ -1,4 +1,4 @@
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 import type {ImageElement} from "~/components/builder/elements/image/index";
 import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
 
@@ -39,5 +39,3 @@ export function createMockElement(): EditorElementInstance<typeof ImageElement> 
         modified: now
     }
 }
-
-export const mockEditor = {}

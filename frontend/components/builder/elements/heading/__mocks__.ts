@@ -1,4 +1,4 @@
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 import {HeadingElement} from "~/components/builder/elements/heading/index";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 

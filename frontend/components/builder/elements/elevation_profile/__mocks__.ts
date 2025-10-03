@@ -3,7 +3,7 @@ import {
     ElevationProfileElement,
     type ElevationProfileProperties
 } from "~/components/builder/elements/elevation_profile/index";
-import type {EditorElementInstance} from "~/components/GridEditor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 
 export function createMockElement(): EditorElementInstance<typeof ElevationProfileElement> {
     const now = new Date();

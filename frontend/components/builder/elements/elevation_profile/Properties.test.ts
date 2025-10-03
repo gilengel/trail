@@ -2,8 +2,8 @@ import {describe, it, expect, vi, beforeEach} from 'vitest';
 import ElevationProfilePropertiesComponent from './Properties.vue';
 import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
-import {EditorInjectionKey} from "~/components/GridEditor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import {mount} from "@vue/test-utils";
 
 const getByTripId = vi.fn();

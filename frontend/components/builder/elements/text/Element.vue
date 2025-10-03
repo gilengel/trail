@@ -1,18 +1,18 @@
 <template>
   <Editor
-    :content="text"
-    @on-text-changed="onTextChanged"
-    v-if="selected"
+      :content="text"
+      @on-text-changed="onTextChanged"
+      v-if="props.element.selected"
   />
   <div
-    v-else
-    v-html="text"
-    class="tiptap"
+      v-else
+      v-html="text"
+      class="tiptap"
   />
 </template>
 
 <script setup lang="ts">
-import type {EditorElementProperties} from "~/components/GridEditor/grid";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {TextElement} from "~/components/builder/elements/text/index";
 
 const text = computed(() => {
