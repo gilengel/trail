@@ -1,6 +1,7 @@
 import {BuilderMode, Editor, type EditorMode} from "../editor";
 import type {EditorElementInstance} from "../editorElementInstanceRegistry";
 import {LogLevel} from "../handler/logger";
+import {AddConnection} from "../undoredo/actions/addConnection";
 
 /**
  * Checks if connected elements would form a loop that is that the provided data is feed back into
@@ -56,7 +57,7 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
     constructor(private _editor: Editor) {
     }
 
-    onSelectElement<Element extends EditorElementInstance>(newSelectedElement: Element): void {
+    async onSelectElement<Element extends EditorElementInstance>(newSelectedElement: Element) {
         if (!this._editor.selectedElement.value || !this.meta || !this.meta.property) {
             return;
         }
@@ -75,9 +76,7 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
             return;
         }
 
-        providingElement.connections.consumed[this.meta.property] = newSelectedElement.instanceId;
-        newSelectedElement.connections.provided[this.meta.property] = providingElement.instanceId;
-
+        await this._editor.executeAction(new AddConnection(providingElement, newSelectedElement, this.meta.property));
 
         this._editor.clearSelectedElements();
         this._editor.switchMode(BuilderMode.Create, {});
@@ -86,5 +85,4 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
     activate(meta: ConnectElementPropertiesMeta): void {
         this.meta = meta;
     }
-
 }

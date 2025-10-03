@@ -42,6 +42,7 @@ import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {ElementProvidedProperties} from "@trail/grid-editor/editorConfiguration";
 import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
 import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
+import {RemoveConnection} from "@trail/grid-editor/undoredo/actions/removeConnection";
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -71,21 +72,10 @@ function onConsumedPropertyRemoved(property: ElementProvidedProperties<typeof El
     return;
   }
 
+  const consumerElementId = props.element.connections.consumed[property];
+  const consumerElement = editor!.findElementWithId(consumerElementId!)!;
 
-  const providerElementId = props.element.connections.provided[property];
-
-  const providerElement = editor!.findElementWithId(providerElementId!)!;
-
-  // Necessary to reconstruct here as connected
-  const {...rest} = props.element.connections.provided;
-
-  // @TODO: this is really an ugly fix to just pass eslint, we are mutating here the props :O
-  const consumerElement = editor!.findElementWithId(props.element.elementId!)!;
-  consumerElement.connections.provided = rest;
-
-
-  const {...restProvider} = providerElement.connections.consumed;
-  providerElement.connections.consumed = restProvider;
+  editor?.executeAction(new RemoveConnection(props.element, consumerElement, property));
 }
 
 function onRouteIdChanged(routeId: number) {

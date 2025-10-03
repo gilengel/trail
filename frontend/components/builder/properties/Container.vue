@@ -13,21 +13,21 @@
         Provided
         <v-list>
           <v-list-item
-            v-for="(item, i) in props.element.defaults.providedProperties"
+            v-for="(item, i) in provided"
             :key="i"
             :value="item"
             color="primary"
-            @click="propertySelected(item as string, PropertyDirection.Consumed)"
+            @click="propertySelected(item.property, PropertyDirection.Consumed)"
           >
             <template #prepend>
               <v-icon
                 icon="las la-arrow-circle-right"
-                :color="isProvided(item as string) ? 'warning' : ''"
+                :color="item.connected ? 'warning' : ''"
               />
             </template>
 
-            <v-list-item-title :class="isProvided(item as string) ? 'text-warning' : ''">
-              {{ item }}
+            <v-list-item-title :class="item.connected ? 'text-warning' : ''">
+              {{ item.property }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -35,30 +35,30 @@
         Consumed
         <v-list>
           <v-list-item
-            v-for="(item, i) in props.element.defaults.consumedProperties"
+            v-for="(item, i) in consumed"
             :key="i"
             :value="item"
           >
             <template #prepend>
               <v-icon
                 icon="las la-arrow-circle-left"
-                :color="isConsumed(item as string) ? 'warning' : ''"
+                :color="item.connected ? 'warning' : ''"
               />
             </template>
 
-            <v-list-item-title :class="isConsumed(item as string) ? 'text-warning' : ''">
-              {{ item }}
+            <v-list-item-title :class="item.connected ? 'text-warning' : ''">
+              {{ item.property }}
             </v-list-item-title>
 
             <template
               #append
-              v-if="isConsumed(item as string)"
+              v-if="item.connected"
             >
               <v-btn
                 color="warning"
                 icon="las la-trash-alt"
                 variant="text"
-                @click="clearConnection(item as string)"
+                @click="clearConnection(item.property)"
               />
             </template>
           </v-list-item>
@@ -68,7 +68,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="Element extends EditorElementDefinition<any, any, any>">
+<script setup lang="ts" generic="Element extends EditorElementDefinition<Record<string, unknown>, string[], string[]>">
 // ---------------------------------------------------------------------------------------------------------------------
 // This is the parent component for all element property components.
 //
@@ -89,7 +89,7 @@ import type {EditorElementDefinition} from "@trail/grid-editor/editorConfigurati
 const props = defineProps<{
   grid: Grid,
   id: string,
-  element: EditorElementInstance<Element>
+  element: EditorElementInstance<Element>,
 }>();
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -112,14 +112,27 @@ enum PropertyDirection {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+const provided = computed(() => {
+  function fn(property: string) {
+    return {
+      property,
+      connected: (props.element.connections.provided as Record<string, unknown>)[property] !== undefined
+    };
+  };
 
-function isProvided(item: string | number | symbol) {
-  return item in props.element.connections.provided;
-}
+  return props.element.defaults.providedProperties.map(fn);
+});
 
-function isConsumed(item: string | number | symbol) {
-  return item in props.element.connections.consumed;
-}
+const consumed = computed(() => {
+  function fn(property: string) {
+    return {
+      property,
+      connected: (props.element.connections.consumed as Record<string, unknown>)[property] !== undefined
+    };
+  };
+
+  return props.element.defaults.providedProperties.map(fn);
+});
 
 function clearConnection(item: string) {
   emit("connectedConsumedPropertyRemoved", item);

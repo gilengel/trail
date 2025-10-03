@@ -8,6 +8,7 @@ import {BuilderMode, Editor} from '../editor'
 import type {EditorElementInstance} from '../editorElementInstanceRegistry'
 import type {Grid} from '../grid'
 import {createTestGrid} from "../undoredo/actions/test.helper";
+import {LogLevel} from "../handler/logger";
 
 
 // Mock console.error to avoid test output pollution
@@ -72,7 +73,7 @@ describe('findLoop', () => {
         mockEditor = {
             selectedElement: {value: null},
             grid: mockGrid,
-            pushWarning: vi.fn(),
+            log: vi.fn(),
             clearSelectedElements: vi.fn(),
             switchMode: vi.fn(),
             findElementWithId: vi.fn().mockImplementation((id: string) => {
@@ -104,7 +105,7 @@ describe('findLoop', () => {
         const result = findLoop('testProperty', mockElement1, mockEditor)
 
         expect(result).toBeUndefined()
-        expect(mockEditor.findElementWithId).toHaveBeenCalledWith('non-existent-element', mockGrid)
+        expect(mockEditor.findElementWithId).toHaveBeenCalledWith('non-existent-element')
     })
 
     it('detects simple loop (element points to already visited element)', () => {
@@ -155,7 +156,7 @@ describe('ConnectElementProperties', () => {
         mockEditor = {
             selectedElement: {value: null},
             grid: mockGrid,
-            pushWarning: vi.fn(),
+            log: vi.fn(),
             clearSelectedElements: vi.fn(),
             switchMode: vi.fn(),
             findElementWithId: vi.fn()
@@ -218,7 +219,7 @@ describe('ConnectElementProperties', () => {
 
             connectMode.onSelectElement(mockConsumingElement)
 
-            expect(mockEditor.pushWarning).not.toHaveBeenCalled()
+            expect(mockEditor.log).not.toHaveBeenCalled()
             expect(mockEditor.clearSelectedElements).not.toHaveBeenCalled()
             expect(mockEditor.switchMode).not.toHaveBeenCalled()
         })
@@ -229,7 +230,7 @@ describe('ConnectElementProperties', () => {
 
             connectMode.onSelectElement(mockConsumingElement)
 
-            expect(mockEditor.pushWarning).not.toHaveBeenCalled()
+            expect(mockEditor.log).not.toHaveBeenCalled()
             expect(mockEditor.clearSelectedElements).not.toHaveBeenCalled()
             expect(mockEditor.switchMode).not.toHaveBeenCalled()
         })
@@ -240,7 +241,7 @@ describe('ConnectElementProperties', () => {
 
             connectMode.onSelectElement(mockConsumingElement)
 
-            expect(mockEditor.pushWarning).not.toHaveBeenCalled()
+            expect(mockEditor.log).not.toHaveBeenCalled()
             expect(mockEditor.clearSelectedElements).not.toHaveBeenCalled()
             expect(mockEditor.switchMode).not.toHaveBeenCalled()
         })
@@ -254,8 +255,8 @@ describe('ConnectElementProperties', () => {
 
             connectMode.onSelectElement(mockConsumingElement)
 
-            expect(mockEditor.pushWarning).toHaveBeenCalledWith(
-                'The data of the connected elements form a loop which is not allowed. The connection is not set.'
+            expect(mockEditor.log).toHaveBeenCalledWith(
+                'The data of the connected elements form a loop which is not allowed. The connection is not set.', LogLevel.Warning
             )
             expect(mockEditor.clearSelectedElements).toHaveBeenCalled()
             expect(mockEditor.switchMode).toHaveBeenCalledWith(BuilderMode.Create, {})
@@ -352,8 +353,9 @@ describe('ConnectElementProperties', () => {
             expect(mockConsumingElement.connections.provided).not.toHaveProperty('dataProperty')
 
             // Verify warning was shown and mode switched
-            expect(mockEditor.pushWarning).toHaveBeenCalledWith(
-                'The data of the connected elements form a loop which is not allowed. The connection is not set.'
+            expect(mockEditor.log).toHaveBeenCalledWith(
+                'The data of the connected elements form a loop which is not allowed. The connection is not set.',
+                LogLevel.Warning
             )
             expect(mockEditor.clearSelectedElements).toHaveBeenCalled()
             expect(mockEditor.switchMode).toHaveBeenCalledWith(BuilderMode.Create, {})

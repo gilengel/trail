@@ -1,10 +1,10 @@
 import type {EditorElementInstance} from "../../editorElementInstanceRegistry";
 
-export function createMockElement(): EditorElementInstance<any> {
+export function createMockElement(instanceId: string = "0"): EditorElementInstance<any> {
     const now = new Date();
 
     return {
-        instanceId: '0',
+        instanceId,
         elementId: 'mock-element',
 
         properties: {level: 0},
