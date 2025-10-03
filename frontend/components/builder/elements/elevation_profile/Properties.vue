@@ -1,9 +1,9 @@
 <template>
   <BuilderPropertiesContainer
-      :grid="props.grid"
-      :id="props.element.instanceId"
-      :element="props.element"
-      @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
+    @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
   >
     <template #title>
       Elevation Profile Properties
@@ -11,19 +11,19 @@
 
     <template #properties>
       <BuilderPropertiesSegments
-          v-if="routes"
-          :routes
-          :route-id="element.properties.routeId"
-          :segments-ids="element.properties.segmentsIds"
-          :is-consumed="'segmentsIds' in element.connections.provided"
-          @update:selected-segment-ids="onSelectionChanged"
-          @update:selected-route-id="onRouteIdChanged"
+        v-if="routes"
+        :routes
+        :route-id="element.properties.routeId"
+        :segments-ids="element.properties.segmentsIds"
+        :is-consumed="'segmentsIds' in element.connections.provided"
+        @update:selected-segment-ids="onSelectionChanged"
+        @update:selected-route-id="onRouteIdChanged"
       />
 
       <v-color-picker
-          v-model="color"
-          hide-inputs
-          show-swatches
+        v-model="color"
+        hide-inputs
+        show-swatches
       />
     </template>
   </BuilderPropertiesContainer>

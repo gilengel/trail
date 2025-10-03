@@ -1,3 +1,18 @@
+# [0.4.0](https://github.com/gilengel/trail/compare/v0.3.0...v0.4.0) (2025-10-03)
+
+
+### Bug Fixes
+
+* propagate property changes now works for any property ([9c584f7](https://github.com/gilengel/trail/commit/9c584f78092f4baed4e1fa66617702b3adef10c9))
+* reverts to removing the map and icon form files that are still needed. ([a77c36b](https://github.com/gilengel/trail/commit/a77c36b3806bc36766525d1398b2e212cfe939cf))
+
+
+### Features
+
+* add consumed/provided properties for elements and highlight connectable elements ([e10a760](https://github.com/gilengel/trail/commit/e10a760e20f80af9e2e6623ed8d13e8f37d8e8fc))
+
+
+
 # [0.3.0](https://github.com/gilengel/trail/compare/v0.1.0...v0.3.0) (2025-07-20)
 
 
