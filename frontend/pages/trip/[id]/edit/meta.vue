@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import {useTripStore} from "~/stores/trip";
-import {RouteDto, TripDto} from "shared";
+import type {RouteDto, TripDto} from "~/types/dto";
 
 const route = useRoute();
 const router = useRouter();
@@ -105,9 +105,3 @@ const rules = {
 };
 
 </script>
-
-<style>
-main {
-  background: rgb(var(--v-theme-on-surface-variant));
-}
-</style>

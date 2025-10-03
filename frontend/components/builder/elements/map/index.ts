@@ -1,0 +1,26 @@
+import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
+import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+
+export const MapElement: EditorElementDefinition<RouteProperty, ["routeId", "segmentsIds"], ["routeId", "segmentsIds"]> = createEditorElementDefinition({
+    id: 'map',
+    name: 'Map',
+    category: 'content',
+
+    components: {
+        element: defineAsyncComponent(() => import('~/components/builder/elements/map/Element.vue')),
+        properties: defineAsyncComponent(() => import('~/components/builder/elements/map/Properties.vue')),
+    },
+
+    defaults: {
+        properties: {} as RouteProperty,
+        providedProperties: ["routeId", "segmentsIds"],
+        consumedProperties: ["routeId", "segmentsIds"],
+    },
+
+    metadata: {
+        description: 'A simple text element with customizable styling',
+        icon: 'text-icon',
+        tags: ['text', 'content', 'basic'],
+        version: '1.0.0',
+    },
+});

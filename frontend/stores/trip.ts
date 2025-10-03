@@ -1,10 +1,9 @@
-import {createDefaultGrid} from "~/stores/grid";
 import {defineStore} from 'pinia';
 import {useUpload} from "~/composables/useUpload";
 import {useDelete} from "~/composables/useDelete";
-import type {Grid} from "~/types/grid";
 import type {TripDto} from "~/types/dto";
 import type {CreateTripDto} from "~/types/dto";
+import {createDefaultGrid, type Grid} from "@trail/grid-editor/grid";
 
 /**
  * Store that can catch (multiple) trips. It hides all network related functionality that the user
@@ -18,7 +17,7 @@ export const useTripStore = () =>
         const cachedTrips = reactive(new Map<number, TripDto>());
 
         /**
-         * Returns the trip if it was already loaded before, if not it will try to fetch it
+         * Returns the trip if it was already loaded before, if not, it will try to fetch it
          * from the backend.
          * @param id - The id of the trip as number.
          * @returns Promise with the trip.
@@ -48,7 +47,7 @@ export const useTripStore = () =>
 
         /**
          * Get all trips, either from locale cache or from backend.
-         * @param fetch - If true, will do a backend requests and update the locale cache, otherwise
+         * @param fetch - If true, will do a backend requests and update the locale cache; otherwise
          * only local stored trips are returned.
          * @returns A map containing where the key of each entry is the trip id and the value the dto of the trip.
          */

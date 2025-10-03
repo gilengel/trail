@@ -32,7 +32,7 @@ const {
   lineColor = 'rgb(75, 192, 192)',
   interactive = true,
   animated = false
-} = defineProps<Props>()
+} = defineProps<Props>();
 
 const map: Ref<Map | null> = ref(null);
 

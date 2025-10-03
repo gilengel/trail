@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-2 ma-2 rounded-xl">
+  <v-sheet class="pa-2 ma-2 rounded-sm">
     <v-card variant="flat">
       <template
         #title

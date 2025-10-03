@@ -7,11 +7,11 @@
       data-testid="element-img"
       :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
       :aspect-ratio="aspectRatio"
-      :position="props.element.attributes.position!"
-      :position-type="props.element.attributes.positionType"
-      :scale="props.element.attributes.scale"
-      :size-type="props.element.attributes.sizeType"
-      :enabled="props.selected"
+      :position="props.element.properties.position!"
+      :position-type="props.element.properties.positionType"
+      :scale="props.element.properties.scale"
+      :size-type="props.element.properties.sizeType"
+      :enabled="props.element.selected"
       @on-image-scale-change="onImageScaleChange"
       @on-image-position-change="onImagePositionChange"
       @on-image-size-type-change="onImageSizeTypeChange"
@@ -20,42 +20,52 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
 import type {Point2D} from "~/types/point";
-import {ImagePosition, type ImageProps, ImageSize} from "~/components/builder/elements/image/Props";
+import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
+import {inject} from "vue";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {ImageElement} from "~/components/builder/elements/image/index";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ImageProps>>();
+const props = defineProps<EditorElementProperties<typeof ImageElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const gridModuleStore = useGridStore();
+const editor = inject(EditorInjectionKey);
+if (!editor) {
+  throw new Error("Editor instance was not injected in Row");
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const aspectRatio = computed(() => {
-  if (props.element.attributes.aspectRatio === undefined) {
+  if (props.element.properties.aspectRatio === undefined) {
     return 1.5;
   }
 
-  return props.element.attributes.aspectRatio;
+  return props.element.properties.aspectRatio;
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 function onImageScaleChange(newScale: number, origin: Point2D) {
-  gridModuleStore.updateElementAttribute(props.element, "scale", {origin, value: newScale});
+  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "scale", {
+    origin,
+    value: newScale
+  }));
 }
 
 function onImagePositionChange(position: Point2D) {
-  gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Free);
-  gridModuleStore.updateElementAttribute(props.element, "position", position);
+  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "positionType", ImagePosition.Free));
+  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "position", position));
 }
 
 function onImageSizeTypeChange(imageSizeType: ImageSize) {
-  gridModuleStore.updateElementAttribute(props.element, "positionType", ImagePosition.Centered);
-  gridModuleStore.updateElementAttribute(props.element, "sizeType", imageSizeType);
+  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "positionType", ImagePosition.Centered));
+  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "sizeType", imageSizeType));
 }
 </script>
 

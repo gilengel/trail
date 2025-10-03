@@ -1,28 +1,34 @@
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, beforeEach} from 'vitest';
 import ImageComponent from '~/components/builder/elements/image/Element.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
-import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Props";
+import {createGlobal} from "~/components/builder/elements/__mocks__";
+import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
+import {mount} from "@vue/test-utils";
+import {createVuetify} from "vuetify";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
 
 describe('Component', () => {
     describe('Image', () => {
-        const props = {
-            element: {
-                id: '0',
-                type: ElementType.Image,
-                attributes: {
-                    aspectRatio: 1,
-                    scale: { origin: { x: 1, y: 1}, value: 1 },
-                    sizeType: ImageSize.Free,
-                    position: { x: 0, y: 0 },
-                    positionType: ImagePosition.Centered
+        let global: ReturnType<typeof createGlobal>;
+        let props: EditorElementProperties<any>;
 
-                }
-            }, selected: true
-        };
+        beforeEach(() => {
+            global = createGlobal();
 
-        it('renders', async () => {
-            const component = await mountSuspended(ImageComponent, { props });
+            props = {
+                element: createMockElement(),
+                grid: global.provide[EditorInjectionKey].grid
+            };
+        });
+
+        it('renders', () => {
+            const component = mount(ImageComponent, {
+                global: {
+                    ...global,
+                    plugins: [createVuetify()]
+                },
+                props
+            });
 
             expect(component.find('[data-testid="element-img"]').exists()).toBeTruthy();
         });

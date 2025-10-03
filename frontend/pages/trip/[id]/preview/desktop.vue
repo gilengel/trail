@@ -26,11 +26,14 @@
             :key="col.id"
             :cols="col.width"
           >
+            <!--
+            TODO enable this with the new editor registration system
             <component
-              :is="componentsMap[col.element.type]"
-              v-bind="{element: col.element, selected: false} as object"
-              v-if="col.element"
+                :is="componentsMap[col.element.type]"
+                v-bind="{element: col.element, selected: false} as object"
+                v-if="col.element"
             />
+            -->
           </v-col>
         </v-row>
       </template>
@@ -41,8 +44,7 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
-import {componentsMap} from "~/components/builder/AllElements";
-import type {Grid} from "~/types/grid";
+import type {Grid} from "@trail/grid-editor/grid";
 
 const route = useRoute();
 

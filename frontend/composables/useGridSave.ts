@@ -1,5 +1,5 @@
-import type {Grid} from "~/types/grid";
-import {RouteDto} from "~/types/dto";
+import type {RouteDto} from "~/types/dto";
+import type {Grid} from "@trail/grid-editor/grid";
 
 /**
  * Persists the grid to the backend.

@@ -16,7 +16,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn
-        class="rounded-xl pl-4 pr-4"
+        class="rounded-sm pl-4 pr-4"
         variant="tonal"
         data-cy="upload-btn"
         @click="upload"
@@ -28,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import {createDefaultGrid} from "~/stores/grid";
+
+import {createDefaultGrid} from "@trail/grid-editor/grid";
 
 const tripStore = useTripStore();
 

@@ -1,24 +1,29 @@
 <template>
-  <div>
-    <Map :segments="mapSegments"/>
-  </div>
+  <BuilderHighlightableElement :is-highlighted="props.element.highlighted">
+    <Map :segments="mapSegments" />
+  </BuilderHighlightableElement>
 </template>
 
 <script setup lang="ts">
 import type {MapLibreSegment} from "~/types/route";
-import type {MapProps} from "~/components/builder/elements/map/Props";
-import type {ElementProps} from "~/components/builder/properties";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type {MapElement} from "~/components/builder/elements/map/index";
 
+// ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<MapProps>>();
+const props = defineProps<EditorElementProperties<typeof MapElement>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 const routeStore = useRouteStore();
 
-const mapSegments: Ref<MapLibreSegment[]> = ref([]);
-watch(() => props.element.attributes.segmentsIds, async () => {
-  const route = await routeStore.getMapLibreRoute(props.element.attributes.routeId);
+// ---------------------------------------------------------------------------------------------------------------------
 
-  const filtered = route?.segments.filter((segment) => props.element.attributes.segmentsIds?.includes(segment.id));
+const mapSegments: Ref<MapLibreSegment[]> = ref([]);
+watch(() => props.element.properties.segmentsIds, async () => {
+  const route = await routeStore.getMapLibreRoute(Number(props.element.properties.routeId!));
+
+  const filtered = route?.segments.filter((segment) => props.element.properties.segmentsIds?.includes(segment.id));
   if (!filtered) {
     return;
   }

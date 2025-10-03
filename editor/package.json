@@ -1,0 +1,39 @@
+{
+  "name": "@trail/grid-editor",
+  "version": "0.2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "author": "Gil Engel",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "description": "",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./undoredo": {
+      "types": "./dist/undoredo/index.d.ts",
+      "import": "./dist/undoredo/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test:unit:cov": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.13"
+  }
+}

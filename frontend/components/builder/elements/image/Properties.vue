@@ -1,6 +1,10 @@
 <template>
   Heading
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
+  >
     <template #title>
       Image Properties
     </template>
@@ -17,7 +21,7 @@
         >
           <v-responsive
             :aspect-ratio="ratio.value"
-            :class="['border', props.element.attributes.aspectRatio === ratio.value ? 'selected' : '']"
+            :class="['border', props.element.properties.aspectRatio === ratio.value ? 'selected' : '']"
             :data-testid="`ratio-${i}`"
             @click="onAspectRatioChanged(ratio.value)"
           >
@@ -115,25 +119,33 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
-import {ImagePosition, type ImageProps, ImageSize} from "~/components/builder/elements/image/Props";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import {
+  ImageElement
+} from "~/components/builder/elements/image/index";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ImageProps>>();
+const props = defineProps<EditorElementProperties<typeof ImageElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const gridModuleStore = useGridStore();
+const editor = inject(EditorInjectionKey);
+if (!editor) {
+  throw new Error("Editor instance was not injected in Row");
+}
 
 // - IMAGE POSITION MODE -----------------------------------------------------------------------------------------------
 
 const imagePositionMode = ref<ImagePosition>(
-    props.element.attributes.positionType ?? ImagePosition.Free
+    props.element.properties.positionType ?? ImagePosition.Free
 );
 
 watch(
-    () => props.element.attributes.positionType,
+    () => props.element.properties.positionType,
     (newVal) => {
       if (newVal !== imagePositionMode.value) {
         imagePositionMode.value = newVal;
@@ -144,12 +156,12 @@ watch(
 watch(
     imagePositionMode,
     (newMode) => {
-      if (newMode !== props.element.attributes.positionType) {
-        gridModuleStore.updateElementAttribute(
+      if (newMode !== props.element.properties.positionType) {
+        editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(
             props.element,
             'positionType',
             newMode
-        );
+        ));
       }
     }
 );
@@ -157,11 +169,11 @@ watch(
 // - IMAGE SIZE MODE ---------------------------------------------------------------------------------------------------
 
 const imageSizeType = ref<ImageSize>(
-    props.element.attributes.sizeType ?? ImageSize.Free
+    props.element.properties.sizeType ?? ImageSize.Free
 );
 
 watch(
-    () => props.element.attributes.sizeType,
+    () => props.element.properties.sizeType,
     (newSizeType) => {
       if (newSizeType !== imageSizeType.value) {
         imageSizeType.value = newSizeType;
@@ -172,12 +184,12 @@ watch(
 watch(
     imageSizeType,
     (newMode) => {
-      if (newMode !== props.element.attributes.sizeType) {
-        gridModuleStore.updateElementAttribute(
+      if (newMode !== props.element.properties.sizeType) {
+        editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(
             props.element,
             'sizeType',
             newMode
-        );
+        ));
       }
     }
 );
@@ -186,17 +198,17 @@ watch(
 
 const scaleValue = computed({
   get() {
-    return props.element.attributes.scale.value;
+    return props.element.properties.scale.value;
   },
   set(newScale) {
-    let scale = props.element.attributes.scale;
+    let scale = props.element.properties.scale;
     if (scale === undefined) {
       scale = {origin: {x: 0, y: 0}, value: 0};
     } else {
       scale.value = newScale;
     }
 
-    gridModuleStore.updateElementAttribute(props.element, "scale", scale);
+    editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "scale", scale));
   }
 });
 
@@ -213,7 +225,7 @@ const aspectRatios = [
 ];
 
 function onAspectRatioChanged(newAspectRatio: number) {
-  gridModuleStore.updateElementAttribute(props.element, "aspectRatio", newAspectRatio);
+  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "aspectRatio", newAspectRatio));
 }
 
 </script>

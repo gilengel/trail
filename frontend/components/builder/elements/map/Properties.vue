@@ -1,39 +1,25 @@
 <template>
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
+    @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
+  >
     <template #title>
       Map Properties
     </template>
 
+
     <template #properties>
-      {{ selection }}
-      <CollapsableList
-        :collapse-number="3"
-        :items="routes!"
-        :text="(routeDto: RouteDto) => routeDto.name"
-        @on-selection-changed="(e) => selectedRoute = e"
+      <BuilderPropertiesSegments
+        v-if="routes"
+        :routes
+        :route-id="element.properties.routeId"
+        :segments-ids="element.properties.segmentsIds"
+        :is-consumed="'segmentsIds' in element.connections.provided"
+        @update:selected-segment-ids="onSelectionChanged"
+        @update:selected-route-id="onRouteIdChanged"
       />
-      <v-list
-        v-model:selected="selection"
-        select-strategy="leaf"
-        multiple
-        max-height="600px"
-      >
-        <v-list-item
-          v-for="item in segments"
-          :key="item.id"
-          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-          :value="item.id"
-        >
-          <template #prepend="{ isSelected }">
-            <v-list-item-action start>
-              <v-checkbox-btn
-                color="primary"
-                :model-value="isSelected"
-              />
-            </v-list-item-action>
-          </template>
-        </v-list-item>
-      </v-list>
     </template>
   </BuilderPropertiesContainer>
 </template>
@@ -41,24 +27,30 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
-import type {ElementProps} from "~/components/builder/properties";
 import {useRouteStore} from "~/stores/route";
-import CollapsableList from "~/components/CollapsableList.vue";
-import * as changeCase from "change-case";
 import type {RouteDto} from "~/types/dto";
-import type {MapProps} from "~/components/builder/elements/map/Props";
+import {inject} from "vue";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type {MapElement} from "~/components/builder/elements/map/index";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<MapProps>>();
+const props = defineProps<EditorElementProperties<typeof MapElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const tripStore = useTripStore();
 const routeStore = useRouteStore();
-const gridStore = useGridStore();
-
 const route = useRoute();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const editor = inject(EditorInjectionKey);
+if (!editor) {
+  throw new Error("Editor instance was not injected in Row");
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -67,29 +59,20 @@ const routes = await routeStore.getByTripId(trip!.id);
 
 const selectedRoute: Ref<RouteDto | null> = ref(null);
 
-const segments = computed(() => {
-  if (!selectedRoute) {
-    return null;
-  }
-
-  return selectedRoute.value?.segments;
-});
-
-const selection = computed({
-  get() {
-    if (!props.element.attributes || props.element.attributes.segmentsIds === undefined) {
-      return [];
-    }
-
-    return props.element.attributes.segmentsIds;
-  },
-  set(selectedIds: number[]) {
-    gridStore.updateElementAttribute(props.element, "segmentsIds", selectedIds);
-  }
-});
+// ---------------------------------------------------------------------------------------------------------------------
 
 watch(selectedRoute, () => {
-  gridStore
-      .updateElementAttribute(props.element, "routeId", selectedRoute.value!.id);
+  editor.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "routeId", selectedRoute.value!.id));
+
 });
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function onRouteIdChanged(routeId: number) {
+  editor!.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "routeId", routeId));
+}
+
+function onSelectionChanged(segmentIds: number[]) {
+  editor!.executeAction(new UpdateElementAttribute<typeof MapElement>(props.element, "segmentsIds", segmentIds));
+}
 </script>

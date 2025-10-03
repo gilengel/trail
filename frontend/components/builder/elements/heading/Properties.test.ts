@@ -1,7 +1,9 @@
 import {describe, it, expect, vi} from 'vitest';
-import HeadingProperties from './Properties.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
+import HeadingPropertiesComponent from './Properties.vue';
+import {mount} from "@vue/test-utils";
+import {createVuetify} from "vuetify";
+import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
+import {createMockElement} from "@trail/grid-editor/undoredo/actions/__mocks__";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -13,18 +15,20 @@ vi.mock('@/stores/route', () => {
 });
 
 describe('Component', () => {
-    describe('Map[Properties]', () => {
+    describe('Heading[Properties]', () => {
         it('renders', async () => {
-            const component = await mountSuspended(HeadingProperties, {
+            const component = mount(HeadingPropertiesComponent, {
+                global: {
+                    plugins: [createVuetify()],
+                    provide: {
+                        [EditorInjectionKey]: new Editor({tripId: 0, rows: []}, () => {
+                            return Promise.resolve();
+                        }),
+                    }
+                },
                 props: {
-                    element: {
-                        id: '0',
-                        type: ElementType.Map,
-                        attributes: {
-                            routeId: 0,
-                            segmentsIds: []
-                        }
-                    }, selected: true
+                    grid: {tripId: 0, rows: []},
+                    element: createMockElement(),
                 }
             });
             expect(component.exists).toBeTruthy();

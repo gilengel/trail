@@ -1,22 +1,7 @@
 /**
  * @file DTO specification for updating a route.
  */
-import { ApiProperty } from './decorators';
-
-export class UpdateTripDto {
-    @ApiProperty({
-        required: false,
-        example: "My Awesome Trip",
-        description: "The name of the trip",
-        type: () => String
-    })
+export interface UpdateTripDto {
     name: string;
-
-    @ApiProperty({
-        required: false,
-        example: {key: "value"},
-        description: "Trip layout as JSON",
-        type: () => Object
-    })
     layout: object;
 }

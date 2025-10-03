@@ -1,12 +1,14 @@
 <template>
-  <div>
+  <BuilderHighlightableElement :is-highlighted="props.element.highlighted">
     <v-alert
-      v-if="!props.element.attributes.segmentsIds || props.element.attributes.segmentsIds?.length == 0"
+      v-if="!props.element.properties.segmentsIds || props.element.properties.segmentsIds?.length == 0"
       type="warning"
       variant="outlined"
       prominent
     >
       No segment is selected for this elevation. Please do so in the property panel on the right side.
+      <hr>
+      {{ element.instanceId }}
     </v-alert>
 
 
@@ -15,22 +17,31 @@
       :data
       :options="chartOptions"
     />
-  </div>
+  </BuilderHighlightableElement>
 </template>
 
 <script setup lang="ts">
 import {computed} from "vue";
 import {Line} from 'vue-chartjs';
 import {addAlphaToColor} from "~/types/color";
-import type {ElevationProfileProps} from "~/components/builder/elements/elevation_profile/Props";
-import type {ElementProps} from "~/components/builder/properties";
 import {useRouteStore} from "~/stores/route";
+import {type ChartOptions, type ChartData, Scale, type CoreScaleOptions} from 'chart.js';
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
+
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+      ? Array<DeepPartial<U>>
+      : T[P] extends object
+          ? DeepPartial<T[P]>
+          : T[P];
+};
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<ElevationProfileProps>>();
+const props = defineProps<EditorElementProperties<typeof ElevationProfileElement>>();
 
-const chartOptions = ref({
+const chartOptions = ref<DeepPartial<ChartOptions<'line'>>>({
   plugins: {
     filler: {
       propagate: true,
@@ -52,8 +63,11 @@ const chartOptions = ref({
       type: 'linear',
       ticks: {
         stepSize: 100,
-        callback: function (value: number) {
-          return `${value}m`;
+        callback: function (
+            this: Scale<CoreScaleOptions>,
+            tickValue: string | number,
+        ) {
+          return `${tickValue}m`;
         }
       },
       grid: {
@@ -61,15 +75,20 @@ const chartOptions = ref({
       },
     },
     y: {
+
       ticks: {
-        callback: function (value: number) {
-          return `${value}m`;
+        callback: function (
+            this: Scale<CoreScaleOptions>,
+            tickValue: string | number,
+        ) {
+          return `${tickValue}m`;
         },
       },
 
       grid: {
         display: false, // Hide grid lines for the y-axis
       },
+
     },
   },
 
@@ -86,8 +105,9 @@ const routeStore = useRouteStore();
 
 const segments = computedAsync(
     async () => {
-      const segmentsIds = props.element.attributes.segmentsIds;
-      const routeId = props.element.attributes.routeId;
+
+      const segmentsIds = props.element.properties.segmentsIds;
+      const routeId = props.element.properties.routeId;
       if (!segmentsIds || !routeId) {
         return null;
       }
@@ -99,17 +119,17 @@ const segments = computedAsync(
 );
 
 const color = computed(() => {
-  if (!props.element.attributes || !props.element.attributes.color) {
+  if (!props.element.properties || !props.element.properties.color) {
     return 'rgb(0, 0, 0)';
   }
 
-  return props.element.attributes.color;
+  return props.element.properties.color;
 });
 
 
 const elevations = computed(() => {
   if (!segments.value) {
-    return;
+    return [];
   }
 
   const coordinates = segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);
@@ -117,27 +137,27 @@ const elevations = computed(() => {
   return coordinates.map(coordinate => coordinate![2]);
 });
 
-const data = computed(() => {
+const data = computed<ChartData<'line'>>(() => {
   if (!elevations.value) {
-    return;
+    return {
+      labels: [],
+      datasets: [],
+    };
   }
 
   return {
-    labels: elevations.value.map((_: unknown, index: number) => {
-      return index;
-    }),
+    labels: elevations.value.map((_, index) => index.toString()), // labels should be strings
     datasets: [
       {
         label: 'Elevation',
-        fill: 'start', // Fill the area under the curve
-        borderColor: color.value, // Border color for the line
-        backgroundColor: addAlphaToColor(color.value, 0.2), // Semi-transparent fill color
+        fill: 'start',
+        borderColor: color.value,
+        backgroundColor: addAlphaToColor(color.value, 0.2),
         tension: 0.1,
         data: elevations.value,
-
         radius: 0,
-      }
-    ]
+      },
+    ],
   };
 });
 

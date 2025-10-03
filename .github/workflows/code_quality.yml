@@ -115,6 +115,25 @@ jobs:
           files: ./backend/coverage-e2e/cobertura-coverage.xml
           flags: backend,e2e
 
+
+      # -----------------------------------------------------------------
+      # editor
+      # -----------------------------------------------------------------
+      - name: Cache npm dependencies (editor)
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-frontend-${{ hashFiles('./editor/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-editor-
+
+      - name: Install dependencies (editor)
+        run: npm install
+        working-directory: ./editor
+
+      - name: Build (editor)
+        run: npm run build:editor
+
       # -----------------------------------------------------------------
       # frontend
       # -----------------------------------------------------------------

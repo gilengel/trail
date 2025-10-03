@@ -1,7 +1,10 @@
-import {describe, it, expect, vi} from 'vitest';
-import ElevationProfileProperties from './Properties.vue';
-import {mountSuspended} from "@nuxt/test-utils/runtime";
-import {ElementType} from "~/types/grid";
+import {describe, it, expect, vi, beforeEach} from 'vitest';
+import ElevationProfilePropertiesComponent from './Properties.vue';
+import {createMockElement} from "~/components/builder/elements/elevation_profile/__mocks__";
+import {createGlobal} from "~/components/builder/elements/__mocks__";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import {mount} from "@vue/test-utils";
 
 const getByTripId = vi.fn();
 vi.mock('@/stores/route', () => {
@@ -14,20 +17,24 @@ vi.mock('@/stores/route', () => {
 
 describe('Component', () => {
     describe('ElevationProfileProperties[Properties]', () => {
-        it('renders', async () => {
+        let global: ReturnType<typeof createGlobal>;
+        let props: EditorElementProperties<any>;
+
+        beforeEach(() => {
+            global = createGlobal();
+
+            props = {
+                element: createMockElement(),
+                grid: global.provide[EditorInjectionKey].grid
+            };
+        });
+
+        it('renders', () => {
             getByTripId.mockResolvedValue([]);
 
-            const component = await mountSuspended(ElevationProfileProperties, {
-                props: {
-                    element: {
-                        id: '0',
-                        type: ElementType.ElevationProfile,
-                        attributes: {
-                            routeId: 0,
-                            segmentsIds: []
-                        }
-                    }, selected: true
-                }
+            const component = mount(ElevationProfilePropertiesComponent, {
+                global,
+                props
             });
             expect(component.exists).toBeTruthy();
         });

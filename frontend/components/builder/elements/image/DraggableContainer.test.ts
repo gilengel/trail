@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import DraggableContainer from "~/components/builder/elements/image/DraggableContainer.vue";
-import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Props";
+import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
 
 describe('Component', () => {
     describe('DraggableContainer', () => {

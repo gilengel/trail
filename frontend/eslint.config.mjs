@@ -28,10 +28,13 @@ export default defineConfigWithVueTs(
         files: ['**/*.vue'],
         rules: {
             semi: ['error', 'always'],
-            "vue/multi-word-component-names": 0 // Usually a good rule but due to nuxt we take care with different directories
+            "vue/multi-word-component-names": 0, // Usually a good rule but due to nuxt we take care with different directories
+            '@typescript-eslint/no-explicit-any': 'off',
+
         }
     },
     {
+
 
         files: ['**/*.ts'],
 
@@ -89,5 +92,16 @@ export default defineConfigWithVueTs(
             "jsdoc/tag-lines": 1,
             "jsdoc/valid-types": 1
         },
-    }
+    },
+    {
+        files: ['**/*.test.ts'],
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            'jsdoc/require-jsdoc': 'off',
+            'jsdoc/require-description': 'off',
+            'jsdoc/require-param': 'off',
+            'jsdoc/require-param-description': 'off',
+            'jsdoc/require-returns': 'off',
+        },
+    },
 );

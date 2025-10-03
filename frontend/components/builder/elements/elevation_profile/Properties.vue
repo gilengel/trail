@@ -1,44 +1,29 @@
 <template>
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
+    @connected-consumed-property-removed="(e) => onConsumedPropertyRemoved(e as 'routeId' | 'segmentsIds')"
+  >
     <template #title>
       Elevation Profile Properties
     </template>
 
     <template #properties>
-      <CollapsableList
-        :collapse-number="3"
-        :items="routes!"
-        :text="(routeDto: RouteDto) => routeDto.name"
-        @on-selection-changed="(e) => selectedRoute = e"
+      <BuilderPropertiesSegments
+        v-if="routes"
+        :routes
+        :route-id="element.properties.routeId"
+        :segments-ids="element.properties.segmentsIds"
+        :is-consumed="'segmentsIds' in element.connections.provided"
+        @update:selected-segment-ids="onSelectionChanged"
+        @update:selected-route-id="onRouteIdChanged"
       />
-      <v-list
-        v-model:selected="selection"
-        select-strategy="leaf"
-        multiple
-        max-height="600px"
-      >
-        <v-list-item
-          v-for="item in segments"
-          :key="item.id"
-          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-          :value="item.id"
-        >
-          <template #prepend="{ isSelected }">
-            <v-list-item-action start>
-              <v-checkbox-btn
-                color="primary"
-                :model-value="isSelected"
-              />
-            </v-list-item-action>
-          </template>
-        </v-list-item>
-      </v-list>
 
       <v-color-picker
         v-model="color"
         hide-inputs
         show-swatches
-        @update:model-value="onColorChange"
       />
     </template>
   </BuilderPropertiesContainer>
@@ -47,24 +32,30 @@
 <script setup lang="ts">
 
 import {useTripStore} from "~/stores/trip";
-import type {ElementProps} from "~/components/builder/properties";
 import {useRouteStore} from "~/stores/route";
-import CollapsableList from "~/components/CollapsableList.vue";
-import * as changeCase from "change-case";
-import type {RouteDto} from "~/types/dto";
-import type {ElevationProfileProps} from "~/components/builder/elements/elevation_profile/Props";
-import type {Color} from "~/types/color";
+
+import type {ProvidedPropertiesRoute} from "~/components/builder/elements/RouteProperty";
+import {inject} from "vue";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {ElementProvidedProperties} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+const props = defineProps<EditorElementProperties<typeof ElevationProfileElement>>();
 
-const props = defineProps<ElementProps<ElevationProfileProps>>();
+// ---------------------------------------------------------------------------------------------------------------------
+
+const editor = inject(EditorInjectionKey);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const tripStore = useTripStore();
 const routeStore = useRouteStore();
-const gridModuleStore = useGridStore();
 
 const route = useRoute();
 
@@ -74,42 +65,73 @@ const route = useRoute();
 const trip = await tripStore.get(Number(route.params.id));
 const routes = await routeStore.getByTripId(trip!.id);
 
-const selectedRoute: Ref<RouteDto | null> = ref(null);
-
-const segments = computed(() => {
-  if (!selectedRoute) {
-    return [];
+function onConsumedPropertyRemoved(property: ElementProvidedProperties<typeof ElevationProfileElement>) {
+  if (property in props.element.connections.provided) {
+    console.error("Cannot remove consumed properties.");
+    return;
   }
 
-  return selectedRoute.value?.segments;
-});
+
+  const providerElementId = props.element.connections.provided[property];
+
+  const providerElement = editor!.findElementWithId(providerElementId!)!;
+
+  // Necessary to reconstruct here as connected
+  const {...rest} = props.element.connections.provided;
+
+  // @TODO: this is really an ugly fix to just pass eslint, we are mutating here the props :O
+  const consumerElement = editor!.findElementWithId(props.element.elementId!)!;
+  consumerElement.connections.provided = rest;
 
 
-const selection = computed({
-  get() {
-    if (!props.element.attributes || props.element.attributes.segmentsIds === undefined) {
-      return [];
-    }
+  const {...restProvider} = providerElement.connections.consumed;
+  providerElement.connections.consumed = restProvider;
+}
 
-    return props.element.attributes.segmentsIds;
-  },
-  set(selectedIds: number[]) {
-    gridModuleStore.updateElementAttribute(props.element, "segmentsIds", selectedIds);
-  }
-});
-
-watch(selectedRoute, () => {
-  gridModuleStore
-      .updateElementAttribute(props.element, "routeId", selectedRoute.value!.id);
-});
-// ---------------------------------------------------------------------------------------------------------------------
-
-const color = computed(() => props.element.attributes.color);
+function onRouteIdChanged(routeId: number) {
+  propagateChangedProperty("routeId", routeId, props.element);
+}
 
 /**
- * @param newValue
+ * Recursively applies the changed property to all connected elements (via consumed property)
+ *
+ * @param property
+ * @param value
+ * @param element
  */
-function onColorChange(newValue: Color) {
-  gridModuleStore.updateElementAttribute(props.element, "color", newValue);
+function propagateChangedProperty(property: ProvidedPropertiesRoute[number], value: any, element: EditorElementInstance<typeof ElevationProfileElement>) {
+  editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(element, property, value));
+
+
+  const consumedProperties = element.connections.consumed;
+  if (!consumedProperties[property]) {
+    return;
+  }
+
+  const consumerId = consumedProperties[property];
+  const consumingElement = editor!.findElementWithId(consumerId);
+  if (!consumingElement) {
+    console.error(`Consuming element with id ${consumerId} not found in grid`);
+    return;
+  }
+  editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(consumingElement, property, value));
+
+  propagateChangedProperty(property, value, consumingElement);
+
 }
+
+function onSelectionChanged(segmentIds: number[]) {
+  propagateChangedProperty("segmentsIds", segmentIds, props.element);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const color = computed({
+  get() {
+    return props.element.properties.color;
+  },
+  set(newValue) {
+    editor?.executeAction(new UpdateElementAttribute<typeof ElevationProfileElement>(props.element, "color", newValue));
+  }
+});
 </script>

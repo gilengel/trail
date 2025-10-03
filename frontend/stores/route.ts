@@ -35,6 +35,9 @@ export const useRouteStore = () =>
                 return null;
             }
 
+            // TODO: better handling. JSON on the wire is always string not number
+            routeDTO.value.id = Number(routeDTO.value.id);
+
             const route = routeDTO.value;
             if (dtoRoutesByTripId.has(route.tripId)) {
                 const existingRoutesPerTrip: RouteDto[] = dtoRoutesByTripId.get(route.tripId)!;

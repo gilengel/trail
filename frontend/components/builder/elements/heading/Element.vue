@@ -1,13 +1,14 @@
 <template>
+  {{ props.element }}
   <Editor
-    ref="editor"
+    ref="textEditor"
     :formatting="false"
     :text="false"
     :undoredo="false"
     :content="text"
     :custom-node="DynamicParagraph"
     @on-text-changed="onTextChanged"
-    v-if="selected"
+    v-if="props.element.selected"
   />
   <div
     class="heading-container"
@@ -18,72 +19,82 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
 import Editor from "~/components/Editor.vue";
 import {DynamicParagraph} from "~/components/builder/elements/heading/DynamicParagraph";
-import type {HeadingProps} from "~/components/builder/elements/heading/Props";
+import {inject} from "vue";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type {HeadingElement} from "~/components/builder/elements/heading/index";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const gridModuleStore = useGridStore();
+const editor = inject(EditorInjectionKey);
 
+if (!editor) {
+  throw new Error("Editor instance was not injected in Heading");
+}
 
-const props = defineProps<ElementProps<HeadingProps>>();
+// ---------------------------------------------------------------------------------------------------------------------
 
-const editor = useTemplateRef<InstanceType<typeof Editor>>('editor');
+const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const textEditor = useTemplateRef<InstanceType<typeof Editor>>('editor');
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const tag = computed(() => {
-  return `h${props.element.attributes.level + 1}`;
+  return `h${props.element.properties.level + 1}`;
 });
 
 const text = computed(() => {
   const t = tag.value;
 
-  const content = props.element.attributes.text;
+  const content = props.element.properties.text;
   return `<${t}>${content}</${t}>`;
 });
 
 const style = computed(() => {
-  const color = props.element.attributes.color;
-  const alignment = props.element.attributes.alignment;
+  const color = props.element.properties.color;
+  const alignment = props.element.properties.alignment;
 
   return `color: ${color}; text-align: ${alignment}`;
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-watch(() => props.selected, (selected) => {
-  if (!selected || !editor.value) {
+watch(() => props.element.selected, (selected) => {
+  if (!selected || !textEditor.value) {
     return;
   }
 
-  editor.value.setColor(props.element.attributes.color);
+  textEditor.value.setColor(props.element.properties.color);
 });
 
-watch(() => props.element.attributes.color, () => {
-  if (!editor.value) {
+watch(() => props.element.properties.color, () => {
+  if (!textEditor.value) {
     return;
   }
 
-  editor.value.setColor(props.element.attributes.color);
+  textEditor.value.setColor(props.element.properties.color);
 });
 
-watch(() => props.element.attributes.level, () => {
-  if (!editor.value) {
+watch(() => props.element.properties.level, () => {
+  if (!textEditor.value) {
     return;
   }
 
   // 1) Put the cursor inside the node (or select it)
   //    so that updateAttributes knows which node to change.
   //    Here we assume the very first block in the doc is our dynamicParagraph.
-  editor.value
+  textEditor.value
       .getChain()!
       .focus()
       .setNodeSelection(1)                           // select the node that starts at pos=1
       .updateAttributes('dynamicParagraph', {
-        level: props.element.attributes.level + 1,
+        level: props.element.properties.level + 1,
       })
       .run();
 });
@@ -101,8 +112,8 @@ function onTextChanged(newContent: string) {
     align = "center";
   }
 
-  gridModuleStore.updateElementAttribute(props.element, "text", element.textContent as string);
-  gridModuleStore.updateElementAttribute(props.element, "alignment", align);
+  editor?.executeAction(new UpdateElementAttribute<typeof HeadingElement>(props.element, "text", element.textContent!));
+  editor?.executeAction(new UpdateElementAttribute<typeof HeadingElement>(props.element, "alignment", align));
 }
 
 </script>

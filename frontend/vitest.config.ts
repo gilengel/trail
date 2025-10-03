@@ -23,6 +23,10 @@ export default defineVitestConfig({
                 "**/server/api/*",
                 "**/server/api/*",
                 "pages/*",
+                "**/__mocks__.ts",
+
+                // Custom node for tiptap editor that is not unit testable
+                "components/builder/elements/heading/DynamicParagraph.ts",
             ],
 
             reporter: ["text", "cobertura", "html"],

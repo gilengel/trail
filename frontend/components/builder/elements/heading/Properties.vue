@@ -1,5 +1,9 @@
 <template>
-  <BuilderPropertiesContainer>
+  <BuilderPropertiesContainer
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
+  >
     <template #title>
       Heading Properties
     </template>
@@ -37,35 +41,42 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
+import {inject} from "vue";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type {HeadingElement} from "~/components/builder/elements/heading/index";
+import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<ElementProps<HeadingProps>>();
+const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
+
+console.log(props);
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const gridModuleStore = useGridStore();
+const editor = inject(EditorInjectionKey);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const size = computed(() => props.element.attributes.level);
+const size = computed(() => props.element.properties.level);
 
 /**
  * @param newValue
  */
 function onSizeChange(newValue: number) {
-  gridModuleStore.updateElementAttribute(props.element, "level", newValue);
+  editor?.executeAction(new UpdateElementAttribute<typeof HeadingElement>(props.element, "level", newValue));
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const color = computed(() => props.element.attributes.color);
+const color = computed(() => props.element.properties.color);
 
 /**
  * @param newValue
  */
 function onColorChange(newValue: string) {
-  gridModuleStore.updateElementAttribute(props.element, "color", newValue);
+  editor?.executeAction(new UpdateElementAttribute<typeof HeadingElement>(props.element, "color", newValue));
 }
 </script>

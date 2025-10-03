@@ -2,7 +2,7 @@
   <Editor
     :content="text"
     @on-text-changed="onTextChanged"
-    v-if="selected"
+    v-if="props.element.selected"
   />
   <div
     v-else
@@ -12,28 +12,21 @@
 </template>
 
 <script setup lang="ts">
-import type {ElementProps} from "~/components/builder/properties";
-
-interface Props {
-  text: string;
-}
+import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import {TextElement} from "~/components/builder/elements/text/index";
 
 const text = computed(() => {
-  if (!props.element.attributes.text) {
+  if (!props.element.properties.content) {
     return "Default Text";
   }
 
-  return props.element.attributes.text;
+  return props.element.properties.content;
 });
 
-const props = defineProps<ElementProps<Props>>();
+const props = defineProps<EditorElementProperties<typeof TextElement>>();
 
-const gridModuleStore = useGridStore();
-
-//
-
-function onTextChanged(newContent: string) {
-  gridModuleStore.updateElementAttribute(props.element, "text", newContent);
+function onTextChanged() {
+  //gridModuleStore.updateElementAttribute(props.element, "text", newContent);
 }
 </script>
 

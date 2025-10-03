@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import type {ImageDto} from "~/types/types";
 import {columnValueValidator} from "~/composables/useColumValidator";
+import type {ImageDto} from "~/types/dto";
 
 
 defineProps({
