@@ -18,8 +18,6 @@ export function createMockElement(instanceId: string = "0"): EditorElementInstan
 
         selected: false,
 
-        highlighted: false,
-
         created: now,
         modified: now
     }

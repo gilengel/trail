@@ -19,7 +19,6 @@ describe('Component', () => {
         const props = {
             element: createMockElement(),
             selected: true,
-            highlighted: false,
             grid: {tripId: 0, rows: []}
         };
 

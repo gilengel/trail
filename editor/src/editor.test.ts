@@ -23,7 +23,6 @@ describe("Editor", () => {
             provided: {}
         },
         selected: false,
-        highlighted: false,
         created: now,
         modified: now
     };
@@ -47,12 +46,12 @@ describe("Editor", () => {
 
     it("highlights the newly selected element", () => {
         expect(editor.selectedElement.value).toBeUndefined();
-        editor.handleSelectElement(mockElement);
+        editor.selectElement(mockElement);
         expect(editor.selectedElement.value).toStrictEqual(mockElement);
     })
 
     it("clears highlight of selected elements", () => {
-        editor.handleSelectElement(mockElement);
+        editor.selectElement(mockElement);
         expect(editor.highlightHandler.get()).toStrictEqual(new Set(["test-id"]));
         editor.clearSelectedElements();
         expect(editor.highlightHandler.get()).toStrictEqual(new Set());

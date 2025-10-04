@@ -37,7 +37,6 @@ describe('findLoop', () => {
             created: now,
             modified: now,
             selected: false,
-            highlighted: false
         } as EditorElementInstance;
 
         mockElement2 = {
@@ -51,7 +50,6 @@ describe('findLoop', () => {
             created: now,
             modified: now,
             selected: false,
-            highlighted: false
         } as EditorElementInstance;
 
         mockElement3 = {
@@ -65,7 +63,6 @@ describe('findLoop', () => {
             created: now,
             modified: now,
             selected: false,
-            highlighted: false
         } as EditorElementInstance;
 
         mockGrid = createTestGrid();
@@ -180,7 +177,6 @@ describe('ConnectElementProperties', () => {
             created: new Date(),
             modified: new Date(),
             selected: false,
-            highlighted: false
         } as EditorElementInstance
 
         mockConsumingElement = {
@@ -194,7 +190,6 @@ describe('ConnectElementProperties', () => {
             created: new Date(),
             modified: new Date(),
             selected: false,
-            highlighted: false
         } as EditorElementInstance
     })
 

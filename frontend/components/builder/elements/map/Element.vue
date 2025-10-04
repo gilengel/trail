@@ -1,6 +1,6 @@
 <template>
-  <BuilderHighlightableElement :is-highlighted="props.element.highlighted">
-    <Map :segments="mapSegments" />
+  <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
+    <Map :segments="mapSegments"/>
   </BuilderHighlightableElement>
 </template>
 
@@ -8,10 +8,19 @@
 import type {MapLibreSegment} from "~/types/route";
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import type {MapElement} from "~/components/builder/elements/map/index";
+import {inject} from "vue";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<EditorElementProperties<typeof MapElement>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const editor = inject(EditorInjectionKey);
+if (!editor) {
+  throw new Error('Editor instance was not injected in "Map" element');
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 

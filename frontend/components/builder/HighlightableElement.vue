@@ -1,6 +1,6 @@
 <template>
-  <div :class="isHighlighted ? 'border-xl' : 'border-thin'">
-    <slot />
+  <div :class="classes">
+    <slot/>
   </div>
 </template>
 
@@ -9,8 +9,20 @@
 const {isHighlighted} = defineProps<{
   isHighlighted: boolean;
 }>();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const classes = computed(() => {
+  if (isHighlighted) {
+    return ["highlight", "border-md"]
+  }
+
+  return ["border-thin"];
+})
 </script>
 
 <style scoped lang="scss">
-
+.highlight {
+  border-color: rgb(var(--v-theme-primary)) !important;
+}
 </style>

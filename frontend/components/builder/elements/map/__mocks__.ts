@@ -32,7 +32,6 @@ export function createMockElement(): EditorElementInstance<typeof MapElement> {
         },
 
         selected: true,
-        highlighted: false,
 
         created: now,
         modified: now

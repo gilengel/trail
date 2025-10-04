@@ -21,8 +21,6 @@ export type EditorElementInstance<T extends EditorElementDefinition = EditorElem
 
     selected: boolean;
 
-    highlighted: boolean;
-
     // Instance metadata
     created: Date;
     modified: Date;
@@ -60,7 +58,6 @@ export class EditorElementInstanceRegistry {
             },
 
             selected: false,
-            highlighted: false,
 
             created: now,
             modified: now,

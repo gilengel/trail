@@ -43,7 +43,6 @@ describe('Component', () => {
                     },
                     properties: {},
                     selected: true,
-                    highlighted: false,
 
                     created: now,
                     modified: now

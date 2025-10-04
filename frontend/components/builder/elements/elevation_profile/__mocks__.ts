@@ -34,7 +34,6 @@ export function createMockElement(): EditorElementInstance<typeof ElevationProfi
         },
 
         selected: true,
-        highlighted: false,
 
         created: now,
         modified: now

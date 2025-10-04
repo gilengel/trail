@@ -36,7 +36,6 @@ export function createMockElement(): EditorElementInstance<typeof TextElement> {
         },
 
         selected: true,
-        highlighted: false,
 
         created: now,
         modified: now

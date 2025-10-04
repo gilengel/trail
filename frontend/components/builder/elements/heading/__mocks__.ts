@@ -33,7 +33,6 @@ export function createMockElement(properties: HeadingProperties = {
         },
 
         selected: true,
-        highlighted: false,
 
         created: now,
         modified: now

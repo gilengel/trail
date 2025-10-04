@@ -14,7 +14,7 @@ export class HighlightHandler {
      *
      * @param elements
      */
-    public add<Element extends EditorElementInstance<any>>(...elements: Element[]) {
+    public add<Element extends EditorElementInstance<any>>(elements: Element[]) {
         for (const element of elements) {
             this._highlightedElements.value.add(element.instanceId);
         }
@@ -49,7 +49,6 @@ export class HighlightHandler {
      * @returns True if the element is highlighted, false otherwise.
      */
     public isHighlighted<Element extends EditorElementInstance>(element: Element): boolean {
-
         return this._highlightedElements.value.has(element.instanceId);
     }
 

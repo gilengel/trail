@@ -37,7 +37,6 @@ export function createMockElement(): EditorElementInstance<typeof ImageElement> 
         },
 
         selected: true,
-        highlighted: false,
 
         created: now,
         modified: now

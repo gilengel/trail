@@ -1,10 +1,10 @@
 <template>
-  <BuilderHighlightableElement :is-highlighted="props.element.highlighted">
+  <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
     <v-alert
-      v-if="!props.element.properties.segmentsIds || props.element.properties.segmentsIds?.length == 0"
-      type="warning"
-      variant="outlined"
-      prominent
+        v-if="!props.element.properties.segmentsIds || props.element.properties.segmentsIds?.length == 0"
+        type="warning"
+        variant="outlined"
+        prominent
     >
       No segment is selected for this elevation. Please do so in the property panel on the right side.
       <hr>
@@ -13,9 +13,9 @@
 
 
     <Line
-      v-else-if="data"
-      :data
-      :options="chartOptions"
+        v-else-if="data"
+        :data
+        :options="chartOptions"
     />
   </BuilderHighlightableElement>
 </template>
@@ -28,6 +28,7 @@ import {useRouteStore} from "~/stores/route";
 import {type ChartOptions, type ChartData, Scale, type CoreScaleOptions} from 'chart.js';
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 
 type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
@@ -40,6 +41,13 @@ type DeepPartial<T> = {
 // ---------------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<EditorElementProperties<typeof ElevationProfileElement>>();
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const editor = inject(EditorInjectionKey);
+if (!editor) {
+  throw new Error('Editor instance was not injected in "Map" element');
+}
 
 const chartOptions = ref<DeepPartial<ChartOptions<'line'>>>({
   plugins: {
