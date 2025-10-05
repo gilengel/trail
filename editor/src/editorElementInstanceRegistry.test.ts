@@ -1,7 +1,6 @@
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest'
 import {EditorElementInstanceRegistry} from "./editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "./editorConfiguration";
-
+import {EditorElementDefinition} from "./configuration/elementDefinition";
 
 describe('EditorElementInstanceRegistry', () => {
     let registry: EditorElementInstanceRegistry
@@ -62,7 +61,6 @@ describe('EditorElementInstanceRegistry', () => {
                 provided: {}
             })
             expect(instance!.selected).toBe(false)
-            expect(instance!.highlighted).toBe(false)
             expect(instance!.created).toEqual(mockDate)
             expect(instance!.modified).toEqual(mockDate)
         })

@@ -116,6 +116,10 @@ export class Editor {
         this._highlightHandler.clear();
     }
 
+    public getIdsOfAllHighlightedElements(): Set<string> {
+        return this._highlightHandler.get();
+    }
+
     /**
      * @returns the grid of the editor that is the underlying model that stores all the information.
      */

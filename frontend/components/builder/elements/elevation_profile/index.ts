@@ -1,22 +1,40 @@
-import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
-import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {
+    ConsumedPropertiesRoute,
+    ProvidedPropertiesRoute,
+    RouteProperty
+} from "~/components/builder/elements/RouteProperty";
+import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 
 export type ElevationProfileProperties = RouteProperty;
 
-export const ElevationProfileElement: EditorElementDefinition<ElevationProfileProperties, ["segmentsIds", "routeId"], ["segmentsIds", "routeId"]> = createEditorElementDefinition({
+export const ElevationProfileElement: EditorElementDefinition<ElevationProfileProperties, ProvidedPropertiesRoute, ConsumedPropertiesRoute> = createEditorElementDefinition({
     id: 'elevation_profile',
     name: 'Elevation Profile',
     category: 'content',
 
-    components: {
-        element: defineAsyncComponent(() => import('~/components/builder/elements/elevation_profile/Element.vue')),
-        properties: defineAsyncComponent(() => import('~/components/builder/elements/elevation_profile/Properties.vue')),
-    },
+    component: defineAsyncComponent(() => import('~/components/builder/elements/elevation_profile/Element.vue')),
 
     defaults: {
         properties: {} as ElevationProfileProperties,
-        providedProperties: ["segmentsIds", "routeId"],
-        consumedProperties: ["segmentsIds", "routeId"],
+        providedProperties: ["route", "color"],
+        consumedProperties: ["route", "color"],
+    },
+
+    propertySchema: {
+        route: {
+            type: 'custom',
+            component: defineAsyncComponent(() => import('~/components/types/RouteSelect.vue')),
+            label: 'Route',
+            description: 'Select the route you want to display on the map',
+        },
+
+        color: {
+            type: 'color',
+            label: 'Route Color',
+            format: 'hex',
+            defaultValue: '#000000'
+        },
     },
 
     metadata: {

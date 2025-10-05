@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {globalElementRegistry} from "~/components/builder/editor.configuration";
-import type {EditorElementDefinition, ElementProperties} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition, ElementProperties} from "@trail/grid-editor/configuration/elementDefinition";
+import type {PropertyType} from "@trail/grid-editor/configuration/elementProperty";
+import {globalPropertyTypeRegistry} from "@trail/grid-editor/configuration/elementPropertyRegistry";
 
 /**
  * Convenience wrapper that provides access to the editors element registry. Use it to add or get editor element
@@ -35,6 +37,11 @@ export function useElementRegistry() {
                     properties?: Partial<ElementProperties<T>>;
                 } = {}
             ) => globalElementRegistry.instances.createInstance(definition, config)
+        },
+
+        properties: {
+            get: (type: PropertyType) => globalPropertyTypeRegistry.get(type),
+            register: (type: PropertyType, component: Component) => globalPropertyTypeRegistry.registerType(type, component),
         }
     };
 }

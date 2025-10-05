@@ -6,11 +6,12 @@ import {mount} from "@vue/test-utils";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {createVuetify} from "vuetify";
+import type {HeadingElement} from "~/components/builder/elements/heading/index";
 
 describe('Component', () => {
     describe('Heading', () => {
         let global: ReturnType<typeof createGlobal>;
-        let defaultProps: EditorElementProperties<any>;
+        let defaultProps: EditorElementProperties<typeof HeadingElement>;
 
         vi.mock('~/components/Editor.vue', () => ({
             default: {
@@ -37,6 +38,7 @@ describe('Component', () => {
 
             defaultProps = {
                 element: createMockElement(),
+                definition: {} as unknown as any,
                 grid: global.provide[EditorInjectionKey].grid
             };
 
@@ -65,7 +67,7 @@ describe('Component', () => {
         });
 
         it('renders h2 based on prop', async () => {
-            const customProps: EditorElementProperties<any> = {
+            const customProps: EditorElementProperties<typeof HeadingElement> = {
                 ...defaultProps,
                 element: {
                     ...defaultProps.element,
@@ -87,7 +89,7 @@ describe('Component', () => {
         });
 
         it('renders it red based on prop', async () => {
-            const customProps: EditorElementProperties<any> = {
+            const customProps: EditorElementProperties<typeof HeadingElement> = {
                 ...defaultProps,
                 element: {
                     ...defaultProps.element,

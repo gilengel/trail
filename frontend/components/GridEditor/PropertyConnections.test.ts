@@ -1,6 +1,5 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {mount} from '@vue/test-utils';
-import Container from "~/components/builder/properties/Container.vue";
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import {createVuetify} from "vuetify";
@@ -21,12 +20,12 @@ describe('Component', () => {
 
     it('renders title and properties slots', () => {
         const now = new Date();
-        const wrapper = mount(Container, {
+        const wrapper = mount(GridEditorPropertyConnections, {
 
 
             props: {
 
-                grid: global.provide[EditorInjectionKey as unknown as number].grid,
+                grid: global.provide[EditorInjectionKey].grid,
 
                 id: '0',
                 element: {
@@ -34,8 +33,8 @@ describe('Component', () => {
                     elementId: '',
                     defaults: {
                         properties: {},
-                        providedProperties: {},
-                        consumedProperties: {}
+                        providedProperties: [],
+                        consumedProperties: []
                     },
                     connections: {
                         consumed: {},

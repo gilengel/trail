@@ -1,10 +1,11 @@
 import * as uuid from "uuid";
-import type {EditorElementDefinition} from "./editorConfiguration";
 import type {EditorElementInstance} from "./editorElementInstanceRegistry";
+import type {EditorElementDefinition} from "./configuration/elementDefinition";
 
 export interface EditorElementProperties<Element extends EditorElementDefinition<any, any, any>> {
     grid: Grid,
     element: EditorElementInstance<Element>,
+    definition: EditorElementDefinition<Element>,
 }
 
 export interface Column {

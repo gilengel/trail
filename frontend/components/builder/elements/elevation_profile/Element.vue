@@ -1,7 +1,7 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
     <v-alert
-        v-if="!props.element.properties.segmentsIds || props.element.properties.segmentsIds?.length == 0"
+        v-if="invalid"
         type="warning"
         variant="outlined"
         prominent
@@ -114,8 +114,8 @@ const routeStore = useRouteStore();
 const segments = computedAsync(
     async () => {
 
-      const segmentsIds = props.element.properties.segmentsIds;
-      const routeId = props.element.properties.routeId;
+      const segmentsIds = props.element.properties.route.segmentIds;
+      const routeId = props.element.properties.route.id;
       if (!segmentsIds || !routeId) {
         return null;
       }
@@ -126,6 +126,11 @@ const segments = computedAsync(
     null, // initial state
 );
 
+const invalid = computed(() => {
+  return !props.element.properties.route ||
+      !props.element.properties.route.segmentIds ||
+      props.element.properties.route.segmentIds?.length == 0;
+})
 const color = computed(() => {
   if (!props.element.properties || !props.element.properties.color) {
     return 'rgb(0, 0, 0)';

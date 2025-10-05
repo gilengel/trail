@@ -1,6 +1,6 @@
 import type {IUndoRedoAction} from "../";
-import type {EditorElementDefinition, ElementProperties} from "../../editorConfiguration";
 import type {EditorElementInstance} from "../../editorElementInstanceRegistry";
+import type {EditorElementDefinition, ElementProperties} from "../../configuration/elementDefinition";
 
 /**
  * Updates an attribute of the element. This is an undoable/redoable action.

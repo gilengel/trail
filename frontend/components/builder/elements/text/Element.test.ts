@@ -2,6 +2,8 @@ import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import TextComponent from '~/components/builder/elements/text/Element.vue';
 import {mountSuspended} from "@nuxt/test-utils/runtime";
 import {createMockElement} from "~/components/builder/elements/text/__mocks__";
+import type {EditorElementProperties, Grid} from "@trail/grid-editor/grid";
+import {TextElement} from "~/components/builder/elements/text/index";
 
 describe('Component', () => {
     describe('Text', () => {
@@ -16,10 +18,10 @@ describe('Component', () => {
             if (target) target.remove();
         });
 
-        const props = {
+        const props: EditorElementProperties<typeof TextElement> = {
             element: createMockElement(),
-            selected: true,
-            grid: {tripId: 0, rows: []}
+            definition: {} as unknown as any,
+            grid: {tripId: 0, rows: []} as Grid
         };
 
         it('renders', async () => {

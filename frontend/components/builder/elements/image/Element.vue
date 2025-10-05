@@ -1,21 +1,24 @@
 <template>
+
   <v-responsive
-    :aspect-ratio
-    :class="['image-container']"
+      :aspect-ratio
+      :class="['image-container']"
   >
+
     <BuilderElementsImageDraggableContainer
-      data-testid="element-img"
-      :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
-      :aspect-ratio="aspectRatio"
-      :position="props.element.properties.position!"
-      :position-type="props.element.properties.positionType"
-      :scale="props.element.properties.scale"
-      :size-type="props.element.properties.sizeType"
-      :enabled="props.element.selected"
-      @on-image-scale-change="onImageScaleChange"
-      @on-image-position-change="onImagePositionChange"
-      @on-image-size-type-change="onImageSizeTypeChange"
+        data-testid="element-img"
+        :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
+        :aspect-ratio="aspectRatio"
+        :position="props.element.properties.position!"
+        :position-type="props.element.properties.positionType"
+        :scale="props.element.properties.scale"
+        :size-type="props.element.properties.sizeType"
+        :enabled="props.element.selected"
+        @on-image-scale-change="onImageScaleChange"
+        @on-image-position-change="onImagePositionChange"
+        @on-image-size-type-change="onImageSizeTypeChange"
     />
+
   </v-responsive>
 </template>
 

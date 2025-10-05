@@ -1,4 +1,4 @@
-export interface HeadingProperties {
+export type HeadingProperties = {
     level: number,
     color: string,
     text: string,

@@ -1,11 +1,10 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
-    <Map :segments="mapSegments"/>
+    <Map :segments/>
   </BuilderHighlightableElement>
 </template>
 
 <script setup lang="ts">
-import type {MapLibreSegment} from "~/types/route";
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import type {MapElement} from "~/components/builder/elements/map/index";
 import {inject} from "vue";
@@ -28,18 +27,23 @@ const routeStore = useRouteStore();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const mapSegments: Ref<MapLibreSegment[]> = ref([]);
-watch(() => props.element.properties.segmentsIds, async () => {
-  const route = await routeStore.getMapLibreRoute(Number(props.element.properties.routeId!));
 
-  const filtered = route?.segments.filter((segment) => props.element.properties.segmentsIds?.includes(segment.id));
-  if (!filtered) {
-    return;
-  }
+const segments = computedAsync(
+    async () => {
+      if (!props.element.properties.route.id || props.element.properties.route.segmentIds.length == 0) {
+        return [];
+      }
 
-  mapSegments.value = filtered;
+      const route = await routeStore.getMapLibreRoute(Number(props.element.properties.route.id!));
+      const filtered = route?.segments.filter((segment) => props.element.properties.route.segmentIds?.includes(segment.id));
+      if (!filtered) {
+        return;
+      }
 
-}, {deep: true, immediate: true});
+      return filtered;
+    },
+    [], // Initial state && fallback
+)
 
 </script>
 <style scoped lang="scss">

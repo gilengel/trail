@@ -1,25 +1,51 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
-import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
+import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import {
+    DefaultImageScale,
+    ImagePosition,
+    type ImageProperties,
+    ImageSize
+} from "~/components/builder/elements/image/Properties";
+
 
 export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = createEditorElementDefinition({
     id: 'image',
     name: 'Image',
     category: 'content',
 
-    components: {
-        element: defineAsyncComponent(() => import('~/components/builder/elements/image/Element.vue')),
-        properties: defineAsyncComponent(() => import('~/components/builder/elements/image/Properties.vue')),
-    },
+    component: defineAsyncComponent(() => import('~/components/builder/elements/image/Element.vue')),
 
     defaults: {
         properties: {
-            scale: {origin: {x: 0, y: 0}, value: 1},
+            scale: DefaultImageScale,
             aspectRatio: 1,
             sizeType: ImageSize.Free,
             positionType: ImagePosition.Free
         } as ImageProperties,
         providedProperties: [],
         consumedProperties: [],
+    },
+
+    propertySchema: {
+        scale: {
+            type: 'custom',
+            component: defineAsyncComponent(() => import('~/components/builder/elements/image/types/Scale.vue')),
+            label: 'Scale',
+            description: '',
+        },
+        aspectRatio: {
+            type: 'number',
+            component: defineAsyncComponent(() => import('~/components/builder/elements/image/types/AspectRatio.vue')),
+            label: 'Aspect Ratio',
+            defaultValue: '1'
+        },
+        sizeType: {
+            type: 'range',
+            component: defineAsyncComponent(() => import('~/components/builder/elements/image/types/Size.vue')),
+            label: 'Size',
+            options: [ImageSize.Free, ImageSize.FitHorizontally, ImageSize.FitVertically],
+            defaultValue: '0'
+        }
     },
 
     metadata: {

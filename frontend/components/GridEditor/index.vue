@@ -42,11 +42,9 @@
         sm="3"
         class="options-container"
     >
-      <component
-          :is="selectedElementPropertiesComponent"
-          v-bind="selectedProps"
-          v-if="selectedElementPropertiesComponent"
-      />
+      <Properties v-bind="selectedProps!"
+                  v-if="selectedProps"/>
+
     </v-col>
   </v-row>
 
@@ -68,6 +66,7 @@ import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {EditorElementProperties, Grid} from "@trail/grid-editor/grid";
 import {MoveRow} from "@trail/grid-editor/undoredo/actions/moveRow";
 import {AddRow} from "@trail/grid-editor/undoredo/actions/addRow";
+import Properties from "~/components/GridEditor/Properties.vue";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -111,14 +110,6 @@ useSortable(el, props.grid.rows, {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const selectedElementPropertiesComponent = computed(() => {
-  if (!editor.selectedElement.value) {
-    return undefined;
-  }
-
-  return registry.getPropertyComponent(editor.selectedElement.value.elementId);
-});
-
 const selectedElementId = computed(() => {
   if (!editor.selectedElement.value) {
     return undefined;
@@ -135,6 +126,7 @@ const selectedProps = computed<EditorElementProperties<any> | undefined>(() => {
   return {
     grid: editor.grid,
     element: editor.selectedElement.value,
+    definition: registry.definitions.get(editor.selectedElement.value.elementId),
 
     selected: true,
     highlighted: editor.isHighlighted(editor.selectedElement.value)

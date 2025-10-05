@@ -81,7 +81,7 @@ import {inject} from 'vue';
 import type {Grid} from "@trail/grid-editor/grid";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 
 
 // ---------------------------------------------------------------------------------------------------------------------

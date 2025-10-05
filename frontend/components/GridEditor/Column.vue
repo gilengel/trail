@@ -68,7 +68,7 @@
 import {computed, inject, type PropType, ref} from 'vue';
 import {columnValueValidator} from "~/composables/useColumValidator";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 import type {Column, EditorElementProperties, Grid, Row} from "@trail/grid-editor/grid";
 import {SetElement} from "@trail/grid-editor/undoredo/actions/setElement";
 import {DeleteColumn} from "@trail/grid-editor/undoredo/actions/deleteColumn";
@@ -167,14 +167,6 @@ if (!editor) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const isHighlighted = computed(() => {
-  if (!props.model.element) {
-    return false;
-  }
-
-  return editor.isHighlighted(props.model.element);
-});
-
 const selectedComponent = computed(() => {
   if (!props.model.element) {
     return undefined;
@@ -191,9 +183,9 @@ const selectedComponentProps = computed<EditorElementProperties<any> | undefined
   return {
     grid: props.grid,
     element: props.model.element,
+    definition: registry.definitions.get(props.model.element.elementId),
     selected: props.model.element.instanceId === props.selectedElementId,
-    highlighted: isHighlighted.value,
-  };
+  } as EditorElementProperties<any>;
 });
 
 // ---------------------------------------------------------------------------------------------------------------------

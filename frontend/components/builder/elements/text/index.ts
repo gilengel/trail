@@ -1,6 +1,7 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 
-interface TextElementProperties {
+export type TextElementProperties = {
     content: string;
     fontSize: number;
     color: string;
@@ -12,10 +13,7 @@ export const TextElement: EditorElementDefinition<TextElementProperties, ["conte
     name: 'Text',
     category: 'content',
 
-    components: {
-        element: defineAsyncComponent(() => import('~/components/builder/elements/text/Element.vue')),
-        properties: defineAsyncComponent(() => import('~/components/builder/elements/text/Element.vue')),
-    },
+    component: defineAsyncComponent(() => import('~/components/builder/elements/text/Element.vue')),
 
     defaults: {
         properties: {

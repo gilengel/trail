@@ -1,4 +1,4 @@
-import type {EditorElementDefinition} from "./editorConfiguration";
+import type {EditorElementDefinition} from "./elementDefinition";
 
 export class ElementDefinitionRegistry {
     private elements = new Map<string, EditorElementDefinition<any, any, any>>();

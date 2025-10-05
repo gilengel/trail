@@ -1,15 +1,13 @@
-import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 
 export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> = createEditorElementDefinition({
     id: 'heading-element',
     name: 'Heading Element',
     category: 'content',
 
-    components: {
-        element: defineAsyncComponent(() => import('~/components/builder/elements/heading/Element.vue')),
-        properties: defineAsyncComponent(() => import('~/components/builder/elements/heading/Properties.vue')),
-    },
+    component: defineAsyncComponent(() => import('~/components/builder/elements/heading/Element.vue')),
 
     defaults: {
         properties: {
@@ -22,15 +20,31 @@ export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> 
         consumedProperties: [] as const,
     },
 
-    /*
-    validation: {
-        properties: (props: HeadingProperties) => {
-            if (props.level >= 1 && props.level <= 6) return ['Heading level must be between 1 and 6'];
-            return true;
+    propertySchema: {
+        level: {
+            type: 'range',
+            component: defineAsyncComponent(() => import('~/components/builder/elements/heading/types/Level.vue')),
+            label: 'Heading Level',
+            description: 'Select heading level (H1-H6)',
+            min: 0,
+            max: 5,
+            step: 1,
+            defaultValue: 0
         },
-        required: ['level', 'color'] as const,
+        color: {
+            type: 'color',
+            label: 'Text Color',
+            format: 'hex',
+            defaultValue: '#000000'
+        },
+        alignment: {
+            type: 'select',
+            component: defineAsyncComponent(() => import('~/components/builder/elements/heading/types/Alignment.vue')),
+            label: 'Text Alignment',
+            options: ['left', 'center', 'right'],
+            defaultValue: 'left'
+        }
     },
-    */
 
     metadata: {
         description: 'A simple text element with customizable styling',

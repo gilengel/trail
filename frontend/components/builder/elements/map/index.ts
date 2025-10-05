@@ -1,20 +1,31 @@
-import type {RouteProperty} from "~/components/builder/elements/RouteProperty";
-import {createEditorElementDefinition, type EditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {
+    ConsumedPropertiesRoute,
+    ProvidedPropertiesRoute,
+    RouteProperty
+} from "~/components/builder/elements/RouteProperty";
+import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 
-export const MapElement: EditorElementDefinition<RouteProperty, ["routeId", "segmentsIds"], ["routeId", "segmentsIds"]> = createEditorElementDefinition({
+export const MapElement: EditorElementDefinition<RouteProperty, ProvidedPropertiesRoute, ConsumedPropertiesRoute> = createEditorElementDefinition({
     id: 'map',
     name: 'Map',
     category: 'content',
 
-    components: {
-        element: defineAsyncComponent(() => import('~/components/builder/elements/map/Element.vue')),
-        properties: defineAsyncComponent(() => import('~/components/builder/elements/map/Properties.vue')),
-    },
+    component: defineAsyncComponent(() => import('~/components/builder/elements/map/Element.vue')),
 
     defaults: {
         properties: {} as RouteProperty,
-        providedProperties: ["routeId", "segmentsIds"],
-        consumedProperties: ["routeId", "segmentsIds"],
+        providedProperties: ["route"],
+        consumedProperties: ["route"],
+    },
+
+    propertySchema: {
+        route: {
+            type: 'custom',
+            component: defineAsyncComponent(() => import('~/components/types/RouteSelect.vue')),
+            label: 'Route',
+            description: 'Select the route you want to display on the map',
+        },
     },
 
     metadata: {

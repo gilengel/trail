@@ -1,7 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {createDefaultGrid} from "./grid";
 
-
 describe('Grid', () => {
     it('creates a default grid with 3 rows (1. with 2 columns, 2. with 3 columns, 3. with 2 columns)', async () => {
         const grid = createDefaultGrid(0);

@@ -11,14 +11,11 @@ describe("IntegratedEditorRegistry", () => {
             providedProperties: {},
             consumedProperties: {}
         },
-        components: {
-            element: defineAsyncComponent(() =>
-                Promise.resolve({template: '<div>Element</div>'})
-            ),
-            properties: defineAsyncComponent(() =>
-                Promise.resolve({template: '<div>Props</div>'})
-            )
-        }
+
+        component: defineAsyncComponent(() =>
+            Promise.resolve({template: '<div>Element</div>'})
+        ),
+
     };
 
     let registry: IntegratedEditorRegistry;
@@ -31,31 +28,14 @@ describe("IntegratedEditorRegistry", () => {
         expect(registry.getComponent("test-id")).toBeNull();
     })
 
-    it('returns "null" for the properties of an element if the element was not registered', () => {
-        const registry = new IntegratedEditorRegistry();
-
-        expect(registry.getPropertyComponent("test-id")).toBeNull();
-    })
-
     it('returns "null" if an element was not registered', () => {
         expect(registry.getComponent("test-id")).toBeNull();
-    });
-
-    it('returns "null" for the properties of an element if the element was not registered', () => {
-        expect(registry.getPropertyComponent("test-id")).toBeNull();
     });
 
     it('returns the element component when element is registered', () => {
         registry.definitions.register(mockDefinition);
 
         const result = registry.getComponent("test-element");
-        expect(result).not.toBeNull();
-    });
-
-    it('returns the properties component when element is registered', () => {
-        registry.definitions.register(mockDefinition);
-
-        const result = registry.getPropertyComponent("test-element");
         expect(result).not.toBeNull();
     });
 })

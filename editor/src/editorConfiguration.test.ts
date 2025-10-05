@@ -1,6 +1,6 @@
 import {defineAsyncComponent} from "vue";
 import {describe, expect, it} from "vitest";
-import {createEditorElementDefinition, type EditorElementDefinition} from "./editorConfiguration";
+import {createEditorElementDefinition} from "./editorConfiguration";
 
 describe("EditorConfiguration", () => {
     it("creates a element definition", async () => {

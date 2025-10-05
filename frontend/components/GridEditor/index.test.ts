@@ -7,6 +7,7 @@ import {GridEditor} from "#components";
 import {createDefaultGrid, type EditorElementProperties} from "@trail/grid-editor/grid";
 import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
 import {AddRow} from "@trail/grid-editor/undoredo/actions/addRow";
+import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
 
 
 describe('Component', () => {
@@ -27,7 +28,8 @@ describe('Component', () => {
 
             props = {
                 element: createMockElement(),
-                grid: global.provide[EditorInjectionKey as unknown as number].grid
+                definition: {} as unknown as EditorElementDefinition<any>, // not relevant for the test
+                grid: global.provide[EditorInjectionKey].grid
             };
 
             component = mount(GridEditor, {

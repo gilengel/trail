@@ -4,12 +4,15 @@ export type ColoredProperty = {
     color?: Color
 };
 
+export type Route = {
+    id: number,
+    segmentIds: number[],
+}
 export type RouteProperty = {
-    routeId?: number
-    segmentsIds?: number[]
+    route: Route,
 } & ColoredProperty;
 
-type RoutePropertyKeys = ["segmentsIds", "routeId"];
+type RoutePropertyKeys = ["route", "color"];
 export type ProvidedPropertiesRoute = RoutePropertyKeys;
 export type ConsumedPropertiesRoute = RoutePropertyKeys;
 

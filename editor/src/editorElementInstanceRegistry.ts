@@ -1,9 +1,9 @@
+import {v4 as uuidv4} from 'uuid';
 import type {
     EditorElementDefinition, ElementConsumedProperties,
     ElementProperties,
     ElementProvidedProperties
-} from "./editorConfiguration";
-import {v4 as uuidv4} from 'uuid';
+} from "./configuration/elementDefinition";
 
 export type EditorElementInstance<T extends EditorElementDefinition = EditorElementDefinition> = {
     instanceId: string;  // e.g., "text-instance-123"

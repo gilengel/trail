@@ -13,12 +13,12 @@ describe('EditorHighlight', () => {
 
     it('adds an element', async () => {
         expect(highlightHandler.get().size).toBe(0);
-        highlightHandler.add(mockElement);
+        highlightHandler.add([mockElement]);
         expect(highlightHandler.get().size).toBe(1);
     });
 
     it('removes an element', async () => {
-        highlightHandler.add(mockElement);
+        highlightHandler.add([mockElement]);
         expect(highlightHandler.get().size).toBe(1);
         highlightHandler.remove(mockElement);
         expect(highlightHandler.get().size).toBe(0);
@@ -26,7 +26,7 @@ describe('EditorHighlight', () => {
 
     it('removes all elements', async () => {
         expect(highlightHandler.get().size).toBe(0);
-        highlightHandler.add(mockElement);
+        highlightHandler.add([mockElement]);
         expect(highlightHandler.get().size).toBe(1);
         highlightHandler.clear();
         expect(highlightHandler.get().size).toBe(0);
@@ -34,7 +34,7 @@ describe('EditorHighlight', () => {
 
     it('returns that an element is highlighted', async () => {
         expect(highlightHandler.get().size).toBe(0);
-        highlightHandler.add(mockElement);
+        highlightHandler.add([mockElement]);
         expect(highlightHandler.get().size).toBe(1);
         expect(highlightHandler.isHighlighted(mockElement)).toBeTruthy();
     });

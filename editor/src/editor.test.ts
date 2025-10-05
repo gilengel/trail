@@ -3,8 +3,8 @@ import {BuilderMode, Editor} from "./editor";
 import {createTestGrid} from "./undoredo/actions/test.helper";
 import type {IUndoRedoAction} from "./undoredo";
 import type {EditorElementInstance} from "./editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "./editorConfiguration";
 import {LogLevel} from "./handler/logger";
+import {EditorElementDefinition} from "./configuration/elementDefinition";
 
 describe("Editor", () => {
     const now = new Date();
@@ -52,9 +52,9 @@ describe("Editor", () => {
 
     it("clears highlight of selected elements", () => {
         editor.selectElement(mockElement);
-        expect(editor.highlightHandler.get()).toStrictEqual(new Set(["test-id"]));
+        expect(editor.getIdsOfAllHighlightedElements()).toStrictEqual(new Set(["test-id"]));
         editor.clearSelectedElements();
-        expect(editor.highlightHandler.get()).toStrictEqual(new Set());
+        expect(editor.getIdsOfAllHighlightedElements()).toStrictEqual(new Set());
     })
 
     it("switches the mode", () => {

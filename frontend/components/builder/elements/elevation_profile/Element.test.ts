@@ -6,17 +6,19 @@ import {createGlobal} from "~/components/builder/elements/__mocks__";
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import {createVuetify} from "vuetify";
+import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
 
 describe('Component', () => {
     describe('ElevationProfile', () => {
         let global: ReturnType<typeof createGlobal>;
-        let props: EditorElementProperties<any>;
+        let props: EditorElementProperties<typeof ElevationProfileElement>;
 
         beforeEach(() => {
             global = createGlobal();
 
             props = {
                 element: createMockElement(),
+                definition: {} as unknown as any, // not relevant for the test
                 grid: global.provide[EditorInjectionKey].grid
             };
         });

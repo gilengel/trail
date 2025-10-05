@@ -1,6 +1,6 @@
 import {describe, it, expect, beforeEach} from 'vitest'
-import type {EditorElementDefinition} from './editorConfiguration'
 import {ElementDefinitionRegistry} from "./editorElementDefinitionRegistry";
+import {EditorElementDefinition} from "./elementDefinition";
 
 describe('ElementDefinitionRegistry', () => {
     let registry: ElementDefinitionRegistry
