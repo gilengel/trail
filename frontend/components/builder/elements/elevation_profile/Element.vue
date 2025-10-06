@@ -1,10 +1,10 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
     <v-alert
-        v-if="invalid"
-        type="warning"
-        variant="outlined"
-        prominent
+      v-if="invalid"
+      type="warning"
+      variant="outlined"
+      prominent
     >
       No segment is selected for this elevation. Please do so in the property panel on the right side.
       <hr>
@@ -13,9 +13,9 @@
 
 
     <Line
-        v-else-if="data"
-        :data
-        :options="chartOptions"
+      v-else-if="data"
+      :data
+      :options="chartOptions"
     />
   </BuilderHighlightableElement>
 </template>
@@ -130,7 +130,7 @@ const invalid = computed(() => {
   return !props.element.properties.route ||
       !props.element.properties.route.segmentIds ||
       props.element.properties.route.segmentIds?.length == 0;
-})
+});
 const color = computed(() => {
   if (!props.element.properties || !props.element.properties.color) {
     return 'rgb(0, 0, 0)';

@@ -1,9 +1,24 @@
 <template>
-  <v-btn-toggle v-model="alignment" mandatory>
-    <v-btn icon="las la-align-left" value="start"/>
-    <v-btn icon="las la-align-center" value="center"/>
-    <v-btn icon="las la-align-right" value="end"/>
-    <v-btn icon="las la-align-justify" value="justify"/>
+  <v-btn-toggle
+    v-model="alignment"
+    mandatory
+  >
+    <v-btn
+      icon="las la-align-left"
+      value="start"
+    />
+    <v-btn
+      icon="las la-align-center"
+      value="center"
+    />
+    <v-btn
+      icon="las la-align-right"
+      value="end"
+    />
+    <v-btn
+      icon="las la-align-justify"
+      value="justify"
+    />
   </v-btn-toggle>
 </template>
 
@@ -15,18 +30,18 @@ const props = defineProps<{
   config: CustomPropertyConfig
   propertyKey: string
   modelValue: string
-}>()
+}>();
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
-}>()
+}>();
 
 const alignment = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(value) {
-    emit("update:modelValue", value)
+    emit("update:modelValue", value);
   }
-})
+});
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <slot/>
+    <slot />
   </div>
 </template>
 
@@ -14,11 +14,11 @@ const {isHighlighted} = defineProps<{
 
 const classes = computed(() => {
   if (isHighlighted) {
-    return ["highlight", "border-md"]
+    return ["highlight", "border-md"];
   }
 
   return ["border-thin"];
-})
+});
 </script>
 
 <style scoped lang="scss">

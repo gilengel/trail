@@ -10,11 +10,11 @@ defineProps<{
   config: CustomPropertyConfig
   propertyKey: string
   modelValue: string | null
-}>()
+}>();
 
 defineEmits<{
   'update:modelValue': [value: string | null]
-}>()
+}>();
 </script>
 
 <style scoped lang="scss">

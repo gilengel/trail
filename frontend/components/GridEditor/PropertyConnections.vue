@@ -1,28 +1,28 @@
 <template>
   <div class="pa-5">
     <v-card
-        class="rounded-sm"
-        variant="flat"
+      class="rounded-sm"
+      variant="flat"
     >
       <v-card-title>
-        <slot name="title"/>
+        <slot name="title" />
       </v-card-title>
       <v-card-text>
-        <slot name="properties"/>
+        <slot name="properties" />
 
         Provided
         <v-list>
           <v-list-item
-              v-for="(item, i) in provided"
-              :key="i"
-              :value="item"
-              color="primary"
-              @click="propertySelected(item.property, PropertyDirection.Consumed)"
+            v-for="(item, i) in provided"
+            :key="i"
+            :value="item"
+            color="primary"
+            @click="propertySelected(item.property, PropertyDirection.Consumed)"
           >
             <template #prepend>
               <v-icon
-                  icon="las la-arrow-circle-right"
-                  :color="item.connected ? 'warning' : ''"
+                icon="las la-arrow-circle-right"
+                :color="item.connected ? 'warning' : ''"
               />
             </template>
 
@@ -35,14 +35,14 @@
         Consumed
         <v-list>
           <v-list-item
-              v-for="(item, i) in consumed"
-              :key="i"
-              :value="item"
+            v-for="(item, i) in consumed"
+            :key="i"
+            :value="item"
           >
             <template #prepend>
               <v-icon
-                  icon="las la-arrow-circle-left"
-                  :color="item.connected ? 'warning' : ''"
+                icon="las la-arrow-circle-left"
+                :color="item.connected ? 'warning' : ''"
               />
             </template>
 
@@ -51,14 +51,14 @@
             </v-list-item-title>
 
             <template
-                #append
-                v-if="item.connected"
+              #append
+              v-if="item.connected"
             >
               <v-btn
-                  color="warning"
-                  icon="las la-trash-alt"
-                  variant="text"
-                  @click="clearConnection(item.property)"
+                color="warning"
+                icon="las la-trash-alt"
+                variant="text"
+                @click="clearConnection(item.property)"
               />
             </template>
           </v-list-item>

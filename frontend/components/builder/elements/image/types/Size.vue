@@ -3,28 +3,28 @@
     Size
   </h2>
   <v-col
-      class="py-2"
-      cols="12"
-      sm="6"
+    class="py-2"
+    cols="12"
+    sm="6"
   >
     <v-btn-toggle v-model="imageSizeType">
       <v-btn
-          :value="ImageSize.FitHorizontally"
-          data-testid="btn-image-size-h"
+        :value="ImageSize.FitHorizontally"
+        data-testid="btn-image-size-h"
       >
         <v-icon>las la-arrows-alt-h</v-icon>
       </v-btn>
 
       <v-btn
-          :value="ImageSize.FitVertically"
-          data-testid="btn-image-size-v"
+        :value="ImageSize.FitVertically"
+        data-testid="btn-image-size-v"
       >
         <v-icon>las la-arrows-alt-v</v-icon>
       </v-btn>
 
       <v-btn
-          :value="ImageSize.Free"
-          data-testid="btn-image-size-f"
+        :value="ImageSize.Free"
+        data-testid="btn-image-size-f"
       >
         <v-icon>las la-vector-square</v-icon>
       </v-btn>
@@ -41,11 +41,11 @@ const props = defineProps<{
   config: CustomPropertyConfig
   propertyKey: string
   modelValue: ImageSize
-}>()
+}>();
 
 const emit = defineEmits<{
   'update:modelValue': [value: ImageSize]
-}>()
+}>();
 
 // - IMAGE SIZE MODE ---------------------------------------------------------------------------------------------------
 

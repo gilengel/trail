@@ -1,6 +1,6 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
-    <Map :segments/>
+    <Map :segments />
   </BuilderHighlightableElement>
 </template>
 
@@ -43,7 +43,7 @@ const segments = computedAsync(
       return filtered;
     },
     [], // Initial state && fallback
-)
+);
 
 </script>
 <style scoped lang="scss">

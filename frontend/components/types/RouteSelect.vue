@@ -1,29 +1,29 @@
 <template>
   <CollapsableList
-      v-if="routes"
-      :collapse-number="3"
-      :items="routes"
-      :text="(routeDto: RouteDto) => routeDto.name"
-      @on-selection-changed="selectedRouteChanged"
+    v-if="routes"
+    :collapse-number="3"
+    :items="routes"
+    :text="(routeDto: RouteDto) => routeDto.name"
+    @on-selection-changed="selectedRouteChanged"
   />
 
   <v-list
-      v-model:selected="selection"
-      select-strategy="leaf"
-      multiple
-      max-height="600px"
+    v-model:selected="selection"
+    select-strategy="leaf"
+    multiple
+    max-height="600px"
   >
     <v-list-item
-        v-for="item in routeModel?.segments"
-        :key="item.id"
-        :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-        :value="item.id"
+      v-for="item in routeModel?.segments"
+      :key="item.id"
+      :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+      :value="item.id"
     >
       <template #prepend="{ isSelected }">
         <v-list-item-action start>
           <v-checkbox-btn
-              color="primary"
-              :model-value="isSelected"
+            color="primary"
+            :model-value="isSelected"
           />
         </v-list-item-action>
       </template>
@@ -64,16 +64,16 @@ const props = defineProps<{
   config: CustomPropertyConfig
   propertyKey: string
   modelValue: Route | undefined
-}>()
+}>();
 
 const emit = defineEmits<{
   'update:modelValue': [value: Route | undefined]
-}>()
+}>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 function selectedRouteChanged(route: RouteDto): void {
-  emit('update:modelValue', {id: route.id, segmentIds: []})
+  emit('update:modelValue', {id: route.id, segmentIds: []});
   //selectedRoute.value = route;
 
   //emit("update:selectedRouteId", route.id);
@@ -82,18 +82,18 @@ function selectedRouteChanged(route: RouteDto): void {
 const selection = computed({
   get() {
     if (!props.modelValue) {
-      return []
+      return [];
     }
 
-    return props.modelValue.segmentIds
+    return props.modelValue.segmentIds;
   },
 
   set(value) {
-    emit('update:modelValue', {id: routeModel.value?.id!, segmentIds: value})
+    emit('update:modelValue', {id: routeModel.value!.id, segmentIds: value});
   }
-})
+});
 
 const routeModel: ComputedRef<RouteDto | undefined> = computed(() => {
   return routes!.find((route) => route.id === props.modelValue?.id);
-})
+});
 </script>

@@ -1,5 +1,8 @@
 <template>
-  <v-btn-toggle v-model="level" mandatory>
+  <v-btn-toggle
+    v-model="level"
+    mandatory
+  >
     <v-btn>
       H1
     </v-btn>
@@ -26,18 +29,18 @@ const props = defineProps<{
   config: CustomPropertyConfig
   propertyKey: string
   modelValue: number | null
-}>()
+}>();
 
 const emit = defineEmits<{
   'update:modelValue': [value: number | null]
-}>()
+}>();
 
 const level = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(value) {
-    emit("update:modelValue", value)
+    emit("update:modelValue", value);
   }
-})
+});
 </script>

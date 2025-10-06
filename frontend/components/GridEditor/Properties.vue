@@ -1,8 +1,8 @@
 <template>
   <GridEditorPropertyConnections
-      :grid="props.grid"
-      :id="props.element.instanceId"
-      :element="props.element"
+    :grid="props.grid"
+    :id="props.element.instanceId"
+    :element="props.element"
   >
     <template #title>
       Properties
@@ -10,30 +10,29 @@
 
     <template #properties>
       <v-expansion-panels
-          multiple
-          expand-icon="las la-angle-down"
-          collapse-icon="las la-angle-up"
-          flat>
+        multiple
+        expand-icon="las la-angle-down"
+        collapse-icon="las la-angle-up"
+        flat
+      >
         <v-expansion-panel
-            v-for="(configuration, propertyKey) in props.definition.propertySchema"
-            :key="propertyKey"
+          v-for="(configuration, propertyKey) in props.definition.propertySchema"
+          :key="propertyKey"
         >
           <v-expansion-panel-title>
             {{ configuration.label }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <component
-                :is="getTypeComponent(configuration)"
-                :config="configuration"
-                :property-key="propertyKey"
-                :model-value="props.element.properties[propertyKey]"
-                @update:model-value="updateProperty(propertyKey, $event)"
+              :is="getTypeComponent(configuration)"
+              :config="configuration"
+              :property-key="propertyKey"
+              :model-value="props.element.properties[propertyKey]"
+              @update:model-value="updateProperty(propertyKey, $event)"
             />
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-
-
     </template>
   </GridEditorPropertyConnections>
 </template>
@@ -87,7 +86,7 @@ function createActionForDependentElements(propertyKey: string, value: any, eleme
   const consumerId = consumedProperties[propertyKey];
   const consumingElement = editor!.findElementWithId(consumerId);
   if (!consumingElement) {
-    throw new Error(`Consuming element with id ${consumerId} not found in grid`)
+    throw new Error(`Consuming element with id ${consumerId} not found in grid`);
   }
 
   return createActionForDependentElements(propertyKey, value, consumingElement, actions);
