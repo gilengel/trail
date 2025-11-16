@@ -1,64 +1,64 @@
 <template>
   <v-container fluid>
     <v-row
-      no-gutters
-      align="center"
-      class="border layout-row"
-      :class="isDraggingColumnSize ? 'dragging' : ''"
-      @mouseenter="isHovering=true"
-      @mouseleave="isHovering=false"
+        no-gutters
+        align="center"
+        class="layout-row"
+        :class="isDraggingColumnSize ? 'dragging' : ''"
+        @mouseenter="isHovering=true"
+        @mouseleave="isHovering=false"
     >
       <v-col
-        v-if="props.activeMode === BuilderMode.Create"
-        cols="auto"
-        class="actions rounded-sm"
+          v-if="props.activeMode === BuilderMode.Create"
+          cols="auto"
+          class="actions rounded-sm border"
       >
         <v-btn
-          :ripple="false"
-          rounded="0"
-          class="drag-handle"
-          icon="las la-arrows-alt"
+            :ripple="false"
+            rounded="0"
+            class="drag-handle"
+            icon="las la-arrows-alt"
         />
         <v-btn
-          flat
-          :ripple="false"
-          rounded="0"
-          data-testid="delete-row-button"
-          icon="las la-trash-alt"
-          @click="editor.executeAction(new DeleteRow(model, props.grid))"
+            flat
+            :ripple="false"
+            rounded="0"
+            data-testid="delete-row-button"
+            icon="las la-trash-alt"
+            @click="editor.executeAction(new DeleteRow(model, props.grid))"
         />
       </v-col>
-      <v-col style="align-self: stretch">
+      <v-col class="border" style="align-self: stretch">
         <v-row
-          no-gutters
-          ref="container"
-          class="fill-height"
-          data-testid="layout-row"
+            no-gutters
+            ref="container"
+            class="fill-height"
+            data-testid="layout-row"
         >
           <GridEditorColumn
-            data-key="itemId"
-            :data-testid="`grid-column-${col_index}-${rowIndex}`"
-            :column-index="col_index"
-            :row="model"
-            :model="column"
-            :active-mode
-            :grid
-            :class="colClass(col_index)"
-            :split-disabled="column.width <= 2"
-            :editable="!isDraggingColumnSize"
-            :selected-element-id="props.selectedElementId"
-            v-for="(column, col_index) in model.columns"
-            :key="col_index"
+              data-key="itemId"
+              :data-testid="`grid-column-${col_index}-${rowIndex}`"
+              :column-index="col_index"
+              :row="model"
+              :model="column"
+              :active-mode
+              :grid
+              :class="colClass(col_index)"
+              :split-disabled="column.width <= 2"
+              :editable="!isDraggingColumnSize"
+              :selected-element-id="props.selectedElementId"
+              v-for="(column, col_index) in model.columns"
+              :key="col_index"
           />
 
           <div
-            v-for="(e, i) in model.columns.length - 1"
-            :key="e"
-            data-testid="row-splitter"
-            class="splitter"
-            :class="isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'"
-            :style="splitterStyleFn(i)"
-            @mousedown="dragMouseDown($event, i)"
+              v-for="(e, i) in model.columns.length - 1"
+              :key="e"
+              data-testid="row-splitter"
+              class="splitter"
+              :class="isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'"
+              :style="splitterStyleFn(i)"
+              @mousedown="dragMouseDown($event, i)"
           />
         </v-row>
       </v-col>
@@ -325,13 +325,15 @@ function closeDragElement() {
 </script>
 
 <style lang="scss" scoped>
+@use 'vuetify/settings';
 
 $primary-color: rgb(var(--v-theme-primary));
 
-$border-width: 1px;
+$border-width: var(--v-border-sm);
 $focus-border: solid $border-width $primary-color;
 
 $actions-width: 52px;
+
 .actions {
   align-self: flex-start;
   display: flex;
@@ -339,17 +341,15 @@ $actions-width: 52px;
   width: auto;
   visibility: hidden;
   overflow: hidden;
+  border-right: 0 !important;
 
   z-index: 999;
 
-  margin-left: -$actions-width + $border-width * 2;
+  //margin-left: -$actions-width + $border-width * 2;
+  margin-left: calc(-#{$actions-width} + var(--v-border-sm) * 2);
 
-  border: solid $border-width $primary-color;
   margin-top: -$border-width;
   margin-bottom: -$border-width;
-
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
 
   transition: all ease-in-out 0.3s;
 }
@@ -367,7 +367,6 @@ $actions-width: 52px;
 }
 
 .layout-row {
-  border-width: $border-width !important;
   margin-left: $actions-width;
 
   transition: all 0.5s ease;
@@ -377,8 +376,6 @@ $actions-width: 52px;
   .actions {
     visibility: visible;
   }
-
-  border: $focus-border !important;
 }
 
 .v-row {

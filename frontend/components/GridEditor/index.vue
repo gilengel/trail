@@ -1,57 +1,58 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div id="editor-primary-toolbar" />
+  <div id="editor-primary-toolbar"/>
 
-  <v-row no-gutters>
+  <v-row no-gutters class="grid-editor-container">
     <v-col
-      sm="9"
-      no-gutters
+        class="preview_container"
+        sm="9"
+        no-gutters
     >
       <div ref="el">
         <GridEditorRow
-          v-for="(element, index) in grid.rows"
-          data-key="itemId"
-          data-value="Row"
-          :key="element.id"
-          :model="element"
-          :grid="grid"
-          :row-index="index"
-          :selected-element-id="selectedElementId"
-          :data-testid="`layout-row-${index}`"
-          :active-mode="editor.activeMode"
+            v-for="(element, index) in grid.rows"
+            data-key="itemId"
+            data-value="Row"
+            :key="element.id"
+            :model="element"
+            :grid="grid"
+            :row-index="index"
+            :selected-element-id="selectedElementId"
+            :data-testid="`layout-row-${index}`"
+            :active-mode="editor.activeMode"
         />
       </div>
       <v-row
-        no-gutters
-        style="margin-top: 24px; margin-right: 16px"
+          no-gutters
+          style="margin-top: 24px; margin-right: 16px"
       >
-        <v-spacer />
+        <v-spacer/>
         <v-btn
-          data-testid="grid-editor-add-row-btn"
-          @click="addRow()"
-          color="primary rounded-sm"
-          variant="outlined"
-          prepend-icon="las la-plus"
+            data-testid="grid-editor-add-row-btn"
+            @click="addRow()"
+            color="primary rounded-sm"
+            variant="outlined"
+            prepend-icon="las la-plus"
         >
           Add Row
         </v-btn>
       </v-row>
     </v-col>
     <v-col
-      ref="options_container"
-      sm="3"
-      class="options-container"
+        ref="options_container"
+        sm="3"
+        class="options-container"
     >
       <Properties
-        v-bind="selectedProps!"
-        v-if="selectedProps"
+          v-bind="selectedProps!"
+          v-if="selectedProps"
       />
     </v-col>
   </v-row>
 
   <v-snackbar-queue
-    v-model="messages"
-    color="warning"
+      v-model="messages"
+      color="warning"
   />
 </template>
 
@@ -154,10 +155,18 @@ function onUpdate(event: SortableEvent): void {
 </script>
 
 <style scoped lang="scss">
+
 $size: 24px;
 
-line {
+.grid-editor-container {
+  background-color: color-mix(in srgb, rgb(var(--v-theme-background)) 98%, black);
 
+  .v-theme--dark & {
+    background-color: color-mix(in srgb, rgb(var(--v-theme-background)) 98%, white);
+  }
+}
+
+line {
   stroke-width: 4px;
 }
 

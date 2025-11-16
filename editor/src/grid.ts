@@ -6,6 +6,8 @@ export interface EditorElementProperties<Element extends EditorElementDefinition
     grid: Grid,
     element: EditorElementInstance<Element>,
     definition: EditorElementDefinition<Element>,
+
+    changeable: boolean
 }
 
 export interface Column {

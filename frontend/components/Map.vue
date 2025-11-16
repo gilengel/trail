@@ -1,8 +1,8 @@
 <template>
   <div
-    ref="mapContainer"
-    data-cy="map-container"
-    class="map"
+      ref="mapContainer"
+      data-cy="map-container"
+      class="map"
   />
 </template>
 
@@ -45,9 +45,6 @@ defineExpose({
 });
 
 let oldSegments: MapLibreSegment[] = [];
-
-function onTripChanged() {
-}
 
 /**
  *
@@ -102,8 +99,6 @@ watch(
     {deep: true}
 );
 
-
-watch(() => trip, onTripChanged, {deep: true});
 
 function waitForStyleLoad(): Promise<void> {
   return new Promise((resolve) => {

@@ -28,7 +28,7 @@ export const TextElement: EditorElementDefinition<TextElementProperties, ["conte
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-comment',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

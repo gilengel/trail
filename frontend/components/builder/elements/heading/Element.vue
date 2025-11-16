@@ -1,19 +1,19 @@
 <template>
   <Editor
-    ref="textEditor"
-    :formatting="false"
-    :text="false"
-    :undoredo="false"
-    :content="text"
-    :custom-node="DynamicParagraph"
-    @on-text-changed="onTextChanged"
-    v-if="props.element.selected"
+      ref="textEditor"
+      :formatting="false"
+      :text="false"
+      :undoredo="false"
+      :content="text"
+      :custom-node="DynamicParagraph"
+      @on-text-changed="onTextChanged"
+      v-if="props.element.selected"
   />
   <div
-    class="heading-container"
-    v-else
-    v-html="text"
-    :style
+      class="heading-container"
+      v-else
+      v-html="text"
+      :style
   />
 </template>
 
@@ -28,15 +28,15 @@ import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/update
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const editor = inject(EditorInjectionKey);
-
-if (!editor) {
-  throw new Error("Editor instance was not injected in Heading");
-}
+const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
+const editor = inject(EditorInjectionKey);
+
+if (!editor && props.changeable) {
+  throw new Error('Editor instance was not injected in element "Heading"');
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 

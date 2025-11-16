@@ -39,7 +39,7 @@ export const ElevationProfileElement: EditorElementDefinition<ElevationProfilePr
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-chart-line',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

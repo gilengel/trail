@@ -1,34 +1,38 @@
 <template>
   <GridEditorPropertyConnections
-    :grid="props.grid"
-    :id="props.element.instanceId"
-    :element="props.element"
+      :grid="props.grid"
+      :id="props.element.instanceId"
+      :element="props.element"
   >
     <template #title>
-      Properties
+
     </template>
 
     <template #properties>
       <v-expansion-panels
-        multiple
-        expand-icon="las la-angle-down"
-        collapse-icon="las la-angle-up"
-        flat
+          static
+          multiple
+          expand-icon="las la-angle-down"
+          collapse-icon="las la-angle-up"
+          flat
+
+          v-model="model"
       >
         <v-expansion-panel
-          v-for="(configuration, propertyKey) in props.definition.propertySchema"
-          :key="propertyKey"
+            v-for="(configuration, propertyKey) in props.definition.propertySchema"
+            :key="propertyKey"
+            :value="propertyKey"
         >
           <v-expansion-panel-title>
-            {{ configuration.label }}
+            {{ configuration!.label }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <component
-              :is="getTypeComponent(configuration)"
-              :config="configuration"
-              :property-key="propertyKey"
-              :model-value="props.element.properties[propertyKey]"
-              @update:model-value="updateProperty(propertyKey, $event)"
+                :is="getTypeComponent(configuration!)"
+                :config="configuration"
+                :property-key="propertyKey"
+                :model-value="props.element.properties[propertyKey as string]"
+                @update:model-value="updateProperty(propertyKey as string, $event)"
             />
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -55,6 +59,8 @@ const {registry} = useElementRegistry();
 // ---------------------------------------------------------------------------------------------------------------------
 
 const editor = inject(EditorInjectionKey);
+
+const model = computed(() => Object.keys(props.definition.propertySchema as object))
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -101,4 +107,5 @@ function updateProperty(propertyKey: string, value: any) {
   }
 }
 </script>
+
 

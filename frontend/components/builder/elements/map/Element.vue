@@ -1,6 +1,6 @@
 <template>
-  <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
-    <Map :segments />
+  <BuilderHighlightableElement :is-highlighted="editor ? editor.isHighlighted(props.element) : false">
+    <Map :segments/>
   </BuilderHighlightableElement>
 </template>
 
@@ -16,9 +16,11 @@ const props = defineProps<EditorElementProperties<typeof MapElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const editor = inject(EditorInjectionKey);
-if (!editor) {
-  throw new Error('Editor instance was not injected in "Map" element');
+
+const editor = inject(EditorInjectionKey, null);
+
+if (!editor && props.changeable) {
+  throw new Error('Editor instance was not injected in element "Map"');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

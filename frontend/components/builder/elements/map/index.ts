@@ -30,7 +30,7 @@ export const MapElement: EditorElementDefinition<RouteProperty, ProvidedProperti
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-map-marked-alt',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

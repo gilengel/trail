@@ -1,18 +1,15 @@
 <template>
-  <h2 class="text-h6 mt-2 mb-2">
-    Aspect Ratio
-  </h2>
   <div class="aspect-ratios pb-4">
     <div
-      v-for="(ratio, i) in aspectRatios"
-      :key="i"
-      class="ratio-container"
+        v-for="(ratio, i) in aspectRatios"
+        :key="i"
+        class="ratio-container"
     >
       <v-responsive
-        :aspect-ratio="ratio.value"
-        :class="['border', props.modelValue === ratio.value ? 'selected' : '']"
-        :data-testid="`ratio-${i}`"
-        @click="$emit('update:modelValue', ratio.value)"
+          :aspect-ratio="ratio.value"
+          :class="['border', props.modelValue === ratio.value ? 'selected' : '']"
+          :data-testid="`ratio-${i}`"
+          @click="$emit('update:modelValue', ratio.value)"
       >
         <div class="ratio-content">
           <strong>{{ ratio.label }}</strong>
