@@ -1,11 +1,11 @@
 import type {PropertyType} from "./elementProperty";
 import type {Component} from "vue";
+import type {IPropertyTypeRegistry} from "./ipropertyRegistry";
 
-export class PropertyTypeRegistry {
+export class PropertyTypeRegistry implements IPropertyTypeRegistry {
     private typeComponents = new Map<PropertyType, Component>()
 
-    // Register a component for a property type
-    registerType(type: PropertyType, component: Component): this {
+    register(type: PropertyType, component: Component): this {
         if (this.typeComponents.has(type)) {
             throw new Error(`Component for property type '${type}' is already registered`)
         }
@@ -27,5 +27,3 @@ export class PropertyTypeRegistry {
         this.typeComponents.clear()
     }
 }
-
-export const globalPropertyTypeRegistry = new PropertyTypeRegistry()

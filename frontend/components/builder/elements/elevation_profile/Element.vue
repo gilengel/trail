@@ -1,5 +1,5 @@
 <template>
-  <BuilderHighlightableElement :is-highlighted="editor ? editor.isHighlighted(props.element) : false">
+  <BuilderHighlightableElement :is-highlighted="highlighted">
     <v-alert
         v-if="invalid"
         type="warning"
@@ -9,6 +9,7 @@
       No segment is selected for this elevation. Please do so in the property panel on the right side.
       <hr>
       {{ element.instanceId }}
+      {{ highlighted }}
     </v-alert>
 
 
@@ -140,6 +141,10 @@ const color = computed(() => {
 
   return props.element.properties.color;
 });
+
+const highlighted = computed(() => {
+  return editor ? editor.isHighlighted(props.element) : false
+})
 
 
 const elevations = computed(() => {

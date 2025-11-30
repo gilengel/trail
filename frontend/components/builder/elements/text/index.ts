@@ -22,8 +22,16 @@ export const TextElement: EditorElementDefinition<TextElementProperties, ["conte
             color: '#000000',
             bold: false,
         } as TextElementProperties,
-        providedProperties: ['content'] as const,
-        consumedProperties: [] as const,
+
+        connections: {
+            provided: {
+                properties: ['content'] as const,
+            },
+
+            consumed: {
+                properties: []
+            }
+        }
     },
 
     metadata: {

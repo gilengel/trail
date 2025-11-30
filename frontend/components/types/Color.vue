@@ -1,11 +1,11 @@
 <template>
   <v-color-picker
-      v-model="value"
-      hide-inputs
-      show-swatches
-      hide-canvas
-      hide-sliders
-      elevation="0"
+    v-model="value"
+    hide-inputs
+    show-swatches
+    hide-canvas
+    hide-sliders
+    elevation="0"
   />
 </template>
 

@@ -1,8 +1,14 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div id="editor-primary-toolbar"/>
+  <div id="editor-primary-toolbar">
+    {{ editor.grid.rows.length }}
+  </div>
 
-  <v-row no-gutters class="grid-editor-container">
+  <v-row
+      no-gutters
+      class="grid-editor-container"
+  >
+
     <v-col
         class="preview_container"
         sm="9"
@@ -61,16 +67,15 @@ import {computed, type Ref, ref, provide, watch} from 'vue';
 import {v4 as uuidv4} from 'uuid';
 import type {SortableEvent} from 'sortablejs';
 import {useSortable} from '@vueuse/integrations/useSortable';
-import {useGridSave} from "~/composables/useGridSave";
 import type {ISaveGridFn} from "@trail/grid-editor/editorConfiguration";
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
-import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {EditorElementProperties, Grid} from "@trail/grid-editor/grid";
 import {MoveRow} from "@trail/grid-editor/undoredo/actions/moveRow";
 import {AddRow} from "@trail/grid-editor/undoredo/actions/addRow";
 import Properties from "~/components/GridEditor/Properties.vue";
 
-// ---------------------------------------------------------------------------------------------------------------------
+//-- PROPS -------------------------------------------------------------------------------------------------------------
 
 const props = defineProps<{
   grid: Grid,
@@ -79,25 +84,35 @@ const props = defineProps<{
   save: ISaveGridFn,
 }>();
 
+//-- EMITS -------------------------------------------------------------------------------------------------------------
+
 defineEmits<{
   onElementChanged: [element: EditorElementInstance];
 }>();
 
-// ---------------------------------------------------------------------------------------------------------------------
+//-- PROVIDES-----------------------------------------------------------------------------------------------------------
+const {$createGridEditor} = useNuxtApp()
 
-const {registry} = useElementRegistry();
-
-const editor = new Editor(props.grid, useGridSave);
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-const messages: Ref<string[]> = ref([]);
+const editor = $createGridEditor(props.grid, props.save);
 
 provide(EditorInjectionKey, editor);
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+const messages: Ref<string[]> = ref([]);
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 watch(props.grid, async (newValue) => {
+  for (const row of props.grid.rows) {
+    for (const column of row.columns) {
+      if (!column.element) continue;
+
+      editor.instances.insertExistingInstance(column.element);
+    }
+  }
+
   newValue.tripId = props.tripId;
   await props.save(newValue);
 });
@@ -128,10 +143,12 @@ const selectedProps = computed<EditorElementProperties<any> | undefined>(() => {
   return {
     grid: editor.grid,
     element: editor.selectedElement.value,
-    definition: registry.definitions.get(editor.selectedElement.value.elementId),
+    definition: editor.definitions.get(editor.selectedElement.value.elementId),
 
     selected: true,
-    highlighted: editor.isHighlighted(editor.selectedElement.value)
+    highlighted: editor.isHighlighted(editor.selectedElement.value),
+
+    changeable: true,
   } as EditorElementProperties<any>;
 });
 

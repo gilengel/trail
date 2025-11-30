@@ -26,15 +26,14 @@
               :key="col.id"
               :cols="col.width"
           >
-
             <component
-                :is="registry.getComponent(col.element?.elementId)"
+                :is="editor.definitions.getComponent(col.element?.elementId)"
                 v-bind="{
-                  grid: (trip?.layout as Grid),
-                  element: col.element,
-                  definition: registry.definitions.get(col.element?.elementId),
-                  changeable: false
-                } as EditorElementProperties<any>"
+                grid: (trip?.layout as Grid),
+                element: col.element,
+                definition: editor.definitions.get(col.element?.elementId),
+                changeable: false
+              } as EditorElementProperties<any>"
                 v-if="col.element"
             />
           </v-col>
@@ -48,15 +47,20 @@
 
 import {useTripStore} from "~/stores/trip";
 import type {EditorElementProperties, Grid} from "@trail/grid-editor/grid";
+import {EditorInjectionKey} from "@trail/grid-editor/editor";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const route = useRoute();
 
-const {registry} = useElementRegistry();
-
 const tripStore = useTripStore();
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+const editor = inject(EditorInjectionKey);
+if (!editor) {
+  throw new Error("Editor instance was not injected in Row");
+}
 // ---------------------------------------------------------------------------------------------------------------------
 
 const trip = await tripStore.get(Number(route.params.id));

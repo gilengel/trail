@@ -1,8 +1,8 @@
 import * as uuid from "uuid";
-import type {EditorElementInstance} from "./editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "./configuration/elementDefinition";
+import type {EditorElementDefinition} from "./definition/elementDefinition";
+import {type EditorElementInstance} from "./instances/instance";
 
-export interface EditorElementProperties<Element extends EditorElementDefinition<any, any, any>> {
+export interface EditorElementProperties<Element extends EditorElementDefinition<any, any, any, any, any>> {
     grid: Grid,
     element: EditorElementInstance<Element>,
     definition: EditorElementDefinition<Element>,
@@ -10,19 +10,19 @@ export interface EditorElementProperties<Element extends EditorElementDefinition
     changeable: boolean
 }
 
-export interface Column {
+export type Column = {
     id: string;
     width: number;
     element?: EditorElementInstance<any>;
     row?: Row;
 }
 
-export interface Row {
+export type Row = {
     id: string;
     columns: Column[];
 }
 
-export interface Grid {
+export type Grid = {
     tripId: number;
     rows: Row[];
 }
@@ -30,7 +30,7 @@ export interface Grid {
 /**
  * Creates a default grid consisting out of 3 rows with 2, 3 and 2 columns.
  * Specially useful to show the user something after creating a new trip.
- * @param tripId - The id of the trip the grid is associated with.
+ * @param tripId - The id of the trip the grid is associated with.a
  * @returns A new instance of a grid with 3 rows and 2, 3 and 2 columns.
  */
 export function createDefaultGrid(tripId: number): Grid {
@@ -65,3 +65,4 @@ export function createDefaultGrid(tripId: number): Grid {
         ],
     };
 }
+

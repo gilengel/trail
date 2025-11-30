@@ -1,7 +1,7 @@
 import {expect, describe, it, beforeEach} from 'vitest';
 
 import {UpdateElementAttribute} from "./updateElementAttribute";
-import type {EditorElementInstance} from "../../editorElementInstanceRegistry";
+import type {EditorElementInstance} from "../../instances/instanceRegistry";
 import {createMockElement} from "./__mocks__";
 
 describe('updateElementAttribute', () => {

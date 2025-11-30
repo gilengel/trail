@@ -231,8 +231,4 @@ const editor = useEditor({
   flex-direction: column;
   justify-content: center;
 }
-
-.v-btn {
-  min-width: 48px;
-}
 </style>

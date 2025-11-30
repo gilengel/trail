@@ -11,6 +11,7 @@
         <slot name="properties"/>
 
         <v-divider/>
+        {{ props.element.connections }}
         <span class="v-expansion-panel-title v-expansion-panel-title--static">Provided</span>
         <v-list>
           <v-list-item
@@ -71,7 +72,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="Element extends EditorElementDefinition<Record<string, unknown>, string[], string[]>">
+<script setup lang="ts" generic="Element extends EditorElementDefinition<any, any, any, any>">
 // ---------------------------------------------------------------------------------------------------------------------
 // This is the parent component for all element property components.
 //
@@ -83,8 +84,8 @@
 import {inject} from 'vue';
 import type {Grid} from "@trail/grid-editor/grid";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -121,9 +122,10 @@ const provided = computed(() => {
       property,
       connected: (props.element.connections.provided as Record<string, unknown>)[property] !== undefined
     };
-  };
+  }
 
-  return props.element.defaults.providedProperties.map(fn);
+  const definition = editor.definitions.get(props.element.elementId);
+  return definition!.defaults.connections.provided.properties.map(fn);
 });
 
 const consumed = computed(() => {
@@ -132,9 +134,10 @@ const consumed = computed(() => {
       property,
       connected: (props.element.connections.consumed as Record<string, unknown>)[property] !== undefined
     };
-  };
+  }
 
-  return props.element.defaults.providedProperties.map(fn);
+  const definition = editor.definitions.get(props.element.elementId);
+  return definition!.defaults.connections.provided.properties.map(fn);
 });
 
 function clearConnection(item: string) {
@@ -170,6 +173,7 @@ function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direc
 function propertySelected(propertyKey: string, direction: PropertyDirection) {
   const inverseDirection = direction === PropertyDirection.Consumed ? PropertyDirection.Provided : PropertyDirection.Consumed;
   const filtered = findAllElementsWithProperties([propertyKey], props.grid, inverseDirection);
+
 
   editor!.clearAllHighlightedElements();
   editor!.highlightElements(filtered);

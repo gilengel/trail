@@ -16,8 +16,15 @@ export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> 
             text: 'Heading',
             alignment: 'left'
         } as HeadingProperties,
-        providedProperties: [] as const,
-        consumedProperties: [] as const,
+
+        connections: {
+            provided: {
+                properties: []
+            },
+            consumed: {
+                properties: []
+            }
+        }
     },
 
     propertySchema: {

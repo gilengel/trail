@@ -20,14 +20,14 @@
         >
           <v-list>
             <v-list-item
-                v-for="(definition, index) in definitions.getAll()"
+                v-for="(definition, index) in editor.definitions.getAll()"
                 :key="definition.id"
                 data-testid="column-element"
                 :value="index"
                 @click="() => createElement(definition, props.model)"
             >
-              <template v-slot:prepend>
-                <v-icon :icon="definition.metadata?.icon"></v-icon>
+              <template #prepend>
+                <v-icon :icon="definition.metadata?.icon"/>
               </template>
 
               <v-list-item-title>{{ definition.name }}</v-list-item-title>
@@ -71,13 +71,11 @@
 import {computed, inject, type PropType, ref} from 'vue';
 import {columnValueValidator} from "~/composables/useColumValidator";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 import type {Column, EditorElementProperties, Grid, Row} from "@trail/grid-editor/grid";
 import {SetElement} from "@trail/grid-editor/undoredo/actions/setElement";
 import {DeleteColumn} from "@trail/grid-editor/undoredo/actions/deleteColumn";
 import {SplitColumn} from "@trail/grid-editor/undoredo/actions/splitColumn";
-
-const {definitions, instances, registry} = useElementRegistry();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -175,7 +173,7 @@ const selectedComponent = computed(() => {
     return undefined;
   }
 
-  return registry.getComponent(props.model.element.elementId);
+  return editor.definitions.getComponent(props.model.element.elementId);
 });
 
 const selectedComponentProps = computed<EditorElementProperties<any> | undefined>(() => {
@@ -186,15 +184,17 @@ const selectedComponentProps = computed<EditorElementProperties<any> | undefined
   return {
     grid: props.grid,
     element: props.model.element,
-    definition: registry.definitions.get(props.model.element.elementId),
+    definition: editor.definitions.get(props.model.element.elementId),
     selected: props.model.element.instanceId === props.selectedElementId,
+
+    changeable: true
   } as EditorElementProperties<any>;
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function createElement(definition: EditorElementDefinition<any>, column: Column) {
-  editor!.executeAction<any>(new SetElement(column, instances.create(definition)!));
+function createElement(definition: EditorElementDefinition, column: Column) {
+  editor!.executeAction<any>(new SetElement(column, editor!.instances.create(definition, {})!));
 }
 </script>
 

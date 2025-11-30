@@ -1,61 +1,75 @@
 <template>
   <div class="t-route-select">
     <CollapsableList
-        v-if="routes"
-        :collapse-number="3"
-        :items="routes"
-        :text="(routeDto: RouteDto) => routeDto.name"
-        @on-selection-changed="selectedRouteChanged"
+      v-if="routes"
+      :collapse-number="3"
+      :items="routes"
+      :text="(routeDto: RouteDto) => routeDto.name"
+      @on-selection-changed="selectedRouteChanged"
     />
 
     <v-list
-        v-model:selected="selection"
-        select-strategy="leaf"
-        multiple
-        max-height="600px"
+      v-model:selected="selection"
+      select-strategy="leaf"
+      multiple
+      max-height="600px"
     >
       <v-list-item
-          v-for="item in routeModel?.segments"
-          :key="item.id"
-          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-          :value="item.id"
+        v-for="item in routeModel?.segments"
+        :key="item.id"
+        :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+        :value="item.id"
       >
         <template #prepend="{ isSelected }">
           <v-list-item-action start>
             <v-checkbox-btn
-                color="primary"
-                :model-value="isSelected"
+              color="primary"
+              :model-value="isSelected"
             />
           </v-list-item-action>
         </template>
       </v-list-item>
     </v-list>
-
   </div>
 
   <v-overlay
 
-      openOnHover
-      activator=".t-route-select"
-      location-strategy="connected"
-      location="start"
-      scroll-strategy="close"
+    open-on-hover
+    activator=".t-route-select"
+    location-strategy="connected"
+    location="start"
+    scroll-strategy="close"
   >
     <v-card class="pa-2">
-      <v-list v-model:selected="selection" select-strategy="leaf">
+      <v-select
+        label="Select"
+        :items="routes?? []"
+        item-value="id"
+        item-title="name"
+
+        @update:model-value="(routeId: number) => selectedRouteChanged(routes?.find((r) => r.id === routeId)!)"
+      >
+        <template #item="{ props, item }">
+          <v-list-item v-bind="props" />
+        </template>
+      </v-select>
+      <v-list
+        v-model:selected="selection"
+        select-strategy="leaf"
+      >
         <v-list-item
-            v-for="item in items"
-            :key="item.type === 'segment' ? item.value : item.title"
-            :value="item.type === 'segment' ? item.value : undefined"
+          v-for="item in items"
+          :key="item.type === 'segment' ? item.value : item.title"
+          :value="item.type === 'segment' ? item.value : undefined"
         >
           <v-list-item-title>
             {{ item.title }}
 
             <template v-if="item.type === 'segment'">
               <Map
-                  class="t-map"
-                  :interactive="false"
-                  :segments="[item.segment!]"
+                class="t-map"
+                :interactive="false"
+                :segments="[item.segment!]"
               />
             </template>
           </v-list-item-title>

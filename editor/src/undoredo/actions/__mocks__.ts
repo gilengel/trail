@@ -1,4 +1,4 @@
-import type {EditorElementInstance} from "../../editorElementInstanceRegistry";
+import type {EditorElementInstance} from "../../instances/instance";
 
 export function createMockElement(instanceId: string = "0"): EditorElementInstance<any> {
     const now = new Date();
@@ -9,11 +9,16 @@ export function createMockElement(instanceId: string = "0"): EditorElementInstan
 
         properties: {level: 0},
 
-        defaults: {},
-
         connections: {
-            consumed: {},
-            provided: {},
+            consumed: {
+                properties: {},
+            },
+            provided: {
+                properties: {},
+                events: {
+                    listeners: {}
+                }
+            },
         },
 
         selected: false,

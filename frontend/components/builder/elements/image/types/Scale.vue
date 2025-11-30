@@ -3,21 +3,21 @@
     <v-row>
       <v-col>
         <v-row
-            no-gutters
-            align="center"
+          no-gutters
+          align="center"
         >
           <v-col cols="8">
             <v-slider
-                v-model="scaleValue"
-                min="0.125"
-                max="2"
+              v-model="scaleValue"
+              min="0.125"
+              max="2"
             />
           </v-col>
           <v-col cols="4">
             <v-number-input
-                control-variant="stacked"
-                v-model="scaleValue"
-                :precision="2"
+              control-variant="stacked"
+              v-model="scaleValue"
+              :precision="2"
             />
           </v-col>
         </v-row>

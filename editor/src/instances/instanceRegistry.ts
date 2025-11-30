@@ -1,38 +1,28 @@
 import {v4 as uuidv4} from 'uuid';
-import type {
-    EditorElementDefinition, ElementConsumedProperties,
-    ElementProperties,
-    ElementProvidedProperties
-} from "./configuration/elementDefinition";
+import {type EditorElementDefinition, type ElementProperties,} from "../definition/elementDefinition";
+import {Direction, type IInstanceRegistry} from "./iinstanceRegistry";
+import type {EditorElementInstance} from "./instance";
+import type {IDefinitionRegistry} from "../definition/idefinitionRegistry";
 
-export type EditorElementInstance<T extends EditorElementDefinition = EditorElementDefinition> = {
-    instanceId: string;  // e.g., "text-instance-123"
-    elementId: T['id'];  // e.g., "text-element" (references the definition)
 
-    // Instance-specific data - properly typed based on element definition
-    properties: ElementProperties<T>;
-
-    defaults: T['defaults'];
-
-    connections: {
-        consumed: Partial<Record<ElementConsumedProperties<T>, string>>;
-        provided: Partial<Record<ElementProvidedProperties<T>, string>>;
-    };
-
-    selected: boolean;
-
-    // Instance metadata
-    created: Date;
-    modified: Date;
-};
-
-export class EditorElementInstanceRegistry {
+export class InstanceRegistry implements IInstanceRegistry {
     private instances = new Map<string, EditorElementInstance>();
 
+    constructor(private readonly _definitionRegistry: IDefinitionRegistry) {
+    }
 
-    // Create type-safe instance from definition
-    public createInstance<T extends EditorElementDefinition>(
-        definition: EditorElementDefinition<any, any, any>,
+    /**
+     * Simply inserting an existing instance to the list of registered instances. This is necessary for instances
+     * that were persisted before and are loaded from the backend
+     *
+     * @param instance contains all custom data that was loaded from the backend
+     */
+    public insertExistingInstance(instance: EditorElementInstance) {
+        this.instances.set(instance.instanceId, instance);
+    }
+
+    public create<T extends EditorElementDefinition>(
+        definition: EditorElementDefinition,
         config: {
             properties?: Partial<ElementProperties<T>>;
         } = {}
@@ -44,17 +34,22 @@ export class EditorElementInstanceRegistry {
             instanceId,
             elementId: definition.id,
 
-            // Merge default properties with overrides - fully typed!
+            // Merge default properties with overrides
             properties: {
                 ...definition.defaults.properties,
                 ...config.properties
             } as ElementProperties<T>,
 
-            defaults: definition.defaults,
-
             connections: {
-                consumed: {},
-                provided: {}
+                consumed: {
+                    properties: {},
+                },
+                provided: {
+                    properties: {},
+                    events: {
+                        listeners: {}
+                    }
+                }
             },
 
             selected: false,
@@ -68,7 +63,6 @@ export class EditorElementInstanceRegistry {
         return instance;
     }
 
-    // Update instance with type safety
     updateInstance<T extends EditorElementDefinition>(
         instanceId: string,
         updates: {
@@ -114,5 +108,29 @@ export class EditorElementInstanceRegistry {
 
         this.instances.delete(instanceId);
         return true;
+    }
+
+    withProperty(propertyKey: PropertyKey, direction: Direction): EditorElementInstance[] {
+        return this.getAllInstances().filter((instance: EditorElementInstance) => {
+            const definition = this._definitionRegistry.get(instance.elementId);
+
+            if (!definition) return false;
+
+            switch (direction) {
+                case Direction.Provided:
+                    return propertyKey in definition.defaults.connections.provided.properties;
+                case Direction.Consumed:
+                    return propertyKey in definition.defaults.connections.consumed.properties;
+            }
+        })
+    }
+
+    withEvent(eventKey: PropertyKey): EditorElementInstance[] {
+        return this.getAllInstances().filter((instance: EditorElementInstance) => {
+            const definition = this._definitionRegistry.get(instance.elementId);
+            const providedEvents = definition!.defaults.connections.provided.events;
+
+            return providedEvents && eventKey in providedEvents;
+        });
     }
 }

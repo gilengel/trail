@@ -22,8 +22,15 @@ export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = cr
             sizeType: ImageSize.Free,
             positionType: ImagePosition.Free
         } as ImageProperties,
-        providedProperties: [],
-        consumedProperties: [],
+
+        connections: {
+            provided: {
+                properties: []
+            },
+            consumed: {
+                properties: []
+            }
+        }
     },
 
     propertySchema: {
