@@ -1,8 +1,8 @@
 /**
  * @file Contains functionality to parse gpx files into typescript objects.
  */
-import {XMLParser} from 'fast-xml-parser';
-import {Buffer} from 'buffer';
+import { XMLParser } from 'fast-xml-parser';
+import { Buffer } from 'buffer';
 
 // If the client tries to create/update routes with less then two coordinates
 export class NotEnoughCoordinatesError extends Error {
@@ -20,9 +20,8 @@ export interface GPXRoute {
 
 export interface GPXRouteSegment {
   name: string;
-  coordinates: Array<[number, number, number]>;
+  coordinates: [number, number, number][];
 }
-
 
 /**
  * Extracts the geospatial coordinates from a string or file buffer.
@@ -50,20 +49,24 @@ export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
     names = [obj.gpx.trk.name];
   }
 
-  const convertedSegments: GPXRouteSegment[] = segments.map((segment: Partial<{trkpt: []}>, i: number) => {
-    const name = names[i];
+  const convertedSegments: GPXRouteSegment[] = segments.map(
+    (segment: Partial<{ trkpt: [] }>, i: number) => {
+      const name = names[i];
 
-    const coordinates = segment.trkpt.map((point: Partial<{ele: unknown}>): number[] => {
-      const elevation = point.ele ? `${point.ele}` : '0';
+      const coordinates = segment.trkpt.map(
+        (point: Partial<{ ele: unknown }>): number[] => {
+          const elevation = point.ele ? `${point.ele}` : '0';
 
-      return [point['@_lat'], point['@_lon'], elevation];
-    });
+          return [point['@_lat'], point['@_lon'], elevation];
+        },
+      );
 
-    return {
-      name,
-      coordinates,
-    };
-  });
+      return {
+        name,
+        coordinates,
+      };
+    },
+  );
 
   return {
     segments: convertedSegments,

@@ -6,9 +6,12 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { RoutesModule } from '../../src/routes/routes.module';
 import { PrismaService } from '../../src/prisma.service';
-import * as testData from '../data';
 import { json } from 'express';
 import { env } from 'node:process';
+import * as DTO from '../../src/dto'
+import * as RouteSegmentTestData from '../../src/routes/segments/__data__';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 /**
  * Creates a trip in the database that has no related routes.
@@ -54,9 +57,6 @@ export async function createTestTripWithSingleRoute(
 
   const tripId = trip.id;
   const routeId = trip.routes[0].id;
-
-  testData.newRoute.tripId = tripId;
-  testData.newRouteWithoutSegments.tripId = tripId;
 
   return { tripId, routeId };
 }
@@ -119,12 +119,15 @@ describe('RoutesController (e2e)', () => {
       await prisma.trip.delete({
         where: { id: tripId },
       });
+
+      await prisma.routeSegment.deleteMany()
     });
 
     it('/routes/ (GET)', () => {
       return request(app.getHttpServer()).get('/routes').expect(200);
     });
 
+ 
     it('/routes/trip/:id (GET)', () => {
       return request(app.getHttpServer())
         .get(`/routes/trip/${tripId}`)
@@ -143,11 +146,17 @@ describe('RoutesController (e2e)', () => {
     it('/routes/:id (GET) returns "404" for nonexistent route', () => {
       return request(app.getHttpServer()).get(`/routes/123456789`).expect(404);
     });
-
+   
     it('/routes/ (POST)', () => {
+      const newRoute: DTO.CreateRoutePublic = {
+        name: 'new_test_route',
+        tripId,
+        description: 'new test route description',
+        segments: RouteSegmentTestData.newSegments
+      }
       return request(app.getHttpServer())
         .post(`/routes`)
-        .send(testData.newRoute)
+        .send(newRoute)
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('name', 'new_test_route');
@@ -155,27 +164,29 @@ describe('RoutesController (e2e)', () => {
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-
+    
     it('/routes/ (POST) with empty route', () => {
       return request(app.getHttpServer())
         .post(`/routes`)
         .send({
           tripId,
+          name: 'test'
         })
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('segments', []);
-          expect(res.body).not.toHaveProperty('description', '');
+          expect(res.body).toHaveProperty('name', 'test');
           expect(res.body).not.toHaveProperty('description', '');
 
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-
+    
     it('/routes/ (POST) fails with a track containing invalid (not enough) coordinates', () => {
       return request(app.getHttpServer())
         .post(`/routes`)
         .send({
+          tripId,
           name: 'invalid_test_route',
           segments: [
             {
@@ -187,13 +198,26 @@ describe('RoutesController (e2e)', () => {
         .expect(400);
     });
 
+    it('/routes/ (POST) returns a "422" if the requested trip does not exist', () => {
+      return request(app.getHttpServer())
+        .post(`/routes`)
+        .send({
+          tripId: 0,
+          name: '',
+          segments: [
+          ],
+        })
+        .expect(422);
+    });
+
+    
     it('/routes/gpx (POST) succeeds with a single segment track', () => {
       return request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Ehrwald Hiking')
         .field('tripId', tripId)
-        .attach('files', 'src/routes/test/short.gpx')
+        .attach('files', join(__dirname, 'files', 'short.gpx'))
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -201,14 +225,14 @@ describe('RoutesController (e2e)', () => {
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-
+    
     it('/routes/gpx (POST) succeeds with a single segment track without elevation', () => {
       return request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Ehrwald Hiking')
         .field('tripId', tripId)
-        .attach('files', 'src/routes/test/no_elevation.gpx')
+        .attach('files', join(__dirname, 'files', 'no_elevation.gpx'))
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -223,7 +247,7 @@ describe('RoutesController (e2e)', () => {
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
         .field('tripId', tripId)
-        .attach('files', 'src/routes/test/long.gpx')
+        .attach('files', join(__dirname, 'files', 'long.gpx'))
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty(
@@ -240,8 +264,18 @@ describe('RoutesController (e2e)', () => {
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'empty')
-        .attach('files', 'src/routes/test/empty.gpx')
+        .attach('files', join(__dirname, 'files', 'empty.gpx'))
         .expect(400);
+    });
+
+    it('/routes/gpx (POST) fails with a "422" if the trip does not exist', () => {
+      return request(app.getHttpServer())
+        .post(`/routes/gpx`)
+        .set('Content-Type', 'multipart/form-data')
+        .field('name', '')
+        .field('tripId', 0)
+        .attach('files', join(__dirname, 'files', 'short.gpx'))
+        .expect(422);    
     });
 
     it('/routes (PATCH) succeeds changing only the name', () => {

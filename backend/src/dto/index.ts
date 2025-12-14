@@ -1,14 +1,13 @@
 /**
  * @file DTO specifications.
  */
-export * from './create.route.dto'
-export * from './create.route.segment.dto'
-export * from './image.dto'
-export * from './route.dto'
-export * from './route.segment.dto'
-export * from './create.trip.dto'
-export * from './trip.dto'
-export * from './update.trip.dto'
-export * from './update.route.dto'
-export * from './update.route.segment.dto'
-export * from './convert'
+export * from '../routes/routes/dto/create.route.dto';
+export * from '../routes/segments/dto/create.route.segment.dto';
+export * from './image.dto';
+export * from '../routes/segments/dto/route.segment.dto';
+export * from '../trips/dto/create.trip.dto';
+export * from '../trips/dto/trip.dto';
+export * from '../trips/dto/update.trip.dto';
+export * from '../routes/routes/dto/update.route.dto';
+export * from '../routes/segments/dto/update.route.segment.dto';
+export * from './convert';

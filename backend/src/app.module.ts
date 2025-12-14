@@ -9,7 +9,6 @@ import { PrismaService } from './prisma.service';
 import { ImagesModule } from './images/images.module';
 import { ErrorsInterceptor } from './interceptors/errors.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { RoutesSegmentsModule } from './routes.segments/routes.segments.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TripsModule } from './trips/trips.module';
@@ -18,7 +17,6 @@ import { TripsModule } from './trips/trips.module';
   imports: [
     RoutesModule,
     ImagesModule,
-    RoutesSegmentsModule,
     TripsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'images'),

@@ -7,7 +7,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "coverageDirectory": "./coverage-e2e",
-  "coveragePathIgnorePatterns": ["test.helper.ts", "dto/*"],
+  "coveragePathIgnorePatterns": ["test.helper.ts", "dto/*", "__data__.ts"],
   "coverageReporters": ["text", "cobertura", "html"],
   "coverageThreshold": {
     "global": {

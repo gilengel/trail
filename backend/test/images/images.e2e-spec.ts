@@ -15,7 +15,8 @@ import { ErrorsInterceptor } from '../../src/interceptors/errors.interceptor';
 import { json } from 'express';
 import * as async from 'async';
 import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
-import { ImageDto, RouteDto } from '../../src/dto';
+import * as DTO from '../../src/dto'
+import { join } from 'path';
 
 describe('ImagesController (e2e)', () => {
   let app: INestApplication;
@@ -113,7 +114,7 @@ describe('ImagesController (e2e)', () => {
   });
 
   describe('GET', () => {
-    let route: RouteDto;
+    let route: DTO.Route;
     let tripId: number;
 
     beforeEach(async () => {
@@ -123,8 +124,8 @@ describe('ImagesController (e2e)', () => {
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'short')
         .field('tripId', tripId)
-        .attach('files', 'src/routes/test/short.gpx');
-
+        .attach('files', join(__dirname, '/../routes/files', 'short.gpx'));
+        
       route = result.body;
     });
 
@@ -145,7 +146,7 @@ describe('ImagesController (e2e)', () => {
                 .expect(201, callback);
             },
 
-            (_: ImageDto[], callback: request.CallbackHandler) => {
+            (_: DTO.Image[], callback: request.CallbackHandler) => {
               request(app.getHttpServer())
                 .get(
                   `/images/route_segment?routeSegmentId=${route.segments[0].id}&maxOffset=${500}`,
@@ -160,8 +161,8 @@ describe('ImagesController (e2e)', () => {
         );
       });
 
-      return wrapper.then((data: { _body: unknown }) => {
-        expect((data._body as Array<ImageDto>).length).toBe(6);
+      return wrapper.then((data: { _body: DTO.Image[] }) => {
+        expect((data._body).length).toBe(6);
       });
     });
 
@@ -182,7 +183,7 @@ describe('ImagesController (e2e)', () => {
                 .expect(201, callback);
             },
 
-            (_: ImageDto[], callback: request.CallbackHandler) => {
+            (_: DTO.Image[], callback: request.CallbackHandler) => {
               request(app.getHttpServer())
                 .get(
                   `/images/route_segment/number?routeSegmentId=${route.segments[0].id}&maxOffset=${500}`,
@@ -198,7 +199,7 @@ describe('ImagesController (e2e)', () => {
       });
 
       return wrapper.then((data: { _body: unknown }) => {
-        expect(data._body).toStrictEqual({ count: '6' });
+        expect(data._body).toStrictEqual({ count: 6 });
       });
     });
 
@@ -233,7 +234,7 @@ describe('ImagesController (e2e)', () => {
                 .expect(201, callback);
             },
 
-            (_: ImageDto[], callback: request.CallbackHandler) => {
+            (_: DTO.Image[], callback: request.CallbackHandler) => {
               request(app.getHttpServer())
                 .get(
                   `/images/route_segment?routeSegmentId=${route.segments[0].id}&maxOffset=${500}&maxNumberOfImages=3`,
@@ -248,12 +249,12 @@ describe('ImagesController (e2e)', () => {
         );
       });
 
-      return wrapper.then((data: { _body: unknown }) => {
-        expect((data._body as Array<ImageDto>).length).toBe(3);
+      return wrapper.then((data: { _body: DTO.Image[] }) => {
+        expect((data._body).length).toBe(3);
       });
     });
 
-    it('/images/route_segment (GET) returns 400 for calling with an invalid (negative) offset', async () => {
+    it('/images/route_segment (GET) returns "400" for calling with an invalid (negative) offset', async () => {
       return request(app.getHttpServer())
         .get(
           `/images/route_segment?routeSegmentId=${
@@ -271,10 +272,10 @@ describe('ImagesController (e2e)', () => {
         .expect(404);
     });
 
-    it('/images/route_segment (GET) returns "404" if the requested route segment does not exist', async () => {
+    it('/images/route_segment (GET) returns "422" if the requested route segment does not exist', async () => {
       return request(app.getHttpServer())
         .get(`/images/route_segment?routeSegmentId=${0}&maxOffset=${500}`)
-        .expect(404);
+        .expect(422);
     });
 
     afterEach(async () => {

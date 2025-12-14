@@ -1,7 +1,7 @@
 /**
  * @file DTO specification for updating a route.
  */
-export interface UpdateTripDto {
+export interface UpdateTrip {
     name: string;
     layout: object;
 }

@@ -1,0 +1,246 @@
+/**
+ * @file Route segments e2e tests.
+ */
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import { json } from 'express';
+import * as request from 'supertest';
+
+import { PrismaService } from '../../src/prisma.service';
+import { createTestTripWithSingleRoute } from '../routes/routes.e2e-spec';
+import { RoutesModule } from '../../src/routes/routes.module';
+
+describe('RoutesSegmentsController (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+
+  let tripId: number;
+  let routeId: number;
+  let routeSegmentId: number;
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [RoutesModule],
+    }).compile();
+
+    app = module.createNestApplication();
+    app.use(json({ limit: '50mb' }));
+    await app.init();
+
+    prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  beforeEach(async () => {
+    const data = await createTestTripWithSingleRoute(prisma);
+    tripId = data.tripId;
+    routeId = data.routeId;
+
+    const segmentResult = await prisma.$queryRaw<[{ id: number }]>`
+      INSERT INTO "RouteSegment" ("routeId", name, description, coordinates) 
+      VALUES (${routeId},
+              'e2e_test_route_segment', 
+              'e2e_test_route_segment_description', 
+               ST_GeomFromText('LINESTRING Z(-71.160281 42.258729 0, -71.160837 42.259113 0,  -71.161144 42.25932 0)', 4326)
+               ) RETURNING id, "routeId"`;
+    routeSegmentId = segmentResult[0].id;
+  });
+
+  afterEach(async () => {
+    await prisma.trip.delete({
+      where: { id: tripId },
+    });
+
+    await prisma.routeSegment.deleteMany()
+  });
+
+  it('/routes/segment (GET) return the segment', () => {
+    return request(app.getHttpServer())
+      .get(`/routes/segment/${routeSegmentId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('name', 'e2e_test_route_segment');
+        expect(res.body).toHaveProperty('coordinates', [
+          [-71.160281, 42.258729, 0],
+          [-71.160837, 42.259113, 0],
+          [-71.161144, 42.25932, 0],
+        ]);
+      });
+  });
+
+  it('/routes/segment/route (GET) return all the segments related to a route', () => {
+    return request(app.getHttpServer())
+      .get(`/routes/segment/route/${routeId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body[0]).toHaveProperty('name', 'e2e_test_route_segment');
+        expect(res.body[0]).toHaveProperty('coordinates', [
+          [-71.160281, 42.258729, 0],
+          [-71.160837, 42.259113, 0],
+          [-71.161144, 42.25932, 0],
+        ]);
+      });
+  });
+
+  it('/routes/segment (GET) return the segment length', () => {
+    return request(app.getHttpServer())
+      .get(`/routes/segment/length/${routeSegmentId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toStrictEqual({ length: 0.001045983387526644 });
+      });
+  });
+
+  it('/routes/segment (GET) return "404" if the route segment does not exists', () => {
+    return request(app.getHttpServer()).get(`/routes/segment/${0}`).expect(404);
+  });
+  it('/routes/segment (POST) succeeds', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/segment`)
+      .send({
+        routeId,
+        name: '',
+        coordinates: [
+          [0, 0, 0],
+          [42, 42, 0],
+        ],
+      })
+      .expect(201);
+  });
+  it('/routes/segment (POST) fails with less than two coordinates', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/segment`)
+      .send({
+        routeId,
+        name: '',
+        coordinates: [[0, 0, 0]],
+      })
+      .expect(400);
+  });
+
+  it('/routes/segment (POST) fails with less than two coordinates', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/segment`)
+      .send({
+        routeId,
+        name: '',
+        coordinates: [[0, 0, 0]],
+      })
+      .expect(400);
+  });
+
+  it('/routes/segment (POST) fails with "400" if the corresponding trip does not exist', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/segment`)
+      .send({
+        routeId: 0,
+        name: '',
+        coordinates: [],
+      })
+      .expect(422);
+  });
+
+  it('/routes/segment (POST) shuld fail with "400" if provided mixed dimension coordinates', () => {
+    return request(app.getHttpServer())
+      .post(`/routes/segment`)
+      .send({
+        routeId,
+        name: '',
+        coordinates: [
+          [0, 0],
+          [10, 10, 10],
+        ],
+      })
+      .expect(400);
+  });
+
+  it('/routes/segment (POST) should fail with "400" if provided with more than max allowed coordinates', () => {
+    const coordinates: [number, number, number][] = Array.from(
+      { length: 1000001 },
+      (_, i) => [i, i, 0],
+    );
+
+    return request(app.getHttpServer())
+      .post(`/routes/segment`)
+      .send({
+        routeId,
+        name: '',
+        coordinates
+      })
+      .expect(400);
+  });
+
+  it('/routes/segment (PATCH)', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/${routeSegmentId}`)
+      .send({
+        name: 'updated_test_route',
+        coordinates: [
+          [30, 10, 0],
+          [10, 30, 0],
+        ],
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('name', 'updated_test_route');
+        expect(res.body).toHaveProperty('coordinates', [
+          [30, 10, 0],
+          [10, 30, 0],
+        ]);
+      });
+  });
+
+  it('/routes/segment (PATCH) fails with invalid data', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/${routeSegmentId}`)
+      .send({})
+      .expect(400);
+  });
+
+  it('/routes/segment (PATCH) fails with invalid id', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/12345678`)
+      .send({ name: 'name_only_test_route' })
+      .expect(404);
+  });
+
+  it('/routes/segment (PATCH) with name only', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/${routeSegmentId}`)
+      .send({ name: 'name_only_test_route' })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('name', 'name_only_test_route');
+      });
+  });
+
+  it('/routes/segment (PATCH) with description only', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/${routeSegmentId}`)
+      .send({ description: 'description_only_test_route' })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty(
+          'description',
+          'description_only_test_route',
+        );
+      });
+  });
+
+  it('/routes/segment (PATCH) with coordinates only', () => {
+    return request(app.getHttpServer())
+      .patch(`/routes/segment/${routeSegmentId}`)
+      .send({
+        coordinates: [
+          [30, 10, 0],
+          [10, 30, 0],
+        ],
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('coordinates', [
+          [30, 10, 0],
+          [10, 30, 0],
+        ]);
+      });
+  });
+});

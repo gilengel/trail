@@ -14,8 +14,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { TripsService } from './trips.service';
-import { Prisma } from '@prisma/client';
-import { CreateTripDto, TripDto } from '../dto';
+import * as DTO from '../dto'
 
 @Controller('trips')
 export class TripsController {
@@ -24,20 +23,27 @@ export class TripsController {
   constructor(private tripsService: TripsService) {}
 
   @Post()
-  async create(@Body() createTripDto: CreateTripDto): Promise<TripDto> {
+  async create(@Body() createTripDto: DTO.CreateTrip): Promise<DTO.Trip> {
     const trip = await this.tripsService.createTrip(createTripDto);
 
     return Promise.resolve(trip);
   }
 
   @Get()
-  async findAll(): Promise<TripDto[]> {
+  async findAll(): Promise<DTO.Trip[]> {
     return await this.tripsService.trips();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<TripDto> {
+  async findOne(@Param('id') id: number): Promise<DTO.Trip> {
     const trip = await this.tripsService.trip(id);
+
+    if (!trip) {
+      throw new HttpException(
+        `Trip with id ${id} does not exist.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     return Promise.resolve(trip);
   }
@@ -45,10 +51,10 @@ export class TripsController {
   @Patch(':id')
   async update(
     @Param('id') id: number,
-    @Body() updateTripDto: Prisma.TripUpdateInput,
-  ): Promise<TripDto> {
+    @Body() UpdateTrip: DTO.UpdateTrip,
+  ): Promise<DTO.Trip> {
     try {
-      return await this.tripsService.updateTrip(id, updateTripDto);
+      return await this.tripsService.updateTrip(id, UpdateTrip);
     } catch (e) {
       this.logger.error(e);
 
@@ -60,7 +66,7 @@ export class TripsController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<TripDto> {
+  async delete(@Param('id') id: number): Promise<DTO.Trip> {
     return this.tripsService.deleteTrip(id);
   }
 }

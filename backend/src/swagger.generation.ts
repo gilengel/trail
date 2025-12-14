@@ -1,3 +1,6 @@
+/**
+ * @file Generates the swagger api documentation.
+ */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -5,16 +8,16 @@ import { writeFileSync } from 'fs';
 import { join } from 'path';
 
 /**
- *
+ * Generates the swagger definition.
  */
 async function generateSwagger() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-      .setTitle('Trail backend')
-      .setDescription('The trails API description')
-      .setVersion('1.0')
-      .addTag('trail')
+    .setTitle('Trail backend')
+    .setDescription('The trails API description')
+    .setVersion('1.0')
+    .addTag('trail')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
