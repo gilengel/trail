@@ -4,7 +4,6 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
 import { RouteSegment } from './route.segment.dto';
 
-
-export class UpdateRouteSegment extends PartialType (
+export class UpdateRouteSegment extends PartialType(
   OmitType(RouteSegment, ['id'] as const),
 ) {}

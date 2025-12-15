@@ -2,8 +2,8 @@
  * @file Routes service unit test cases.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import * as tripTestData from './__data__'
-import * as routeTestData from '../routes/routes/__data__'
+import * as tripTestData from './__data__';
+import * as routeTestData from '../routes/routes/__data__';
 
 import { TripsService } from './trips.service';
 import { CreateTrip, Trip } from '../dto';
@@ -16,7 +16,7 @@ describe('TripsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TripsModule]
+      imports: [TripsModule],
     }).compile();
 
     service = module.get<TripsService>(TripsService);
@@ -29,9 +29,11 @@ describe('TripsService', () => {
       layout: {},
     };
 
-    jest
-      .spyOn(database, 'create')
-      .mockResolvedValueOnce({ id: 0, name: tripTestData.tripName, layout: {} });
+    jest.spyOn(database, 'create').mockResolvedValueOnce({
+      id: 0,
+      name: tripTestData.tripName,
+      layout: {},
+    });
 
     const result = await service.createTrip(trip);
 

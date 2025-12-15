@@ -18,7 +18,7 @@ export type Json =
   | boolean
   | null
   | Json[]
-  | { [key: string]: Json }
+  | { [key: string]: Json };
 
 export class Trip {
   @ApiProperty()
@@ -41,11 +41,10 @@ export class Trip {
     type: () => Object,
   })
   @IsObject()
-  layout: Json
+  layout: Json;
 
   @ApiProperty({ type: () => Route })
   @IsArray()
   @IsOptional()
   routes?: Route[];
 }
-

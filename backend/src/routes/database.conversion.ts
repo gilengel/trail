@@ -1,4 +1,8 @@
 /**
+ * @file Conversion function for geometry to and from wkt to entity format.
+ */
+
+/**
  * Takes a LineString in Well-Known Text (WKT) format and transforms it into an array of arrays of floats.
  * @param wkt - A string representing a LineString in 2D or 3D space.
  * @returns An array consisting of arrays of floats.
@@ -7,17 +11,17 @@
  * wkt2numberArray('LINESTRING (30 10, 10 30, 40 40)')
  */
 export function wkt2numberArray(wkt: string): number[][] {
-    return wkt
-        .replace(/LINESTRING Z ?\(/, '')
-        .replace(')', '')
-        .split(',')
-        .map((point) => {
-            const coordinates = point
-                .split(' ')
-                .map((coordinate) => parseFloat(coordinate));
+  return wkt
+    .replace(/LINESTRING Z ?\(/, '')
+    .replace(')', '')
+    .split(',')
+    .map((point) => {
+      const coordinates = point
+        .split(' ')
+        .map((coordinate) => parseFloat(coordinate));
 
-            return coordinates;
-        });
+      return coordinates;
+    });
 }
 
 /**
@@ -29,11 +33,10 @@ export function wkt2numberArray(wkt: string): number[][] {
  * numberArray2wkt([[30, 10], [10, 30], [40, 40]]
  */
 export function numberArray2wkt(array: number[][]): string {
-    const routePointsString = array.map((point) => point.join(' ')).join(',');
+  const routePointsString = array.map((point) => point.join(' ')).join(',');
 
-    return `LINESTRING Z(${routePointsString})`;
+  return `LINESTRING Z(${routePointsString})`;
 }
-
 
 /**
  * Takes a point in the form of a number array and converts it into the wkt (well known text)
@@ -45,9 +48,8 @@ export function numberArray2wkt(array: number[][]): string {
  * point2wkt([32, 64])
  */
 export function point2wkt(point: number[]): string {
-    return `POINT(${point.join(' ')})`;
+  return `POINT(${point.join(' ')})`;
 }
-
 
 /**
  * Takes a point as a string in the wkt format and converts it into an array where each member
@@ -59,9 +61,9 @@ export function point2wkt(point: number[]): string {
  * wkt2point('POINT(32 64)')
  */
 export function wkt2point(wkt: string): number[] {
-    return wkt
-        .replace('POINT(', '')
-        .replace(')', '')
-        .split(' ')
-        .map((value) => parseFloat(value));
+  return wkt
+    .replace('POINT(', '')
+    .replace(')', '')
+    .split(' ')
+    .map((value) => parseFloat(value));
 }

@@ -4,33 +4,31 @@
  */
 import { Injectable } from '@nestjs/common';
 import { RouteSegmentsDatabase } from './route.segments.database';
-import * as DTO from '../../dto'
+import * as DTO from '../../dto';
 
 // If the client tries to create/update routes with less then two coordinates
 export class NotEnoughCoordinatesError extends Error {
-    constructor() {
-        super(
-            'Minimum number of coordinates for a route is two which was not met.',
-        );
-    }
+  constructor() {
+    super(
+      'Minimum number of coordinates for a route is two which was not met.',
+    );
+  }
 }
 
 // If the client tries to create/update routes with more than one million points
 export class TooManyCoordinatesError extends Error {
-    constructor() {
-        super(
-            `Maximum number of coordinates for a route is 1'000'000 which was exceed.`,
-        );
-    }
+  constructor() {
+    super(
+      `Maximum number of coordinates for a route is 1'000'000 which was exceed.`,
+    );
+  }
 }
 
 // If the coordinates bot have 2D and 3D data
 export class MixedCoordinatesError extends Error {
-    constructor() {
-        super(
-            `Mixing 2D and 3D coordinates in a route segment is not supported.`,
-        );
-    }
+  constructor() {
+    super(`Mixing 2D and 3D coordinates in a route segment is not supported.`);
+  }
 }
 
 @Injectable()
@@ -45,7 +43,7 @@ export class RouteSegmentsService {
    */
   async create(
     segment: DTO.CreateRouteSegmentPrivate,
-    route: DTO.Route
+    route: DTO.Route,
   ): Promise<DTO.RouteSegment> {
     this.validateCoordinates(segment.coordinates);
 
@@ -71,7 +69,7 @@ export class RouteSegmentsService {
    * @returns A Promise that resolves to a RouteSegmentDto object or null if not found.
    */
   async length(id: number): Promise<number> {
-        return this.database.length(id);
+    return this.database.length(id);
   }
 
   /**
@@ -84,20 +82,19 @@ export class RouteSegmentsService {
     id: number,
     data: DTO.UpdateRouteSegment,
   ): Promise<DTO.RouteSegment> {
-    if(data.coordinates)
-    {
+    if (data.coordinates) {
       this.validateCoordinates(data.coordinates);
     }
-  
+
     return this.database.update(id, data);
   }
 
-    /**
-     * Validates an array of coordinates to ensure they meet specific criteria.
-     * @param coordinates - An array of arrays representing coordinates.
-     * @throws {NotEnoughCoordinatesError} - If the array contains fewer than 2 coordinate sets.
-     * @throws {TooManyCoordinatesError} - If the array contains more than 1,000,000 coordinate sets.
-     */
+  /**
+   * Validates an array of coordinates to ensure they meet specific criteria.
+   * @param coordinates - An array of arrays representing coordinates.
+   * @throws {NotEnoughCoordinatesError} - If the array contains fewer than 2 coordinate sets.
+   * @throws {TooManyCoordinatesError} - If the array contains more than 1,000,000 coordinate sets.
+   */
   validateCoordinates(coordinates: number[][]): void {
     // Check if there are at least 2 coordinates.
     if (coordinates.length < 2) {
@@ -110,8 +107,10 @@ export class RouteSegmentsService {
     }
 
     const innerLength = coordinates[0].length;
-    const allSameLength = coordinates.every(inner => inner.length === innerLength);
-    if(!allSameLength) {
+    const allSameLength = coordinates.every(
+      (inner) => inner.length === innerLength,
+    );
+    if (!allSameLength) {
       throw new MixedCoordinatesError();
     }
   }

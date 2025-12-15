@@ -2,17 +2,24 @@
  * @file Public API for images unit test cases.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpException, HttpStatus, Logger } from '@nestjs/common';
+import {
+  UnprocessableEntityException,
+  BadRequestException,
+  NotFoundException,
+  Logger,
+} from '@nestjs/common';
 import { readFileSync } from 'fs';
 
-import { ImagesController, NoOrWrongGeoInformationError } from './images.controller';
+import {
+  ImagesController,
+  NoOrWrongGeoInformationError,
+} from './images.controller';
 import { ImagesService } from './images.service';
 import { mockFileFromBuffer } from './test/test.helper';
-import * as imageTestData from './__data__'
-import * as routeSegmentTestData from '../routes/segments/__data__'
+import * as imageTestData from './__data__';
+import * as routeSegmentTestData from '../routes/segments/__data__';
 import { ImagesModule } from './images.module';
 import { RouteSegmentsService } from '../routes/segments/route.segments.service';
-
 
 describe('ImageController', () => {
   let controller: ImagesController;
@@ -21,16 +28,15 @@ describe('ImageController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ImagesModule]
+      imports: [ImagesModule],
     }).compile();
 
     controller = module.get<ImagesController>(ImagesController);
-    routeSegmentService = module.get<RouteSegmentsService>(
-      RouteSegmentsService,
-    );
+    routeSegmentService =
+      module.get<RouteSegmentsService>(RouteSegmentsService);
     imageService = module.get<ImagesService>(ImagesService);
 
-    jest.spyOn(Logger.prototype, 'error').mockImplementation(() => { });
+    jest.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -61,9 +67,8 @@ describe('ImageController', () => {
 
     const result = controller.uploadFile([mockFileFromBuffer(buffer)]);
     await expect(result).rejects.toThrow(
-      new HttpException(
+      new BadRequestException(
         'The provided image has no or wrong geo information.',
-        HttpStatus.BAD_REQUEST,
       ),
     );
   });
@@ -77,7 +82,7 @@ describe('ImageController', () => {
     expect(result).toStrictEqual(imageTestData.Entities.images);
   });
 
-  it('should fail with a "BadRequest" if parameters are invalid', async () => {
+  it('should fail with a "400" if parameters are invalid', async () => {
     jest
       .spyOn(imageService, 'getImagesNearCoordinate')
       .mockRejectedValue(new Error());
@@ -85,18 +90,40 @@ describe('ImageController', () => {
     const result = controller.getImagesNearPoint(1024, 1024, -1);
 
     await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.BAD_REQUEST),
+      new BadRequestException(
+        'The provided offset query parameter must be greater or equal to zero, got -1',
+      ),
     );
   });
 
-  it('should fail with a "NotFound" if no images are near a point', async () => {
-    jest.spyOn(imageService, 'getImagesNearCoordinate').mockResolvedValue([]);
+  it('should fail with a "400" if not provided with longitude', async () => {
+    jest
+      .spyOn(imageService, 'getImagesNearCoordinate')
+      .mockRejectedValue(new BadRequestException());
 
-    const result = controller.getImagesNearPoint(1024, 1024, 0);
+    const result = controller.getImagesNearPoint(undefined, 1024, -1);
 
-    await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.NOT_FOUND),
-    );
+    await expect(result).rejects.toThrow(new BadRequestException());
+  });
+
+  it('should fail with a "400" if not provided with latitude', async () => {
+    jest
+      .spyOn(imageService, 'getImagesNearCoordinate')
+      .mockRejectedValue(new BadRequestException());
+
+    const result = controller.getImagesNearPoint(1024, undefined, -1);
+
+    await expect(result).rejects.toThrow(new BadRequestException());
+  });
+
+  it('should fail with a "400" if not provided with longitude and latitude', async () => {
+    jest
+      .spyOn(imageService, 'getImagesNearCoordinate')
+      .mockRejectedValue(new BadRequestException());
+
+    const result = controller.getImagesNearPoint(undefined, undefined, -1);
+
+    await expect(result).rejects.toThrow(new BadRequestException());
   });
 
   it('should return the image dtos for all images near a route segment', async () => {
@@ -126,24 +153,22 @@ describe('ImageController', () => {
       routeSegmentTestData.routeSegment.id,
       0,
     );
-    expect(result).toStrictEqual(4);
+    expect(result).toStrictEqual({ count: 4 });
   });
 
-  it('should throw an error if the database returns an error for the numbers of images', async () => {
+  it('should return "422" if the route segment was not found', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')
-      .mockReturnValue(Promise.resolve(routeSegmentTestData.routeSegment));
+      .mockReturnValue(Promise.resolve(null));
     jest
       .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
-      .mockRejectedValue(new Error());
+      .mockReturnValue(Promise.resolve(4));
 
-    const result = controller.getImagesNearRouteSegment(
+    const result = controller.getNumberOfImagesNearRouteSegment(
       routeSegmentTestData.routeSegment.id,
       0,
     );
-    await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.BAD_REQUEST),
-    );
+    expect(result).rejects.toThrow(new UnprocessableEntityException());
   });
 
   it('should return the image dtos for all images near a route segment capped by the max parameter', async () => {
@@ -152,7 +177,9 @@ describe('ImageController', () => {
       .mockReturnValue(Promise.resolve(routeSegmentTestData.routeSegment));
     jest
       .spyOn(imageService, 'getImagesNearRouteSegment')
-      .mockReturnValue(Promise.resolve(imageTestData.Entities.multipleImages.slice(0, 3)));
+      .mockReturnValue(
+        Promise.resolve(imageTestData.Entities.multipleImages.slice(0, 3)),
+      );
 
     const result = await controller.getImagesNearRouteSegment(
       routeSegmentTestData.routeSegment.id,
@@ -162,46 +189,8 @@ describe('ImageController', () => {
     expect(result.length).toEqual(3);
   });
 
-  it('should fail with a "NotFound" if no images are near a route segment for number', async () => {
-    jest
-      .spyOn(routeSegmentService, 'findOne')
-      .mockReturnValue(Promise.resolve(routeSegmentTestData.routeSegment));
-    jest
-      .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
-      .mockReturnValue(Promise.resolve(0));
-
-    const result = controller.getNumberOfImagesNearRouteSegment(
-      routeSegmentTestData.routeSegment.id,
-      0,
-    );
-
-    await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.NOT_FOUND),
-    );
-  });
-
-  it('should fail with an "500" if the database query for the number of images for a route segments fails', async () => {
-    jest
-      .spyOn(routeSegmentService, 'findOne')
-      .mockReturnValue(Promise.resolve(routeSegmentTestData.routeSegment));
-    jest
-      .spyOn(imageService, 'getNumberOfImagesNearRouteSegment')
-      .mockRejectedValue(new Error('some error'));
-
-    const result = controller.getNumberOfImagesNearRouteSegment(
-      routeSegmentTestData.routeSegment.id,
-      0,
-    );
-
-    await expect(result).rejects.toThrow(
-      new HttpException('some error', HttpStatus.BAD_REQUEST),
-    );
-  });
-
-  it('should throw an error if the database returns an error', async () => {
-    jest
-      .spyOn(routeSegmentService, 'findOne')
-      .mockRejectedValue(new Error('some error'));
+  it('should fail with a "422" if the corresponding route segment does not exists', async () => {
+    jest.spyOn(routeSegmentService, 'findOne').mockResolvedValue(null);
     jest
       .spyOn(imageService, 'getImagesNearRouteSegment')
       .mockRejectedValue(new Error());
@@ -210,12 +199,10 @@ describe('ImageController', () => {
       routeSegmentTestData.routeSegment.id,
       0,
     );
-    await expect(result).rejects.toThrow(
-      new HttpException('some error', HttpStatus.BAD_REQUEST),
-    );
+    await expect(result).rejects.toThrow(new UnprocessableEntityException());
   });
 
-  it('should fail with a "BadRequest" if parameters are invalid to get images for a route segment', async () => {
+  it('should fail with a "400" if parameters are invalid to get images for a route segment', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')
       .mockReturnValue(Promise.resolve(routeSegmentTestData.routeSegment));
@@ -229,7 +216,7 @@ describe('ImageController', () => {
     );
 
     await expect(result).rejects.toThrow(
-      new HttpException('Invalid Index', HttpStatus.BAD_REQUEST),
+      new BadRequestException('Invalid offset: Must be >= 0'),
     );
   });
 
@@ -254,7 +241,7 @@ describe('ImageController', () => {
   it('should fail with a 404 if the requested segment does not exist', async () => {
     jest
       .spyOn(routeSegmentService, 'findOne')
-      .mockRejectedValue(new HttpException('', HttpStatus.NOT_FOUND));
+      .mockRejectedValue(new NotFoundException());
 
     jest.spyOn(imageService, 'getImagesNearRouteSegment').mockResolvedValue([]);
 
@@ -263,16 +250,14 @@ describe('ImageController', () => {
       0,
     );
 
-    await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.NOT_FOUND),
-    );
+    await expect(result).rejects.toThrow(new NotFoundException());
   });
 
   it('should fail with a 400 if the requested segment id is greater than the allowed max integer from the database', async () => {
     const result = controller.getImagesNearRouteSegment(2147483647 + 1, 0);
 
     await expect(result).rejects.toThrow(
-      new HttpException('Invalid route segment id', HttpStatus.BAD_REQUEST),
+      new BadRequestException('Invalid route segment id'),
     );
   });
 });

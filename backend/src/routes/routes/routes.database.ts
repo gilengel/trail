@@ -4,10 +4,10 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Prisma, Route } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
-import * as DTO from '../../dto'
+import * as DTO from '../../dto';
 import { RouteSegmentsDatabase } from '../segments';
 
-export class NoAttributesProvidedError extends Error { }
+export class NoAttributesProvidedError extends Error {}
 
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
 @Injectable()
@@ -15,8 +15,8 @@ export class RoutesDatabase {
   constructor(
     @Inject(forwardRef(() => RouteSegmentsDatabase))
     private routeSegmentsDatabase: RouteSegmentsDatabase,
-    private prisma: PrismaService
-  ) { }
+    private prisma: PrismaService,
+  ) {}
 
   /**
    * Create a new trip in the database.
@@ -24,7 +24,10 @@ export class RoutesDatabase {
    * @param trip - The trip the newly route shall be associated with.
    * @returns A Promise that resolves to a RouteDto object.
    */
-  async create(data: DTO.CreateRoutePrivate, trip: DTO.Trip): Promise<DTO.Route> {
+  async create(
+    data: DTO.CreateRoutePrivate,
+    trip: DTO.Trip,
+  ): Promise<DTO.Route> {
     const dbRoute = await this.prisma.route.create({
       data: {
         trip: { connect: { id: trip.id } },
@@ -36,7 +39,10 @@ export class RoutesDatabase {
     const dtoRoute = this.dbToDto(dbRoute);
 
     if (data.segments) {
-      dtoRoute.segments = await this.routeSegmentsDatabase.createMultiple(data.segments, dtoRoute);
+      dtoRoute.segments = await this.routeSegmentsDatabase.createMultiple(
+        data.segments,
+        dtoRoute,
+      );
     }
 
     return Promise.resolve(dtoRoute);
@@ -57,7 +63,8 @@ export class RoutesDatabase {
     }
 
     const dtoRoute = this.dbToDto(routes[0]);
-    dtoRoute.segments = await this.routeSegmentsDatabase.getAllForRoute(dtoRoute)
+    dtoRoute.segments =
+      await this.routeSegmentsDatabase.getAllForRoute(dtoRoute);
 
     return dtoRoute;
   }
@@ -96,7 +103,10 @@ export class RoutesDatabase {
    * @param data - The data for updating the trip.
    * @returns A Promise that resolves to the updated trip.
    */
-  async update(id: number, data: DTO.UpdateRoute): Promise<DTO.RouteWithoutSegments | null> {
+  async update(
+    id: number,
+    data: DTO.UpdateRoute,
+  ): Promise<DTO.RouteWithoutSegments | null> {
     const attributesQueries = [];
     // Name only
     if (data.name) {
@@ -113,7 +123,8 @@ export class RoutesDatabase {
                              WHERE id = ${id}::int
                              RETURNING id, name, description`;
 
-    const routes = await this.prisma.$queryRaw<DTO.RouteWithoutSegments[]>(query);
+    const routes =
+      await this.prisma.$queryRaw<DTO.RouteWithoutSegments[]>(query);
 
     if (routes.length == 0) {
       return Promise.resolve(null);
@@ -171,7 +182,7 @@ export class RoutesDatabase {
       id: route.id,
       name: route.name,
       description: route.description,
-      segments: []
-    }
+      segments: [],
+    };
   }
 }

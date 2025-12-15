@@ -3,7 +3,7 @@
  */
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import * as DTO from './dto'
+import * as DTO from './dto';
 import { PrismaService } from '../prisma.service';
 
 // General note: Prisma currently does not support PostGIS, therefore we must use raw queries 🙁
@@ -55,17 +55,21 @@ export class TripsDatabase {
    * @param data - The data for updating the trip.
    * @returns A Promise that resolves to the updated trip.
    */
-  async update(id: number, data: DTO.UpdateTrip): Promise<DTO.Trip> {
-    const updatedTrip = await this.prisma.trip.update({
-      where: {
-        id: Number(id),
-      },
-      data: {
-        layout: data.layout ?? Prisma.JsonNull
-      },
-    });
+  async update(id: number, data: DTO.UpdateTrip): Promise<DTO.Trip | null> {
+    try {
+      const trip = await this.prisma.trip.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          layout: data.layout ?? Prisma.JsonNull,
+        },
+      });
 
-    return Promise.resolve(updatedTrip);
+      return trip;
+    } catch {
+      return Promise.resolve(null);
+    }
   }
 
   /**

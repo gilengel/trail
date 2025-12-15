@@ -77,13 +77,13 @@ describe('TripsController (e2e)', () => {
       });
   });
 
-    it('/trips (PATCH) resets the layout to default if not provided', () => {
+  it('/trips (PATCH) resets the layout to default if not provided', () => {
     return request(app.getHttpServer())
       .patch(`/trips/${tripId}`)
       .send({})
       .expect(200)
       .expect((res) => {
-        expect(res.body).toHaveProperty('layout', {});
+        expect(res.body).toHaveProperty('layout', null);
       });
   });
 

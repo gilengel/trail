@@ -1,9 +1,9 @@
 /**
  * @file Test data for routes api.
  */
-import * as Data from "../segments/__data__";
+import * as Data from '../segments/__data__';
 
-import * as DTO from '../../dto'
+import * as DTO from '../../dto';
 
 export const routeId = 0;
 export const routeName = 'test_route';
@@ -12,6 +12,8 @@ export const updatedRouteDescription = 'updated_test_route_description';
 export const updatedRouteName = 'updated_test_route';
 
 import { Route as PrismaRoute } from '@prisma/client';
+import { GPXRoute, GPXRouteSegment } from '../../dto';
+import { coordinates } from '../segments/__data__';
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DB {
   export const Route = {
@@ -112,34 +114,31 @@ export namespace Enties {
   export const Routes: PrismaRoute[] = [DB.Route];
 }
 
-
 export const newRoute: DTO.CreateRoutePublic = {
   name: 'new_test_route',
   tripId: 0,
   description: 'new test route description',
-  segments: Data.newSegments
+  segments: Data.newSegments,
 };
 
 export const newRouteWithoutSegments: DTO.CreateRoutePublic = {
   name: 'new_test_route',
   tripId: 0,
-  description: ''
+  description: '',
 };
 
 export const routeWithEmptyName: DTO.Route = {
   id: routeId,
   name: '',
   description: '',
-  segments: Data.segments
-
+  segments: Data.segments,
 };
 
 export const route: DTO.Route = {
   id: routeId,
   name: routeName,
   description: routeDescription,
-  segments: Data.segments
-
+  segments: Data.segments,
 };
 
 export const routes: DTO.Route[] = [route];
@@ -157,7 +156,6 @@ export const routeWithEmptySegments: DTO.Route = {
   segments: [],
 };
 
-/*
 export const gpxSegments: GPXRouteSegment[] = [
   {
     name: 'test_route_segment',
@@ -169,4 +167,3 @@ export const gpxRoute: GPXRoute = {
   name: routeName,
   segments: gpxSegments,
 };
-*/

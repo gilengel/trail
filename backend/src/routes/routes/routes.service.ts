@@ -1,11 +1,7 @@
 /**
  * @file Provides functionality to create, read, update and delete routes.
  */
-import {
-  Inject,
-  Injectable,
-  forwardRef,
-} from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { RouteSegmentsService } from '../segments/route.segments.service';
 import * as DTO from '../../dto';
@@ -18,7 +14,7 @@ export class RoutesService {
     private routesDatabase: RoutesDatabase,
     @Inject(forwardRef(() => RouteSegmentsService))
     private segments: RouteSegmentsService,
-  ) { }
+  ) {}
 
   /**
    * Retrieve a route by its ID.
@@ -36,7 +32,7 @@ export class RoutesService {
       id,
       name: routeDB.name,
       description: routeDB.description,
-      segments: []
+      segments: [],
     };
 
     route.segments = await this.segments.findAllForRoute(route);
@@ -67,7 +63,10 @@ export class RoutesService {
    * @param trip - The trip for which the routes are created (and therefore associated with).
    * @returns A Promise that resolves to a Route object.
    */
-  async createRoute(route: DTO.CreateRoutePrivate, trip: DTO.Trip): Promise<DTO.Route> {
+  async createRoute(
+    route: DTO.CreateRoutePrivate,
+    trip: DTO.Trip,
+  ): Promise<DTO.Route> {
     if (route.segments) {
       route.segments.forEach((segment) =>
         this.segments.validateCoordinates(segment.coordinates),

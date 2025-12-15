@@ -6,7 +6,7 @@ import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { TripsController } from './trips.controller';
 import { TripsService } from './trips.service';
 import { Trip } from '../dto';
-import * as tripTestData from './__data__'
+import * as tripTestData from './__data__';
 import { TripsModule } from './trips.module';
 
 describe('TripsController', () => {
@@ -15,25 +15,27 @@ describe('TripsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TripsModule]
+      imports: [TripsModule],
     }).compile();
 
     controller = module.get<TripsController>(TripsController);
     service = module.get<TripsService>(TripsService);
 
-    jest.spyOn(Logger.prototype, 'error').mockImplementation(() => { });
+    jest.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
   });
 
   afterEach(async () => {
     jest.restoreAllMocks();
-  })
+  });
 
   it('should create a new trip and return its dto', async () => {
     jest
       .spyOn(service, 'createTrip')
       .mockReturnValue(Promise.resolve(tripTestData.trip));
 
-    expect(await controller.create(tripTestData.newTrip)).toBe(tripTestData.trip);
+    expect(await controller.create(tripTestData.newTrip)).toBe(
+      tripTestData.trip,
+    );
   });
 
   it('should throw "BadRequest" trying to create a trip if layout is invalid', async () => {
@@ -74,7 +76,6 @@ describe('TripsController', () => {
     expect(await controller.findOne(0)).toEqual(tripTestData.trip);
   });
 
-
   it('should return "404" if no trip is stored in the database by the given id', async () => {
     jest.spyOn(service, 'trip').mockResolvedValue(null);
 
@@ -98,9 +99,7 @@ describe('TripsController', () => {
   });
 
   it('should update a trip and return its dto', async () => {
-    jest.spyOn(service, 'updateTrip').mockImplementation(() => {
-      throw new Error();
-    });
+    jest.spyOn(service, 'updateTrip').mockResolvedValue(null);
 
     const result = controller.update(0, { layout: { test: 'value' } });
     await expect(result).rejects.toThrow(

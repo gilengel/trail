@@ -11,6 +11,6 @@ import { TripsDatabase } from './trips.database';
   providers: [TripsService, TripsDatabase],
   controllers: [TripsController],
   imports: [PrismaModule],
-  exports: [TripsService]
+  exports: [TripsService],
 })
 export class TripsModule {}

@@ -6,15 +6,14 @@ import {
   Controller,
   Get,
   Delete,
-  HttpException,
-  HttpStatus,
+  NotFoundException,
   Logger,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { TripsService } from './trips.service';
-import * as DTO from '../dto'
+import * as DTO from '../dto';
 
 @Controller('trips')
 export class TripsController {
@@ -39,10 +38,7 @@ export class TripsController {
     const trip = await this.tripsService.trip(id);
 
     if (!trip) {
-      throw new HttpException(
-        `Trip with id ${id} does not exist.`,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(`Trip with id ${id} does not exist.`);
     }
 
     return Promise.resolve(trip);
@@ -53,16 +49,14 @@ export class TripsController {
     @Param('id') id: number,
     @Body() UpdateTrip: DTO.UpdateTrip,
   ): Promise<DTO.Trip> {
-    try {
-      return await this.tripsService.updateTrip(id, UpdateTrip);
-    } catch (e) {
-      this.logger.error(e);
-
-      throw new HttpException(
+    const trip = await this.tripsService.updateTrip(id, UpdateTrip);
+    if (trip === null) {
+      throw new NotFoundException(
         'The requested trip you want to update does not exist.',
-        HttpStatus.NOT_FOUND,
       );
     }
+
+    return Promise.resolve(trip);
   }
 
   @Delete(':id')

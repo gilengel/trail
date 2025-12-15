@@ -41,8 +41,8 @@ export class TripsService {
    * @param data - The data for updating the trip.
    * @returns A Promise that resolves to the updated trip.
    */
-  async updateTrip(id: number, data: DTO.UpdateTrip): Promise<DTO.Trip> {
-    return this.database.update(id, data);
+  async updateTrip(id: number, data: DTO.UpdateTrip): Promise<DTO.Trip | null> {
+    return await this.database.update(id, data);
   }
 
   /**

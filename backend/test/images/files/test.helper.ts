@@ -5,7 +5,6 @@ import * as fs from 'fs';
 import { Express } from 'express';
 import { Buffer } from 'buffer';
 
-
 /**
  * Creates a fake image in the sense that the content is not valid.
  * Used for unit tests.
@@ -21,7 +20,6 @@ export function mockImage(size: number, name: string): File {
 }
 */
 
- 
 /**
  * Creates a file based on a buffer. This can be useful to unit test upload functionality.
  * @param buffer - The data that should be used to create the file.
@@ -48,7 +46,6 @@ export function mockFileFromBuffer(
   };
 }
 
- 
 /**
  * Ensure that the storage directory for the images exists.
  */

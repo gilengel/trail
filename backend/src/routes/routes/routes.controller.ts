@@ -22,17 +22,29 @@ import { RoutesService } from './routes.service';
 
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
-import { extractCoordinatesFromGPX, GPXRoute } from '../../dto/convert';
-import { Route, RouteWithMultipleFiles, RouteWithoutSegments } from './dto/route.dto';
-import * as DTO from '../../dto'
+import { extractCoordinatesFromGPX } from '../../dto/convert';
+import {
+  Route,
+  RouteWithMultipleFiles,
+  RouteWithoutSegments,
+} from './dto/route.dto';
+import * as DTO from '../../dto';
 import { TripsService } from '../../trips/trips.service';
-import { MixedCoordinatesError, NotEnoughCoordinatesError, TooManyCoordinatesError } from '../segments/route.segments.service';
+import {
+  MixedCoordinatesError,
+  NotEnoughCoordinatesError,
+  TooManyCoordinatesError,
+} from '../segments/route.segments.service';
+import { GPXRoute } from '../../dto';
 
 @Controller('routes')
 export class RoutesController {
   private readonly logger = new Logger(RoutesController.name);
 
-  constructor(private routeService: RoutesService, private tripService: TripsService) { }
+  constructor(
+    private routeService: RoutesService,
+    private tripService: TripsService,
+  ) {}
 
   @Get()
   async findAll(): Promise<RouteWithoutSegments[]> {
@@ -61,7 +73,6 @@ export class RoutesController {
     return route;
   }
 
-
   @Post()
   async create(@Body() route: DTO.CreateRoutePublic): Promise<Route> {
     const trip = await this.tripService.trip(route.tripId);
@@ -73,7 +84,6 @@ export class RoutesController {
     return this._create(route, trip);
   }
 
-
   @Post('gpx')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('files'))
@@ -81,8 +91,8 @@ export class RoutesController {
     @Body() body: RouteWithMultipleFiles,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ): Promise<Route> {
-    if(body.tripId === undefined) {
-      throw new BadRequestException("tripId is missing");
+    if (body.tripId === undefined) {
+      throw new BadRequestException('tripId is missing');
     }
 
     const trip = await this.tripService.trip(body.tripId);
@@ -102,18 +112,17 @@ export class RoutesController {
     const routeDto: DTO.CreateRoutePublic = {
       tripId: body.tripId,
       name: body.name,
-      segments: mergedRoute.segments.map(gpxSegment => {
+      segments: mergedRoute.segments.map((gpxSegment) => {
         return {
           routeId: 0, //
           name: gpxSegment.name,
-          coordinates: gpxSegment.coordinates
-        }
-      })
-    }
+          coordinates: gpxSegment.coordinates,
+        };
+      }),
+    };
 
     return this._create(routeDto, trip);
   }
-
 
   @Patch(':id')
   async update(
@@ -130,7 +139,9 @@ export class RoutesController {
     const result = await this.routeService.updateRoute(id, route);
 
     if (result == null) {
-      throw new NotFoundException('The requested route you want to update does not exist.');
+      throw new NotFoundException(
+        'The requested route you want to update does not exist.',
+      );
     }
 
     return result;
@@ -141,13 +152,15 @@ export class RoutesController {
     return this.routeService.deleteRoute(id);
   }
 
-    private async _create(route: DTO.CreateRoutePublic, trip: DTO.Trip): Promise<Route> {
+  private async _create(
+    route: DTO.CreateRoutePublic,
+    trip: DTO.Trip,
+  ): Promise<Route> {
     try {
       const newRoute = await this.routeService.createRoute(route, trip);
 
       return Promise.resolve(newRoute);
-    }
-    catch (e) {
+    } catch (e) {
       if (e instanceof NotEnoughCoordinatesError) {
         throw new BadRequestException(e.message);
       } else if (e instanceof TooManyCoordinatesError) {

@@ -1,10 +1,10 @@
 /**
  * @file Contains data for unit tests of route segments.
  */
-import { CreateRouteSegmentPublic } from "./dto/create.route.segment.dto";
-import { RouteSegment } from "./dto/route.segment.dto";
-import { DB as SegmentDB } from "./route.segments.database";
-import * as DTO from '../../dto'
+import { CreateRouteSegmentPublic } from './dto/create.route.segment.dto';
+import { RouteSegment } from './dto/route.segment.dto';
+import { DB as SegmentDB } from './route.segments.database';
+import * as DTO from '../../dto';
 
 export const segmentId = 42;
 export const segmentName = 'test_route_segment';
@@ -26,7 +26,6 @@ export const updatedCoordinates: Array<[number, number, number]> = [
   [30, 10, 0],
   [10, 30, 0],
 ];
-
 
 export const newRouteSegment: CreateRouteSegmentPublic = {
   routeId: 0,
@@ -65,7 +64,7 @@ export namespace DB {
     routeId: 0,
     name: segmentName,
     description: segmentDescription,
-    coordinates: wkt
+    coordinates: wkt,
   };
 
   export const Segments: SegmentDB.RouteSegment[] = [
@@ -106,7 +105,7 @@ export namespace Entities {
     id: segmentId,
     name: segmentName,
     description: segmentDescription,
-    coordinates
+    coordinates,
   };
 
   export const Segments: DTO.RouteSegment[] = [
@@ -140,28 +139,28 @@ export namespace Entities {
     name: 'test_route_segment',
     description: segmentDescription,
     coordinates,
-  }
+  };
 
   export const segmentWithUpdatedName: DTO.RouteSegment = {
     id: segmentId,
     name: updatedSegmentName,
     description: segmentDescription,
     coordinates,
-  }
+  };
 
   export const segmentWithUpdatedDescription: DTO.RouteSegment = {
     id: segmentId,
     name: updatedSegmentName,
     description: updatedSegmentDescription,
     coordinates,
-  }
+  };
 
   export const segmentWithUpdatedCoordinates: DTO.RouteSegment = {
     id: segmentId,
     name: segmentName,
     description: segmentDescription,
     coordinates: updatedCoordinates,
-  }
+  };
 }
 
 export const segments: RouteSegment[] = [

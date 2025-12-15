@@ -1,8 +1,8 @@
 /**
  * @file Test data for the trips api.
  */
-import * as DTO from './dto'
-import * as routeTestData from "../routes/routes/__data__"
+import * as DTO from './dto';
+import * as routeTestData from '../routes/routes/__data__';
 
 export const tripName = 'test_trip';
 export const tripId = 0;
@@ -11,7 +11,7 @@ export const trip: DTO.Trip = {
   id: routeTestData.routeId,
   name: tripName,
   layout: {},
-  routes: []
+  routes: [],
 };
 
 export const newTrip: DTO.CreateTrip = {
@@ -23,5 +23,5 @@ export const dbTripWithUpdatedLayout: DTO.Trip = {
   id: routeTestData.routeId,
   name: routeTestData.routeName,
   layout: { test: 'value' },
-  routes: []
+  routes: [],
 };

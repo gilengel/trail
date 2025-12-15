@@ -8,7 +8,6 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  NotFoundException,
   Post,
   Query,
   UnprocessableEntityException,
@@ -16,7 +15,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import ExifReader from 'exifreader';
-import { ImagesService } from './images.service';
+import { ImagesService, InvalidOffsetError } from './images.service';
 import ImagesUploadInterceptor from './helper/images.upload.interceptor';
 import { RouteSegmentsService } from '../routes/segments/route.segments.service';
 import * as DTO from '../dto';
@@ -27,7 +26,6 @@ export class NoOrWrongGeoInformationError extends Error {
   }
 }
 
-
 @Controller('images')
 export class ImagesController {
   private readonly logger = new Logger(ImagesService.name);
@@ -35,7 +33,7 @@ export class ImagesController {
   constructor(
     private imagesService: ImagesService,
     private routeSegmentService: RouteSegmentsService,
-  ) { }
+  ) {}
 
   @Post()
   @UseInterceptors(ImagesUploadInterceptor)
@@ -57,23 +55,18 @@ export class ImagesController {
     @Query('lat') latitude: number,
     @Query('maxOffset') offset: number,
   ): Promise<DTO.Image[]> {
-    if(longitude === undefined || latitude === undefined) {
+    if (longitude === undefined || latitude === undefined) {
       throw new BadRequestException();
     }
+    if (offset < 0) {
+      throw new BadRequestException(new InvalidOffsetError(offset).message);
+    }
 
-    let images: Array<DTO.Image> = [];
-    try {
-      images = await this.imagesService.getImagesNearCoordinate(
+    const images: Array<DTO.Image> =
+      await this.imagesService.getImagesNearCoordinate(
         [longitude, latitude, 0],
         offset,
       );
-    } catch (e) {
-      throw new BadRequestException(e.message);
-    }
-
-    if (images.length == 0) {
-      throw new NotFoundException();
-    }
 
     return Promise.resolve(images);
   }
@@ -86,22 +79,17 @@ export class ImagesController {
   ): Promise<DTO.Image[]> {
     this.validateImageParameters(offset, routeSegmentId);
 
-    const routeSegment =
-      await this.routeSegmentService.findOne(routeSegmentId);
+    const routeSegment = await this.routeSegmentService.findOne(routeSegmentId);
 
     if (routeSegment === null) {
       throw new UnprocessableEntityException();
     }
-    const images: Array<DTO.Image> = await this.imagesService.getImagesNearRouteSegment(
-      routeSegment,
-      offset,
-      maxNumberOfImages,
-    );
-
-
-    if (images.length == 0) {
-      return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
-    }
+    const images: Array<DTO.Image> =
+      await this.imagesService.getImagesNearRouteSegment(
+        routeSegment,
+        offset,
+        maxNumberOfImages,
+      );
 
     return Promise.resolve(images);
   }
@@ -110,26 +98,23 @@ export class ImagesController {
   async getNumberOfImagesNearRouteSegment(
     @Query('routeSegmentId') routeSegmentId: number,
     @Query('maxOffset') offset: number,
-  ): Promise<{ count: number}> {
+  ): Promise<{ count: number }> {
     this.validateImageParameters(offset, routeSegmentId);
 
     let images: number | undefined = undefined;
-    try {
-      const routeSegment =
-        await this.routeSegmentService.findOne(routeSegmentId);
-      images = await this.imagesService.getNumberOfImagesNearRouteSegment(
-        routeSegment,
-        offset,
-      );
-    } catch (e) {
-      throw new NotFoundException();
+
+    const routeSegment = await this.routeSegmentService.findOne(routeSegmentId);
+
+    if (routeSegment === null) {
+      throw new UnprocessableEntityException();
     }
 
-    if (images == 0) {
-      throw new NotFoundException();
-    }
+    images = await this.imagesService.getNumberOfImagesNearRouteSegment(
+      routeSegment,
+      offset,
+    );
 
-    return Promise.resolve({ count: images});
+    return Promise.resolve({ count: images });
   }
 
   private extractCoordinates(image: Express.Multer.File): number[] {
@@ -146,10 +131,7 @@ export class ImagesController {
     const longitude = metaInfo.gps.Longitude;
     const latitude = metaInfo.gps.Latitude;
 
-    return [
-      longitude,
-      latitude,
-    ];
+    return [longitude, latitude];
   }
 
   private validateImageParameters(offset: number, routeSegmentId: number) {
@@ -163,7 +145,9 @@ export class ImagesController {
     }
   }
 
-  private async file2CreateImageDto(images: Express.Multer.File[]): Promise<DTO.CreateImage[]> {
+  private async file2CreateImageDto(
+    images: Express.Multer.File[],
+  ): Promise<DTO.CreateImage[]> {
     let values: DTO.CreateImage[] = [];
     try {
       values = images.map((image) => {
@@ -171,8 +155,8 @@ export class ImagesController {
           name: '',
           mimeType: image.mimetype,
           buffer: image.buffer,
-          coordinates: this.extractCoordinates(image)
-        }
+          coordinates: this.extractCoordinates(image),
+        };
       });
 
       return Promise.resolve(values);

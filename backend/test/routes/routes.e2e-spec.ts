@@ -8,10 +8,9 @@ import { RoutesModule } from '../../src/routes/routes.module';
 import { PrismaService } from '../../src/prisma.service';
 import { json } from 'express';
 import { env } from 'node:process';
-import * as DTO from '../../src/dto'
+import * as DTO from '../../src/dto';
 import * as RouteSegmentTestData from '../../src/routes/segments/__data__';
 import { join } from 'path';
-import { existsSync } from 'fs';
 
 /**
  * Creates a trip in the database that has no related routes.
@@ -120,14 +119,13 @@ describe('RoutesController (e2e)', () => {
         where: { id: tripId },
       });
 
-      await prisma.routeSegment.deleteMany()
+      await prisma.routeSegment.deleteMany();
     });
 
     it('/routes/ (GET)', () => {
       return request(app.getHttpServer()).get('/routes').expect(200);
     });
 
- 
     it('/routes/trip/:id (GET)', () => {
       return request(app.getHttpServer())
         .get(`/routes/trip/${tripId}`)
@@ -146,14 +144,14 @@ describe('RoutesController (e2e)', () => {
     it('/routes/:id (GET) returns "404" for nonexistent route', () => {
       return request(app.getHttpServer()).get(`/routes/123456789`).expect(404);
     });
-   
+
     it('/routes/ (POST)', () => {
       const newRoute: DTO.CreateRoutePublic = {
         name: 'new_test_route',
         tripId,
         description: 'new test route description',
-        segments: RouteSegmentTestData.newSegments
-      }
+        segments: RouteSegmentTestData.newSegments,
+      };
       return request(app.getHttpServer())
         .post(`/routes`)
         .send(newRoute)
@@ -164,13 +162,13 @@ describe('RoutesController (e2e)', () => {
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-    
+
     it('/routes/ (POST) with empty route', () => {
       return request(app.getHttpServer())
         .post(`/routes`)
         .send({
           tripId,
-          name: 'test'
+          name: 'test',
         })
         .expect(201)
         .expect(async (res) => {
@@ -181,8 +179,8 @@ describe('RoutesController (e2e)', () => {
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-    
-    it('/routes/ (POST) fails with a track containing invalid (not enough) coordinates', () => {
+
+    it('/routes/ (POST) fails with "400" if the track contains invalid coordinates', () => {
       return request(app.getHttpServer())
         .post(`/routes`)
         .send({
@@ -198,19 +196,56 @@ describe('RoutesController (e2e)', () => {
         .expect(400);
     });
 
+    it('/routes/ (POST) fails with "400" if the track contains too many coordinates', () => {
+      const coordinates: [number, number, number][] = Array.from(
+        { length: 1000001 },
+        (_, i) => [i, i, 0],
+      );
+      return request(app.getHttpServer())
+        .post(`/routes`)
+        .send({
+          tripId,
+          name: 'invalid_test_route',
+          segments: [
+            {
+              name: 'invalid_segment',
+              coordinates,
+            },
+          ],
+        })
+        .expect(400);
+    });
+
+    it('/routes/ (POST) fails with "400" if the track contains mixed coordinates', () => {
+      return request(app.getHttpServer())
+        .post(`/routes`)
+        .send({
+          tripId,
+          name: 'invalid_test_route',
+          segments: [
+            {
+              name: 'invalid_segment',
+              coordinates: [
+                [0, 0],
+                [0, 0, 0],
+              ],
+            },
+          ],
+        })
+        .expect(400);
+    });
+
     it('/routes/ (POST) returns a "422" if the requested trip does not exist', () => {
       return request(app.getHttpServer())
         .post(`/routes`)
         .send({
           tripId: 0,
           name: '',
-          segments: [
-          ],
+          segments: [],
         })
         .expect(422);
     });
 
-    
     it('/routes/gpx (POST) succeeds with a single segment track', () => {
       return request(app.getHttpServer())
         .post(`/routes/gpx`)
@@ -225,7 +260,7 @@ describe('RoutesController (e2e)', () => {
           await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
         });
     });
-    
+
     it('/routes/gpx (POST) succeeds with a single segment track without elevation', () => {
       return request(app.getHttpServer())
         .post(`/routes/gpx`)
@@ -259,7 +294,7 @@ describe('RoutesController (e2e)', () => {
         });
     });
 
-    it('/routes/gpx (POST) fails with less than two coordinates', () => {
+    it('/routes/gpx (POST) fails with a "400" if the route has less than two coordinates', () => {
       return request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
@@ -275,7 +310,7 @@ describe('RoutesController (e2e)', () => {
         .field('name', '')
         .field('tripId', 0)
         .attach('files', join(__dirname, 'files', 'short.gpx'))
-        .expect(422);    
+        .expect(422);
     });
 
     it('/routes (PATCH) succeeds changing only the name', () => {

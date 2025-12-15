@@ -1,14 +1,14 @@
 /**
  * @file Entity definition for a trip. Only to be used in domain logic.
  */
-import { Route } from "../routes/routes/route.entity"
+import { Route } from '../routes/routes/route.entity';
 
 export type Trip = {
- id: number,
- 
- name: string,
+  id: number;
 
- layout: string,
+  name: string;
 
- routes: Route[]
-}
+  layout: string;
+
+  routes: Route[];
+};

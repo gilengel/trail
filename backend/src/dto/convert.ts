@@ -3,25 +3,8 @@
  */
 import { XMLParser } from 'fast-xml-parser';
 import { Buffer } from 'buffer';
-
-// If the client tries to create/update routes with less then two coordinates
-export class NotEnoughCoordinatesError extends Error {
-  constructor() {
-    super(
-      'Minimum number of coordinates for a route is two which was not met.',
-    );
-  }
-}
-
-export interface GPXRoute {
-  name?: string;
-  segments: GPXRouteSegment[];
-}
-
-export interface GPXRouteSegment {
-  name: string;
-  coordinates: [number, number, number][];
-}
+import { NotEnoughCoordinatesError } from '../routes/segments/route.segments.service';
+import { GPXRoute, GPXRouteSegment } from '../dto';
 
 /**
  * Extracts the geospatial coordinates from a string or file buffer.

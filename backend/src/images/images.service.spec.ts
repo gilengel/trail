@@ -2,15 +2,10 @@
  * @file Image service unit tests.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  ImagesService,
-  InvalidOffsetError,
-} from './images.service';
-import {
-  ensureExistenceOfStorageDirectory,
-} from './test/test.helper';
-import * as imageTestData from './__data__'
-import * as routeSegmentsTestData from '../routes/segments/__data__'
+import { ImagesService } from './images.service';
+import { ensureExistenceOfStorageDirectory } from './test/test.helper';
+import * as imageTestData from './__data__';
+import * as routeSegmentsTestData from '../routes/segments/__data__';
 import { ImagesModule } from './images.module';
 import { ImagesDatabase } from './images.database';
 
@@ -24,7 +19,7 @@ describe('ImageService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ImagesModule]
+      imports: [ImagesModule],
     }).compile();
 
     service = module.get<ImagesService>(ImagesService);
@@ -35,26 +30,17 @@ describe('ImageService', () => {
     const expected = imageTestData.Entities.images;
     jest.spyOn(database, 'create').mockResolvedValue(expected);
 
-    const result = await service.saveImages([imageTestData.Entities.newImageWithoutData]);
+    const result = await service.saveImages([
+      imageTestData.Entities.newImageWithoutData,
+    ]);
 
     expect(result).toStrictEqual(expected);
-
-  })
-
-  it('should fail to retrieve images if the offset is < 0', async () => {
-    try {
-      await service.getImagesNearCoordinate([0, 0, 0], -1);
-      fail('Expected getImagesNearCoordinate to throw');
-    } catch (err) {
-      expect(err).toBeInstanceOf(InvalidOffsetError);
-      expect(err.message).toBe(
-        'The provided offset query parameter must be greater or equal to zero, got -1',
-      );
-    }
   });
 
   it('should get all images near a coordinate', async () => {
-    jest.spyOn(database, 'getByCoordinate').mockResolvedValue(imageTestData.Entities.images);
+    jest
+      .spyOn(database, 'getByCoordinate')
+      .mockResolvedValue(imageTestData.Entities.images);
 
     const result = await service.getImagesNearCoordinate([1024, 1024, 0], 10);
 
@@ -62,7 +48,9 @@ describe('ImageService', () => {
   });
 
   it('should get all images near a route', async () => {
-    jest.spyOn(database, 'getByGeometry').mockResolvedValue(imageTestData.Entities.images);
+    jest
+      .spyOn(database, 'getByLineSegment')
+      .mockResolvedValue(imageTestData.Entities.images);
 
     const result = await service.getImagesNearRouteSegment(
       routeSegmentsTestData.routeSegment,
@@ -74,8 +62,7 @@ describe('ImageService', () => {
 
   it('should get all images near a route limited by the max number of images', async () => {
     const expected = imageTestData.Entities.multipleImages;
-    jest.spyOn(database, 'getByGeometry').mockResolvedValue(expected);
-
+    jest.spyOn(database, 'getByLineSegment').mockResolvedValue(expected);
 
     const result = await service.getImagesNearRouteSegment(
       routeSegmentsTestData.routeSegment,

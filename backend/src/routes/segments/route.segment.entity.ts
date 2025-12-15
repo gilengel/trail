@@ -1,16 +1,16 @@
 /**
  * @file Entity definition for a route segment. Only to be used in domain logic.
  */
-import { Route } from "../routes/route.entity";
+import { Route } from '../routes/route.entity';
 
 export type RouteSegment = {
-    route: Route;
-    
-    id: number;
+  route: Route;
 
-    name: string;
+  id: number;
 
-    description: string;
+  name: string;
 
-    coordinates: [number, number, number][]
-}
+  description: string;
+
+  coordinates: [number, number, number][];
+};

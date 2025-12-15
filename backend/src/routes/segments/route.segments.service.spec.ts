@@ -3,6 +3,7 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import {
+  MixedCoordinatesError,
   NotEnoughCoordinatesError,
   RouteSegmentsService,
   TooManyCoordinatesError,
@@ -12,7 +13,7 @@ import { RouteSegment } from './dto/route.segment.dto';
 
 import * as routeSegmentTestData from './__data__';
 import * as routeTestData from '../routes/__data__';
-import * as DTO from '../../dto'
+import * as DTO from '../../dto';
 import { RoutesModule } from '../routes.module';
 import { RouteSegmentsDatabase } from './route.segments.database';
 
@@ -22,7 +23,7 @@ describe('RouteSegmentsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [RoutesModule]
+      imports: [RoutesModule],
     }).compile();
 
     service = module.get<RouteSegmentsService>(RouteSegmentsService);
@@ -49,18 +50,16 @@ describe('RouteSegmentsService', () => {
     expect(result).toBe(expected);
   });
 
-    it('should return all route segments for a route', async () => {
-      const expected = routeSegmentTestData.Entities.Segments;
-    jest
-      .spyOn(database, 'getAllForRoute')
-      .mockResolvedValueOnce(expected);
+  it('should return all route segments for a route', async () => {
+    const expected = routeSegmentTestData.Entities.Segments;
+    jest.spyOn(database, 'getAllForRoute').mockResolvedValueOnce(expected);
 
-    const result: RouteSegment[] = await service.findAllForRoute(routeTestData.Enties.Route);
+    const result: RouteSegment[] = await service.findAllForRoute(
+      routeTestData.Enties.Route,
+    );
 
     expect(result).toStrictEqual(expected);
   });
-
-
 
   it('should return null if a route segment was requested that does not exist', async () => {
     jest.spyOn(database, 'getOneById').mockResolvedValueOnce(null);
@@ -76,7 +75,7 @@ describe('RouteSegmentsService', () => {
 
     const result: DTO.RouteSegment = await service.create(
       routeSegmentTestData.newRouteSegment,
-      routeTestData.route
+      routeTestData.route,
     );
     const expected: DTO.RouteSegment = {
       id: routeSegmentTestData.routeSegment.id,
@@ -90,14 +89,14 @@ describe('RouteSegmentsService', () => {
 
   it('should update only the name of a route segment', async () => {
     jest
-      .spyOn(database, "update")
+      .spyOn(database, 'update')
       .mockResolvedValue(routeSegmentTestData.Entities.segmentWithUpdatedName);
 
     const result = await service.update(routeTestData.routeId, {
       name: routeSegmentTestData.updatedSegmentName,
     });
 
-    const expected : DTO.RouteSegment = {
+    const expected: DTO.RouteSegment = {
       id: routeSegmentTestData.segmentId,
       name: routeSegmentTestData.updatedSegmentName,
       description: routeSegmentTestData.segmentDescription,
@@ -109,14 +108,16 @@ describe('RouteSegmentsService', () => {
 
   it('should update only the coordinates of a route segment', async () => {
     jest
-      .spyOn(database, "update")
-      .mockResolvedValue(routeSegmentTestData.Entities.segmentWithUpdatedCoordinates);
+      .spyOn(database, 'update')
+      .mockResolvedValue(
+        routeSegmentTestData.Entities.segmentWithUpdatedCoordinates,
+      );
 
     const result = await service.update(routeTestData.routeId, {
       coordinates: routeSegmentTestData.coordinates,
     });
 
-    const expected : DTO.RouteSegment = {
+    const expected: DTO.RouteSegment = {
       id: routeSegmentTestData.segmentId,
       name: routeSegmentTestData.segmentName,
       description: routeSegmentTestData.segmentDescription,
@@ -135,9 +136,7 @@ describe('RouteSegmentsService', () => {
       coordinates: routeSegmentTestData.coordinates,
     };
 
-    jest
-      .spyOn(database, "update")
-      .mockResolvedValue(expected);
+    jest.spyOn(database, 'update').mockResolvedValue(expected);
 
     const result = await service.update(routeTestData.routeId, {
       description: routeSegmentTestData.updatedSegmentDescription,
@@ -150,6 +149,17 @@ describe('RouteSegmentsService', () => {
     await expect(service.update(0, { coordinates: [] })).rejects.toThrow(
       new NotEnoughCoordinatesError(),
     );
+  });
+
+  it('should reject trying to change a route segment with mixed coordinates', async () => {
+    await expect(
+      service.update(0, {
+        coordinates: [
+          [0, 0],
+          [0, 0, 0],
+        ],
+      }),
+    ).rejects.toThrow(new MixedCoordinatesError());
   });
 
   it('should reject trying to change a route segment with more then 1.000.000 coordinates', async () => {

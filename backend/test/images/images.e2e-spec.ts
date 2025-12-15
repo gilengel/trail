@@ -15,7 +15,7 @@ import { ErrorsInterceptor } from '../../src/interceptors/errors.interceptor';
 import { json } from 'express';
 import * as async from 'async';
 import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
-import * as DTO from '../../src/dto'
+import * as DTO from '../../src/dto';
 import { join } from 'path';
 
 describe('ImagesController (e2e)', () => {
@@ -87,25 +87,28 @@ describe('ImagesController (e2e)', () => {
       .expect(200);
   });
 
-  it('/images/point (GET) fails with wrong offset', () => {
+  it('/images/point (GET) returns "400" if provided with wrong offset', () => {
     return request(app.getHttpServer())
       .get(`/images/point?lon=1024&lat=1024&maxOffset=-10`)
       .expect(400);
   });
 
-  it('/images/point (GET) returns "NotFound" if no images are found near a point', () => {
+  it('/images/point (GET) returns "200" and an empty array if no images are found near a point', () => {
     return request(app.getHttpServer())
       .get(`/images/point?lon=0&lat=0&maxOffset=1`)
-      .expect(404);
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toStrictEqual([]);
+      });
   });
 
-  it('/images/point (GET) returns 400 with invalid location', () => {
+  it('/images/point (GET) returns "400" with invalid location', () => {
     return request(app.getHttpServer())
       .get(`/images/point?lon=0&maxOffset=1`)
       .expect(400);
   });
 
-  it('/images/route_segment (GET) returns 400 with invalid route id', () => {
+  it('/images/route_segment (GET) returns "400" with invalid route id', () => {
     const id = Number.MAX_SAFE_INTEGER;
 
     return request(app.getHttpServer())
@@ -118,14 +121,14 @@ describe('ImagesController (e2e)', () => {
     let tripId: number;
 
     beforeEach(async () => {
-      tripId = await createTestTripWithoutRoutes(prisma)
+      tripId = await createTestTripWithoutRoutes(prisma);
       const result = await request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'short')
         .field('tripId', tripId)
         .attach('files', join(__dirname, '/../routes/files', 'short.gpx'));
-        
+
       route = result.body;
     });
 
@@ -162,7 +165,7 @@ describe('ImagesController (e2e)', () => {
       });
 
       return wrapper.then((data: { _body: DTO.Image[] }) => {
-        expect((data._body).length).toBe(6);
+        expect(data._body.length).toBe(6);
       });
     });
 
@@ -206,15 +209,18 @@ describe('ImagesController (e2e)', () => {
     it('/images/route_segment/number (GET) returns "404" for the number of images near a route segment if the segment does not exist', () => {
       return request(app.getHttpServer())
         .get(`/images/route_segment/number?routeSegmentId=${0}&maxOffset=0`)
-        .expect(404);
+        .expect(422);
     });
 
-    it('/images/route_segment (GET) returns "404" if no images are near a route segment', () => {
+    it('/images/route_segment/number (GET) returns "200" and {count: 0} if no images are near a route segment', () => {
       return request(app.getHttpServer())
         .get(
           `/images/route_segment/number?routeSegmentId=${route.segments[0].id}&maxOffset=0`,
         )
-        .expect(404);
+        .expect(200)
+        .expect((result) => {
+          expect(result.body).toStrictEqual({ count: 0 });
+        });
     });
 
     it('/images/route_segment (GET) returns list of images near a route segment limited by the max number of images', () => {
@@ -250,7 +256,7 @@ describe('ImagesController (e2e)', () => {
       });
 
       return wrapper.then((data: { _body: DTO.Image[] }) => {
-        expect((data._body).length).toBe(3);
+        expect(data._body.length).toBe(3);
       });
     });
 
@@ -269,7 +275,10 @@ describe('ImagesController (e2e)', () => {
         .get(
           `/images/route_segment?routeSegmentId=${route.segments[0].id}&maxOffset=0`,
         )
-        .expect(404);
+        .expect(200)
+        .expect((result) => {
+          expect(result.body).toStrictEqual([]);
+        });
     });
 
     it('/images/route_segment (GET) returns "422" if the requested route segment does not exist', async () => {
@@ -280,7 +289,7 @@ describe('ImagesController (e2e)', () => {
 
     afterEach(async () => {
       await prisma.trip.delete({
-        where: { id: tripId }
+        where: { id: tripId },
       });
     });
   });

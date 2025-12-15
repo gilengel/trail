@@ -3,7 +3,7 @@
  */
 import { Injectable } from '@nestjs/common';
 
-import * as DTO from '../dto'
+import * as DTO from '../dto';
 
 import { RouteSegment } from '../routes/segments/dto/route.segment.dto';
 import { ImagesDatabase } from './images.database';
@@ -17,16 +17,6 @@ export class InvalidOffsetError extends Error {
   }
 }
 
-/*
-export class InvalidCoordinates extends Error {
-  constructor() {
-    super(
-      'The provided coordinates are invalid. Either longitude, latitude or both are undefined or outside the range',
-    );
-  }
-}
-  */
-
 @Injectable()
 export class ImagesService {
   constructor(private database: ImagesDatabase) {}
@@ -34,8 +24,6 @@ export class ImagesService {
   async saveImages(images: DTO.CreateImage[]): Promise<DTO.Image[]> {
     return this.database.create(images);
   }
-
-
 
   private async multipleImagesQueryCount(
     geometryAsWkt: string,
@@ -49,12 +37,11 @@ export class ImagesService {
     maxOffsetRadius: number,
     maxNumberOfImages?: number,
   ): Promise<DTO.Image[]> {
-
-    if(maxOffsetRadius < 0) {
-      throw new InvalidOffsetError(maxOffsetRadius);
-    }
-
-    return this.database.getByCoordinate(coordinate, maxOffsetRadius, maxNumberOfImages);
+    return this.database.getByCoordinate(
+      coordinate,
+      maxOffsetRadius,
+      maxNumberOfImages,
+    );
   }
 
   async getImagesNearRouteSegment(
@@ -62,7 +49,11 @@ export class ImagesService {
     maxOffset: number,
     maxNumberOfImages?: number,
   ): Promise<DTO.Image[]> {
-    return this.database.getByLineSegment(segment.coordinates, maxOffset, maxNumberOfImages);
+    return this.database.getByLineSegment(
+      segment.coordinates,
+      maxOffset,
+      maxNumberOfImages,
+    );
   }
 
   async getNumberOfImagesNearRouteSegment(

@@ -4,7 +4,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as routeTestData from './__data__';
 import * as routeSegmentTestData from '../segments/__data__';
-import * as tripTestData from '../../trips/__data__'
+import * as tripTestData from '../../trips/__data__';
 
 import { RoutesService } from './routes.service';
 
@@ -14,9 +14,6 @@ import { RoutesDatabase } from './routes.database';
 import { RouteSegmentsDatabase } from '../segments';
 import { RoutesModule } from '../routes.module';
 
-  
-
-  
 describe('RoutesService', () => {
   let service: RoutesService;
   let routeSegmentsService: RouteSegmentsService;
@@ -29,15 +26,18 @@ describe('RoutesService', () => {
     }).compile();
 
     service = module.get<RoutesService>(RoutesService);
-    routeSegmentsService = module.get<RouteSegmentsService>(RouteSegmentsService);
+    routeSegmentsService =
+      module.get<RouteSegmentsService>(RouteSegmentsService);
     routesDatabase = module.get<RoutesDatabase>(RoutesDatabase);
-    routesSegmentDatabase = module.get<RouteSegmentsDatabase>(RouteSegmentsDatabase);
+    routesSegmentDatabase = module.get<RouteSegmentsDatabase>(
+      RouteSegmentsDatabase,
+    );
   });
 
   it('should return a route stored in the database by id', async () => {
     jest
       .spyOn(routesDatabase, 'getOneById')
-      .mockResolvedValueOnce(routeTestData.Enties.Route)
+      .mockResolvedValueOnce(routeTestData.Enties.Route);
 
     jest
       .spyOn(routeSegmentsService, 'findAllForRoute')
@@ -76,7 +76,7 @@ describe('RoutesService', () => {
       name: routeTestData.route.name,
       description: routeTestData.route.description,
       tripId: 0,
-      segments: routeSegmentTestData.segments
+      segments: routeSegmentTestData.segments,
     };
 
     jest.spyOn(routesDatabase, 'create').mockResolvedValueOnce(createdRoute);
@@ -84,24 +84,27 @@ describe('RoutesService', () => {
       .spyOn(routesSegmentDatabase, 'createMultiple')
       .mockResolvedValue(routeSegmentTestData.Entities.Segments);
 
-    const result: Route = await service.createRoute(routeTestData.newRoute, tripTestData.trip);
+    const result: Route = await service.createRoute(
+      routeTestData.newRoute,
+      tripTestData.trip,
+    );
 
     expect(result).toStrictEqual(createdRoute);
   });
 
-  
   it('should store a route in the database without segments and return it', async () => {
     const expected = {
       id: routeTestData.routeId,
       name: routeTestData.route.name,
       description: routeTestData.route.description,
-      segments: routeSegmentTestData.segments
+      segments: routeSegmentTestData.segments,
     };
 
     jest.spyOn(routesDatabase, 'create').mockResolvedValueOnce(expected);
 
     const result: Route = await service.createRoute(
-      routeTestData.newRouteWithoutSegments, tripTestData.trip
+      routeTestData.newRouteWithoutSegments,
+      tripTestData.trip,
     );
 
     expect(result).toStrictEqual(expected);
@@ -186,7 +189,7 @@ describe('RoutesService', () => {
       name: 'updated_test_route',
     });
 
-    await expect(result).toBeNull()
+    await expect(result).toBeNull();
   });
 
   it('should delete a route from the db and return it', async () => {

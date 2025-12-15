@@ -4,4 +4,6 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
 import { Trip } from '.';
 
-export class UpdateTrip extends PartialType(OmitType(Trip, ['id', 'routes'] as const))  {}
+export class UpdateTrip extends PartialType(
+  OmitType(Trip, ['id', 'routes'] as const),
+) {}

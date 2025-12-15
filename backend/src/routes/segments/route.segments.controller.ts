@@ -16,9 +16,14 @@ import {
   UnprocessableEntityException,
   BadRequestException,
 } from '@nestjs/common';
-import { MixedCoordinatesError, NotEnoughCoordinatesError, RouteSegmentsService, TooManyCoordinatesError } from './route.segments.service';
+import {
+  MixedCoordinatesError,
+  NotEnoughCoordinatesError,
+  RouteSegmentsService,
+  TooManyCoordinatesError,
+} from './route.segments.service';
 import { NoAttributesProvidedError } from '../routes/routes.database';
-import * as DTO from '../../dto'
+import * as DTO from '../../dto';
 import { RoutesService } from '../routes/routes.service';
 
 @Controller('routes/segment')
@@ -26,44 +31,41 @@ export class RoutesSegmentsController {
   constructor(
     private readonly RouteSegmentsService: RouteSegmentsService,
     @Inject(forwardRef(() => RoutesService))
-    private readonly routesService: RoutesService
-  ) { }
+    private readonly routesService: RoutesService,
+  ) {}
 
   @Post()
   async create(
     @Body() createRouteSegment: DTO.CreateRouteSegmentPublic,
   ): Promise<DTO.RouteSegment> {
     const route = await this.routesService.route(createRouteSegment.routeId);
-    if(route === null) {
+    if (route === null) {
       throw new UnprocessableEntityException();
     }
 
     try {
       const segment = await this.RouteSegmentsService.create(
         createRouteSegment,
-        route
+        route,
       );
 
-      return Promise.resolve(segment);    
-
+      return Promise.resolve(segment);
+    } catch (e) {
+      if (e instanceof NotEnoughCoordinatesError) {
+        throw new BadRequestException(e.message);
+      } else if (e instanceof TooManyCoordinatesError) {
+        throw new BadRequestException(e.message);
+      } else if (e instanceof MixedCoordinatesError) {
+        throw new BadRequestException(e.message);
+      }
     }
-    catch(e) {
-        if (e instanceof NotEnoughCoordinatesError) {
-          throw new BadRequestException(e.message);
-        } else if (e instanceof TooManyCoordinatesError) {
-          throw new BadRequestException(e.message);
-        } else if(e instanceof MixedCoordinatesError) {
-          throw new BadRequestException(e.message);
-        } 
-    }
-  
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<DTO.RouteSegment> {
     const segment = await this.RouteSegmentsService.findOne(id);
 
-    if(segment === null){
+    if (segment === null) {
       throw new NotFoundException();
     }
 

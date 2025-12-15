@@ -19,7 +19,7 @@ export class Route {
   segments: RouteSegment[];
 }
 
-export type RouteWithoutSegments = Omit<Route, "segments">
+export type RouteWithoutSegments = Omit<Route, 'segments'>;
 
 export class RouteWithMultipleFiles {
   //@ApiProperty({ description: 'Route name' })
@@ -42,4 +42,3 @@ export class RouteWithMultipleFiles {
   })
   files: unknown[];
 }
-

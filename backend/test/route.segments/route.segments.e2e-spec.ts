@@ -50,7 +50,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       where: { id: tripId },
     });
 
-    await prisma.routeSegment.deleteMany()
+    await prisma.routeSegment.deleteMany();
   });
 
   it('/routes/segment (GET) return the segment', () => {
@@ -164,7 +164,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       .send({
         routeId,
         name: '',
-        coordinates
+        coordinates,
       })
       .expect(400);
   });
