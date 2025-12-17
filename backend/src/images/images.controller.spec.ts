@@ -15,7 +15,7 @@ import {
   NoOrWrongGeoInformationError,
 } from './images.controller';
 import { ImagesService } from './images.service';
-import { mockFileFromBuffer } from './test/test.helper';
+import { mockFileFromBuffer } from './__test.helper__';
 import * as imageTestData from './__data__';
 import * as routeSegmentTestData from '../routes/segments/__data__';
 import { ImagesModule } from './images.module';
@@ -52,7 +52,7 @@ describe('ImageController', () => {
       .spyOn(imageService, 'saveImages')
       .mockReturnValue(Promise.resolve(imageTestData.Entities.images));
 
-    const buffer = readFileSync(`src/images/test/${file}`);
+    const buffer = readFileSync(`src/images/__test_files__/${file}`);
 
     const result = await controller.uploadFile([mockFileFromBuffer(buffer)]);
     expect(result).toStrictEqual(imageTestData.Entities.images);
@@ -63,7 +63,7 @@ describe('ImageController', () => {
       .spyOn(imageService, 'saveImages')
       .mockRejectedValue(new NoOrWrongGeoInformationError());
 
-    const buffer = readFileSync('src/images/test/without_geo_information.jpg');
+    const buffer = readFileSync('src/images/__test_files__/without_geo_information.jpg');
 
     const result = controller.uploadFile([mockFileFromBuffer(buffer)]);
     await expect(result).rejects.toThrow(

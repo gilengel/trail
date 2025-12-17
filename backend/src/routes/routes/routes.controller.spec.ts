@@ -2,7 +2,7 @@
  * @file Public API for routes unit test cases.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { RoutesController } from './routes.controller';
 import { RoutesService } from './routes.service';
@@ -25,7 +25,9 @@ import {
   NotEnoughCoordinatesError,
   TooManyCoordinatesError,
 } from '../segments/route.segments.service';
-import { mockFileFromBuffer } from '../../images/test/test.helper';
+import { mockFileFromBuffer } from '../../images/__test.helper__';
+
+const file = join(__dirname, '__test_files__', 'short.gpx');
 
 describe('RoutesController', () => {
   let controller: RoutesController;
@@ -116,7 +118,7 @@ describe('RoutesController', () => {
   });
 
   it('should return "400" if tripId is not within the body', async () => {
-    const file = join(__dirname, '../../../test/routes/files', 'short.gpx');
+    expect(existsSync(file)).toBeTruthy();
     const buffer = readFileSync(file);
     const files = [mockFileFromBuffer(buffer)];
     const result = controller.createFromGPX(
@@ -135,7 +137,6 @@ describe('RoutesController', () => {
   it('should return "422" if the corresponding trip does not exist', async () => {
     jest.spyOn(tripService, 'trip').mockReturnValue(Promise.resolve(null));
 
-    const file = join(__dirname, '../../../test/routes/files', 'short.gpx');
     const buffer = readFileSync(file);
     const files = [mockFileFromBuffer(buffer)];
     const result = controller.createFromGPX(
@@ -156,7 +157,6 @@ describe('RoutesController', () => {
       .spyOn(service, 'createRoute')
       .mockReturnValue(Promise.resolve(routeTestData.route));
 
-    const file = join(__dirname, '../../../test/routes/files', 'short.gpx');
     const buffer = readFileSync(file);
     const files = [mockFileFromBuffer(buffer)];
     const result = await controller.createFromGPX(
@@ -169,58 +169,7 @@ describe('RoutesController', () => {
     );
     expect(result).toStrictEqual(routeTestData.route);
   });
-  /*
 
-  it('should return "404" if the requested route segment does not exist', async () => {
-    jest.spyOn(parser, 'extractCoordinatesFromGPX').mockImplementation(() => {
-      throw new HttpException(
-        `Route segment with id 0 does not exist.`,
-        HttpStatus.NOT_FOUND,
-      );
-    });
-
-    const buffer = readFileSync(`src/routes/test/invalid.gpx`);
-
-    const files = [mockFileFromBuffer(buffer)];
-    const result = controller.createFromGPX(
-      {
-        name: 'test_route',
-        tripId: 0,
-        files,
-      },
-      files,
-    );
-    await expect(result).rejects.toThrow(
-      new HttpException(
-        `Route segment with id 0 does not exist.`,
-        HttpStatus.BAD_REQUEST,
-      ),
-    );
-  });
-
-
-  it('should fail to create a new route from a gpx file if the file is invalid', async () => {
-    jest.spyOn(parser, 'extractCoordinatesFromGPX').mockImplementation(() => {
-      throw new Error();
-    });
-
-    const buffer = readFileSync(`src/routes/test/invalid.gpx`);
-
-    const files = [mockFileFromBuffer(buffer)];
-
-    const result = controller.createFromGPX(
-      {
-        name: 'test_route',
-        tripId: 0,
-        files,
-      },
-      files,
-    );
-    await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.BAD_REQUEST),
-    );
-  });
-  */
   it('should throw "400" trying to create a route with not enough coordinates', async () => {
     jest
       .spyOn(tripService, 'trip')

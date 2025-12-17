@@ -4,12 +4,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { PrismaService } from '../../src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { json } from 'express';
-import { TripsModule } from '../../src/trips/trips.module';
+import { TripsModule } from './trips.module';
 
-import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
-import * as TripTestData from '../../src/trips/__data__';
+import { createTestTripWithoutRoutes } from '../routes/routes/routes.e2e-spec';
+import * as TripTestData from './__data__';
 
 describe('TripsController (e2e)', () => {
   let app: INestApplication;

@@ -8,15 +8,16 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { v4 as uuidv4 } from 'uuid';
 import * as request from 'supertest';
 
-import { PrismaService } from '../../src/prisma.service';
-import { ImagesModule } from '../../src/images/images.module';
-import { ensureExistenceOfStorageDirectory } from '../../src/images/test/test.helper';
-import { ErrorsInterceptor } from '../../src/interceptors/errors.interceptor';
+import { PrismaService } from '../prisma.service';
+import { ImagesModule } from './images.module';
+import { ensureExistenceOfStorageDirectory } from './__test.helper__';
+import { ErrorsInterceptor } from '../interceptors/errors.interceptor';
 import { json } from 'express';
 import * as async from 'async';
-import { createTestTripWithoutRoutes } from '../routes/routes.e2e-spec';
-import * as DTO from '../../src/dto';
+import { createTestTripWithoutRoutes } from '../routes/routes/routes.e2e-spec';
+import * as DTO from '../dto';
 import { join } from 'path';
+import * as fs from 'fs';
 
 describe('ImagesController (e2e)', () => {
   let app: INestApplication;
@@ -61,7 +62,7 @@ describe('ImagesController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/images`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('files', `src/images/test/${image}`)
+      .attach('files', `src/images/__test_files__/${image}`)
       .expect(201);
   });
 
@@ -69,7 +70,7 @@ describe('ImagesController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/images`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('files', 'src/images/test/without_geo_information.jpg')
+      .attach('files', 'src/images/__test_files__/without_geo_information.jpg')
       .expect(400);
   });
 
@@ -77,7 +78,7 @@ describe('ImagesController (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/images`)
       .set('Content-Type', 'multipart/form-data')
-      .attach('files', 'src/images/test/no_image.txt')
+      .attach('files', 'src/images/__test_files__/no_image.txt')
       .expect(400);
   });
 
@@ -121,13 +122,16 @@ describe('ImagesController (e2e)', () => {
     let tripId: number;
 
     beforeEach(async () => {
+      const gpxFilePath = join(__dirname, '../routes/routes/__test_files__', 'short.gpx');
+      expect(fs.existsSync(gpxFilePath)).toBeTruthy();
+
       tripId = await createTestTripWithoutRoutes(prisma);
       const result = await request(app.getHttpServer())
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'short')
         .field('tripId', tripId)
-        .attach('files', join(__dirname, '/../routes/files', 'short.gpx'));
+        .attach('files', gpxFilePath);
 
       route = result.body;
     });
@@ -140,12 +144,12 @@ describe('ImagesController (e2e)', () => {
               request(app.getHttpServer())
                 .post(`/images`)
                 .set('Content-Type', 'multipart/form-data')
-                .attach('files', `${__dirname}/data/20230909_102937.jpg`)
-                .attach('files', `${__dirname}/data/20230909_102954.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105445.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105508.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105615.jpg`)
-                .attach('files', `${__dirname}/data/20230909_110041.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_102937.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_102954.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105445.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105508.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105615.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_110041.jpg`)
                 .expect(201, callback);
             },
 
@@ -177,12 +181,12 @@ describe('ImagesController (e2e)', () => {
               request(app.getHttpServer())
                 .post(`/images`)
                 .set('Content-Type', 'multipart/form-data')
-                .attach('files', `${__dirname}/data/20230909_102937.jpg`)
-                .attach('files', `${__dirname}/data/20230909_102954.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105445.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105508.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105615.jpg`)
-                .attach('files', `${__dirname}/data/20230909_110041.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_102937.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_102954.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105445.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105508.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105615.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_110041.jpg`)
                 .expect(201, callback);
             },
 
@@ -231,12 +235,12 @@ describe('ImagesController (e2e)', () => {
               request(app.getHttpServer())
                 .post(`/images`)
                 .set('Content-Type', 'multipart/form-data')
-                .attach('files', `${__dirname}/data/20230909_102937.jpg`)
-                .attach('files', `${__dirname}/data/20230909_102954.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105445.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105508.jpg`)
-                .attach('files', `${__dirname}/data/20230909_105615.jpg`)
-                .attach('files', `${__dirname}/data/20230909_110041.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_102937.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_102954.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105445.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105508.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_105615.jpg`)
+                .attach('files', `${__dirname}/__test_files__/20230909_110041.jpg`)
                 .expect(201, callback);
             },
 

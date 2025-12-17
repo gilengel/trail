@@ -29,7 +29,7 @@ import { RoutesService } from '../routes/routes.service';
 @Controller('routes/segment')
 export class RoutesSegmentsController {
   constructor(
-    private readonly RouteSegmentsService: RouteSegmentsService,
+    private readonly routeSegmentsService: RouteSegmentsService,
     @Inject(forwardRef(() => RoutesService))
     private readonly routesService: RoutesService,
   ) {}
@@ -44,7 +44,7 @@ export class RoutesSegmentsController {
     }
 
     try {
-      const segment = await this.RouteSegmentsService.create(
+      const segment = await this.routeSegmentsService.create(
         createRouteSegment,
         route,
       );
@@ -63,7 +63,7 @@ export class RoutesSegmentsController {
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<DTO.RouteSegment> {
-    const segment = await this.RouteSegmentsService.findOne(id);
+    const segment = await this.routeSegmentsService.findOne(id);
 
     if (segment === null) {
       throw new NotFoundException();
@@ -75,12 +75,12 @@ export class RoutesSegmentsController {
   @Get('route/:id')
   async findAllForRoute(@Param('id') id: number): Promise<DTO.RouteSegment[]> {
     const route = await this.routesService.route(id);
-    return this.RouteSegmentsService.findAllForRoute(route);
+    return this.routeSegmentsService.findAllForRoute(route);
   }
 
   @Get('length/:id')
   async length(@Param() params: { id: number }): Promise<{ length: number }> {
-    const length = await this.RouteSegmentsService.length(params.id);
+    const length = await this.routeSegmentsService.length(params.id);
     return Promise.resolve({ length });
   }
 
@@ -90,7 +90,7 @@ export class RoutesSegmentsController {
     @Body() updateRouteSegmentDto: DTO.UpdateRouteSegment,
   ): Promise<DTO.RouteSegment> {
     try {
-      const updatedRow = await this.RouteSegmentsService.update(
+      const updatedRow = await this.routeSegmentsService.update(
         id,
         updateRouteSegmentDto,
       );

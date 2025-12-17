@@ -6,9 +6,9 @@ import { INestApplication } from '@nestjs/common';
 import { json } from 'express';
 import * as request from 'supertest';
 
-import { PrismaService } from '../../src/prisma.service';
+import { PrismaService } from '../../prisma.service';
 import { createTestTripWithSingleRoute } from '../routes/routes.e2e-spec';
-import { RoutesModule } from '../../src/routes/routes.module';
+import { RoutesModule } from '../routes.module';
 
 describe('RoutesSegmentsController (e2e)', () => {
   let app: INestApplication;
@@ -106,6 +106,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       })
       .expect(201);
   });
+  
   it('/routes/segment (POST) fails with less than two coordinates', () => {
     return request(app.getHttpServer())
       .post(`/routes/segment`)
@@ -128,7 +129,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       .expect(400);
   });
 
-  it('/routes/segment (POST) fails with "400" if the corresponding trip does not exist', () => {
+  it('/routes/segment (POST) fails with "422" if the corresponding trip does not exist', () => {
     return request(app.getHttpServer())
       .post(`/routes/segment`)
       .send({
@@ -169,7 +170,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       .expect(400);
   });
 
-  it('/routes/segment (PATCH)', () => {
+  it('/routes/segment (PATCH) succeeds', () => {
     return request(app.getHttpServer())
       .patch(`/routes/segment/${routeSegmentId}`)
       .send({
@@ -189,21 +190,21 @@ describe('RoutesSegmentsController (e2e)', () => {
       });
   });
 
-  it('/routes/segment (PATCH) fails with invalid data', () => {
+  it('/routes/segment (PATCH) fails with "400" if provided with invalid (empty) data', () => {
     return request(app.getHttpServer())
       .patch(`/routes/segment/${routeSegmentId}`)
       .send({})
       .expect(400);
   });
 
-  it('/routes/segment (PATCH) fails with invalid id', () => {
+  it('/routes/segment (PATCH) fails with "404" if the route segment does not exists', () => {
     return request(app.getHttpServer())
       .patch(`/routes/segment/12345678`)
       .send({ name: 'name_only_test_route' })
       .expect(404);
   });
 
-  it('/routes/segment (PATCH) with name only', () => {
+  it('/routes/segment (PATCH) succeeds with name only', () => {
     return request(app.getHttpServer())
       .patch(`/routes/segment/${routeSegmentId}`)
       .send({ name: 'name_only_test_route' })
@@ -213,7 +214,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       });
   });
 
-  it('/routes/segment (PATCH) with description only', () => {
+  it('/routes/segment (PATCH) succeeds with description only', () => {
     return request(app.getHttpServer())
       .patch(`/routes/segment/${routeSegmentId}`)
       .send({ description: 'description_only_test_route' })
@@ -226,7 +227,7 @@ describe('RoutesSegmentsController (e2e)', () => {
       });
   });
 
-  it('/routes/segment (PATCH) with coordinates only', () => {
+  it('/routes/segment (PATCH) succeeds with coordinates only', () => {
     return request(app.getHttpServer())
       .patch(`/routes/segment/${routeSegmentId}`)
       .send({

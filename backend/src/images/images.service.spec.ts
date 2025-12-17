@@ -3,7 +3,7 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { ImagesService } from './images.service';
-import { ensureExistenceOfStorageDirectory } from './test/test.helper';
+import { ensureExistenceOfStorageDirectory } from './__test.helper__';
 import * as imageTestData from './__data__';
 import * as routeSegmentsTestData from '../routes/segments/__data__';
 import { ImagesModule } from './images.module';

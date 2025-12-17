@@ -4,12 +4,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { RoutesModule } from '../../src/routes/routes.module';
-import { PrismaService } from '../../src/prisma.service';
+import { RoutesModule } from '../routes.module';
+import { PrismaService } from '../../prisma.service';
 import { json } from 'express';
 import { env } from 'node:process';
-import * as DTO from '../../src/dto';
-import * as RouteSegmentTestData from '../../src/routes/segments/__data__';
+import * as DTO from '../../dto';
+import * as RouteSegmentTestData from '../segments/__data__';
 import { join } from 'path';
 
 /**
@@ -252,7 +252,7 @@ describe('RoutesController (e2e)', () => {
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Ehrwald Hiking')
         .field('tripId', tripId)
-        .attach('files', join(__dirname, 'files', 'short.gpx'))
+        .attach('files', join(__dirname, '__test_files__', 'short.gpx'))
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -267,7 +267,7 @@ describe('RoutesController (e2e)', () => {
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Ehrwald Hiking')
         .field('tripId', tripId)
-        .attach('files', join(__dirname, 'files', 'no_elevation.gpx'))
+        .attach('files', join(__dirname, '__test_files__',  'no_elevation.gpx'))
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -282,7 +282,7 @@ describe('RoutesController (e2e)', () => {
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
         .field('tripId', tripId)
-        .attach('files', join(__dirname, 'files', 'long.gpx'))
+        .attach('files', join(__dirname, '__test_files__',  'long.gpx'))
         .expect(201)
         .expect(async (res) => {
           expect(res.body).toHaveProperty(
@@ -299,7 +299,7 @@ describe('RoutesController (e2e)', () => {
         .post(`/routes/gpx`)
         .set('Content-Type', 'multipart/form-data')
         .field('name', 'empty')
-        .attach('files', join(__dirname, 'files', 'empty.gpx'))
+        .attach('files', join(__dirname, '__test_files__',  'empty.gpx'))
         .expect(400);
     });
 
@@ -309,7 +309,7 @@ describe('RoutesController (e2e)', () => {
         .set('Content-Type', 'multipart/form-data')
         .field('name', '')
         .field('tripId', 0)
-        .attach('files', join(__dirname, 'files', 'short.gpx'))
+        .attach('files', join(__dirname, '__test_files__',  'short.gpx'))
         .expect(422);
     });
 
