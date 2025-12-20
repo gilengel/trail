@@ -9,10 +9,10 @@
   "collectCoverageFrom": ["src/**/*.{ts,jxs}"],
   "coverageReporters": ["text", "cobertura", "html"],
   "coveragePathIgnorePatterns": [
+    "e2e-spec",
     "main.ts",
     ".module.ts",
     ".dto.ts",
-    "test.helper.ts",
     "prisma.service.ts",
     "entity",
     "images.upload.interceptor.ts",
@@ -20,7 +20,9 @@
     "dto/*",
     "swagger.generation.ts",
     ".database.ts",
-    "__data__.ts"
+    "__data__.ts",
+    "__test.helper__.ts",
+    "__e2e_test_helper__.ts"
   ],
   "coverageDirectory": "./coverage-unit",
 

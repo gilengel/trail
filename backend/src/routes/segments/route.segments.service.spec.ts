@@ -55,7 +55,7 @@ describe('RouteSegmentsService', () => {
     jest.spyOn(database, 'getAllForRoute').mockResolvedValueOnce(expected);
 
     const result: RouteSegment[] = await service.findAllForRoute(
-      routeTestData.Enties.Route,
+      routeTestData.Entities.Route,
     );
 
     expect(result).toStrictEqual(expected);

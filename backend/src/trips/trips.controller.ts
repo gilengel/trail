@@ -15,8 +15,13 @@ import {
 import { TripsService } from './trips.service';
 import * as DTO from '../dto';
 
-@Controller('trips')
+export const TRIPS_URI = "trips";
+
+@Controller(TRIPS_URI)
 export class TripsController {
+  public static QUERY = {
+    ID: "id"
+  }
   private readonly logger = new Logger(TripsController.name);
 
   constructor(private tripsService: TripsService) {}
@@ -33,8 +38,8 @@ export class TripsController {
     return await this.tripsService.trips();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<DTO.Trip> {
+  @Get(`:${TripsController.QUERY.ID}`)
+  async findOne(@Param(TripsController.QUERY.ID) id: number): Promise<DTO.Trip> {
     const trip = await this.tripsService.trip(id);
 
     if (!trip) {
@@ -44,9 +49,9 @@ export class TripsController {
     return Promise.resolve(trip);
   }
 
-  @Patch(':id')
+  @Patch(`:${TripsController.QUERY.ID}`)
   async update(
-    @Param('id') id: number,
+    @Param(TripsController.QUERY.ID) id: number,
     @Body() UpdateTrip: DTO.UpdateTrip,
   ): Promise<DTO.Trip> {
     const trip = await this.tripsService.updateTrip(id, UpdateTrip);
@@ -59,8 +64,8 @@ export class TripsController {
     return Promise.resolve(trip);
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: number): Promise<DTO.Trip> {
+  @Delete(`:${TripsController.QUERY.ID}`)
+  async delete(@Param(TripsController.QUERY.ID) id: number): Promise<DTO.Trip> {
     return this.tripsService.deleteTrip(id);
   }
 }

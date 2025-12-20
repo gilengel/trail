@@ -63,7 +63,9 @@ describe('ImageController', () => {
       .spyOn(imageService, 'saveImages')
       .mockRejectedValue(new NoOrWrongGeoInformationError());
 
-    const buffer = readFileSync('src/images/__test_files__/without_geo_information.jpg');
+    const buffer = readFileSync(
+      'src/images/__test_files__/without_geo_information.jpg',
+    );
 
     const result = controller.uploadFile([mockFileFromBuffer(buffer)]);
     await expect(result).rejects.toThrow(
@@ -219,24 +221,6 @@ describe('ImageController', () => {
       new BadRequestException('Invalid offset: Must be >= 0'),
     );
   });
-
-  /*
-  it('should fail with a "NotFound" if no images are near a route segment', async () => {
-    jest
-      .spyOn(routeSegmentService, 'findOne')
-      .mockReturnValue(Promise.resolve(testData.routeSegment));
-    jest.spyOn(imageService, 'getImagesNearRouteSegment').mockResolvedValue([]);
-
-    const result = controller.getImagesNearRouteSegment(
-      testData.routeSegment.id,
-      0,
-    );
-
-    await expect(result).rejects.toThrow(
-      new HttpException('', HttpStatus.NOT_FOUND),
-    );
-  });
-  */
 
   it('should fail with a 404 if the requested segment does not exist', async () => {
     jest

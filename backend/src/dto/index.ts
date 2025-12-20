@@ -3,7 +3,6 @@
  */
 export * from '../routes/routes/dto/create.route.dto';
 export * from '../routes/segments/dto/create.route.segment.dto';
-export * from './image.dto';
 export * from '../routes/segments/dto/route.segment.dto';
 export * from '../trips/dto/create.trip.dto';
 export * from '../trips/dto/trip.dto';

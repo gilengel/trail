@@ -14,7 +14,6 @@ export const updatedSegmentDescription =
   'updated_test_route_segment_description';
 
 export const wkt = 'LINESTRING Z(30 10 0,10 30 0,40 40 0)';
-export const updatedWkt = 'LINESTRING Z(30 10 0,10 30 0)';
 
 export const coordinates: Array<[number, number, number]> = [
   [30, 10, 0],
@@ -117,13 +116,6 @@ export namespace Entities {
     },
   ];
 }
-
-export const updatedRouteSegment: RouteSegment = {
-  id: segmentId,
-  description: '',
-  name: updatedSegmentName,
-  coordinates: updatedCoordinates,
-};
 
 export const routeSegment: DTO.RouteSegment = {
   id: segmentId,

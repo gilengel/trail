@@ -2,7 +2,6 @@
  * @file Test data for routes api.
  */
 import * as Data from '../segments/__data__';
-
 import * as DTO from '../../dto';
 
 export const routeId = 0;
@@ -12,16 +11,20 @@ export const updatedRouteDescription = 'updated_test_route_description';
 export const updatedRouteName = 'updated_test_route';
 
 import { Route as PrismaRoute } from '@prisma/client';
-import { GPXRoute, GPXRouteSegment } from '../../dto';
-import { coordinates } from '../segments/__data__';
-// eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace DB {
-  export const Route = {
+ 
+
+const TestRoute = {
     id: 0,
     tripId: 0,
     name: routeName,
-    description: routeDescription,
+    description: routeDescription
+  };
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace DB {
+  export const Route = {
     segments: [Data.DB.RouteSegmentWithUpdatedCoordinates],
+    ...TestRoute
   };
 
   export const RouteWithUpdatedName: PrismaRoute = {
@@ -65,50 +68,36 @@ export namespace DB {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace Enties {
+export namespace Entities {
   export const Route = {
-    id: 0,
-    tripId: 0,
-    name: routeName,
-    description: routeDescription,
     segments: [Data.Entities.RouteSegmentWithUpdatedCoordinates],
+    ...TestRoute
   };
 
   export const RouteWithUpdatedName: PrismaRoute = {
-    id: routeId,
-    tripId: 0,
     name: updatedRouteName,
     description: routeDescription,
+    ...TestRoute
   };
 
   export const RouteWithUpdatedDescription: PrismaRoute = {
-    id: routeId,
-    tripId: 0,
-    name: routeName,
     description: updatedRouteDescription,
+    ...TestRoute
   };
 
   export const RouteWithUpdatedNameAndDescription: PrismaRoute = {
-    id: routeId,
-    tripId: 0,
-    name: updatedRouteName,
     description: updatedRouteDescription,
+    ...RouteWithUpdatedDescription
   };
 
   export const RouteWithUpdatedCoordinates = {
-    id: routeId,
-    tripId: 0,
-    name: routeName,
-    description: routeDescription,
     segments: [Data.DB.RouteSegmentWithUpdatedCoordinates],
+    ...TestRoute
   };
 
   export const RouteWithUpdatedNameAndCoordinates = {
-    id: routeId,
-    tripId: 0,
-    name: updatedRouteName,
-    description: routeDescription,
     segments: [Data.DB.RouteSegmentWithUpdatedCoordinates],
+    ...RouteWithUpdatedDescription
   };
 
   export const Routes: PrismaRoute[] = [DB.Route];
@@ -127,43 +116,9 @@ export const newRouteWithoutSegments: DTO.CreateRoutePublic = {
   description: '',
 };
 
-export const routeWithEmptyName: DTO.Route = {
-  id: routeId,
-  name: '',
-  description: '',
-  segments: Data.segments,
-};
-
 export const route: DTO.Route = {
   id: routeId,
   name: routeName,
   description: routeDescription,
   segments: Data.segments,
-};
-
-export const routes: DTO.Route[] = [route];
-
-export const routeWithoutSegments = {
-  id: routeId,
-  name: routeName,
-  description: routeDescription,
-};
-
-export const routeWithEmptySegments: DTO.Route = {
-  id: routeId,
-  name: routeName,
-  description: routeDescription,
-  segments: [],
-};
-
-export const gpxSegments: GPXRouteSegment[] = [
-  {
-    name: 'test_route_segment',
-    coordinates,
-  },
-];
-
-export const gpxRoute: GPXRoute = {
-  name: routeName,
-  segments: gpxSegments,
 };

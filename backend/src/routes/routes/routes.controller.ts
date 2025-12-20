@@ -44,7 +44,7 @@ export class RoutesController {
   constructor(
     private routeService: RoutesService,
     private tripService: TripsService,
-  ) {}
+  ) { }
 
   @Get()
   async findAll(): Promise<RouteWithoutSegments[]> {
@@ -161,13 +161,22 @@ export class RoutesController {
 
       return Promise.resolve(newRoute);
     } catch (e) {
-      if (e instanceof NotEnoughCoordinatesError) {
-        throw new BadRequestException(e.message);
-      } else if (e instanceof TooManyCoordinatesError) {
-        throw new BadRequestException(e.message);
-      } else if (e instanceof MixedCoordinatesError) {
-        throw new BadRequestException(e.message);
-      }
+      ThrowHttpExceptionFromDomainError(e);
     }
+  }
+}
+
+/**
+ * Takes a doman error and throws a http status code with the corresponding message.
+ * @param e - The error reported from the domain.
+ * @throws The http code as jest exception.
+ */
+export function ThrowHttpExceptionFromDomainError(e: Error) {
+  if (e instanceof NotEnoughCoordinatesError) {
+    throw new BadRequestException(e.message);
+  } else if (e instanceof TooManyCoordinatesError) {
+    throw new BadRequestException(e.message);
+  } else if (e instanceof MixedCoordinatesError) {
+    throw new BadRequestException(e.message);
   }
 }

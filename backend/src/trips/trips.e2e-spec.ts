@@ -5,11 +5,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { PrismaService } from '../prisma.service';
-import { json } from 'express';
 import { TripsModule } from './trips.module';
 
 import { createTestTripWithoutRoutes } from '../routes/routes/routes.e2e-spec';
 import * as TripTestData from './__data__';
+import { json } from 'express';
+import { TRIPS_URI } from './trips.controller';
 
 describe('TripsController (e2e)', () => {
   let app: INestApplication;
@@ -25,7 +26,6 @@ describe('TripsController (e2e)', () => {
     app = module.createNestApplication();
     app.use(json({ limit: '50mb' }));
     await app.init();
-
     prisma = module.get<PrismaService>(PrismaService);
   });
 
@@ -39,7 +39,8 @@ describe('TripsController (e2e)', () => {
     });
   });
 
-  it('/trips/ (POST)', () => {
+  const TRIPS_POST = `/${TRIPS_URI} (POST)`;
+  it(`${TRIPS_POST}`, () => {
     return request(app.getHttpServer())
       .post(`/trips`)
       .send(TripTestData.newTrip)
@@ -50,6 +51,7 @@ describe('TripsController (e2e)', () => {
         await prisma.$queryRaw`DELETE FROM "Trip" WHERE id=${res.body.id}`;
       });
   });
+
 
   it('/trips/ (GET)', () => {
     return request(app.getHttpServer()).get('/trips').expect(200);
@@ -63,38 +65,42 @@ describe('TripsController (e2e)', () => {
     return request(app.getHttpServer()).get(`/trips/123456789`).expect(404);
   });
 
-  it('/trips (PATCH) succeeds changing the layout', () => {
-    return request(app.getHttpServer())
-      .patch(`/trips/${tripId}`)
-      .send({
-        layout: { row: [{ column: 'id' }] },
-      })
-      .expect(200)
-      .expect((res) => {
-        expect(res.body).toHaveProperty('layout', {
-          row: [{ column: 'id' }],
+  const TRIPS_PATCH = `/${TRIPS_URI} (PATCH)`;
+  describe(`${TRIPS_PATCH}`, () => {
+    it('succeeds changing the layout', () => {
+      return request(app.getHttpServer())
+        .patch(`/trips/${tripId}`)
+        .send({
+          layout: { row: [{ column: 'id' }] },
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('layout', {
+            row: [{ column: 'id' }],
+          });
         });
-      });
+    });
+
+    it('resets the layout to default if not provided', () => {
+      return request(app.getHttpServer())
+        .patch(`/trips/${tripId}`)
+        .send({})
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('layout', null);
+        });
+    });
+
+    it('returns "404" for a non existing trip', () => {
+      return request(app.getHttpServer())
+        .patch(`/trips/123456789`)
+        .send({
+          layout: { row: [{ column: 'id' }] },
+        })
+        .expect(404);
+    });
   });
 
-  it('/trips (PATCH) resets the layout to default if not provided', () => {
-    return request(app.getHttpServer())
-      .patch(`/trips/${tripId}`)
-      .send({})
-      .expect(200)
-      .expect((res) => {
-        expect(res.body).toHaveProperty('layout', null);
-      });
-  });
-
-  it('/trips (PATCH) returns "404" for a non existing trip', () => {
-    return request(app.getHttpServer())
-      .patch(`/trips/123456789`)
-      .send({
-        layout: { row: [{ column: 'id' }] },
-      })
-      .expect(404);
-  });
 
   it('/trips/ (DELETE)', async () => {
     const tempTripId = await createTestTripWithoutRoutes(prisma);

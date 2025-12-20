@@ -7,7 +7,7 @@ import { json } from 'express';
 import * as request from 'supertest';
 
 import { PrismaService } from '../../prisma.service';
-import { createTestTripWithSingleRoute } from '../routes/routes.e2e-spec';
+import { createTestTripWithSingleRoute, tooManyCoordinates } from '../routes/routes.e2e-spec';
 import { RoutesModule } from '../routes.module';
 
 describe('RoutesSegmentsController (e2e)', () => {
@@ -28,8 +28,8 @@ describe('RoutesSegmentsController (e2e)', () => {
     await app.init();
 
     prisma = module.get<PrismaService>(PrismaService);
-  });
-
+  })
+  
   beforeEach(async () => {
     const data = await createTestTripWithSingleRoute(prisma);
     tripId = data.tripId;
@@ -93,39 +93,35 @@ describe('RoutesSegmentsController (e2e)', () => {
   it('/routes/segment (GET) return "404" if the route segment does not exists', () => {
     return request(app.getHttpServer()).get(`/routes/segment/${0}`).expect(404);
   });
+
+  /**
+   * Helper function to create default test data for a route segment. ID and name are fixed for all created instances
+   * coordinates must be provided.
+   * @param coordinates - The coordinates that the route segment shall have. Can be an empty array.
+   * @returns The route segment.
+   */
+  function createTestData(coordinates) {
+    return {
+      routeId,
+      name: '',
+      coordinates,
+    }
+  }
   it('/routes/segment (POST) succeeds', () => {
     return request(app.getHttpServer())
       .post(`/routes/segment`)
-      .send({
-        routeId,
-        name: '',
-        coordinates: [
-          [0, 0, 0],
-          [42, 42, 0],
-        ],
-      })
+      .send(createTestData([
+        [0, 0, 0],
+        [42, 42, 0],
+      ],
+      ))
       .expect(201);
-  });
-  
-  it('/routes/segment (POST) fails with less than two coordinates', () => {
-    return request(app.getHttpServer())
-      .post(`/routes/segment`)
-      .send({
-        routeId,
-        name: '',
-        coordinates: [[0, 0, 0]],
-      })
-      .expect(400);
   });
 
   it('/routes/segment (POST) fails with less than two coordinates', () => {
     return request(app.getHttpServer())
       .post(`/routes/segment`)
-      .send({
-        routeId,
-        name: '',
-        coordinates: [[0, 0, 0]],
-      })
+      .send(createTestData([[0, 0, 0]]))
       .expect(400);
   });
 
@@ -143,29 +139,23 @@ describe('RoutesSegmentsController (e2e)', () => {
   it('/routes/segment (POST) shuld fail with "400" if provided mixed dimension coordinates', () => {
     return request(app.getHttpServer())
       .post(`/routes/segment`)
-      .send({
-        routeId,
-        name: '',
-        coordinates: [
-          [0, 0],
-          [10, 10, 10],
-        ],
-      })
+      .send(createTestData([
+        [0, 0],
+        [10, 10, 10],
+      ],
+      ))
       .expect(400);
   });
 
   it('/routes/segment (POST) should fail with "400" if provided with more than max allowed coordinates', () => {
-    const coordinates: [number, number, number][] = Array.from(
-      { length: 1000001 },
-      (_, i) => [i, i, 0],
-    );
+
 
     return request(app.getHttpServer())
       .post(`/routes/segment`)
       .send({
         routeId,
         name: '',
-        coordinates,
+        coordinates: tooManyCoordinates,
       })
       .expect(400);
   });

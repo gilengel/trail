@@ -75,11 +75,35 @@ jobs:
       - name: Setup (backend)
         uses: ./.github/actions/setup-backend
 
+      - name: Dependencies audit (backend)
+        run: npm run deps:audit
+        working-directory: ./backend
+
+      - name: Dependencies check (backend)
+        run: npm run deps:check
+        working-directory: ./backend
+
       - name: Build (backend)
         run: npm run build:backend
 
+      - name: Run format check (backend)
+        run: npm run format:check
+        working-directory: ./backend
+
       - name: Run eslint (backend)
-        run: npm run lint
+        run: npm run code:lint
+        working-directory: ./backend
+
+      - name: Run duplicates check (backend)
+        run: npm run code:duplicates
+        working-directory: ./backend
+
+      - name: Run knip (backend)
+        run: npm run code:knip
+        working-directory: ./backend
+
+      - name: Run typecheck (backend)
+        run: npm run code:typecheck
         working-directory: ./backend
 
       - name: Run the unit tests (backend)

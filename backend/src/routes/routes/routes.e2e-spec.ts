@@ -12,6 +12,11 @@ import * as DTO from '../../dto';
 import * as RouteSegmentTestData from '../segments/__data__';
 import { join } from 'path';
 
+export const tooManyCoordinates: [number, number, number][] = Array.from(
+  { length: 1000001 },
+  (_, i) => [i, i, 0],
+);
+
 /**
  * Creates a trip in the database that has no related routes.
  * @param prisma - Prisma instance.
@@ -78,7 +83,6 @@ describe('RoutesController (e2e)', () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [RoutesModule],
       }).compile();
-
       app = module.createNestApplication();
       app.use(json({ limit: '50mb' }));
       await app.init();
@@ -98,9 +102,8 @@ describe('RoutesController (e2e)', () => {
   describe('with working database', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
-        imports: [RoutesModule],
-      }).compile();
-
+    imports: [RoutesModule],
+  }).compile();
       app = module.createNestApplication();
       app.use(json({ limit: '50mb' }));
       await app.init();
@@ -197,10 +200,6 @@ describe('RoutesController (e2e)', () => {
     });
 
     it('/routes/ (POST) fails with "400" if the track contains too many coordinates', () => {
-      const coordinates: [number, number, number][] = Array.from(
-        { length: 1000001 },
-        (_, i) => [i, i, 0],
-      );
       return request(app.getHttpServer())
         .post(`/routes`)
         .send({
@@ -209,7 +208,7 @@ describe('RoutesController (e2e)', () => {
           segments: [
             {
               name: 'invalid_segment',
-              coordinates,
+              coordinates: tooManyCoordinates,
             },
           ],
         })
@@ -246,72 +245,61 @@ describe('RoutesController (e2e)', () => {
         .expect(422);
     });
 
-    it('/routes/gpx (POST) succeeds with a single segment track', () => {
-      return request(app.getHttpServer())
-        .post(`/routes/gpx`)
-        .set('Content-Type', 'multipart/form-data')
-        .field('name', 'Ehrwald Hiking')
-        .field('tripId', tripId)
-        .attach('files', join(__dirname, '__test_files__', 'short.gpx'))
-        .expect(201)
-        .expect(async (res) => {
-          expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
+    const ROUTES_GPX_POST = '/routes/gpx (POST)'
+    describe(ROUTES_GPX_POST, () => {
 
-          await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
-        });
-    });
+      it(`${ROUTES_GPX_POST}  succeeds with a single segment track without elevation`, () => {
+        return request(app.getHttpServer())
+          .post(`/routes/gpx`)
+          .set('Content-Type', 'multipart/form-data')
+          .field('name', 'Ehrwald Hiking')
+          .field('tripId', tripId)
+          .attach('files', join(__dirname, '__test_files__', 'no_elevation.gpx'))
+          .expect(201)
+          .expect(async (res) => {
+            expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
 
-    it('/routes/gpx (POST) succeeds with a single segment track without elevation', () => {
-      return request(app.getHttpServer())
-        .post(`/routes/gpx`)
-        .set('Content-Type', 'multipart/form-data')
-        .field('name', 'Ehrwald Hiking')
-        .field('tripId', tripId)
-        .attach('files', join(__dirname, '__test_files__',  'no_elevation.gpx'))
-        .expect(201)
-        .expect(async (res) => {
-          expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
+            await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+          });
+      });
 
-          await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
-        });
-    });
+      it(`${ROUTES_GPX_POST}  succeeds with a multi segment track`, () => {
+        return request(app.getHttpServer())
+          .post(`/routes/gpx`)
+          .set('Content-Type', 'multipart/form-data')
+          .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
+          .field('tripId', tripId)
+          .attach('files', join(__dirname, '__test_files__', 'long.gpx'))
+          .expect(201)
+          .expect(async (res) => {
+            expect(res.body).toHaveProperty(
+              'name',
+              'Stage 1: Arctic Ocean to Väylä — European Divide Trail',
+            );
 
-    it('/routes/gpx (POST) succeeds with a multi segment track', () => {
-      return request(app.getHttpServer())
-        .post(`/routes/gpx`)
-        .set('Content-Type', 'multipart/form-data')
-        .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
-        .field('tripId', tripId)
-        .attach('files', join(__dirname, '__test_files__',  'long.gpx'))
-        .expect(201)
-        .expect(async (res) => {
-          expect(res.body).toHaveProperty(
-            'name',
-            'Stage 1: Arctic Ocean to Väylä — European Divide Trail',
-          );
+            await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
+          });
+      });
 
-          await prisma.$queryRaw`DELETE FROM "Route" WHERE id=${res.body.id}`;
-        });
-    });
+      it(`${ROUTES_GPX_POST} fails with a "400" if the route has less than two coordinates`, () => {
+        return request(app.getHttpServer())
+          .post(`/routes/gpx`)
+          .set('Content-Type', 'multipart/form-data')
+          .field('name', 'empty')
+          .attach('files', join(__dirname, '__test_files__', 'empty.gpx'))
+          .expect(400);
+      });
 
-    it('/routes/gpx (POST) fails with a "400" if the route has less than two coordinates', () => {
-      return request(app.getHttpServer())
-        .post(`/routes/gpx`)
-        .set('Content-Type', 'multipart/form-data')
-        .field('name', 'empty')
-        .attach('files', join(__dirname, '__test_files__',  'empty.gpx'))
-        .expect(400);
-    });
-
-    it('/routes/gpx (POST) fails with a "422" if the trip does not exist', () => {
-      return request(app.getHttpServer())
-        .post(`/routes/gpx`)
-        .set('Content-Type', 'multipart/form-data')
-        .field('name', '')
-        .field('tripId', 0)
-        .attach('files', join(__dirname, '__test_files__',  'short.gpx'))
-        .expect(422);
-    });
+      it(`${ROUTES_GPX_POST}  fails with a "422" if the trip does not exist`, () => {
+        return request(app.getHttpServer())
+          .post(`/routes/gpx`)
+          .set('Content-Type', 'multipart/form-data')
+          .field('name', '')
+          .field('tripId', 0)
+          .attach('files', join(__dirname, '__test_files__', 'short.gpx'))
+          .expect(422);
+      });
+    })
 
     it('/routes (PATCH) succeeds changing only the name', () => {
       return request(app.getHttpServer())

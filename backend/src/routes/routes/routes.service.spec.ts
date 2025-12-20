@@ -37,7 +37,7 @@ describe('RoutesService', () => {
   it('should return a route stored in the database by id', async () => {
     jest
       .spyOn(routesDatabase, 'getOneById')
-      .mockResolvedValueOnce(routeTestData.Enties.Route);
+      .mockResolvedValueOnce(routeTestData.Entities.Route);
 
     jest
       .spyOn(routeSegmentsService, 'findAllForRoute')

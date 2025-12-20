@@ -14,17 +14,14 @@ import {
   forwardRef,
   NotFoundException,
   UnprocessableEntityException,
-  BadRequestException,
 } from '@nestjs/common';
 import {
-  MixedCoordinatesError,
-  NotEnoughCoordinatesError,
   RouteSegmentsService,
-  TooManyCoordinatesError,
 } from './route.segments.service';
 import { NoAttributesProvidedError } from '../routes/routes.database';
 import * as DTO from '../../dto';
 import { RoutesService } from '../routes/routes.service';
+import { ThrowHttpExceptionFromDomainError } from '../routes/routes.controller';
 
 @Controller('routes/segment')
 export class RoutesSegmentsController {
@@ -51,13 +48,7 @@ export class RoutesSegmentsController {
 
       return Promise.resolve(segment);
     } catch (e) {
-      if (e instanceof NotEnoughCoordinatesError) {
-        throw new BadRequestException(e.message);
-      } else if (e instanceof TooManyCoordinatesError) {
-        throw new BadRequestException(e.message);
-      } else if (e instanceof MixedCoordinatesError) {
-        throw new BadRequestException(e.message);
-      }
+      ThrowHttpExceptionFromDomainError(e);
     }
   }
 
