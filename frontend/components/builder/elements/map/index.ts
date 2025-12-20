@@ -4,7 +4,9 @@ import type {
     RouteProperty
 } from "~/components/builder/elements/RouteProperty";
 import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
+import {defineCallback} from "@trail/grid-editor/events/eventRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 
 export const MapElement: EditorElementDefinition<RouteProperty, ProvidedPropertiesRoute, ConsumedPropertiesRoute> = createEditorElementDefinition({
     id: 'map',
@@ -15,8 +17,42 @@ export const MapElement: EditorElementDefinition<RouteProperty, ProvidedProperti
 
     defaults: {
         properties: {} as RouteProperty,
-        providedProperties: ["route"],
-        consumedProperties: ["route"],
+
+        connections: {
+            provided: {
+                properties: ["route", "color"],
+                events: {
+                    'segment-hovered-on': {
+                        name: 'segment-hovered-on',
+                        label: 'Segment was hovered on',
+                        description: 'Fired when map is panned or zoomed',
+                        payloadType: 'custom',
+                        payloadSchema: {
+                            point: {lat: 0, lng: 0},
+                        }
+                    }
+                }
+            },
+
+            consumed: {
+                properties: ["route", "color"],
+
+                callbacks: {
+                    'segment-hovered-on': defineCallback(
+                        {point: {lat: 0, lng: 0}},
+                        (instance: EditorElementInstance, args: {
+                            point: { lat: number, lng: number }
+                        }) => {
+
+                            console.log(args.point);
+
+                            //instance.point = args.point;
+                        },
+                        {name: 'segment-hovered-on', label: 'Segment hovered'}
+                    )
+                }
+            }
+        }
     },
 
     propertySchema: {
@@ -26,11 +62,18 @@ export const MapElement: EditorElementDefinition<RouteProperty, ProvidedProperti
             label: 'Route',
             description: 'Select the route you want to display on the map',
         },
+
+        color: {
+            type: 'color',
+            label: 'Route Color',
+            format: 'hex',
+            defaultValue: '#000000'
+        },
     },
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-map-marked-alt',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

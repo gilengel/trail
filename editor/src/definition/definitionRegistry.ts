@@ -1,17 +1,19 @@
-import type {EditorElementDefinition} from "./elementDefinition";
+import type {EditorElementDefinition, EditorElementDefinitionID} from "./elementDefinition";
+import type {IDefinitionRegistry} from "./idefinitionRegistry";
+import {defineAsyncComponent} from "vue";
 
-export class ElementDefinitionRegistry {
-    private elements = new Map<string, EditorElementDefinition<any, any, any>>();
-    private categories = new Map<string, Set<string>>();
-    private tags = new Map<string, Set<string>>();
+export class DefinitionRegistry implements IDefinitionRegistry {
+    private definitions = new Map<EditorElementDefinitionID, EditorElementDefinition>();
+    private categories = new Map<EditorElementDefinitionID, Set<string>>();
+    private tags = new Map<EditorElementDefinitionID, Set<string>>();
 
-    // Register a single element
-    register<T extends EditorElementDefinition<any, any, any>>(element: T): this {
-        if (this.elements.has(element.id)) {
+    // Register a single element definition
+    register<T extends EditorElementDefinition>(element: T): this {
+        if (this.definitions.has(element.id)) {
             throw new Error(`Element with ID '${element.id}' is already registered`);
         }
 
-        this.elements.set(element.id, element);
+        this.definitions.set(element.id, element);
 
         // Index by category
         const category = element.category || 'default';
@@ -33,7 +35,7 @@ export class ElementDefinitionRegistry {
     }
 
     // Register multiple elements
-    registerMany<T extends readonly EditorElementDefinition<any, any, any>[]>(elements: T): this {
+    registerMany<T extends readonly EditorElementDefinition[]>(elements: T): this {
         for (const element of elements) {
             this.register(element);
         }
@@ -41,32 +43,32 @@ export class ElementDefinitionRegistry {
     }
 
     // Get element by ID with type safety
-    get<Id extends string>(id: Id): EditorElementDefinition<any, any, any> | undefined {
-        return this.elements.get(id);
+    get(id: EditorElementDefinitionID): EditorElementDefinition | undefined {
+        return this.definitions.get(id);
     }
 
     // Get all elements
-    getAll(): EditorElementDefinition<any, any, any>[] {
-        return Array.from(this.elements.values());
+    getAll(): EditorElementDefinition[] {
+        return Array.from(this.definitions.values());
     }
 
     // Get elements by category
-    getByCategory(category: string): EditorElementDefinition<any, any, any>[] {
+    getByCategory(category: string): EditorElementDefinition[] {
         const elementIds = this.categories.get(category);
         if (!elementIds) return [];
 
         return Array.from(elementIds)
-            .map(id => this.elements.get(id)!)
+            .map(id => this.definitions.get(id)!)
             .filter(Boolean);
     }
 
     // Get elements by tag
-    getByTag(tag: string): EditorElementDefinition<any, any, any>[] {
+    getByTag(tag: string): EditorElementDefinition[] {
         const elementIds = this.tags.get(tag);
         if (!elementIds) return [];
 
         return Array.from(elementIds)
-            .map(id => this.elements.get(id)!)
+            .map(id => this.definitions.get(id)!)
             .filter(Boolean);
     }
 
@@ -82,18 +84,23 @@ export class ElementDefinitionRegistry {
 
     // Check if element exists
     has(id: string): boolean {
-        return this.elements.has(id);
+        return this.definitions.has(id);
     }
 
     // Get element count
     size(): number {
-        return this.elements.size;
+        return this.definitions.size;
     }
 
     // Clear all elements
     clear(): void {
-        this.elements.clear();
+        this.definitions.clear();
         this.categories.clear();
         this.tags.clear();
+    }
+
+    public getComponent(definitionTypeId: string): ReturnType<typeof defineAsyncComponent> | null {
+        const definition = this.definitions.get(definitionTypeId);
+        return definition?.component || null;
     }
 }

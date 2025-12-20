@@ -1,7 +1,4 @@
 <template>
-  <h2 class="text-h6 mt-2 mb-2">
-    Size
-  </h2>
   <v-col
     class="py-2"
     cols="12"

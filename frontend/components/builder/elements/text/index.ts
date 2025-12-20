@@ -22,13 +22,21 @@ export const TextElement: EditorElementDefinition<TextElementProperties, ["conte
             color: '#000000',
             bold: false,
         } as TextElementProperties,
-        providedProperties: ['content'] as const,
-        consumedProperties: [] as const,
+
+        connections: {
+            provided: {
+                properties: ['content'] as const,
+            },
+
+            consumed: {
+                properties: []
+            }
+        }
     },
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-comment',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

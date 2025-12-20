@@ -1,27 +1,44 @@
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {BuilderMode, Editor} from "./editor";
+import {BuilderMode, createDefaultEditor, Editor} from "./editor";
 import {createTestGrid} from "./undoredo/actions/test.helper";
 import type {IUndoRedoAction} from "./undoredo";
-import type {EditorElementInstance} from "./editorElementInstanceRegistry";
-import {LogLevel} from "./handler/logger";
-import {EditorElementDefinition} from "./configuration/elementDefinition";
+import {EditorElementDefinition} from "./definition/elementDefinition";
+import {EditorElementInstance} from "./instances/instance";
+import {LogLevel} from "./handler/ilogger";
 
 describe("Editor", () => {
     const now = new Date();
 
-    const mockElement: EditorElementInstance<EditorElementDefinition<{}, [], []>> = {
+    const mockElement: EditorElementInstance<EditorElementDefinition<{}, [], [], {}, {}>> = {
         instanceId: "test-id",
         elementId: "",
         properties: {},
         defaults: {
             properties: {},
-            providedProperties: [],
-            consumedProperties: []
+            connections: {
+                consumed: {
+                    properties: []
+                },
+                provided: {
+                    properties: []
+                }
+            },
         },
+
         connections: {
-            consumed: {},
-            provided: {}
+            provided: {
+                properties: {},
+
+                events: {
+                    listeners: {}
+                }
+            },
+
+            consumed: {
+                properties: {}
+            }
         },
+
         selected: false,
         created: now,
         modified: now
@@ -32,7 +49,7 @@ describe("Editor", () => {
 
 
     beforeEach(() => {
-        editor = new Editor(createTestGrid(1, 2), mockPersist);
+        editor = createDefaultEditor(createTestGrid(1, 2), mockPersist);
     })
 
     it('returns "undefined" if an element was not found"', () => {

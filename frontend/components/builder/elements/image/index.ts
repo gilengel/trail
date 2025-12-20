@@ -22,8 +22,15 @@ export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = cr
             sizeType: ImageSize.Free,
             positionType: ImagePosition.Free
         } as ImageProperties,
-        providedProperties: [],
-        consumedProperties: [],
+
+        connections: {
+            provided: {
+                properties: []
+            },
+            consumed: {
+                properties: []
+            }
+        }
     },
 
     propertySchema: {
@@ -50,7 +57,7 @@ export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = cr
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-image',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

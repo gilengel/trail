@@ -1,17 +1,42 @@
-import {EditorElements, globalElementRegistry} from '~/components/builder/editor.configuration';
+import {EditorElements} from '~/components/builder/editor.configuration';
+import {PropertyTypeRegistry} from "@trail/grid-editor/properties/elementPropertyRegistry";
+import {DefinitionRegistry} from "@trail/grid-editor/definition/definitionRegistry";
+import type {Grid} from "@trail/grid-editor/grid";
+import type {ISaveGridFn} from "@trail/grid-editor/editorConfiguration";
+import {Editor} from "@trail/grid-editor/editor";
+import {InstanceRegistry} from "@trail/grid-editor/instances/instanceRegistry";
+import {EventManager} from "@trail/grid-editor/events/eventManager";
+import {UndoRedoHandler} from "@trail/grid-editor/undoredo";
+import {HighlightHandler} from "@trail/grid-editor/handler/highlight";
+import {LoggerHandler} from "@trail/grid-editor/handler/logger";
 
 
 export default defineNuxtPlugin(() => {
-    // Clear existing registrations on refresh/HMR
-    if (process.env.NODE_ENV === 'development') {
-        globalElementRegistry.definitions.clear();
-        globalElementRegistry.properties.clear();
+    const definitionRegistry = new DefinitionRegistry();
+    definitionRegistry.registerMany(EditorElements);
+
+    const propertyRegistry = new PropertyTypeRegistry();
+
+    const instanceRegistry = new InstanceRegistry(definitionRegistry);
+
+    propertyRegistry.register("range", defineAsyncComponent(() => import('~/components/types/Range.vue')));
+    propertyRegistry.register("string", defineAsyncComponent(() => import('~/components/types/Text.vue')));
+    propertyRegistry.register("color", defineAsyncComponent(() => import('~/components/types/Color.vue')));
+    propertyRegistry.register("text-align", defineAsyncComponent(() => import('~/components/types/TextAlign.vue')));
+
+    return {
+        provide: {
+            createGridEditor(grid: Grid, saveFn: ISaveGridFn): Editor {
+                return new Editor(grid,
+                    definitionRegistry,
+                    propertyRegistry,
+                    instanceRegistry,
+                    new EventManager(definitionRegistry, instanceRegistry),
+                    new UndoRedoHandler(saveFn),
+                    new HighlightHandler(),
+                    new LoggerHandler(),
+                    saveFn);
+            }
+        }
     }
-
-    globalElementRegistry.definitions.registerMany(EditorElements);
-
-    globalElementRegistry.properties.registerType("range", defineAsyncComponent(() => import('~/components/types/Range.vue')));
-    globalElementRegistry.properties.registerType("string", defineAsyncComponent(() => import('~/components/types/Text.vue')));
-    globalElementRegistry.properties.registerType("color", defineAsyncComponent(() => import('~/components/types/Color.vue')));
-    globalElementRegistry.properties.registerType("text-align", defineAsyncComponent(() => import('~/components/types/TextAlign.vue')));
 });

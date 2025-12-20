@@ -17,8 +17,28 @@ export const ElevationProfileElement: EditorElementDefinition<ElevationProfilePr
 
     defaults: {
         properties: {} as ElevationProfileProperties,
-        providedProperties: ["route", "color"],
-        consumedProperties: ["route", "color"],
+
+        connections: {
+            provided: {
+                properties: ["route", "color"],
+                events: {}
+            },
+            consumed: {
+                properties: ["route", "color"],
+
+                callbacks: {
+                    'segment-hovered-on': {
+                        name: 'segment-hovered-on',
+                        label: 'Segment was hovered on',
+                        description: 'Fired when map is panned or zoomed',
+                        payloadType: 'custom',
+                        payloadSchema: {
+                            point: {lat: 0, lng: 0},
+                        }
+                    }
+                }
+            }
+        }
     },
 
     propertySchema: {
@@ -39,7 +59,7 @@ export const ElevationProfileElement: EditorElementDefinition<ElevationProfilePr
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-chart-line',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

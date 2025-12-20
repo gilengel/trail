@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {LoggerHandler, LogLevel} from "./logger";
+import {LoggerHandler} from "./logger";
+import {LogLevel} from "./ilogger";
 
 describe("LoggerHandler", () => {
     it("logs a message with the given level", () => {

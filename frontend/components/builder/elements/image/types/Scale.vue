@@ -1,7 +1,4 @@
 <template>
-  <h2 class="text-h6 mt-2 mb-2">
-    Scaling {{ props.propertyKey }}
-  </h2>
   <div>
     <v-row>
       <v-col>

@@ -28,15 +28,15 @@ import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/update
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const editor = inject(EditorInjectionKey);
-
-if (!editor) {
-  throw new Error("Editor instance was not injected in Heading");
-}
+const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const props = defineProps<EditorElementProperties<typeof HeadingElement>>();
+const editor = inject(EditorInjectionKey);
+
+if (!editor && props.changeable) {
+  throw new Error('Editor instance was not injected in element "Heading"');
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 

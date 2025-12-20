@@ -4,7 +4,7 @@ import type {EditorElementDefinition} from "@trail/grid-editor/configuration/ele
 
 export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> = createEditorElementDefinition({
     id: 'heading-element',
-    name: 'Heading Element',
+    name: 'Heading',
     category: 'content',
 
     component: defineAsyncComponent(() => import('~/components/builder/elements/heading/Element.vue')),
@@ -16,8 +16,15 @@ export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> 
             text: 'Heading',
             alignment: 'left'
         } as HeadingProperties,
-        providedProperties: [] as const,
-        consumedProperties: [] as const,
+
+        connections: {
+            provided: {
+                properties: []
+            },
+            consumed: {
+                properties: []
+            }
+        }
     },
 
     propertySchema: {
@@ -48,7 +55,7 @@ export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> 
 
     metadata: {
         description: 'A simple text element with customizable styling',
-        icon: 'text-icon',
+        icon: 'las la-heading',
         tags: ['text', 'content', 'basic'],
         version: '1.0.0',
     },

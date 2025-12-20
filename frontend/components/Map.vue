@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import type {MapLibreSegment, MapLibreRoute} from "~/types/route";
-import {LngLatBounds, Map} from "maplibre-gl";
+import {LngLatBounds, type LngLatLike, Map} from "maplibre-gl";
 import type {Color} from "~/types/color";
 
 type LineStyle = {
@@ -44,10 +44,11 @@ defineExpose({
   fitBounds,
 });
 
-let oldSegments: MapLibreSegment[] = [];
+const emit = defineEmits<{
+  'segment:hoveredOn': [id: string | null, point: LngLatLike]
+}>();
 
-function onTripChanged() {
-}
+let oldSegments: MapLibreSegment[] = [];
 
 /**
  *
@@ -102,8 +103,6 @@ watch(
     {deep: true}
 );
 
-
-watch(() => trip, onTripChanged, {deep: true});
 
 function waitForStyleLoad(): Promise<void> {
   return new Promise((resolve) => {
@@ -213,6 +212,10 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
       "line-color": style.color,
       "line-width": style.width,
     },
+  });
+
+  map.value!.on("mouseenter", _id, (e) => {
+    emit("segment:hoveredOn", _id, e.lngLat);
   });
 }
 

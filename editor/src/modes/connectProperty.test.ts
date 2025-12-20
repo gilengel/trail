@@ -4,10 +4,10 @@ import {
     type ConnectElementPropertiesMeta,
     findLoop
 } from "./connectProperty";
-import type {EditorElementInstance} from '../editorElementInstanceRegistry'
+import type {EditorElementInstance} from '../instances/instance'
 import type {Grid} from '../grid'
 import {createTestGrid} from "../undoredo/actions/test.helper";
-import {LogLevel} from "../handler/logger";
+import {LogLevel} from "../handler/ilogger";
 import {BuilderMode, Editor} from "../editor";
 
 
@@ -30,8 +30,8 @@ describe('findLoop', () => {
             instanceId: 'element-1',
             elementId: 'text-element',
             connections: {
-                consumed: {},
-                provided: {}
+                consumed: {properties: {}},
+                provided: {properties: {}}
             },
             properties: {},
             created: now,
@@ -43,8 +43,8 @@ describe('findLoop', () => {
             instanceId: 'element-2',
             elementId: 'text-element',
             connections: {
-                consumed: {},
-                provided: {}
+                consumed: {properties: {}},
+                provided: {properties: {}}
             },
             properties: {},
             created: now,
@@ -56,8 +56,8 @@ describe('findLoop', () => {
             instanceId: 'element-3',
             elementId: 'text-element',
             connections: {
-                consumed: {},
-                provided: {}
+                consumed: {properties: {}},
+                provided: {properties: {}}
             },
             properties: {},
             created: now,
@@ -96,7 +96,7 @@ describe('findLoop', () => {
     })
 
     it('returns undefined when connected element is not found', () => {
-        mockElement1.connections.consumed['testProperty'] = 'non-existent-element'
+        mockElement1.connections.consumed.properties['testProperty'] = 'non-existent-element'
         vi.mocked(mockEditor.findElementWithId).mockReturnValue(undefined)
 
         const result = findLoop('testProperty', mockElement1, mockEditor)
@@ -106,7 +106,7 @@ describe('findLoop', () => {
     })
 
     it('detects simple loop (element points to already visited element)', () => {
-        mockElement1.connections.consumed['testProperty'] = 'element-2'
+        mockElement1.connections.consumed.properties['testProperty'] = 'element-2'
         vi.mocked(mockEditor.findElementWithId).mockReturnValue(mockElement2)
 
         const visitedIds = ['element-2']
@@ -117,13 +117,13 @@ describe('findLoop', () => {
 
     it('detects complex loop through recursion', () => {
         // Setup chain: element1 -> element2 -> element3 -> element2 (loop)
-        mockElement1.connections.consumed['testProperty'] = 'element-2'
+        mockElement1.connections.consumed.properties['testProperty'] = 'element-2'
 
-        mockElement2.connections.provided['testProperty'] = 'element-1'
-        mockElement2.connections.consumed['testProperty'] = 'element-3'
+        mockElement2.connections.provided.properties['testProperty'] = 'element-1'
+        mockElement2.connections.consumed.properties['testProperty'] = 'element-3'
 
-        mockElement3.connections.provided['testProperty'] = 'element-2'
-        mockElement3.connections.consumed['testProperty'] = 'element-1'
+        mockElement3.connections.provided.properties['testProperty'] = 'element-2'
+        mockElement3.connections.consumed.properties['testProperty'] = 'element-1'
 
 
         const result = findLoop('testProperty', mockElement1, mockEditor)
@@ -168,12 +168,32 @@ describe('ConnectElementProperties', () => {
             elementId: 'text-element',
             defaults: {
                 properties: {},
-                providedProperties: ['testProperty'],
-                consumedProperties: []
+                connections: {
+                    provided: {
+                        properties: ['testProperty'],
+                        events: {}
+                    },
+
+                    consumed: {
+                        properties: [],
+                        callbacks: {}
+                    }
+                }
             },
             connections: {
-                consumed: {},
-                provided: {'testProperty': 'some-other-element'}
+                provided: {
+                    properties: {
+                        testProperty: 'some-other-element'
+                    },
+                    events: {
+                        listeners: {}
+                    },
+                },
+
+                consumed: {
+                    properties: {}
+                },
+
             },
             properties: {},
             created: new Date(),
@@ -185,8 +205,12 @@ describe('ConnectElementProperties', () => {
             instanceId: 'consuming-element',
             elementId: 'text-element',
             connections: {
-                consumed: {},
-                provided: {}
+                consumed: {
+                    properties: {}
+                },
+                provided: {
+                    properties: {}
+                }
             },
             properties: {},
             created: new Date(),
@@ -248,7 +272,7 @@ describe('ConnectElementProperties', () => {
 
             // Mock findLoop to detect a loop
             vi.mocked(mockEditor.findElementWithId).mockReturnValue(mockConsumingElement)
-            mockConsumingElement.connections.consumed['testProperty'] = 'providing-element'
+            mockConsumingElement.connections.consumed.properties['testProperty'] = 'providing-element'
 
             connectMode.onSelectElement(mockConsumingElement)
 
@@ -337,11 +361,11 @@ describe('ConnectElementProperties', () => {
         it('handles workflow with loop prevention', () => {
             const meta: ConnectElementPropertiesMeta = {property: 'dataProperty'}
             mockEditor.selectedElement.value = mockProvidingElement
-            mockProvidingElement.connections.provided['dataProperty'] = 'consuming-element'
+            mockProvidingElement.connections.provided.properties['dataProperty'] = 'consuming-element'
 
             // Set up loop
             vi.mocked(mockEditor.findElementWithId).mockReturnValue(mockConsumingElement)
-            mockConsumingElement.connections.consumed['dataProperty'] = 'providing-element'
+            mockConsumingElement.connections.consumed.properties['dataProperty'] = 'providing-element'
 
             // Activate mode
             connectMode.activate(meta)
@@ -350,8 +374,8 @@ describe('ConnectElementProperties', () => {
             connectMode.onSelectElement(mockConsumingElement)
 
             // Verify no connection was made
-            expect(mockProvidingElement.connections.consumed).not.toHaveProperty('dataProperty')
-            expect(mockConsumingElement.connections.provided).not.toHaveProperty('dataProperty')
+            expect(mockProvidingElement.connections.consumed.properties).not.toHaveProperty('dataProperty')
+            expect(mockConsumingElement.connections.provided.properties).not.toHaveProperty('dataProperty')
 
             // Verify warning was shown and mode switched
             expect(mockEditor.log).toHaveBeenCalledWith(

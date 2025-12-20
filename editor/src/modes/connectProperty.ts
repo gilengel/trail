@@ -1,7 +1,8 @@
-import {BuilderMode, Editor, type EditorMode} from "../editor";
-import type {EditorElementInstance} from "../editorElementInstanceRegistry";
-import {LogLevel} from "../handler/logger";
-import {AddConnection} from "../undoredo/actions/addConnection";
+import {BuilderMode, Editor} from "../editor";
+import type {EditorMode} from "../editorMode";
+import {LogLevel} from "../handler/ilogger";
+import {AddPropertyConnection} from "../undoredo/actions/addPropertyConnection";
+import type {EditorElementInstance} from "../instances/instance";
 
 /**
  * Checks if connected elements would form a loop that is that the provided data is feed back into
@@ -26,7 +27,7 @@ export function findLoop<Element extends EditorElementInstance
   editor: Editor,
   visitedElementIds: string[] = []): string[] | undefined {
 
-    const elementIdOfConnectedConsumedProperty = target.connections.consumed[property];
+    const elementIdOfConnectedConsumedProperty = target.connections.consumed.properties[property];
     if (!elementIdOfConnectedConsumedProperty) {
         return;
     }
@@ -64,7 +65,7 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
 
         const providingElement = this._editor.selectedElement.value;
 
-        const foundLoops = Object.keys(providingElement.connections.provided).filter((value: string) => {
+        const foundLoops = Object.keys(providingElement.connections.provided.properties).filter((value: string) => {
             return findLoop(value, newSelectedElement, this._editor);
         })
 
@@ -76,7 +77,7 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
             return;
         }
 
-        await this._editor.executeAction(new AddConnection(providingElement, newSelectedElement, this.meta.property));
+        await this._editor.executeAction(new AddPropertyConnection(providingElement, newSelectedElement, this.meta.property));
 
         this._editor.clearSelectedElements();
         this._editor.switchMode(BuilderMode.Create, {});

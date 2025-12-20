@@ -1,28 +1,30 @@
 <template>
   <div class="pa-5">
     <v-card
-      class="rounded-sm"
-      variant="flat"
+        class="rounded-sm"
+        variant="flat"
     >
       <v-card-title>
-        <slot name="title" />
+        <slot name="title"/>
       </v-card-title>
       <v-card-text>
-        <slot name="properties" />
+        <slot name="properties"/>
 
-        Provided
+        <v-divider/>
+        {{ props.element.connections }}
+        <span class="v-expansion-panel-title v-expansion-panel-title--static">Provided</span>
         <v-list>
           <v-list-item
-            v-for="(item, i) in provided"
-            :key="i"
-            :value="item"
-            color="primary"
-            @click="propertySelected(item.property, PropertyDirection.Consumed)"
+              v-for="(item, i) in provided"
+              :key="i"
+              :value="item"
+              color="primary"
+              @click="propertySelected(item.property, PropertyDirection.Consumed)"
           >
             <template #prepend>
               <v-icon
-                icon="las la-arrow-circle-right"
-                :color="item.connected ? 'warning' : ''"
+                  icon="las la-arrow-circle-right"
+                  :color="item.connected ? 'warning' : ''"
               />
             </template>
 
@@ -32,17 +34,19 @@
           </v-list-item>
         </v-list>
 
-        Consumed
+        <v-divider/>
+        <span class="v-expansion-panel-title v-expansion-panel-title--static">Consumed</span>
+
         <v-list>
           <v-list-item
-            v-for="(item, i) in consumed"
-            :key="i"
-            :value="item"
+              v-for="(item, i) in consumed"
+              :key="i"
+              :value="item"
           >
             <template #prepend>
               <v-icon
-                icon="las la-arrow-circle-left"
-                :color="item.connected ? 'warning' : ''"
+                  icon="las la-arrow-circle-left"
+                  :color="item.connected ? 'warning' : ''"
               />
             </template>
 
@@ -51,14 +55,14 @@
             </v-list-item-title>
 
             <template
-              #append
-              v-if="item.connected"
+                #append
+                v-if="item.connected"
             >
               <v-btn
-                color="warning"
-                icon="las la-trash-alt"
-                variant="text"
-                @click="clearConnection(item.property)"
+                  color="warning"
+                  icon="las la-trash-alt"
+                  variant="text"
+                  @click="clearConnection(item.property)"
               />
             </template>
           </v-list-item>
@@ -68,7 +72,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="Element extends EditorElementDefinition<Record<string, unknown>, string[], string[]>">
+<script setup lang="ts" generic="Element extends EditorElementDefinition<any, any, any, any>">
 // ---------------------------------------------------------------------------------------------------------------------
 // This is the parent component for all element property components.
 //
@@ -80,8 +84,8 @@
 import {inject} from 'vue';
 import type {Grid} from "@trail/grid-editor/grid";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -118,9 +122,10 @@ const provided = computed(() => {
       property,
       connected: (props.element.connections.provided as Record<string, unknown>)[property] !== undefined
     };
-  };
+  }
 
-  return props.element.defaults.providedProperties.map(fn);
+  const definition = editor.definitions.get(props.element.elementId);
+  return definition!.defaults.connections.provided.properties.map(fn);
 });
 
 const consumed = computed(() => {
@@ -129,9 +134,10 @@ const consumed = computed(() => {
       property,
       connected: (props.element.connections.consumed as Record<string, unknown>)[property] !== undefined
     };
-  };
+  }
 
-  return props.element.defaults.providedProperties.map(fn);
+  const definition = editor.definitions.get(props.element.elementId);
+  return definition!.defaults.connections.provided.properties.map(fn);
 });
 
 function clearConnection(item: string) {
@@ -168,6 +174,7 @@ function propertySelected(propertyKey: string, direction: PropertyDirection) {
   const inverseDirection = direction === PropertyDirection.Consumed ? PropertyDirection.Provided : PropertyDirection.Consumed;
   const filtered = findAllElementsWithProperties([propertyKey], props.grid, inverseDirection);
 
+
   editor!.clearAllHighlightedElements();
   editor!.highlightElements(filtered);
 
@@ -175,3 +182,9 @@ function propertySelected(propertyKey: string, direction: PropertyDirection) {
 }
 
 </script>
+
+<style lang="scss">
+.v-expansion-panel-title {
+  padding: 0 !important;
+}
+</style>

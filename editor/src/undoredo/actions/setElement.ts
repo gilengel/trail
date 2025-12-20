@@ -1,6 +1,6 @@
 import type {IUndoRedoAction} from "../";
 import type {Column} from "../../grid"
-import type {EditorElementInstance} from "../../editorElementInstanceRegistry";
+import type {EditorElementInstance} from "../../instances/instance";
 
 /**
  * Sets the element type of column. If there was an element before it is cached

@@ -1,5 +1,6 @@
 import type {Grid} from "./grid";
-import type {EditorElementDefinition} from "./configuration/elementDefinition";
+import type {EditorElementDefinition} from "./definition/elementDefinition";
+import type {ConsumedEventSchema, EventSchema} from "./events/eventRegistry";
 
 // Base interface for save function
 export interface ISaveGridFn {
@@ -15,18 +16,31 @@ export type EditorConfiguration<Elements extends readonly EditorElementDefinitio
     };
 };
 
+
 export function createEditorElementDefinition<
-    Properties extends Record<string, any>,
-    ProvidedProps extends ReadonlyArray<keyof Properties>,
-    ConsumedProps extends ReadonlyArray<keyof Properties>
+    Properties extends Record<string, unknown>,
+    ProvidedProperties extends ReadonlyArray<keyof Properties>,
+    ConsumedProperties extends ReadonlyArray<keyof Properties>,
+    ProvidedEvents extends EventSchema<ProvidedProperties> = EventSchema<ProvidedProperties>,
+    ConsumedEvents extends ConsumedEventSchema = ConsumedEventSchema
 >(
-    config: Omit<EditorElementDefinition<Properties, ProvidedProps, ConsumedProps>, 'defaults'> & {
+    config: Omit<EditorElementDefinition<Properties, ProvidedProperties, ConsumedProperties>, 'defaults'> & {
         defaults: {
             properties: Properties;
-            providedProperties: ProvidedProps;
-            consumedProperties: ConsumedProps;
+
+            connections: {
+                provided: {
+                    properties: ProvidedProperties,
+                    events: ProvidedEvents,
+                },
+
+                consumed: {
+                    properties: ConsumedProperties,
+                    callbacks: ConsumedEvents
+                }
+            }
         };
     }
-): EditorElementDefinition<Properties, ProvidedProps, ConsumedProps> {
-    return config as EditorElementDefinition<Properties, ProvidedProps, ConsumedProps>;
+): EditorElementDefinition<Properties, ProvidedProperties, ConsumedProperties, ProvidedEvents, ConsumedEvents> {
+    return config as EditorElementDefinition<Properties, ProvidedProperties, ConsumedProperties, ProvidedEvents, ConsumedEvents>;
 }

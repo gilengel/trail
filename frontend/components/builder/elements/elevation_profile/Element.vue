@@ -1,27 +1,28 @@
 <template>
-  <BuilderHighlightableElement :is-highlighted="editor.isHighlighted(props.element)">
+  <BuilderHighlightableElement :is-highlighted="highlighted">
     <v-alert
-      v-if="invalid"
-      type="warning"
-      variant="outlined"
-      prominent
+        v-if="invalid"
+        type="warning"
+        variant="outlined"
+        prominent
     >
       No segment is selected for this elevation. Please do so in the property panel on the right side.
       <hr>
       {{ element.instanceId }}
+      {{ highlighted }}
     </v-alert>
 
 
     <Line
-      v-else-if="data"
-      :data
-      :options="chartOptions"
+        v-else-if="data"
+        :data
+        :options="chartOptions"
     />
   </BuilderHighlightableElement>
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, inject} from "vue";
 import {Line} from 'vue-chartjs';
 import {addAlphaToColor} from "~/types/color";
 import {useRouteStore} from "~/stores/route";
@@ -44,9 +45,10 @@ const props = defineProps<EditorElementProperties<typeof ElevationProfileElement
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const editor = inject(EditorInjectionKey);
-if (!editor) {
-  throw new Error('Editor instance was not injected in "Map" element');
+const editor = inject(EditorInjectionKey, null);
+
+if (!editor && props.changeable) {
+  throw new Error('Editor instance was not injected in element "ElevationProfile"');
 }
 
 const chartOptions = ref<DeepPartial<ChartOptions<'line'>>>({
@@ -131,6 +133,7 @@ const invalid = computed(() => {
       !props.element.properties.route.segmentIds ||
       props.element.properties.route.segmentIds?.length == 0;
 });
+
 const color = computed(() => {
   if (!props.element.properties || !props.element.properties.color) {
     return 'rgb(0, 0, 0)';
@@ -138,6 +141,10 @@ const color = computed(() => {
 
   return props.element.properties.color;
 });
+
+const highlighted = computed(() => {
+  return editor ? editor.isHighlighted(props.element) : false
+})
 
 
 const elevations = computed(() => {

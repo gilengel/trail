@@ -3,6 +3,9 @@
     v-model="value"
     hide-inputs
     show-swatches
+    hide-canvas
+    hide-sliders
+    elevation="0"
   />
 </template>
 
@@ -24,7 +27,7 @@ const value = computed({
     if (!value) {
       return;
     }
-    
+
     emit("update:modelValue", value);
   }
 });

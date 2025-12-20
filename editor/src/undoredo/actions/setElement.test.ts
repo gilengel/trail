@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it} from "vitest";
 import {type Column} from "../../grid"
 import {SetElement} from "./setElement";
-import type {EditorElementInstance} from "../../editorElementInstanceRegistry";
+import type {EditorElementInstance} from "../../instances/instanceRegistry";
 import {createMockElement} from "./__mocks__";
 
 describe("SetElement", () => {

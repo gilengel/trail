@@ -14,6 +14,7 @@
       <slot name="toolbar"/>
     </v-navigation-drawer>
 
+    <!--
     <v-app-bar
         class="px-3"
         height="72"
@@ -34,10 +35,11 @@
 
       <theme-toggle-button/>
     </v-app-bar>
+    -->
 
     <v-main
         data-cy="page-content"
-        class="d-flex justify-center ga-7"
+        class="d-flex justify-center"
     >
       <slot name="content"/>
     </v-main>

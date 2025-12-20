@@ -1,7 +1,4 @@
 <template>
-  <h2 class="text-h6 mt-2 mb-2">
-    Aspect Ratio
-  </h2>
   <div class="aspect-ratios pb-4">
     <div
       v-for="(ratio, i) in aspectRatios"

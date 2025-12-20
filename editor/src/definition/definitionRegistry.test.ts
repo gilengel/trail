@@ -1,28 +1,32 @@
 import {describe, it, expect, beforeEach} from 'vitest'
-import {ElementDefinitionRegistry} from "./editorElementDefinitionRegistry";
+import {DefinitionRegistry} from "./definitionRegistry";
 import {EditorElementDefinition} from "./elementDefinition";
 
 describe('ElementDefinitionRegistry', () => {
-    let registry: ElementDefinitionRegistry
-    let mockElement1: EditorElementDefinition<any, any, any>
-    let mockElement2: EditorElementDefinition<any, any, any>
-    let mockElement3: EditorElementDefinition<any, any, any>
+    let registry: DefinitionRegistry
+    let mockElement1: EditorElementDefinition
+    let mockElement2: EditorElementDefinition
+    let mockElement3: EditorElementDefinition
 
     beforeEach(() => {
-        registry = new ElementDefinitionRegistry()
+        registry = new DefinitionRegistry()
 
         mockElement1 = {
             id: 'text-element',
             name: 'Text Element',
             category: 'content',
-            components: {
-                element: {} as any,
-                properties: {} as any,
-            },
+            component: undefined,
             defaults: {
                 properties: {content: 'default'},
-                providedProperties: ['content'] as const,
-                consumedProperties: [] as const,
+                connections: {
+                    provided: {
+                        properties: ['content']
+                    },
+
+                    consumed: {
+                        properties: []
+                    }
+                }
             },
             metadata: {
                 description: 'A text element',
@@ -36,14 +40,18 @@ describe('ElementDefinitionRegistry', () => {
             id: 'button-element',
             name: 'Button Element',
             category: 'interactive',
-            components: {
-                element: {} as any,
-                properties: {} as any,
-            },
+            component: undefined,
             defaults: {
                 properties: {label: 'Click me'},
-                providedProperties: [] as const,
-                consumedProperties: ['label'] as const,
+                connections: {
+                    provided: {
+                        properties: []
+                    },
+
+                    consumed: {
+                        properties: ['label']
+                    }
+                }
             },
             metadata: {
                 description: 'A button element',
@@ -57,14 +65,18 @@ describe('ElementDefinitionRegistry', () => {
             id: 'container-element',
             name: 'Container Element',
             category: 'layout',
-            components: {
-                element: {} as any,
-                properties: {} as any,
-            },
+            component: undefined,
             defaults: {
                 properties: {padding: 10},
-                providedProperties: [] as const,
-                consumedProperties: [] as const,
+                connections: {
+                    provided: {
+                        properties: []
+                    },
+
+                    consumed: {
+                        properties: []
+                    }
+                }
             },
             metadata: {
                 description: 'A container element',

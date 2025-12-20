@@ -1,14 +1,14 @@
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest'
-import {EditorElementInstanceRegistry} from "./editorElementInstanceRegistry";
-import {EditorElementDefinition} from "./configuration/elementDefinition";
+import {InstanceRegistry} from "./instanceRegistry";
+import {EditorElementDefinition} from "../definition/elementDefinition";
 
 describe('EditorElementInstanceRegistry', () => {
-    let registry: EditorElementInstanceRegistry
+    let registry: InstanceRegistry
     let mockDefinition: EditorElementDefinition<any, any, any>
     let mockDate: Date
 
     beforeEach(() => {
-        registry = new EditorElementInstanceRegistry()
+        registry = new InstanceRegistry()
 
         // Mock Date to have predictable timestamps
         mockDate = new Date('2023-01-01T00:00:00.000Z')
@@ -20,18 +20,22 @@ describe('EditorElementInstanceRegistry', () => {
             id: 'test-element',
             name: 'Test Element',
             category: 'test',
-            components: {
-                element: {} as any,
-                properties: {} as any,
-            },
+            component: undefined,
             defaults: {
                 properties: {
                     content: 'default content',
                     fontSize: 16,
                     color: '#000000'
                 },
-                providedProperties: ['content'] as const,
-                consumedProperties: [] as const,
+                connections: {
+                    provided: {
+                        properties: ['content']
+                    },
+
+                    consumed: {
+                        properties: []
+                    }
+                }
             },
             metadata: {
                 description: 'Test element',
@@ -46,7 +50,7 @@ describe('EditorElementInstanceRegistry', () => {
 
     describe('createInstance', () => {
         it('creates a new instance with default properties', () => {
-            const instance = registry.createInstance(mockDefinition)
+            const instance = registry.create(mockDefinition)
 
             expect(instance).not.toBeNull()
             expect(instance!.elementId).toBe('test-element')
@@ -57,8 +61,16 @@ describe('EditorElementInstanceRegistry', () => {
             })
             expect(instance!.defaults).toBe(mockDefinition.defaults)
             expect(instance!.connections).toEqual({
-                consumed: {},
-                provided: {}
+                consumed: {
+                    properties: {}
+                },
+                provided: {
+                    properties: {},
+
+                    events: {
+                        listeners: {}
+                    }
+                }
             })
             expect(instance!.selected).toBe(false)
             expect(instance!.created).toEqual(mockDate)
@@ -73,7 +85,7 @@ describe('EditorElementInstanceRegistry', () => {
                 }
             }
 
-            const instance = registry.createInstance(mockDefinition, config)
+            const instance = registry.create(mockDefinition, config)
 
             expect(instance!.properties).toEqual({
                 content: 'custom content',
@@ -89,7 +101,7 @@ describe('EditorElementInstanceRegistry', () => {
                 }
             }
 
-            const instance = registry.createInstance(mockDefinition, config)
+            const instance = registry.create(mockDefinition, config)
 
             expect(instance!.properties).toEqual({
                 content: 'default content',
@@ -99,14 +111,14 @@ describe('EditorElementInstanceRegistry', () => {
         })
 
         it('stores the instance in the registry', () => {
-            const instance = registry.createInstance(mockDefinition)
+            const instance = registry.create(mockDefinition)
             const retrievedInstance = registry.getInstance(instance!.instanceId)
 
             expect(retrievedInstance).toBe(instance)
         })
 
         it('creates instance with empty config object', () => {
-            const instance = registry.createInstance(mockDefinition, {})
+            const instance = registry.create(mockDefinition, {})
 
             expect(instance).not.toBeNull()
             expect(instance!.properties).toEqual(mockDefinition.defaults.properties)
@@ -117,7 +129,7 @@ describe('EditorElementInstanceRegistry', () => {
         let instanceId: string
 
         beforeEach(() => {
-            const instance = registry.createInstance(mockDefinition)
+            const instance = registry.create(mockDefinition)
             instanceId = instance!.instanceId
         })
 
@@ -198,7 +210,7 @@ describe('EditorElementInstanceRegistry', () => {
 
     describe('getInstance', () => {
         it('returns instance when it exists', () => {
-            const created = registry.createInstance(mockDefinition)
+            const created = registry.create(mockDefinition)
             const retrieved = registry.getInstance(created!.instanceId)
 
             expect(retrieved).toBe(created)
@@ -213,12 +225,12 @@ describe('EditorElementInstanceRegistry', () => {
 
     describe('getInstancesByElementId', () => {
         it('returns instances matching element id', () => {
-            const instance1 = registry.createInstance(mockDefinition)
-            const instance2 = registry.createInstance(mockDefinition)
+            const instance1 = registry.create(mockDefinition)
+            const instance2 = registry.create(mockDefinition)
 
             // Create instance with different element id
             const otherDefinition = {...mockDefinition, id: 'other-element'}
-            const instance3 = registry.createInstance(otherDefinition)
+            const instance3 = registry.create(otherDefinition)
             const instances = registry.getInstancesByElementId('test-element')
 
             expect(instances).toHaveLength(2)
@@ -242,8 +254,8 @@ describe('EditorElementInstanceRegistry', () => {
 
     describe('getAllInstances', () => {
         it('returns all instances', () => {
-            const instance1 = registry.createInstance(mockDefinition)
-            const instance2 = registry.createInstance(mockDefinition)
+            const instance1 = registry.create(mockDefinition)
+            const instance2 = registry.create(mockDefinition)
 
             const allInstances = registry.getAllInstances()
 
@@ -263,7 +275,7 @@ describe('EditorElementInstanceRegistry', () => {
         let instanceId: string
 
         beforeEach(() => {
-            const instance = registry.createInstance(mockDefinition)
+            const instance = registry.create(mockDefinition)
             instanceId = instance!.instanceId
         })
 
@@ -283,7 +295,7 @@ describe('EditorElementInstanceRegistry', () => {
         })
 
         it('only removes the specified instance', () => {
-            const instance2 = registry.createInstance(mockDefinition)
+            const instance2 = registry.create(mockDefinition)
 
             const result = registry.removeInstance(instanceId)
 
@@ -297,10 +309,10 @@ describe('EditorElementInstanceRegistry', () => {
     describe('integration tests', () => {
         it('handles complete lifecycle of multiple instances', () => {
             // Create instances
-            const instance1 = registry.createInstance(mockDefinition, {
+            const instance1 = registry.create(mockDefinition, {
                 properties: {content: 'instance 1'}
             })
-            const instance2 = registry.createInstance(mockDefinition, {
+            const instance2 = registry.create(mockDefinition, {
                 properties: {content: 'instance 2'}
             })
 
@@ -333,8 +345,8 @@ describe('EditorElementInstanceRegistry', () => {
                 }
             }
 
-            registry.createInstance(mockDefinition)
-            registry.createInstance(definition2)
+            registry.create(mockDefinition)
+            registry.create(definition2)
 
             expect(registry.getInstancesByElementId('test-element')).toHaveLength(1)
             expect(registry.getInstancesByElementId('other-element')).toHaveLength(1)

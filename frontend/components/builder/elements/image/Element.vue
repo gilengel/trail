@@ -35,8 +35,9 @@ const props = defineProps<EditorElementProperties<typeof ImageElement>>();
 // ---------------------------------------------------------------------------------------------------------------------
 
 const editor = inject(EditorInjectionKey);
-if (!editor) {
-  throw new Error("Editor instance was not injected in Row");
+
+if (!editor && props.changeable) {
+  throw new Error('Editor instance was not injected in element "Image"');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

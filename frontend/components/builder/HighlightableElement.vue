@@ -14,7 +14,7 @@ const {isHighlighted} = defineProps<{
 
 const classes = computed(() => {
   if (isHighlighted) {
-    return ["highlight", "border-md"];
+    return ["highlight", "border-thin"];
   }
 
   return ["border-thin"];
