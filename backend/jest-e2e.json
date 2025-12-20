@@ -2,12 +2,12 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testMatch": ["<rootDir>/test/**/*.e2e-spec.{ts,js}"],
+  "testMatch": ["<rootDir>/src/**/*.e2e-spec.{ts,js}"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "coverageDirectory": "./coverage-e2e",
-  "coveragePathIgnorePatterns": ["test.helper.ts", "dto/*"],
+  "coveragePathIgnorePatterns": ["test.helper.ts", "dto/*", "__data__.ts", "__test.helper__.ts"],
   "coverageReporters": ["text", "cobertura", "html"],
   "coverageThreshold": {
     "global": {

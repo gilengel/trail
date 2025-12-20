@@ -7,7 +7,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { json } from 'express';
 
- 
 /**
  * Starts the backend server.
  */

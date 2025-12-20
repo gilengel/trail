@@ -2,6 +2,7 @@
  * @file Public API for images.
  */
 import {
+  BadRequestException,
   Controller,
   Get,
   HttpException,
@@ -9,129 +10,171 @@ import {
   Logger,
   Post,
   Query,
+  UnprocessableEntityException,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { ImagesService } from './images.service';
-import { dbimages2dto } from '../conversion';
+import ExifReader from 'exifreader';
+import { ImagesService, InvalidOffsetError } from './images.service';
 import ImagesUploadInterceptor from './helper/images.upload.interceptor';
-import { RoutesSegmentsService } from '../routes.segments/routes.segments.service';
-import { CountDto, ImageDto } from '../dto';
+import { RouteSegmentsService } from '../routes/segments/route.segments.service';
+import * as DTO from '../dto';
 
-@Controller('images')
+export class NoOrWrongGeoInformationError extends Error {
+  constructor() {
+    super('The provided image has no or wrong geo information.');
+  }
+}
+
+export const IMAGES_URI = "images";
+
+@Controller(IMAGES_URI)
 export class ImagesController {
+  public static QUERY = {
+    LONGITUDE: "lon",
+    LATITUDE: "lat",
+    MAX_OFFSET: "maxOffset",
+    MAX_NUMBER_OF_IMAGES: "maxNumberOfImages",
+    ROUTE_SEGMENT_ID: "routeSegmentId"
+  }
+
   private readonly logger = new Logger(ImagesService.name);
 
   constructor(
     private imagesService: ImagesService,
-    private routeSegmentService: RoutesSegmentsService,
+    private routeSegmentService: RouteSegmentsService,
   ) {}
 
   @Post()
   @UseInterceptors(ImagesUploadInterceptor)
   async uploadFile(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-  ): Promise<Array<ImageDto>> {
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<DTO.Image[]> {
     try {
-      const images = await this.imagesService.saveImages(files);
-      return Promise.resolve(dbimages2dto(images));
+      const createImageDtos = await this.file2CreateImageDto(files);
+      const images = await this.imagesService.saveImages(createImageDtos);
+      return Promise.resolve(images);
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  @Get('point')
+  public static POINT_URI = "point";
+  @Get(ImagesController.POINT_URI)
   async getImagesNearPoint(
-    @Query('lon') longitude: number,
-    @Query('lat') latitude: number,
-    @Query('maxOffset') offset: number,
-  ): Promise<ImageDto[]> {
-    let images: Array<ImageDto> = [];
-    try {
-      images = await this.imagesService.getImagesNearCoordinate(
-        longitude,
-        latitude,
-        0,
-        offset,
-      );
-    } catch (e) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    @Query(ImagesController.QUERY.LONGITUDE) longitude: number,
+    @Query(ImagesController.QUERY.LATITUDE) latitude: number,
+    @Query(ImagesController.QUERY.MAX_OFFSET) offset: number,
+  ): Promise<DTO.Image[]> {
+    if (longitude === undefined || latitude === undefined) {
+      throw new BadRequestException();
+    }
+    if (offset < 0) {
+      throw new BadRequestException(new InvalidOffsetError(offset).message);
     }
 
-    if (images.length == 0) {
-      throw new HttpException('', HttpStatus.NOT_FOUND);
-    }
+    const images: Array<DTO.Image> =
+      await this.imagesService.getImagesNearCoordinate(
+        [longitude, latitude, 0],
+        offset,
+      );
 
     return Promise.resolve(images);
   }
 
-  private validateImageParameters(offset: number, routeSegmentId: number) {
-    if (offset < 0) {
-      throw new HttpException('Invalid Index', HttpStatus.BAD_REQUEST);
-    }
-
-    // integer limit of postgis
-    if (routeSegmentId > 2147483647) {
-      throw new HttpException(
-        'Invalid route segment id',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  @Get('route_segment')
+  public static ROUTE_SEGMENT_URI = "route_segment";
+  @Get(ImagesController.ROUTE_SEGMENT_URI)
   async getImagesNearRouteSegment(
-    @Query('routeSegmentId') routeSegmentId: number,
-    @Query('maxOffset') offset: number,
-    @Query('maxNumberOfImages') maxNumberOfImages?: number,
-  ): Promise<ImageDto[]> {
+    @Query(ImagesController.QUERY.ROUTE_SEGMENT_ID) routeSegmentId: number,
+    @Query(ImagesController.QUERY.MAX_OFFSET) offset: number,
+    @Query(ImagesController.QUERY.MAX_NUMBER_OF_IMAGES) maxNumberOfImages?: number,
+  ): Promise<DTO.Image[]> {
     this.validateImageParameters(offset, routeSegmentId);
 
-    let images: Array<ImageDto> = [];
-    try {
-      const routeSegment =
-        await this.routeSegmentService.findOne(routeSegmentId);
-      images = await this.imagesService.getImagesNearRouteSegment(
+    const routeSegment = await this.routeSegmentService.findOne(routeSegmentId);
+
+    if (routeSegment === null) {
+      throw new UnprocessableEntityException();
+    }
+    const images: DTO.Image[] =
+      await this.imagesService.getImagesNearRouteSegment(
         routeSegment,
         offset,
         maxNumberOfImages,
       );
-    } catch (e) {
-      return Promise.reject(e);
-    }
-
-    if (images.length == 0) {
-      return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
-    }
 
     return Promise.resolve(images);
   }
 
-  @Get('route_segment/number')
+  public static ROUTE_SEGMENT_NUMBER_URI = `${ImagesController.ROUTE_SEGMENT_URI}/number`
+  @Get(ImagesController.ROUTE_SEGMENT_NUMBER_URI)
   async getNumberOfImagesNearRouteSegment(
-    @Query('routeSegmentId') routeSegmentId: number,
-    @Query('maxOffset') offset: number,
-  ): Promise<CountDto> {
+    @Query(ImagesController.QUERY.ROUTE_SEGMENT_ID) routeSegmentId: number,
+    @Query(ImagesController.QUERY.MAX_OFFSET) offset: number,
+  ): Promise<{ count: number }> {
     this.validateImageParameters(offset, routeSegmentId);
 
-    let images: CountDto | undefined = undefined;
+    let images: number | undefined = undefined;
+
+    const routeSegment = await this.routeSegmentService.findOne(routeSegmentId);
+
+    if (routeSegment === null) {
+      throw new UnprocessableEntityException();
+    }
+
+    images = await this.imagesService.getNumberOfImagesNearRouteSegment(
+      routeSegment,
+      offset,
+    );
+
+    return Promise.resolve({ count: images });
+  }
+
+  private extractCoordinates(image: Express.Multer.File): number[] {
+    const metaInfo = ExifReader.load(image.buffer, {
+      async: false,
+      expanded: true,
+      includeUnknown: true,
+    });
+
+    if (!metaInfo.gps) {
+      throw new NoOrWrongGeoInformationError();
+    }
+
+    const longitude = metaInfo.gps.Longitude;
+    const latitude = metaInfo.gps.Latitude;
+
+    return [longitude, latitude];
+  }
+
+  private validateImageParameters(offset: number, routeSegmentId: number) {
+    if (offset < 0) {
+      throw new BadRequestException('Invalid offset: Must be >= 0');
+    }
+
+    // integer limit of postgis
+    if (routeSegmentId > 2147483647) {
+      throw new BadRequestException('Invalid route segment id');
+    }
+  }
+
+  private async file2CreateImageDto(
+    images: Express.Multer.File[],
+  ): Promise<DTO.CreateImage[]> {
+    let values: DTO.CreateImage[] = [];
     try {
-      const routeSegment =
-        await this.routeSegmentService.findOne(routeSegmentId);
-      images = await this.imagesService.getNumberOfImagesNearRouteSegment(
-        routeSegment,
-        offset,
-      );
-    } catch (e) {
-      this.logger.error(e);
+      values = images.map((image) => {
+        return {
+          name: '',
+          mimeType: image.mimetype,
+          buffer: image.buffer,
+          coordinates: this.extractCoordinates(image),
+        };
+      });
 
-      return Promise.reject(new HttpException(e, HttpStatus.NOT_FOUND));
+      return Promise.resolve(values);
+    } catch {
+      return Promise.reject(new NoOrWrongGeoInformationError());
     }
-
-    if (parseInt(images.count) == 0) {
-      return Promise.reject(new HttpException('', HttpStatus.NOT_FOUND));
-    }
-
-    return Promise.resolve({ count: Number(images.count).toString() });
   }
 }

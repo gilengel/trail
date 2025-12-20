@@ -3,26 +3,11 @@
  */
 import { Injectable } from '@nestjs/common';
 
+import * as DTO from '../dto';
 
-import { v4 as uuidv4 } from 'uuid';
-import { PrismaService } from '../prisma.service';
-import ExifReader from 'exifreader';
-import { Prisma } from '@prisma/client';
-import * as conversion from '../conversion';
-import * as fs from 'fs';
-import { generateFileExtensionBasedOnMimeType } from '../conversion';
-import { CountDto, DbImageDto, ImageDto, RouteSegmentDto } from '../dto';
-
-interface SphericalCoordinates {
-  longitude: number;
-  latitude: number;
-}
-
-export class NoOrWrongGeoInformationError extends Error {
-  constructor() {
-    super('The provided image has no or wrong geo information.');
-  }
-}
+import { RouteSegment } from '../routes/segments/dto/route.segment.dto';
+import { ImagesDatabase } from './images.database';
+import { numberArray2wkt } from '../routes/database.conversion';
 
 export class InvalidOffsetError extends Error {
   constructor(value: number) {
@@ -32,148 +17,50 @@ export class InvalidOffsetError extends Error {
   }
 }
 
-export class InvalidCoordinates extends Error {
-  constructor() {
-    super(
-      'The provided coordinates are invalid. Either longitude, latitude or both are undefined or outside the range',
-    );
-  }
-}
-
 @Injectable()
 export class ImagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private database: ImagesDatabase) {}
 
-  private extractCoordinates(image: Express.Multer.File): SphericalCoordinates {
-    const metaInfo = ExifReader.load(image.buffer, {
-      async: false,
-      expanded: true,
-      includeUnknown: true,
-    });
-
-    if (!metaInfo.gps) {
-      throw new NoOrWrongGeoInformationError();
-    }
-
-    const longitude = metaInfo.gps.Longitude;
-    const latitude = metaInfo.gps.Latitude;
-
-    return {
-      longitude,
-      latitude,
-    };
-  }
-
-  async saveImages(images: Express.Multer.File[]): Promise<DbImageDto[]> {
-    let values;
-    try {
-      values = images.map((image) => {
-        const coordinates = this.extractCoordinates(image);
-        const point = conversion.point2wkt([
-          coordinates.latitude,
-          coordinates.longitude,
-        ]);
-
-        return [
-          uuidv4(),
-          'test',
-          Prisma.sql`ST_GeomFromText(${point}::text, 4326)`,
-          image.mimetype,
-        ];
-      });
-    } catch {
-      return Promise.reject(new NoOrWrongGeoInformationError());
-    }
-
-    const result: DbImageDto[] = await this.prisma
-      .$queryRaw`INSERT INTO "Image" (id, name, coordinates, mime_type) 
-    VALUES ${Prisma.join(
-      values.map((row) => Prisma.sql`(${Prisma.join(row)})`),
-    )}
-    RETURNING id, name, ST_AsText(coordinates) as coordinates, mime_type`;
-
-    // save all images to storage
-    // TODO: it is bad to store them on the same server. Move them to another via REST
-    result.forEach(async (value, index) => {
-      const extension = generateFileExtensionBasedOnMimeType(
-        images[index].mimetype,
-      );
-
-      fs.writeFileSync(`images/${value.id}.${extension}`, images[index].buffer);
-    });
-
-    return Promise.resolve(result);
-  }
-
-  private async multipleImagesQuery(
-    geometryAsWkt: string,
-    offset: number,
-    maxNumberOfImages?: number,
-  ): Promise<Array<ImageDto>> {
-    let limit: bigint = BigInt(Number.MAX_SAFE_INTEGER);
-    if (maxNumberOfImages) {
-      limit = BigInt(maxNumberOfImages);
-    }
-
-    const query = Prisma.sql`
-    SELECT id, name, ST_AsText(coordinates) as coordinates, mime_type
-    FROM "Image"
-    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geometryAsWkt}::text, 4326), ${offset}::int ) 
-    LIMIT ${limit}`;
-
-    const result: Array<DbImageDto> = await this.prisma.$queryRaw(query);
-    return Promise.resolve(conversion.dbimages2dto(result));
+  async saveImages(images: DTO.CreateImage[]): Promise<DTO.Image[]> {
+    return this.database.create(images);
   }
 
   private async multipleImagesQueryCount(
     geometryAsWkt: string,
     offset: number,
-  ): Promise<CountDto> {
-    const query = Prisma.sql`
-    SELECT COUNT(id)
-    FROM "Image"
-    WHERE ST_3DDWithin( coordinates, ST_GeomFromText(${geometryAsWkt}::text, 4326), ${offset}::int )`;
-
-    const result: CountDto[] = await this.prisma.$queryRaw(query);
-
-    return Promise.resolve(result[0]);
+  ): Promise<number> {
+    return this.database.getCountByGeometry(geometryAsWkt, offset);
   }
 
   async getImagesNearCoordinate(
-    longitude: number,
-    latitude: number,
-    altitude: number,
+    coordinate: number[],
     maxOffsetRadius: number,
-  ): Promise<Array<ImageDto>> {
-    if (
-      longitude === undefined ||
-      latitude === undefined ||
-      altitude === undefined
-    ) {
-      throw new InvalidCoordinates();
-    }
-    if (maxOffsetRadius < 0) {
-      throw new InvalidOffsetError(maxOffsetRadius);
-    }
-
-    const pointWkt = conversion.point2wkt([longitude, latitude, altitude]);
-    return this.multipleImagesQuery(pointWkt, maxOffsetRadius);
+    maxNumberOfImages?: number,
+  ): Promise<DTO.Image[]> {
+    return this.database.getByCoordinate(
+      coordinate,
+      maxOffsetRadius,
+      maxNumberOfImages,
+    );
   }
 
   async getImagesNearRouteSegment(
-    segment: RouteSegmentDto,
+    segment: RouteSegment,
     maxOffset: number,
     maxNumberOfImages?: number,
-  ): Promise<ImageDto[]> {
-    const routeWkt = conversion.numberArray2wkt(segment.coordinates);
-    return this.multipleImagesQuery(routeWkt, maxOffset, maxNumberOfImages);
+  ): Promise<DTO.Image[]> {
+    return this.database.getByLineSegment(
+      segment.coordinates,
+      maxOffset,
+      maxNumberOfImages,
+    );
   }
 
   async getNumberOfImagesNearRouteSegment(
-    segment: RouteSegmentDto,
+    segment: RouteSegment,
     maxOffset: number,
-  ): Promise<CountDto> {
-    const routeWkt = conversion.numberArray2wkt(segment.coordinates);
+  ): Promise<number> {
+    const routeWkt = numberArray2wkt(segment.coordinates);
     return this.multipleImagesQueryCount(routeWkt, maxOffset);
   }
 }
