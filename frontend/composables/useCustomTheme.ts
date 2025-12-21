@@ -1,4 +1,5 @@
 import {useDark, useToggle} from '@vueuse/core';
+import {useTheme} from 'vuetify'
 
 /**
  * Composable to toggle between light and dark Vuetify themes,
@@ -23,7 +24,7 @@ export function useCustomTheme(): {
         initialValue: prefersDark ? 'dark' : 'light',
         onChanged: (dark: boolean) => {
             if (typeof window !== 'undefined') {
-                $vuetify.theme.global.name.value = dark ? 'dark' : 'light';
+                $vuetify.theme.change(dark ? 'dark' : 'light');
             }
         },
         storageKey: 'app-theme', // Optional: Persist in localStorage

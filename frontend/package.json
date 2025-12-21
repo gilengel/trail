@@ -27,7 +27,8 @@
     "@tiptap/extension-color": "^2.11.5",
     "@tiptap/extension-text-align": "^2.11.5",
     "@tiptap/extension-text-style": "^2.11.7",
-    "@turf/turf": "^7.2.0",
+    "@trail/grid-editor": "*",
+    "@turf/turf": "^7.3.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/coverage-istanbul": "^3.0.4",
     "@vueuse/integrations": "^13.5.0",
@@ -46,8 +47,7 @@
     "uuid": "^11.0.5",
     "vue": "^3.5.13",
     "vue-chartjs": "^5.3.2",
-    "vue-router": "^4.5.0",
-    "@trail/grid-editor": "*"
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.6",

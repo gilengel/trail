@@ -43,10 +43,7 @@ export const MapElement: EditorElementDefinition<RouteProperty, ProvidedProperti
                         (instance: EditorElementInstance, args: {
                             point: { lat: number, lng: number }
                         }) => {
-
-                            console.log(args.point);
-
-                            //instance.point = args.point;
+                            instance.properties.marker = args.point
                         },
                         {name: 'segment-hovered-on', label: 'Segment hovered'}
                     )

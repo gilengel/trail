@@ -1,8 +1,8 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="editor ? editor.isHighlighted(props.element) : false">
-    <Map
-        :segments
-        @segment:hovered-on="segmentHoveredOn"
+    <Map ref="map"
+         :segments
+         @segment:hovered-on="segmentHoveredOn"
     />
   </BuilderHighlightableElement>
 </template>
@@ -13,6 +13,8 @@ import type {MapElement} from "~/components/builder/elements/map/index";
 import {inject} from "vue";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {LngLatLike} from "maplibre-gl";
+import Editor from "~/components/Editor.vue";
+import type {BuilderHighlightableElement} from "#components";
 
 //-- PROPS -------------------------------------------------------------------------------------------------------------
 
@@ -30,10 +32,17 @@ if (!editor && props.changeable) {
   throw new Error('Editor instance was not injected in element "Map"');
 }
 
+const map = useTemplateRef<InstanceType<typeof BuilderHighlightableElement>>('map');
+
+let markerId = 0;
+
 //-- COMPUTED ----------------------------------------------------------------------------------------------------------
 
 const segments = computedAsync(
     async () => {
+      if (!props.element.properties.route) {
+        return []
+      }
       if (!props.element.properties.route.id || props.element.properties.route.segmentIds.length == 0) {
         return [];
       }
@@ -50,6 +59,20 @@ const segments = computedAsync(
 );
 
 //----------------------------------------------------------------------------------------------------------------------
+
+watch(() => props.element.properties.marker, (marker) => {
+
+  const m = map.value;
+  if (!m) {
+    return
+  }
+  
+  if (!map.value.getMarker(markerId)) {
+    map.value.addMarker(markerId);
+  }
+
+  map.value.getMarker(markerId).setLngLat(marker);
+});
 
 function segmentHoveredOn(id: string | null, point: LngLatLike) {
   editor?.eventManager.emit(

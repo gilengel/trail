@@ -1,15 +1,16 @@
 <template>
   <div
-    ref="mapContainer"
-    data-cy="map-container"
-    class="map"
+      ref="mapContainer"
+      data-cy="map-container"
+      class="map"
   />
 </template>
 
 <script setup lang="ts">
 import type {MapLibreSegment, MapLibreRoute} from "~/types/route";
-import {LngLatBounds, type LngLatLike, Map} from "maplibre-gl";
+import {LngLatBounds, type LngLatLike, Map as MapLibreMap, Marker} from "maplibre-gl";
 import type {Color} from "~/types/color";
+import {nearestPointOnLine, point} from "@turf/turf";
 
 type LineStyle = {
   width: number;
@@ -23,7 +24,9 @@ interface Props {
   segments?: MapLibreSegment[] | null,
   lineColor?: Color,
   interactive?: boolean,
-  animated?: boolean
+  animated?: boolean,
+
+  hoverOffset?: number
 }
 
 const {
@@ -31,10 +34,11 @@ const {
   segments = null,
   lineColor = 'rgb(75, 192, 192)',
   interactive = true,
-  animated = false
+  animated = false,
+  hoverOffset = 20,
 } = defineProps<Props>();
 
-const map: Ref<Map | null> = ref(null);
+const map: Ref<MapLibreMap | null> = ref(null);
 
 const mapContainer: Ref<HTMLElement | null> = ref(null);
 
@@ -42,6 +46,9 @@ defineExpose({
   zoomToSegment,
   zoomToSegments: zoomToTrip,
   fitBounds,
+  addMarker,
+  getMarker,
+  removeMarker
 });
 
 const emit = defineEmits<{
@@ -49,6 +56,9 @@ const emit = defineEmits<{
 }>();
 
 let oldSegments: MapLibreSegment[] = [];
+
+const markersById = new Map<number, Marker>();
+
 
 /**
  *
@@ -84,7 +94,6 @@ function onSegmentsChanged() {
     bounds.extend(segment.bounds);
   }
 
-
   fitBounds(bounds, animated);
 
   oldSegments = segments!;
@@ -119,7 +128,7 @@ function waitForStyleLoad(): Promise<void> {
 }
 
 onMounted(() => {
-  map.value = new Map({
+  map.value = new MapLibreMap({
     container: mapContainer.value!,
     style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
     zoom: 16,
@@ -214,9 +223,57 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
     },
   });
 
-  map.value!.on("mouseenter", _id, (e) => {
-    emit("segment:hoveredOn", _id, e.lngLat);
+  map.value!.on("mousemove", (e) => {
+    const features = map.value!.queryRenderedFeatures(
+        [
+          [e.point.x - hoverOffset, e.point.y - hoverOffset],
+          [e.point.x + hoverOffset, e.point.y + hoverOffset],
+        ],
+        {layers: [_id]}
+    );
+
+    if (!features.length) return;
+
+    const lineFeature = features[0]; // closest rendered feature
+    const mousePoint = point([e.lngLat.lng, e.lngLat.lat]);
+
+    const snapped = nearestPointOnLine(lineFeature as any, mousePoint);
+
+    emit(
+        "segment:hoveredOn",
+        _id,
+        {
+          lng: snapped.geometry.coordinates[0],
+          lat: snapped.geometry.coordinates[1],
+        }
+    );
   });
+
+}
+
+function addMarker(id: number) {
+  const marker = new Marker({
+    color: "#FFFFFF",
+    draggable: true
+  }).setLngLat([30.5, 50.5])
+      .addTo(map.value!);
+
+  markersById.set(id, marker);
+  return marker;
+}
+
+function removeMarker(id: number) {
+  const marker = markersById.get(id);
+  if (!marker) {
+    return;
+  }
+
+  marker.remove();
+  markersById.delete(id);
+}
+
+function getMarker(id: number) {
+  return markersById.get(id)
 }
 
 /**
