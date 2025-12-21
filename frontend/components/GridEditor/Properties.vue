@@ -8,13 +8,6 @@
 
 
     <template #properties>
-      <v-btn
-          @click="dialog = true"
-          color="surface-variant"
-          text="Open Dialog"
-          variant="flat"
-      />
-
       <v-dialog max-width="500" v-model="dialog">
 
         <EventConnections
@@ -33,6 +26,7 @@
           <v-btn
               variant="flat"
               icon="las la-link"
+              @click="dialog = true"
           />
         </v-col>
       </v-row>
@@ -45,6 +39,7 @@
 
           v-model="model"
       >
+
         <v-expansion-panel
             v-for="(configuration, propertyKey) in props.definition.propertySchema"
             :key="propertyKey"
@@ -85,11 +80,17 @@ const props = defineProps<EditorElementProperties<any>>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const editor = inject(EditorInjectionKey);
+const editor = inject(EditorInjectionKey)!;
 
 //-- COMPUTED ----------------------------------------------------------------------------------------------------------
 
-const model = computed(() => Object.keys(props.definition.propertySchema as object));
+const model = defineModel<string[]>()
+
+watchEffect(() => {
+  if (!model.value) {
+    model.value = Object.keys(props.definition.propertySchema as Record<string, unknown>)
+  }
+})
 
 //-- REFS --------------------------------------------------------------------------------------------------------------
 
@@ -113,15 +114,15 @@ function getTypeComponent(typeConfiguration: PropertyConfig) {
  * @param element
  * @param actions
  */
-function createActionForDependentElements(propertyKey: string, value: any, element: EditorElementInstance<any>, actions: IUndoRedoAction[]) {
+function createActionForDependentElements(propertyKey: string, value: any, element: EditorElementInstance, actions: IUndoRedoAction[]) {
   actions.push(new UpdateElementAttribute<any>(element, propertyKey, value));
 
-  const consumedProperties = element.connections.consumed;
+  const consumedProperties = element.connections.consumed as Record<string, unknown>;
   if (!consumedProperties[propertyKey]) {
     return actions;
   }
 
-  const consumerId = consumedProperties[propertyKey];
+  const consumerId = consumedProperties[propertyKey] as string;
   const consumingElement = editor!.findElementWithId(consumerId);
   if (!consumingElement) {
     throw new Error(`Consuming element with id ${consumerId} not found in grid`);

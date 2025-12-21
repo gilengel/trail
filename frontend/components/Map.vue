@@ -14,7 +14,7 @@ import {nearestPointOnLine, point} from "@turf/turf";
 
 type LineStyle = {
   width: number;
-  color: string;
+  color: Color;
   join?: "round" | "bevel" | "miter";
   cap?: "butt" | "round" | "square";
 };
@@ -22,7 +22,7 @@ type LineStyle = {
 interface Props {
   trip?: MapLibreRoute | null
   segments?: MapLibreSegment[] | null,
-  lineColor?: Color,
+  lineStyle?: LineStyle,
   interactive?: boolean,
   animated?: boolean,
 
@@ -32,7 +32,12 @@ interface Props {
 const {
   trip = null,
   segments = null,
-  lineColor = 'rgb(75, 192, 192)',
+  lineStyle = {
+    width: 4,
+    color: 'rgb(75, 192, 192)',
+    join: "round",
+    cap: "round",
+  },
   interactive = true,
   animated = false,
   hoverOffset = 20,
@@ -58,6 +63,7 @@ const emit = defineEmits<{
 let oldSegments: MapLibreSegment[] = [];
 
 const markersById = new Map<number, Marker>();
+let linesById: string[] = [];
 
 
 /**
@@ -84,10 +90,7 @@ function onSegmentsChanged() {
     addLine(
         segment.id,
         segment.coordinates.map((e) => e.toArray()),
-        {
-          width: 5,
-          color: lineColor,
-        }
+        lineStyle
     );
 
 
@@ -111,6 +114,17 @@ watch(
     },
     {deep: true}
 );
+
+watch(
+    () => lineStyle,
+    () => {
+      for (let id of linesById) {
+        map.value!.setPaintProperty(id, "line-color", lineStyle.color)
+        map.value!.setPaintProperty(id, "line-width", lineStyle.width)
+      }
+    },
+    {deep: true}
+)
 
 
 function waitForStyleLoad(): Promise<void> {
@@ -143,10 +157,7 @@ onMounted(() => {
         addLine(
             segment.id,
             segment.coordinates.map((e) => e.toArray()),
-            {
-              width: 5,
-              color: lineColor,
-            }
+            lineStyle
         );
       }
 
@@ -159,10 +170,7 @@ onMounted(() => {
         addLine(
             segment.id,
             segment.coordinates.map((e) => e.toArray()),
-            {
-              width: 5,
-              color: lineColor,
-            }
+            lineStyle
         );
       }
       zoomToTrip(trip, false);
@@ -182,6 +190,9 @@ function routeId(id: number) {
  */
 function removeLine(id: number) {
   const _id = routeId(id);
+
+  linesById = linesById.filter(item => item !== _id)
+
   map.value!.removeLayer(_id);
   map.value!.removeSource(_id);
 }
@@ -196,6 +207,9 @@ function removeLine(id: number) {
  */
 function addLine(id: number, coordinates: number[][], style: LineStyle) {
   const _id = routeId(id);
+
+  linesById.push(_id);
+
   map.value!.addSource(_id, {
     type: "geojson",
     data: {
@@ -217,11 +231,11 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
       "line-cap": style.cap || "round",
     },
     paint: {
-
       "line-color": style.color,
       "line-width": style.width,
     },
   });
+
 
   map.value!.on("mousemove", (e) => {
     const features = map.value!.queryRenderedFeatures(

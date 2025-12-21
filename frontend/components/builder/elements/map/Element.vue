@@ -1,6 +1,7 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="editor ? editor.isHighlighted(props.element) : false">
     <Map ref="map"
+         :lineStyle
          :segments
          @segment:hovered-on="segmentHoveredOn"
     />
@@ -13,7 +14,6 @@ import type {MapElement} from "~/components/builder/elements/map/index";
 import {inject} from "vue";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {LngLatLike} from "maplibre-gl";
-import Editor from "~/components/Editor.vue";
 import type {BuilderHighlightableElement} from "#components";
 
 //-- PROPS -------------------------------------------------------------------------------------------------------------
@@ -33,6 +33,15 @@ if (!editor && props.changeable) {
 }
 
 const map = useTemplateRef<InstanceType<typeof BuilderHighlightableElement>>('map');
+
+const lineStyle = computed(() => {
+  return {
+    width: 4,
+    color: props.element.properties.color,
+    join: "round",
+    cap: "round",
+  }
+})
 
 let markerId = 0;
 
@@ -66,7 +75,7 @@ watch(() => props.element.properties.marker, (marker) => {
   if (!m) {
     return
   }
-  
+
   if (!map.value.getMarker(markerId)) {
     map.value.addMarker(markerId);
   }

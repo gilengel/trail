@@ -4,7 +4,9 @@ import type {
     RouteProperty
 } from "~/components/builder/elements/RouteProperty";
 import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
+import {defineCallback} from "@trail/grid-editor/events/eventRegistry";
 
 export type ElevationProfileProperties = RouteProperty;
 
@@ -27,15 +29,15 @@ export const ElevationProfileElement: EditorElementDefinition<ElevationProfilePr
                 properties: ["route", "color"],
 
                 callbacks: {
-                    'segment-hovered-on': {
-                        name: 'segment-hovered-on',
-                        label: 'Segment was hovered on',
-                        description: 'Fired when map is panned or zoomed',
-                        payloadType: 'custom',
-                        payloadSchema: {
-                            point: {lat: 0, lng: 0},
-                        }
-                    }
+                    'segment-hovered-on': defineCallback(
+                        {point: {lat: 0, lng: 0}},
+                        (instance: EditorElementInstance, args: {
+                            point: { lat: number, lng: number }
+                        }) => {
+                            instance.properties.marker = args.point
+                        },
+                        {name: 'segment-hovered-on', label: 'Segment hovered'}
+                    )
                 }
             }
         }

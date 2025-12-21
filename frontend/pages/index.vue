@@ -39,8 +39,7 @@
 
         <Tile>
           <TripOverview
-              @selected-trip-changed="(id: number) => $router.push(`trip/${id}/feed`)"
-          />
+              @selected-trip-changed="(id: number) => $router.push(`trip/${id}/feed`)"/>
         </Tile>
       </v-col>
     </v-row>

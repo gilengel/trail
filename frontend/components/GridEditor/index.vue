@@ -1,7 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
   <div id="editor-primary-toolbar">
-    {{ editor.grid.rows.length }}
   </div>
 
   <v-row

@@ -29,7 +29,7 @@ export interface CustomEventConfig extends BaseEventConfig {
 export interface CustomConsumedEventConfig<Payload extends Record<string, any> = Record<string, any>> extends BaseEventConfig {
     payloadType: 'custom'
     readonly payloadSchema: Payload
-    fn: (args: Payload) => void
+    fn: (instance: EditorElementInstance, args: Payload) => void
 }
 
 export type EventConfig<T extends Record<string, any> = Record<string, any>> =

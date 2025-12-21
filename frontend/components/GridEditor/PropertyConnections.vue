@@ -11,7 +11,6 @@
         <slot name="properties"/>
 
         <v-divider/>
-        {{ props.element.connections }}
         <span class="v-expansion-panel-title v-expansion-panel-title--static">Provided</span>
         <v-list>
           <v-list-item

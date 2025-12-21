@@ -12,12 +12,13 @@
       {{ highlighted }}
     </v-alert>
 
-
     <Line
+        ref="line"
         v-else-if="data"
         :data
         :options="chartOptions"
     />
+
   </BuilderHighlightableElement>
 </template>
 
@@ -30,6 +31,7 @@ import {type ChartOptions, type ChartData, Scale, type CoreScaleOptions} from 'c
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import type {BuilderHighlightableElement} from "#components";
 
 type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
@@ -46,6 +48,9 @@ const props = defineProps<EditorElementProperties<typeof ElevationProfileElement
 // ---------------------------------------------------------------------------------------------------------------------
 
 const editor = inject(EditorInjectionKey, null);
+
+const lineChart = useTemplateRef<InstanceType<typeof Line>>('line');
+
 
 if (!editor && props.changeable) {
   throw new Error('Editor instance was not injected in element "ElevationProfile"');
@@ -146,16 +151,30 @@ const highlighted = computed(() => {
   return editor ? editor.isHighlighted(props.element) : false
 })
 
-
-const elevations = computed(() => {
+const coordinates = computed(() => {
   if (!segments.value) {
     return [];
   }
 
-  const coordinates = segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);
-
-  return coordinates.map(coordinate => coordinate![2]);
+  return segments.value.filter(segment => segment.coordinates !== undefined).map(segment => segment.coordinates).flat(1);
+})
+const elevations = computed(() => {
+  return coordinates.value.map(coordinate => coordinate![2]);
 });
+
+function equal(x: number, y: number, tolerance = Number.EPSILON) {
+  return Math.abs(x - y) < tolerance;
+}
+
+watch(() => props.element.properties.marker, (marker) => {
+      const index = coordinates.value.findIndex((coordinate) => equal(coordinate![0], marker!.lat, 0.01) && equal(coordinate![1], marker!.lng, 0.01));
+      const markerData = data.value.datasets[1].data as any[];
+      markerData[0].x = index;
+      markerData[0].y = coordinates.value[index][2];
+
+      lineChart.value!.chart.update("none");
+    },
+    {flush: "post"});
 
 const data = computed<ChartData<'line'>>(() => {
   if (!elevations.value) {
@@ -177,12 +196,26 @@ const data = computed<ChartData<'line'>>(() => {
         data: elevations.value,
         radius: 0,
       },
+      {
+        label: 'Marker',
+        parsing: false,
+        animation: false,
+        showLine: false,
+        data: [{x: 1000, y: 3000}],
+        borderColor: 'rgb(75, 192, 192)',
+        fill: true,
+        tension: 0.1,
+        pointRadius: 8, // Size of the point
+        pointBackgroundColor: color.value, // Color of the point
+        pointBorderColor: 'white', // Border color
+        pointBorderWidth: 2, // Border width
+        pointStyle: 'circle', // 'circle', 'rect', 'triangle', 'cross', etc.
+      }
     ],
   };
 });
 
 </script>
-
 
 <style scoped lang="scss">
 div {

@@ -1,30 +1,31 @@
 <template>
   <div class="t-route-select">
+
     <CollapsableList
-      v-if="routes"
-      :collapse-number="3"
-      :items="routes"
-      :text="(routeDto: RouteDto) => routeDto.name"
-      @on-selection-changed="selectedRouteChanged"
+        v-if="routes"
+        :collapse-number="3"
+        :items="routes"
+        :text="(routeDto: RouteDto) => routeDto.name"
+        @on-selection-changed="selectedRouteChanged"
     />
 
     <v-list
-      v-model:selected="selection"
-      select-strategy="leaf"
-      multiple
-      max-height="600px"
+        v-model:selected="selection"
+        select-strategy="leaf"
+        multiple
+        max-height="600px"
     >
       <v-list-item
-        v-for="item in routeModel?.segments"
-        :key="item.id"
-        :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
-        :value="item.id"
+          v-for="item in routeModel?.segments"
+          :key="item.id"
+          :title="changeCase.sentenceCase(item.name ?? 'Untitled')"
+          :value="item.id"
       >
         <template #prepend="{ isSelected }">
           <v-list-item-action start>
             <v-checkbox-btn
-              color="primary"
-              :model-value="isSelected"
+                color="primary"
+                :model-value="isSelected"
             />
           </v-list-item-action>
         </template>
@@ -32,49 +33,62 @@
     </v-list>
   </div>
 
-  <v-overlay
+  <v-btn @click="overlay = !overlay">
+    Edit Routes
+  </v-btn>
 
-    open-on-hover
-    activator=".t-route-select"
-    location-strategy="connected"
-    location="start"
-    scroll-strategy="close"
+  <v-overlay v-model="overlay"
+             activator=".t-route-select"
+             location-strategy="connected"
+             location="start"
+             scroll-strategy="close"
   >
     <v-card class="pa-2">
-      <v-select
-        label="Select"
-        :items="routes?? []"
-        item-value="id"
-        item-title="name"
+      <v-card-text>
+        <v-select
+            label="Select Route"
+            :items="routes?? []"
+            item-value="id"
+            item-title="name"
 
-        @update:model-value="(routeId: number) => selectedRouteChanged(routes?.find((r) => r.id === routeId)!)"
-      >
-        <template #item="{ props, item }">
-          <v-list-item v-bind="props" />
-        </template>
-      </v-select>
-      <v-list
-        v-model:selected="selection"
-        select-strategy="leaf"
-      >
-        <v-list-item
-          v-for="item in items"
-          :key="item.type === 'segment' ? item.value : item.title"
-          :value="item.type === 'segment' ? item.value : undefined"
+            v-model="selectedRoute"
+
+            @update:model-value="(routeId: number) => selectedRouteChanged(routes?.find((r) => r.id === routeId)!)"
         >
-          <v-list-item-title>
-            {{ item.title }}
+          <template #item="{ props, item }">
+            <v-list-item v-bind="props"/>
+          </template>
+        </v-select>
+        <v-list
+            :max-height="availableHeight()"
+            v-model:selected="selection"
+            select-strategy="leaf"
+        >
+          <v-list-item
+              v-for="item in items"
+              :key="item.type === 'segment' ? item.value : item.title"
+              :value="item.type === 'segment' ? item.value : undefined"
+          >
+            <v-list-item-title>
+              {{ item.title }}
 
-            <template v-if="item.type === 'segment'">
-              <Map
-                class="t-map"
-                :interactive="false"
-                :segments="[item.segment!]"
-              />
-            </template>
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
+              <template v-if="item.type === 'segment'">
+                <Map
+                    class="t-map"
+                    :interactive="false"
+                    :segments="[item.segment!]"
+                />
+              </template>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+            color="orange-lighten-2"
+            text="Explore"
+        ></v-btn>
+      </v-card-actions>
     </v-card>
   </v-overlay>
 </template>
@@ -121,12 +135,22 @@ const emit = defineEmits<{
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+function availableHeight() {
+  return window.screen.height * 0.6;
+}
+
 function selectedRouteChanged(route: RouteDto): void {
   emit('update:modelValue', {id: route.id, segmentIds: []});
   //selectedRoute.value = route;
 
   //emit("update:selectedRouteId", route.id);
 }
+
+const overlay: Ref<boolean> = ref(false);
+
+const selectedRoute = computed(() => {
+  return props.modelValue?.id
+})
 
 const selection = computed({
   get() {
@@ -186,7 +210,6 @@ const items = computedAsync<RouteItem[]>(async () => {
     ...segments,
   ];
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -196,6 +219,6 @@ const items = computedAsync<RouteItem[]>(async () => {
 }
 
 .t-map {
-  min-width: 600px;
+  min-width: 400px;
 }
 </style>
