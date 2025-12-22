@@ -4,16 +4,19 @@
       :id="props.element.instanceId"
       :element="props.element"
   >
+
     <template #title/>
 
 
     <template #properties>
       <v-dialog max-width="500" v-model="dialog">
 
-        <EventConnections
+        <GridEditorEventConnections
             :element="props.element"
             :editor
             @event:selected="eventSelected"
+            @event:removeListener="eventRemoveListener"
+            @property:selected="propertySelected"
         />
       </v-dialog>
 
@@ -69,10 +72,10 @@ import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
 import type {PropertyConfig} from "@trail/grid-editor/properties/elementProperty";
-import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
+import type {EditorElementInstance, ElementInstanceId} from "@trail/grid-editor/instances/instance";
 import {GroupedUndoRedoAction, type IUndoRedoAction} from "@trail/grid-editor/undoredo";
-import EventConnections from "~/components/GridEditor/EventConnections.vue";
 import type {EventConfig} from "@trail/grid-editor/events/eventRegistry";
+import {Direction} from "@trail/grid-editor/instances/iinstanceRegistry";
 
 //-- PROPS -------------------------------------------------------------------------------------------------------------
 
@@ -117,18 +120,22 @@ function getTypeComponent(typeConfiguration: PropertyConfig) {
 function createActionForDependentElements(propertyKey: string, value: any, element: EditorElementInstance, actions: IUndoRedoAction[]) {
   actions.push(new UpdateElementAttribute<any>(element, propertyKey, value));
 
-  const consumedProperties = element.connections.consumed as Record<string, unknown>;
-  if (!consumedProperties[propertyKey]) {
+  const consumedProperties = element.connections.consumed;
+  if (!consumedProperties.properties[propertyKey]) {
     return actions;
   }
 
-  const consumerId = consumedProperties[propertyKey] as string;
-  const consumingElement = editor!.findElementWithId(consumerId);
-  if (!consumingElement) {
-    throw new Error(`Consuming element with id ${consumerId} not found in grid`);
+  const consumerIds = consumedProperties.properties[propertyKey];
+  for (let id of consumerIds) {
+    const consumingElement = editor!.findElementWithId(id);
+    if (!consumingElement) {
+      throw new Error(`Consuming element with id ${id} not found in grid`);
+    }
+
+    createActionForDependentElements(propertyKey, value, consumingElement, actions);
   }
 
-  return createActionForDependentElements(propertyKey, value, consumingElement, actions);
+  return actions
 }
 
 function updateProperty(propertyKey: string, value: any) {
@@ -140,7 +147,7 @@ function updateProperty(propertyKey: string, value: any) {
   }
 }
 
-function eventSelected(event: EventConfig<string[]>) {
+function eventSelected(event: EventConfig) {
   if (event.payloadType === 'properties') {
 
   }
@@ -156,6 +163,33 @@ function eventSelected(event: EventConfig<string[]>) {
     editor!.highlightElements(compatibleElementInstances);
     editor!.switchMode(BuilderMode.ConnectEvent, {event: event.name})
   }
+
+  dialog.value = false;
+}
+
+function eventRemoveListener(event: EventConfig, instanceId: ElementInstanceId) {
+  editor.eventManager.unsubscribe(props.element.instanceId, event.name, instanceId);
+}
+
+function propertySelected(propertyKey: string) {
+  if (!editor) {
+    // TODO log error
+    return;
+  }
+
+  // TODO make current element visually disabled
+  editor!.clearAllHighlightedElements();
+  const compatibleElementInstances = editor.instances.withProperty(propertyKey, Direction.Consumed);
+
+  // Don't highlight the current selected element as it is prohibited to connect properties from an element
+  // to itself as this would result in an infinite loop
+  if (editor!.selectedElement) {
+    compatibleElementInstances.splice(compatibleElementInstances.indexOf(editor!.selectedElement.value!), 1);
+  }
+
+  editor!.highlightElements(compatibleElementInstances);
+  editor!.switchMode(BuilderMode.ConnectProperty, {property: propertyKey})
+
 
   dialog.value = false;
 }

@@ -18,7 +18,7 @@
               :key="i"
               :value="item"
               color="primary"
-              @click="propertySelected(item.property, PropertyDirection.Consumed)"
+              @click="propertySelected(item.property, Direction.Consumed)"
           >
             <template #prepend>
               <v-icon
@@ -85,6 +85,7 @@ import type {Grid} from "@trail/grid-editor/grid";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
+import {Direction} from "@trail/grid-editor/instances/iinstanceRegistry";
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -104,13 +105,6 @@ const emit = defineEmits<(e: "connectedConsumedPropertyRemoved", property: strin
 const editor = inject(EditorInjectionKey);
 if (!editor) {
   throw new Error("Container component is missing the 'editor' injected object.");
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-enum PropertyDirection {
-  Provided = "Provided",
-  Consumed = "Consumed",
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -152,25 +146,33 @@ function clearConnection(item: string) {
  *
  * @returns All the elements that have the properties
  */
-function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direction: PropertyDirection): EditorElementInstance<any>[] {
+function findAllElementsWithProperties(propertyKeys: string[], grid: Grid, direction: Direction): EditorElementInstance<any>[] {
 
-  function areAllKeysOf(arr: string[], obj: Partial<Record<string, string>> | undefined): boolean {
+  function otherElementHasAllPropertiesAsConnections(_propertyKeys: string[], obj: Partial<Record<string, string[]>> | undefined): boolean {
     if (!obj) return false;
-    return arr.every(key => key in obj);
+    return _propertyKeys.every(_propertyKeys => _propertyKeys in obj);
   }
 
+  const otherElementThanCurrentInstances = (element: EditorElementInstance) => element.instanceId !== props.id
+  const getCorrectProperties = (element: EditorElementInstance) => {
+    if (direction === Direction.Provided) {
+      return element.connections.provided.properties
+    }
+
+    return element.connections.consumed.properties
+  }
   return grid.rows.flatMap(row =>
       row.columns
           .map(column => column.element)
           .filter(element => element &&
-              element.instanceId !== props.id &&
-              areAllKeysOf(propertyKeys, direction === PropertyDirection.Provided ? element.connections.provided : element.connections.consumed))
-          .filter(Boolean) as EditorElementInstance<any>[]
+              otherElementThanCurrentInstances(element) &&
+              otherElementHasAllPropertiesAsConnections(propertyKeys, getCorrectProperties(element)))
+          .filter(Boolean) as EditorElementInstance[]
   );
 }
 
-function propertySelected(propertyKey: string, direction: PropertyDirection) {
-  const inverseDirection = direction === PropertyDirection.Consumed ? PropertyDirection.Provided : PropertyDirection.Consumed;
+function propertySelected(propertyKey: string, direction: Direction) {
+  const inverseDirection = direction === Direction.Consumed ? Direction.Provided : Direction.Consumed;
   const filtered = findAllElementsWithProperties([propertyKey], props.grid, inverseDirection);
 
 

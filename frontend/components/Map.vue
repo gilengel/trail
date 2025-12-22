@@ -126,7 +126,6 @@ watch(
     {deep: true}
 )
 
-
 function waitForStyleLoad(): Promise<void> {
   return new Promise((resolve) => {
     if (!map.value) {

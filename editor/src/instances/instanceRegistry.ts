@@ -118,9 +118,9 @@ export class InstanceRegistry implements IInstanceRegistry {
 
             switch (direction) {
                 case Direction.Provided:
-                    return propertyKey in definition.defaults.connections.provided.properties;
+                    return definition.defaults.connections.provided.properties.includes(propertyKey as string);
                 case Direction.Consumed:
-                    return propertyKey in definition.defaults.connections.consumed.properties;
+                    return definition.defaults.connections.consumed.properties.includes((propertyKey as string));
             }
         })
     }

@@ -1,13 +1,13 @@
 import {beforeEach, describe, expect, it} from "vitest";
 import type {EditorElementInstance} from "../../instances/instance";
 import {createMockElement} from "./__mocks__";
-import {RemoveConnection} from "./removeConnection";
+import {RemovePropertyConnection} from "./removePropertyConnection";
 
 describe("RemoveConnection", () => {
     let providingElement: EditorElementInstance<any>;
     let consumingElement: EditorElementInstance<any>;
 
-    let removeConnection: RemoveConnection;
+    let removeConnection: RemovePropertyConnection;
 
     beforeEach(() => {
         providingElement = createMockElement("0");
@@ -16,7 +16,7 @@ describe("RemoveConnection", () => {
         providingElement.connections.consumed.properties["test"] = "1";
         consumingElement.connections.provided.properties["test"] = "0";
 
-        removeConnection = new RemoveConnection(providingElement, consumingElement, "test");
+        removeConnection = new RemovePropertyConnection(providingElement, consumingElement, "test");
     });
 
     it("should set a new element and store the old one on redo", async () => {

@@ -1,17 +1,29 @@
 <template>
   <v-card class="mx-auto">
-    <v-toolbar color="transparent">
-      <template #prepend>
-        <v-icon>{{ definition?.metadata?.icon }}</v-icon>
-      </template>
 
-      <v-toolbar-title class="text-h6">
-        {{ definition?.name }}
-      </v-toolbar-title>
-    </v-toolbar>
+
+    <v-img
+        class="align-end text-white bg-primary"
+        width="826"
+        height="349"
+        src="public/images/backgrounds/connections.dark.svg"
+        cover
+    >
+      <v-card-title>
+
+        <v-toolbar color="transparent">
+          <template #prepend>
+            <v-icon>{{ definition?.metadata?.icon }}</v-icon>
+          </template>
+          <v-toolbar-title class="text-h6">
+            {{ definition?.name }}
+          </v-toolbar-title>
+        </v-toolbar>
+      </v-card-title>
+    </v-img>
+
 
     <v-card-text>
-
       <v-list density="compact">
         <v-list-subheader>Properties</v-list-subheader>
 
@@ -20,6 +32,8 @@
             :key="i"
             :value="item"
             color="primary"
+
+            @click="propertySelected(item)"
         >
           <v-list-item-title>
             {{ definition.propertySchema![item]!.label }}
@@ -37,31 +51,19 @@
       <v-list density="compact">
         <v-list-subheader>Events</v-list-subheader>
 
-        <v-list-item
-            v-for="(event, i) in providedEvents"
-            :key="i"
-            :value="event"
-            color="primary"
-
-            @click="eventSelected(event)"
-        >
-          <v-list-item-title>
-            {{ event.label }}
-            <v-tooltip
-                activator="parent"
-                location="top"
-            >
-              {{ event.description }}
-            </v-tooltip>
-          </v-list-item-title>
-        </v-list-item>
+        <GridEditorConnectionsTree
+            :editor="props.editor"
+            :element="props.element"
+            @event:selected="eventSelected"
+            @event:removeListener="(event, instanceId) => emit('event:removeListener', event, instanceId)"
+        />
       </v-list>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
+import type {EditorElementInstance, ElementInstanceId} from "@trail/grid-editor/instances/instance";
 import type {EventConfig} from "@trail/grid-editor/events/eventRegistry";
 import type {Editor} from "@trail/grid-editor/editor";
 
@@ -74,7 +76,11 @@ const props = defineProps<{
 
 //-- EMITS -------------------------------------------------------------------------------------------------------------
 
-const emit = defineEmits<(e: "event:selected", event: EventConfig<string[]>) => void>();
+const emit = defineEmits<{
+  'event:selected': [event: EventConfig],
+  'event:removeListener': [event: EventConfig, instanceId: ElementInstanceId],
+  'property:selected': [propertyKey: string],
+}>();
 
 //-- COMPUTED ----------------------------------------------------------------------------------------------------------
 
@@ -84,22 +90,13 @@ const providedProperties = computed(() => {
   return definition.value.defaults.connections.provided.properties;
 });
 
-const providedEvents = computed(() => {
-  return definition.value.defaults.connections.provided.events;
-});
-
 //----------------------------------------------------------------------------------------------------------------------
 
-function eventSelected(event: EventConfig<string[]>) {
-  if (event.payloadType === 'properties') {
+function propertySelected(propertyKey: string) {
+  emit("property:selected", propertyKey);
+}
 
-  }
-
-  if (event.payloadType === 'partial-properties') {
-
-    event.properties; // keyof T[]
-  }
-
+function eventSelected(event: EventConfig) {
   if (event.payloadType === 'custom') {
     const instancesWithEvent = props.editor.instances.withEvent(event.name);
     props.editor.highlightElements(instancesWithEvent);
@@ -107,16 +104,4 @@ function eventSelected(event: EventConfig<string[]>) {
 
   emit("event:selected", event);
 }
-
-/*
-function propertySelected(propertyKey: string, direction: PropertyDirection) {
-  const inverseDirection = direction === PropertyDirection.Consumed ? PropertyDirection.Provided : PropertyDirection.Consumed;
-  const filtered = findAllElementsWithProperties([propertyKey], props.grid, inverseDirection);
-
-  editor!.clearAllHighlightedElements();
-  editor!.highlightElements(filtered);
-
-  editor!.switchMode(BuilderMode.ConnectProperty, {property: propertyKey});
-}
- */
 </script>

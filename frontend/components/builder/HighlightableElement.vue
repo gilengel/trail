@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <slot />
+    <slot/>
   </div>
 </template>
 
@@ -24,5 +24,12 @@ const classes = computed(() => {
 <style scoped lang="scss">
 .highlight {
   border-color: rgb(var(--v-theme-primary)) !important;
+}
+</style>
+
+
+<style lang="scss">
+canvas {
+  max-width: 100%;
 }
 </style>

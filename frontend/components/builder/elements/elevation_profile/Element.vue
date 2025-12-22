@@ -13,7 +13,7 @@
     </v-alert>
 
     <Line
-        ref="line"
+        ref="lineChart"
         v-else-if="data"
         :data
         :options="chartOptions"
@@ -27,7 +27,7 @@ import {computed, inject} from "vue";
 import {Line} from 'vue-chartjs';
 import {addAlphaToColor} from "~/types/color";
 import {useRouteStore} from "~/stores/route";
-import {type ChartOptions, type ChartData, Scale, type CoreScaleOptions} from 'chart.js';
+import {type ChartOptions, type ChartData, Scale, type CoreScaleOptions, type Chart} from 'chart.js';
 import type {EditorElementProperties} from "@trail/grid-editor/grid";
 import {ElevationProfileElement} from "~/components/builder/elements/elevation_profile/index";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
@@ -49,8 +49,9 @@ const props = defineProps<EditorElementProperties<typeof ElevationProfileElement
 
 const editor = inject(EditorInjectionKey, null);
 
-const lineChart = useTemplateRef<InstanceType<typeof Line>>('line');
-
+const lineChart = ref<{
+  chart: Chart;
+} | null>(null);
 
 if (!editor && props.changeable) {
   throw new Error('Editor instance was not injected in element "ElevationProfile"');
@@ -166,11 +167,24 @@ function equal(x: number, y: number, tolerance = Number.EPSILON) {
   return Math.abs(x - y) < tolerance;
 }
 
+const tolerance = 0.01;
 watch(() => props.element.properties.marker, (marker) => {
-      const index = coordinates.value.findIndex((coordinate) => equal(coordinate![0], marker!.lat, 0.01) && equal(coordinate![1], marker!.lng, 0.01));
+      const coords = coordinates.value;
+
+      if (!coords) {
+        return;
+      }
+
+      const index = coords.findIndex((coordinate: [number, number, number] | undefined) =>
+          equal(coordinate![0], marker!.lat, tolerance) &&
+          equal(coordinate![1], marker!.lng, tolerance));
+      if (index == -1) {
+        return;
+      }
+
       const markerData = data.value.datasets[1].data as any[];
       markerData[0].x = index;
-      markerData[0].y = coordinates.value[index][2];
+      markerData[0].y = coords[index]![2];
 
       lineChart.value!.chart.update("none");
     },

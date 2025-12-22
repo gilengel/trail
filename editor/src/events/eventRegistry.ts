@@ -32,9 +32,9 @@ export interface CustomConsumedEventConfig<Payload extends Record<string, any> =
     fn: (instance: EditorElementInstance, args: Payload) => void
 }
 
-export type EventConfig<T extends Record<string, any> = Record<string, any>> =
+export type EventConfig =
     | PropertiesEventConfig
-    | PartialPropertiesEventConfig<T>
+    | PartialPropertiesEventConfig<any>
     | CustomEventConfig
 
 export type ConsumedEventConfig =
@@ -42,7 +42,7 @@ export type ConsumedEventConfig =
     | PartialPropertiesEventConfig<any>
     | CustomConsumedEventConfig<any>
 
-export type EventSchema<T extends Record<string, any>> = Record<string, EventConfig<T>>
+export type EventSchema = Record<string, EventConfig>
 export type ConsumedEventSchema = Record<string, ConsumedEventConfig>
 
 export const defineCallback = <const T extends Record<string, any>>(
@@ -76,9 +76,9 @@ export function deepEqual(a: any, b: any): boolean {
     return true;
 }
 
-export function areEventsEqual<T extends Record<string, any>>(
-    a: EventConfig<T>,
-    b: EventConfig<T>
+export function areEventsEqual(
+    a: EventConfig,
+    b: EventConfig
 ): boolean {
 
     if (a.payloadType !== b.payloadType) return false;

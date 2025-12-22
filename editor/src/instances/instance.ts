@@ -28,14 +28,14 @@ export type EditorElementInstance<T extends EditorElementDefinition = EditorElem
 
     connections: {
         provided: {
-            properties: Partial<Record<ElementProvidedProperties<T>, string>>
+            properties: Partial<Record<ElementProvidedProperties<T>, ElementInstanceId[]>>
 
             events: {
-                listeners: { [eventName: string]: string[] }
+                listeners: { [eventName: string]: ElementInstanceId[] }
             }
         },
         consumed: {
-            properties: Partial<Record<ElementConsumedProperties<T>, string>>,
+            properties: Partial<Record<ElementConsumedProperties<T>, ElementInstanceId[]>>,
         }
     };
 

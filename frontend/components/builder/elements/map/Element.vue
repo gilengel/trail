@@ -37,7 +37,7 @@ const map = useTemplateRef<InstanceType<typeof BuilderHighlightableElement>>('ma
 const lineStyle = computed(() => {
   return {
     width: 4,
-    color: props.element.properties.color,
+    color: props.element.properties.color ?? 'rgb(75, 192, 192)',
     join: "round",
     cap: "round",
   }

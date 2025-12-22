@@ -21,7 +21,7 @@ export function createEditorElementDefinition<
     Properties extends Record<string, unknown>,
     ProvidedProperties extends ReadonlyArray<keyof Properties>,
     ConsumedProperties extends ReadonlyArray<keyof Properties>,
-    ProvidedEvents extends EventSchema<ProvidedProperties> = EventSchema<ProvidedProperties>,
+    ProvidedEvents extends EventSchema = EventSchema,
     ConsumedEvents extends ConsumedEventSchema = ConsumedEventSchema
 >(
     config: Omit<EditorElementDefinition<Properties, ProvidedProperties, ConsumedProperties>, 'defaults'> & {

@@ -1,6 +1,6 @@
 import {BuilderMode, Editor} from "../editor";
 import type {EditorMode} from "../editorMode";
-import {LogLevel} from "../handler/ilogger";
+//import {LogLevel} from "../handler/ilogger";
 import {AddPropertyConnection} from "../undoredo/actions/addPropertyConnection";
 import type {EditorElementInstance} from "../instances/instance";
 
@@ -21,6 +21,8 @@ import type {EditorElementInstance} from "../instances/instance";
  *
  * @returns A list of the ids of all elements that form a loop if a loop was found, undefined otherwise.
  */
+/*
+TODO: enable with multiple consumers
 export function findLoop<Element extends EditorElementInstance
 >(property: string,
   target: Element,
@@ -32,7 +34,7 @@ export function findLoop<Element extends EditorElementInstance
         return;
     }
 
-    if (visitedElementIds.find((id) => id === elementIdOfConnectedConsumedProperty)) {
+    if (visitedElementIds.find((id) => elementIdOfConnectedConsumedProperty.includes(id))) {
         return visitedElementIds;
     }
 
@@ -43,10 +45,12 @@ export function findLoop<Element extends EditorElementInstance
     }
 
 
+
     visitedElementIds.push(elementIdOfConnectedConsumedProperty);
 
     return findLoop(property, target, editor, visitedElementIds);
 }
+*/
 
 export type ConnectElementPropertiesMeta = {
     property: string
@@ -65,6 +69,7 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
 
         const providingElement = this._editor.selectedElement.value;
 
+        /*
         const foundLoops = Object.keys(providingElement.connections.provided.properties).filter((value: string) => {
             return findLoop(value, newSelectedElement, this._editor);
         })
@@ -76,6 +81,7 @@ export class ConnectElementProperties implements EditorMode<ConnectElementProper
 
             return;
         }
+        */
 
         await this._editor.executeAction(new AddPropertyConnection(providingElement, newSelectedElement, this.meta.property));
 

@@ -12,7 +12,7 @@ export type EditorElementDefinition<
     Properties extends Record<string, unknown> = Record<string, unknown>,
     ProvidedProperties extends ReadonlyArray<keyof Properties> = ReadonlyArray<keyof Properties>,
     ConsumedProperties extends ReadonlyArray<keyof Properties> = ReadonlyArray<keyof Properties>,
-    ProvidedEvents extends EventSchema<ProvidedProperties> = EventSchema<ProvidedProperties>,
+    ProvidedEvents extends EventSchema = EventSchema,
     ConsumedEvents extends ConsumedEventSchema = ConsumedEventSchema,
 > = {
     /**
@@ -71,19 +71,15 @@ export type EditorElementDefinition<
     };
 };
 
-export type ElementProperties<T> = T extends EditorElementDefinition<infer P, any, any, any> ? P : never;
+export type ElementProperties<T> = T extends EditorElementDefinition<infer P, any, any, any, any> ? P : never;
 
-export type ElementProvidedProperties<T> = T extends EditorElementDefinition<any, infer P, any, any>
+export type ElementProvidedProperties<T> = T extends EditorElementDefinition<any, infer P, any, any, any>
     ? P[number]
     : never;
 
-export type ElementConsumedProperties<T> = T extends EditorElementDefinition<any, infer P, any, any>
+export type ElementConsumedProperties<T> = T extends EditorElementDefinition<any, any, infer P, any, any>
     ? P[number]
     : never;
-
-export type ExtractCallbackFunctions<T extends ConsumedEventSchema> = {
-    [K in keyof T]: T[K] extends { fn: infer F } ? F : never
-}
 
 export function extractCallbackFunctions(
     schema?: ConsumedEventSchema
