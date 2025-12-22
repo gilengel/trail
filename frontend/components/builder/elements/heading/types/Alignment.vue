@@ -1,30 +1,30 @@
 <template>
   <v-btn-toggle
-    v-model="alignment"
-    mandatory
+      v-model="alignment"
+      mandatory
   >
     <v-btn
-      icon="las la-align-left"
-      value="start"
+        icon="las la-align-left"
+        value="start"
     />
     <v-btn
-      icon="las la-align-center"
-      value="center"
+        icon="las la-align-center"
+        value="center"
     />
     <v-btn
-      icon="las la-align-right"
-      value="end"
+        icon="las la-align-right"
+        value="end"
     />
     <v-btn
-      icon="las la-align-justify"
-      value="justify"
+        icon="las la-align-justify"
+        value="justify"
     />
   </v-btn-toggle>
 </template>
 
 <script setup lang="ts">
 
-import type {CustomPropertyConfig} from "@trail/grid-editor/configuration/elementProperty";
+import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty"
 
 const props = defineProps<{
   config: CustomPropertyConfig

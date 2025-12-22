@@ -31,7 +31,8 @@ describe('Component', () => {
             props = {
                 element: createMockElement(),
                 definition: {} as unknown as any,
-                grid: global.provide[EditorInjectionKey].grid
+                grid: global.provide[EditorInjectionKey].grid,
+                changeable: true,
             };
         });
 

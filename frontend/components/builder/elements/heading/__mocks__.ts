@@ -1,10 +1,10 @@
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 import {HeadingElement} from "~/components/builder/elements/heading/index";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
 
 /**
  * Creates a mock heading element to be used in unit tests.
- * @param "properties" - Can be used to pass non default properties necessary for single tests.
+ * @param properties - Can be used to pass non default properties necessary for single tests.
  * @returns The mock instance.
  */
 export function createMockElement(properties: HeadingProperties = {
@@ -21,15 +21,16 @@ export function createMockElement(properties: HeadingProperties = {
 
         properties,
 
-        defaults: {
-            properties: {} as HeadingProperties,
-            providedProperties: [],
-            consumedProperties: [],
-        },
-
         connections: {
-            consumed: {},
-            provided: {}
+            consumed: {
+                properties: {}
+            },
+            provided: {
+                properties: {},
+                events: {
+                    listeners: {}
+                }
+            }
         },
 
         selected: true,

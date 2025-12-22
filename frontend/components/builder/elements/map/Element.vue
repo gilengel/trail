@@ -15,6 +15,8 @@ import {inject} from "vue";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
 import type {LngLatLike} from "maplibre-gl";
 import type {BuilderHighlightableElement} from "#components";
+import Map from "~/components/Map.vue";
+import type {LineStyle} from "~/types/lineStyle";
 
 //-- PROPS -------------------------------------------------------------------------------------------------------------
 
@@ -32,9 +34,9 @@ if (!editor && props.changeable) {
   throw new Error('Editor instance was not injected in element "Map"');
 }
 
-const map = useTemplateRef<InstanceType<typeof BuilderHighlightableElement>>('map');
+const map = useTemplateRef<InstanceType<typeof Map>>('map');
 
-const lineStyle = computed(() => {
+const lineStyle: ComputedRef<LineStyle> = computed(() => {
   return {
     width: 4,
     color: props.element.properties.color ?? 'rgb(75, 192, 192)',
@@ -70,17 +72,20 @@ const segments = computedAsync(
 //----------------------------------------------------------------------------------------------------------------------
 
 watch(() => props.element.properties.marker, (marker) => {
-
+  if (!marker) {
+    return;
+  }
   const m = map.value;
   if (!m) {
     return
   }
 
-  if (!map.value.getMarker(markerId)) {
-    map.value.addMarker(markerId);
+
+  if (!m.getMarker(markerId)) {
+    m.addMarker(markerId);
   }
 
-  map.value.getMarker(markerId).setLngLat(marker);
+  m.getMarker(markerId)!.setLngLat(marker);
 });
 
 function segmentHoveredOn(id: string | null, point: LngLatLike) {

@@ -7,8 +7,7 @@ import {GridEditor} from "#components";
 import {createDefaultGrid, type EditorElementProperties} from "@trail/grid-editor/grid";
 import {Editor, EditorInjectionKey} from "@trail/grid-editor/editor";
 import {AddRow} from "@trail/grid-editor/undoredo/actions/addRow";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
-
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 
 describe('Component', () => {
     describe('GridEditor', () => {
@@ -21,15 +20,12 @@ describe('Component', () => {
         beforeEach(() => {
             global = createGlobal(createDefaultGrid(0));
 
-            executeActionSpy = vi.spyOn(Editor.prototype, 'executeAction')
-                .mockImplementation(async () => {
-                });
-
 
             props = {
                 element: createMockElement(),
                 definition: {} as unknown as EditorElementDefinition<any>, // not relevant for the test
-                grid: global.provide[EditorInjectionKey].grid
+                grid: global.provide[EditorInjectionKey].grid,
+                changeable: true,
             };
 
             component = mount(GridEditor, {
@@ -46,6 +42,12 @@ describe('Component', () => {
                     }
                 }
             });
+
+            const editorUsedByComponent = component.vm.editor;
+
+            executeActionSpy = vi.fn();
+            editorUsedByComponent.executeAction = executeActionSpy;
+
         });
 
         it('renders', () => {

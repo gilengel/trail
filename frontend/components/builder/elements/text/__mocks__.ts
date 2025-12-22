@@ -1,4 +1,4 @@
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 import type {TextElement} from "~/components/builder/elements/text/index";
 
 /**
@@ -19,6 +19,7 @@ export function createMockElement(): EditorElementInstance<typeof TextElement> {
             bold: false,
         },
 
+        /*
         defaults: {
             properties: {
                 content: 'Default text',
@@ -29,10 +30,20 @@ export function createMockElement(): EditorElementInstance<typeof TextElement> {
             providedProperties: ["content"],
             consumedProperties: [],
         },
+        */
 
         connections: {
-            consumed: {},
-            provided: {}
+            consumed: {
+                properties: {}
+            },
+            provided: {
+                properties: {
+                    "content": []
+                },
+                events: {
+                    listeners: {}
+                }
+            }
         },
 
         selected: true,

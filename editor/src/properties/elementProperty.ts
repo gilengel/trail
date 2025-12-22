@@ -46,7 +46,7 @@ export interface ColorPropertyConfig extends BasePropertyConfig {
 
 export interface SelectPropertyConfig extends BasePropertyConfig {
     type: 'select'
-    options: string[]
+    options: unknown[]
 }
 
 export interface RangePropertyConfig extends BasePropertyConfig {

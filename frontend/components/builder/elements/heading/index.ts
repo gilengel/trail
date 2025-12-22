@@ -1,6 +1,6 @@
 import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
 import type {HeadingProperties} from "~/components/builder/elements/heading/Properties";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 
 export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> = createEditorElementDefinition({
     id: 'heading-element',
@@ -19,10 +19,13 @@ export const HeadingElement: EditorElementDefinition<HeadingProperties, [], []> 
 
         connections: {
             provided: {
-                properties: []
+                properties: [],
+                events: {}
             },
             consumed: {
-                properties: []
+                properties: [],
+                callbacks: {}
+
             }
         }
     },

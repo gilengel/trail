@@ -1,8 +1,5 @@
-import {
-    type ElevationProfileProperties
-} from "~/components/builder/elements/elevation_profile";
 import type {MapElement} from "~/components/builder/elements/map/index";
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 
 /**
  * Creates a mock map element to be used in unit tests.
@@ -16,19 +13,22 @@ export function createMockElement(): EditorElementInstance<typeof MapElement> {
         elementId: 'ElevationProfile0',
 
         properties: {
-            segmentsIds: [],
-            routeId: 0,
-        },
-
-        defaults: {
-            properties: {} as ElevationProfileProperties,
-            providedProperties: ["routeId", "segmentsIds"],
-            consumedProperties: ["routeId", "segmentsIds"],
+            route: {
+                id: 0,
+                segmentIds: []
+            }
         },
 
         connections: {
-            consumed: {},
-            provided: {}
+            consumed: {
+                properties: {}
+            },
+            provided: {
+                properties: {},
+                events: {
+                    listeners: {}
+                }
+            }
         },
 
         selected: true,

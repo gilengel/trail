@@ -1,9 +1,8 @@
 import type {Color} from "~/types/color";
 import {
     ElevationProfileElement,
-    type ElevationProfileProperties
 } from "~/components/builder/elements/elevation_profile/index";
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 
 /**
  * Creates a mock elevation profile element to be used in unit tests.
@@ -17,20 +16,31 @@ export function createMockElement(): EditorElementInstance<typeof ElevationProfi
         elementId: 'ElevationProfile0',
 
         properties: {
-            segmentsIds: [],
-            routeId: 0,
+            route: {
+                id: 0,
+                segmentIds: [],
+            },
             color: '#FF0000' as Color
         },
 
+        /*
         defaults: {
             properties: {} as ElevationProfileProperties,
             providedProperties: ["segmentsIds", "routeId"],
             consumedProperties: ["segmentsIds", "routeId"],
         },
+        */
 
         connections: {
-            consumed: {},
-            provided: {}
+            consumed: {
+                properties: {}
+            },
+            provided: {
+                properties: {},
+                events: {
+                    listeners: {}
+                }
+            }
         },
 
         selected: true,

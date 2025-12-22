@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 
-import type {CustomPropertyConfig} from "@trail/grid-editor/configuration/elementProperty";
+import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
 import type {Route} from "~/components/builder/elements/RouteProperty";
 import {useTripStore} from "~/stores/trip";
 import {useRouteStore} from "~/stores/route";

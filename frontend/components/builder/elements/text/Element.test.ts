@@ -21,7 +21,8 @@ describe('Component', () => {
         const props: EditorElementProperties<typeof TextElement> = {
             element: createMockElement(),
             definition: {} as unknown as any,
-            grid: {tripId: 0, rows: []} as Grid
+            grid: {tripId: 0, rows: []} as Grid,
+            changeable: true
         };
 
         it('renders', async () => {

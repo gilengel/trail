@@ -6,7 +6,7 @@ import {createVuetify} from "vuetify";
 import {GridEditorColumn} from "#components";
 import {createDefaultGrid, type EditorElementProperties} from "@trail/grid-editor/grid";
 import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 
 describe('Component', () => {
     describe('Column', () => {
@@ -19,7 +19,8 @@ describe('Component', () => {
             props = {
                 element: createMockElement(),
                 definition: {} as unknown as EditorElementDefinition<any>, // not relevant for the test
-                grid: global.provide[EditorInjectionKey].grid
+                grid: global.provide[EditorInjectionKey].grid,
+                changeable: true
             };
         });
 

@@ -1,5 +1,5 @@
 import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 
 export type TextElementProperties = {
     content: string;
@@ -26,10 +26,12 @@ export const TextElement: EditorElementDefinition<TextElementProperties, ["conte
         connections: {
             provided: {
                 properties: ['content'] as const,
+                events: {}
             },
 
             consumed: {
-                properties: []
+                properties: [],
+                callbacks: {}
             }
         }
     },

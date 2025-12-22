@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ "23.x" ]
+        node-version: [ "24.x" ]
         db-name: [ e2e-testing-db ]
         db-user: [ user ]
         db-password: [ password ]

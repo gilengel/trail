@@ -39,7 +39,8 @@ describe('Component', () => {
             defaultProps = {
                 element: createMockElement(),
                 definition: {} as unknown as any,
-                grid: global.provide[EditorInjectionKey].grid
+                grid: global.provide[EditorInjectionKey].grid,
+                changeable: true
             };
 
             const target = document.createElement('div');

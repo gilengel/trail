@@ -9,15 +9,8 @@
 <script setup lang="ts">
 import type {MapLibreSegment, MapLibreRoute} from "~/types/route";
 import {LngLatBounds, type LngLatLike, Map as MapLibreMap, Marker} from "maplibre-gl";
-import type {Color} from "~/types/color";
 import {nearestPointOnLine, point} from "@turf/turf";
-
-type LineStyle = {
-  width: number;
-  color: Color;
-  join?: "round" | "bevel" | "miter";
-  cap?: "butt" | "round" | "square";
-};
+import type {LineStyle} from "~/types/lineStyle";
 
 interface Props {
   trip?: MapLibreRoute | null

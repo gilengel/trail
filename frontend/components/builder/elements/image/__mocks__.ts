@@ -1,6 +1,6 @@
-import type {EditorElementInstance} from "@trail/grid-editor/editorElementInstanceRegistry";
+import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
 import type {ImageElement} from "~/components/builder/elements/image/index";
-import {ImagePosition, type ImageProperties, ImageSize} from "~/components/builder/elements/image/Properties";
+import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
 
 /**
  * Creates a mock image element to be used in unit tests.
@@ -20,6 +20,7 @@ export function createMockElement(): EditorElementInstance<typeof ImageElement> 
             positionType: ImagePosition.Free
         },
 
+        /*
         defaults: {
             properties: {
                 scale: {origin: {x: 0, y: 0}, value: 1},
@@ -30,10 +31,18 @@ export function createMockElement(): EditorElementInstance<typeof ImageElement> 
             providedProperties: [],
             consumedProperties: [],
         },
+        */
 
         connections: {
-            consumed: {},
-            provided: {}
+            consumed: {
+                properties: {}
+            },
+            provided: {
+                properties: {},
+                events: {
+                    listeners: {}
+                }
+            }
         },
 
         selected: true,

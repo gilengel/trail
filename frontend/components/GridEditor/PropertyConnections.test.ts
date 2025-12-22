@@ -5,6 +5,7 @@ import * as directives from 'vuetify/directives';
 import {createVuetify} from "vuetify";
 import {createGlobal} from "~/components/builder/elements/__mocks__";
 import {EditorInjectionKey} from "@trail/grid-editor/editor";
+import {GridEditorPropertyConnections} from "#components";
 
 const vuetify = createVuetify({
     components,
@@ -16,6 +17,27 @@ describe('Component', () => {
 
     beforeEach(() => {
         global = createGlobal();
+
+        global.provide[EditorInjectionKey].definitions.register({
+            id: 'muu',
+            name: 'Muu',
+            category: 'Muu',
+            component: undefined as unknown as Component,
+            defaults: {
+                properties: {},
+                connections: {
+                    provided: {
+                        properties: [],
+                        events: {}
+                    },
+                    consumed: {
+                        properties: [],
+                        callbacks: {}
+                    }
+                }
+            }
+
+        })
     });
 
     it('renders title and properties slots', () => {
@@ -29,16 +51,25 @@ describe('Component', () => {
 
                 id: '0',
                 element: {
-                    instanceId: '',
-                    elementId: '',
+                    instanceId: 'muu',
+                    elementId: 'muu',
+                    /*
                     defaults: {
                         properties: {},
                         providedProperties: [],
                         consumedProperties: []
                     },
+                    */
                     connections: {
-                        consumed: {},
-                        provided: {}
+                        consumed: {
+                            properties: {}
+                        },
+                        provided: {
+                            properties: {},
+                            events: {
+                                listeners: {}
+                            }
+                        }
                     },
                     properties: {},
                     selected: true,

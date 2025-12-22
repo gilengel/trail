@@ -3,21 +3,21 @@
     <v-row>
       <v-col>
         <v-row
-          no-gutters
-          align="center"
+            no-gutters
+            align="center"
         >
           <v-col cols="8">
             <v-slider
-              v-model="scaleValue"
-              min="0.125"
-              max="2"
+                v-model="scaleValue"
+                min="0.125"
+                max="2"
             />
           </v-col>
           <v-col cols="4">
             <v-number-input
-              control-variant="stacked"
-              v-model="scaleValue"
-              :precision="2"
+                control-variant="stacked"
+                v-model="scaleValue"
+                :precision="2"
             />
           </v-col>
         </v-row>
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 
-import type {CustomPropertyConfig} from "@trail/grid-editor/configuration/elementProperty";
+import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
 import {DefaultImageScale, type ImageScaleType} from "~/components/builder/elements/image/Properties";
 
 const props = defineProps<{
@@ -43,15 +43,15 @@ const emit = defineEmits<{
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const scaleValue: RefComputed<number[]> = computed({
+const scaleValue = computed({
   get() {
     if (!props.modelValue) {
-      return DefaultImageScale;
+      return DefaultImageScale.value;
     }
 
     return props.modelValue.value;
   },
-  set(newScale) {
+  set(newScale: number) {
     let scale = props.modelValue;
     if (scale === undefined) {
       scale = DefaultImageScale;

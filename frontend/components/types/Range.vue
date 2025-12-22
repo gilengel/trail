@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 
-import type {CustomPropertyConfig} from "@trail/grid-editor/configuration/elementProperty";
+import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
 
 defineProps<{
   config: CustomPropertyConfig

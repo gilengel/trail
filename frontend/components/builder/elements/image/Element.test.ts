@@ -19,7 +19,8 @@ describe('Component', () => {
             props = {
                 element: createMockElement(),
                 definition: {} as unknown as any, // not relevant for the test
-                grid: global.provide[EditorInjectionKey].grid
+                grid: global.provide[EditorInjectionKey].grid,
+                changeable: true
             };
         });
 

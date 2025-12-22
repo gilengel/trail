@@ -1,5 +1,5 @@
 import {createEditorElementDefinition} from "@trail/grid-editor/editorConfiguration";
-import type {EditorElementDefinition} from "@trail/grid-editor/configuration/elementDefinition";
+import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
 import {
     DefaultImageScale,
     ImagePosition,
@@ -25,10 +25,12 @@ export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = cr
 
         connections: {
             provided: {
-                properties: []
+                properties: [],
+                events: {}
             },
             consumed: {
-                properties: []
+                properties: [],
+                callbacks: {}
             }
         }
     },
@@ -47,7 +49,7 @@ export const ImageElement: EditorElementDefinition<ImageProperties, [], []> = cr
             defaultValue: '1'
         },
         sizeType: {
-            type: 'range',
+            type: 'select',
             component: defineAsyncComponent(() => import('~/components/builder/elements/image/types/Size.vue')),
             label: 'Size',
             options: [ImageSize.Free, ImageSize.FitHorizontally, ImageSize.FitVertically],
