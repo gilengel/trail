@@ -1,0 +1,58 @@
+name: check-backend
+author: gil
+description: check-backend
+runs:
+  using: "composite"
+  steps:
+    - name: Run format check (backend)
+      run: npm run format:check
+      working-directory: ./backend
+
+    - name: Run eslint (backend)
+      run: npm run code:lint
+      working-directory: ./backend
+
+    - name: Run duplicates check (backend)
+      run: npm run code:duplicates
+      working-directory: ./backend
+
+    - name: Run knip (backend)
+      run: npm run code:knip
+      working-directory: ./backend
+
+    - name: Run typecheck (backend)
+      run: npm run code:typecheck
+      working-directory: ./backend
+
+    - name: Run the unit tests (backend)
+      run: npm run test:unit:cov
+      working-directory: ./backend
+
+    - name: Prepare database schema for e2e test (backend)
+      run: npx prisma migrate deploy
+      working-directory: ./backend
+      env:
+        DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
+
+    - name: Run the e2e tests (backend)
+      run: npm run test:e2e:cov
+      working-directory: ./backend
+      env:
+        DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
+        BROKEN_DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.broken-db-port }}/${{ matrix.db-name }}?schema=public
+
+    - name: Upload coverage reports to Codecov (backend)
+      uses: codecov/codecov-action@v4.0.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: gilengel/trail
+        files: ./backend/coverage-unit/cobertura-coverage.xml
+        flags: backend,unit
+
+    - name: Upload coverage reports to Codecov (e2e)
+      uses: codecov/codecov-action@v4.0.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: gilengel/trail
+        files: ./backend/coverage-e2e/cobertura-coverage.xml
+        flags: backend,e2e

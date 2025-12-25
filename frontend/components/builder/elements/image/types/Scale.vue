@@ -8,6 +8,7 @@
         >
           <v-col cols="8">
             <v-slider
+                data-testid="editor-scale-slider"
                 v-model="scaleValue"
                 min="0.125"
                 max="2"

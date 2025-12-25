@@ -3,10 +3,6 @@ generator client {
   previewFeatures = ["postgresqlExtensions"]
 }
 
-generator class_validator {
-  provider = "prisma-class-validator-generator"
-}
-
 datasource db {
   provider   = "postgresql"
   extensions = [postgis, postgis_raster]

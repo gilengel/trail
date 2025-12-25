@@ -63,7 +63,6 @@ describe('Component', () => {
                 props: defaultProps
             });
 
-            console.log(component.html());
             expect(component.text()).toContain('Heading');
         });
 

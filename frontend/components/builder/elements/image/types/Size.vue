@@ -6,22 +6,23 @@
   >
     <v-btn-toggle v-model="imageSizeType">
       <v-btn
+          data-testid="editor-image-size-h-btn"
           :value="ImageSize.FitHorizontally"
-          data-testid="btn-image-size-h"
       >
         <v-icon>las la-arrows-alt-h</v-icon>
       </v-btn>
 
       <v-btn
+          data-testid="editor-image-size-v-btn"
           :value="ImageSize.FitVertically"
-          data-testid="btn-image-size-v"
+
       >
         <v-icon>las la-arrows-alt-v</v-icon>
       </v-btn>
 
       <v-btn
+          data-testid="editor-image-size-free-btn"
           :value="ImageSize.Free"
-          data-testid="btn-image-size-f"
       >
         <v-icon>las la-vector-square</v-icon>
       </v-btn>
@@ -34,18 +35,21 @@
 import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
 import {ImageSize} from "~/components/builder/elements/image/Properties";
 
+//-- PROPS -------------------------------------------------------------------------------------------------------------
+
 const props = defineProps<{
   config: CustomPropertyConfig
   propertyKey: string
   modelValue: ImageSize
 }>();
 
+//-- EMITS -------------------------------------------------------------------------------------------------------------
+
 const emit = defineEmits<{
   'update:modelValue': [value: ImageSize]
 }>();
 
-// - IMAGE SIZE MODE ---------------------------------------------------------------------------------------------------
-
+//-- COMPUTED ---------------------------------------------------------------------------------------------------
 
 const imageSizeType = computed({
   get() {
