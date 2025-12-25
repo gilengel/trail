@@ -1,9 +1,9 @@
-import {defineStore} from 'pinia';
-import {useUpload} from "~/composables/useUpload";
-import {useDelete} from "~/composables/useDelete";
-import type {TripDto} from "~/types/dto";
-import type {CreateTripDto} from "~/types/dto";
-import {createDefaultGrid, type Grid} from "@trail/grid-editor/grid";
+import { defineStore } from "pinia";
+import { useUpload } from "~/composables/useUpload";
+import { useDelete } from "~/composables/useDelete";
+import type { TripDto } from "~/types/dto";
+import type { CreateTripDto } from "~/types/dto";
+import { createDefaultGrid, type Grid } from "@trail/grid-editor/grid";
 
 /**
  * Store that can catch (multiple) trips. It hides all network related functionality that the user
@@ -12,94 +12,90 @@ import {createDefaultGrid, type Grid} from "@trail/grid-editor/grid";
  * was not requested before).
  */
 export const useTripStore = () =>
-    defineStore('tripStore', () => {
+  defineStore("tripStore", () => {
+    const cachedTrips = reactive(new Map<number, TripDto>());
 
-        const cachedTrips = reactive(new Map<number, TripDto>());
+    /**
+     * Returns the trip if it was already loaded before, if not, it will try to fetch it
+     * from the backend.
+     * @param id - The id of the trip as number.
+     * @returns Promise with the trip.
+     */
+    async function get(id: number): Promise<TripDto | null> {
+      if (cachedTrips.has(id)) {
+        return cachedTrips.get(id) as TripDto;
+      }
 
-        /**
-         * Returns the trip if it was already loaded before, if not, it will try to fetch it
-         * from the backend.
-         * @param id - The id of the trip as number.
-         * @returns Promise with the trip.
-         */
-        async function get(id: number): Promise<TripDto | null> {
-            if (cachedTrips.has(id)) {
-                return cachedTrips.get(id) as TripDto;
-            }
+      const { data: trip } = await useApiFetch<TripDto>(`/api/trips/${id}`);
 
-            const {data: trip} = await useApiFetch<TripDto>(
-                `/api/trips/${id}`
-            );
+      if (!trip.value) {
+        return null;
+      }
 
-            if (trip.value === null) {
-                return null;
-            }
+      // TripId is not stored inside the grid on database level and must be patched here
+      if (trip.value.layout) {
+        (trip.value.layout as Grid).tripId = trip.value.id;
+      }
 
-            // TripId is not stored inside the grid on database level and must be patched here
-            if (trip.value.layout) {
-                (trip.value.layout as Grid).tripId = trip.value.id;
-            }
+      cachedTrips.set(id, trip.value);
 
-            cachedTrips.set(id, trip.value);
+      return trip.value;
+    }
 
-            return trip.value;
+    /**
+     * Get all trips, either from locale cache or from backend.
+     * @param fetch - If true, will do a backend requests and update the locale cache; otherwise
+     * only local stored trips are returned.
+     * @returns A map containing where the key of each entry is the trip id and the value the dto of the trip.
+     */
+    async function all(fetch: boolean = true): Promise<Map<number, TripDto>> {
+      if (!fetch) {
+        return cachedTrips;
+      }
+
+      const { data: dbTrips } = await useFetch<TripDto[]>("/api/trips");
+      dbTrips.value?.forEach((trip) => {
+        if (!cachedTrips.has(trip.id)) {
+          cachedTrips.set(trip.id, trip);
         }
+      });
 
-        /**
-         * Get all trips, either from locale cache or from backend.
-         * @param fetch - If true, will do a backend requests and update the locale cache; otherwise
-         * only local stored trips are returned.
-         * @returns A map containing where the key of each entry is the trip id and the value the dto of the trip.
-         */
-        async function all(fetch: boolean = true): Promise<Map<number, TripDto>> {
-            if (!fetch) {
-                return cachedTrips;
-            }
+      return cachedTrips;
+    }
 
-            const {data: dbTrips} = await useFetch<TripDto[]>('/api/trips');
-            dbTrips.value?.forEach(trip => {
-                if (!cachedTrips.has(trip.id)) {
-                    cachedTrips.set(trip.id, trip);
-                }
-            });
+    /**
+     * Creates a new trip in the locale cache and in the backend.
+     * @param trip - The dto of the new trip to be created.
+     * @returns The dto of newly created trip if successful.
+     */
+    async function create(trip: CreateTripDto): Promise<TripDto> {
+      const newTrip = await useUpload<TripDto>("/api/trips", {
+        name: trip.name,
+        layout: createDefaultGrid(0),
+      });
 
-            return cachedTrips;
-        }
+      cachedTrips.set(newTrip.id, newTrip);
 
-        /**
-         * Creates a new trip in the locale cache and in the backend.
-         * @param trip - The dto of the new trip to be created.
-         * @returns The dto of newly created trip if successful.
-         */
-        async function create(trip: CreateTripDto): Promise<TripDto> {
-            const newTrip = await useUpload<TripDto>('/api/trips', {
-                name: trip.name,
-                layout: createDefaultGrid(0)
-            });
+      return newTrip;
+    }
 
-            cachedTrips.set(newTrip.id, newTrip);
+    /**
+     * Deletes a trip to the locale cache and in the backend.
+     * @param trip - The dto of the trip to be deleted.
+     * @returns The dto of newly created trip if successful.
+     */
+    async function remove(trip: TripDto): Promise<TripDto> {
+      const deletedTrip = await useDelete<TripDto>(`/api/trips/${trip.id}`);
 
-            return newTrip;
-        }
+      cachedTrips.delete(trip.id);
 
-        /**
-         * Deletes a trip to the locale cache and in the backend.
-         * @param trip - The dto of the trip to be deleted.
-         * @returns The dto of newly created trip if successful.
-         */
-        async function remove(trip: TripDto): Promise<TripDto> {
-            const deletedTrip = await useDelete<TripDto>(`/api/trips/${trip.id}`);
+      return deletedTrip;
+    }
 
-            cachedTrips.delete(trip.id);
-
-            return deletedTrip;
-        }
-
-
-        return {
-            create,
-            get,
-            all,
-            remove
-        };
-    })();
+    return {
+      create,
+      get,
+      all,
+      remove,
+    };
+  })();

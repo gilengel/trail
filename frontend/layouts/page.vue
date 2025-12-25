@@ -2,16 +2,12 @@
   <v-app id="inspire">
     <div class="header-image"></div>
 
-    <v-navigation-drawer
-        rail
-        permanent
-        data-cy="page-toolbars"
-    >
-      <slot name="primary-toolbar"/>
+    <v-navigation-drawer rail permanent data-cy="page-toolbars">
+      <slot name="primary-toolbar" />
 
-      <v-divider class="mx-3 my-5"/>
+      <v-divider class="mx-3 my-5" />
 
-      <slot name="toolbar"/>
+      <slot name="toolbar" />
     </v-navigation-drawer>
 
     <!--
@@ -37,21 +33,15 @@
     </v-app-bar>
     -->
 
-    <v-main
-        data-cy="page-content"
-        class="d-flex justify-center"
-    >
-      <slot name="content"/>
+    <v-main data-cy="page-content" class="d-flex justify-center">
+      <slot name="content" />
     </v-main>
 
-
-    <slot name="overview"/>
+    <slot name="overview" />
   </v-app>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
 main {
@@ -94,5 +84,4 @@ main {
 
   gap: 24px;
 }
-
 </style>

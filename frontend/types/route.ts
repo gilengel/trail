@@ -1,16 +1,16 @@
-import {LngLat, LngLatBounds} from "maplibre-gl";
-import {distance} from "@turf/turf";
-import type {RouteDto, RouteSegmentDto} from "~/types/dto";
-import type {GPXRoute, GPXRouteSegment} from "~/types/dto/convert";
+import { LngLat, LngLatBounds } from "maplibre-gl";
+import { distance } from "@turf/turf";
+import type { RouteDto, RouteSegmentDto } from "~/types/dto";
+import type { GPXRoute, GPXRouteSegment } from "~/types/dto/convert";
 
 export class LngLatWithElevation extends LngLat {
-    constructor(lng: number, lat: number, elevation: number) {
-        super(lng, lat);
+  constructor(lng: number, lat: number, elevation: number) {
+    super(lng, lat);
 
-        this.elevation = elevation;
-    }
+    this.elevation = elevation;
+  }
 
-    elevation: number = 0;
+  elevation: number = 0;
 }
 
 /**
@@ -19,14 +19,14 @@ export class LngLatWithElevation extends LngLat {
  * @returns Trip in map component format.
  */
 export function routeDto2MapLibreTrip(route: RouteDto): MapLibreRoute {
-    return new MapLibreRoute(
-        route.id,
-        route.name,
-        route.segments.map((segment) =>
-            RouteSegmentDto2MapLibreRouteSegment(segment)
-        ),
-        route.description
-    );
+  return new MapLibreRoute(
+    route.id,
+    route.name,
+    route.segments.map((segment) =>
+      RouteSegmentDto2MapLibreRouteSegment(segment),
+    ),
+    route.description,
+  );
 }
 
 /**
@@ -35,13 +35,13 @@ export function routeDto2MapLibreTrip(route: RouteDto): MapLibreRoute {
  * @returns Trip in map component format.
  */
 export function gpxRoute2MapLibreTrip(trip: GPXRoute): MapLibreRoute {
-    return new MapLibreRoute(
-        Math.random(),
-        trip.name ? trip.name : '',
-        trip.segments.map((segment) =>
-            gpxRouteSegmentDto2MapLibreRouteSegment(segment)
-        )
-    );
+  return new MapLibreRoute(
+    Math.random(),
+    trip.name ? trip.name : "",
+    trip.segments.map((segment) =>
+      gpxRouteSegmentDto2MapLibreRouteSegment(segment),
+    ),
+  );
 }
 
 /**
@@ -50,18 +50,19 @@ export function gpxRoute2MapLibreTrip(trip: GPXRoute): MapLibreRoute {
  * @returns Segment in map component format.
  */
 export function gpxRouteSegmentDto2MapLibreRouteSegment(
-    tripSegment: GPXRouteSegment
+  tripSegment: GPXRouteSegment,
 ): MapLibreSegment {
-    return new MapLibreSegment(
-        Math.random(),
-        tripSegment.name,
+  return new MapLibreSegment(
+    Math.random(),
+    tripSegment.name,
 
-        // not sure why but LibreMap switches longitude and latitude...
-        tripSegment.coordinates.map(
-            (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
-        ),
-        "#000"
-    );
+    // not sure why but LibreMap switches longitude and latitude...
+    tripSegment.coordinates.map(
+      (coordinate) =>
+        new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2]),
+    ),
+    "#000",
+  );
 }
 
 /**
@@ -70,190 +71,193 @@ export function gpxRouteSegmentDto2MapLibreRouteSegment(
  * @returns Segment in map component format.
  */
 export function RouteSegmentDto2MapLibreRouteSegment(
-    tripSegment: RouteSegmentDto
+  tripSegment: RouteSegmentDto,
 ): MapLibreSegment {
-    const coordinates = !tripSegment.coordinates ? [] : tripSegment.coordinates.map(
+  const coordinates = !tripSegment.coordinates
+    ? []
+    : tripSegment.coordinates.map(
         // not sure why but LibreMap switches longitude and latitude...
-        (coordinate) => new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2])
-    );
+        (coordinate) =>
+          new LngLatWithElevation(coordinate[1], coordinate[0], coordinate[2]),
+      );
 
-    return new MapLibreSegment(
-        tripSegment.id,
-        tripSegment.name ?? "Unnamed Segment",
-        coordinates,
-        "#000",
-        tripSegment.description
-    );
+  return new MapLibreSegment(
+    tripSegment.id,
+    tripSegment.name ?? "Unnamed Segment",
+    coordinates,
+    "#000",
+    tripSegment.description,
+  );
 }
 
 export class MapLibreRoute {
-    private readonly _bounds: LngLatBounds;
+  private readonly _bounds: LngLatBounds;
 
-    constructor(
-        private _id: number,
-        private _name: string,
-        private _segments: MapLibreSegment[],
-        private _description?: string
-    ) {
-        this._bounds = new LngLatBounds();
-        for (const segment of this._segments) {
-            this._bounds.extend(segment.bounds);
-        }
+  constructor(
+    private _id: number,
+    private _name: string,
+    private _segments: MapLibreSegment[],
+    private _description?: string,
+  ) {
+    this._bounds = new LngLatBounds();
+    for (const segment of this._segments) {
+      this._bounds.extend(segment.bounds);
+    }
+  }
+
+  get id(): number {
+    return this._id;
+  }
+
+  get description(): string | undefined {
+    return this._description;
+  }
+
+  set description(description: string) {
+    this._description = description;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  set name(name: string) {
+    this._name = name;
+  }
+
+  get segments(): MapLibreSegment[] {
+    return this._segments;
+  }
+
+  get start(): LngLat | undefined {
+    if (this._segments.length == 0) {
+      return undefined;
     }
 
-    get id(): number {
-        return this._id;
+    return this._segments[0]!.start;
+  }
+
+  get end(): LngLat | undefined {
+    if (this._segments.length == 0) {
+      return undefined;
     }
 
-    get description(): string | undefined {
-        return this._description;
-    }
+    return this._segments[this._segments.length - 1]!.end;
+  }
 
-    set description(description: string) {
-        this._description = description;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(name: string) {
-        this._name = name;
-    }
-
-    get segments(): MapLibreSegment[] {
-        return this._segments;
-    }
-
-    get start(): LngLat | undefined {
-        if (this._segments.length == 0) {
-            return undefined;
-        }
-
-        return this._segments[0].start;
-    }
-
-    get end(): LngLat | undefined {
-        if (this._segments.length == 0) {
-            return undefined;
-        }
-
-        return this._segments[this._segments.length - 1].end;
-    }
-
-    get bounds(): LngLatBounds {
-        return this._bounds;
-    }
+  get bounds(): LngLatBounds {
+    return this._bounds;
+  }
 }
 
 export class MapLibreSegment {
-    private _lineString: object;
+  private _lineString: object;
 
-    private readonly _bounds: LngLatBounds;
+  private readonly _bounds: LngLatBounds;
 
-    constructor(
-        private _id: number,
-        private _name: string,
-        private _coordinates: LngLatWithElevation[],
-        private _color: string,
-        private _description?: string
-    ) {
-        this._lineString = {
-            type: "Feature",
-            geometry: {
-                type: "LineString",
-                coordinates: _coordinates,
-            },
-        };
+  constructor(
+    private _id: number,
+    private _name: string,
+    private _coordinates: LngLatWithElevation[],
+    private _color: string,
+    private _description?: string,
+  ) {
+    this._lineString = {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: _coordinates,
+      },
+    };
 
-        this._bounds = new LngLatBounds();
-        for (const coordinate of this._coordinates) {
-            this._bounds.extend(coordinate);
-        }
+    this._bounds = new LngLatBounds();
+    for (const coordinate of this._coordinates) {
+      this._bounds.extend(coordinate);
     }
+  }
 
-    get id(): number {
-        return this._id;
-    }
+  get id(): number {
+    return this._id;
+  }
 
-    get name(): string {
-        return this._name;
-    }
+  get name(): string {
+    return this._name;
+  }
 
-    get description(): string | undefined {
-        return this._description;
-    }
+  get description(): string | undefined {
+    return this._description;
+  }
 
-    set description(description: string) {
-        this._description = description;
-    }
+  set description(description: string) {
+    this._description = description;
+  }
 
-    get coordinates(): LngLatWithElevation[] {
-        return this._coordinates;
-    }
+  get coordinates(): LngLatWithElevation[] {
+    return this._coordinates;
+  }
 
-    get color(): string {
-        return this._color;
-    }
+  get color(): string {
+    return this._color;
+  }
 
-    get start(): LngLat {
-        return this._coordinates[0];
-    }
+  get start(): LngLat {
+    return this._coordinates[0]!;
+  }
 
-    get end(): LngLat {
-        return this._coordinates[this._coordinates.length - 1];
-    }
+  get end(): LngLat {
+    return this._coordinates[this._coordinates.length - 1]!;
+  }
 
-    get length(): number {
-        return 42;
-        //return length(
-        //  this._lineString.geometry.coordinates.map((e) => e.toArray())
-        //);
-    }
+  get length(): number {
+    return 42;
+    //return length(
+    //  this._lineString.geometry.coordinates.map((e) => e.toArray())
+    //);
+  }
 
-    get bounds(): LngLatBounds {
-        return this._bounds;
-    }
+  get bounds(): LngLatBounds {
+    return this._bounds;
+  }
 
-    get accumulatedAscent(): number {
-        /*
-        let sum = 0;
-        for (let i = 0; i < this.coordinates.length - 1; ++i) {
-          const alt1 = this.coordinates[i][2];
-          const alt2 = this.coordinates[i + 1][2];
-          if (alt1 < alt2) {
-            sum += alt2 - alt1;
-          }
-        }
-        return sum;
-        */
-        return 42;
-    }
+  get accumulatedAscent(): number {
+    /*
+            let sum = 0;
+            for (let i = 0; i < this.coordinates.length - 1; ++i) {
+              const alt1 = this.coordinates[i][2];
+              const alt2 = this.coordinates[i + 1][2];
+              if (alt1 < alt2) {
+                sum += alt2 - alt1;
+              }
+            }
+            return sum;
+            */
+    return 42;
+  }
 
-    get accumulatedDescent(): number {
-        /*
-        let sum = 0;
-        for (let i = 0; i < this.coordinates.length - 1; ++i) {
-          const alt1 = this.coordinates[i][2] as number;
-          const alt2 = this.coordinates[i + 1][2] as number;
-          if (alt1 > alt2) {
-            sum += alt1 - alt2;
-          }
-        }
-        return sum;
-        */
-        return 42;
-    }
+  get accumulatedDescent(): number {
+    /*
+            let sum = 0;
+            for (let i = 0; i < this.coordinates.length - 1; ++i) {
+              const alt1 = this.coordinates[i][2] as number;
+              const alt2 = this.coordinates[i + 1][2] as number;
+              if (alt1 > alt2) {
+                sum += alt1 - alt2;
+              }
+            }
+            return sum;
+            */
+    return 42;
+  }
 
-    /**
-     * Calculates the length between two coordinates rounded to two decimals. Unit is Km.
-     * @param latlng1 - The first coordinate.
-     * @param latlng2 - The second coordinate.
-     * @returns - Direct distance between the two coordinates in Km.
-     */
-    private distanceBetweenPoints(latlng1: LngLat, latlng2: LngLat) {
-        return (
-            Math.round(distance(latlng1.toArray(), latlng2.toArray()) * 100) / 100
-        );
-    }
+  /**
+   * Calculates the length between two coordinates rounded to two decimals. Unit is Km.
+   * @param latlng1 - The first coordinate.
+   * @param latlng2 - The second coordinate.
+   * @returns - Direct distance between the two coordinates in Km.
+   */
+  private distanceBetweenPoints(latlng1: LngLat, latlng2: LngLat) {
+    return (
+      Math.round(distance(latlng1.toArray(), latlng2.toArray()) * 100) / 100
+    );
+  }
 }

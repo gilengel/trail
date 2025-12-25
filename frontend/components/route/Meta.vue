@@ -31,11 +31,7 @@
       </v-col>
     </v-row>
 
-    <v-dialog
-      v-model="confirmDeletion"
-      width="auto"
-      persistent
-    >
+    <v-dialog v-model="confirmDeletion" width="auto" persistent>
       <v-card
         max-width="400"
         prepend-icon="las la-trash-alt"
@@ -43,9 +39,7 @@
         title="Confirm Delete Trip"
       >
         <template #actions>
-          <v-btn @click="confirmDeletion = false">
-            Cancel
-          </v-btn>
+          <v-btn @click="confirmDeletion = false"> Cancel </v-btn>
           <v-btn
             class="ms-auto"
             text="Permanently Delete"
@@ -58,12 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import {useDelete} from "~/composables/useDelete";
-import {RouteSegmentDto2MapLibreRouteSegment} from "~/types/route";
-import type {RouteDto} from "~/types/dto";
+import { useDelete } from "~/composables/useDelete";
+import { RouteSegmentDto2MapLibreRouteSegment } from "~/types/route";
+import type { RouteDto } from "~/types/dto";
 
 interface Props {
-  route: RouteDto
+  route: RouteDto;
 }
 
 const props = defineProps<Props>();
@@ -73,10 +67,12 @@ const mapSegments = computed(() => {
     return [];
   }
 
-  return props.route.segments.map((segment) => RouteSegmentDto2MapLibreRouteSegment(segment));
+  return props.route.segments.map((segment) =>
+    RouteSegmentDto2MapLibreRouteSegment(segment),
+  );
 });
 
-const emit = defineEmits(['deleted']);
+const emit = defineEmits(["deleted"]);
 
 const confirmDeletion = ref(false);
 
@@ -85,13 +81,11 @@ async function deleteRoute() {
     await useDelete(`/api/routes/${props.route.id}`);
     confirmDeletion.value = false;
 
-    emit('deleted', props.route.id);
+    emit("deleted", props.route.id);
   } catch (e) {
     console.log(e);
   }
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

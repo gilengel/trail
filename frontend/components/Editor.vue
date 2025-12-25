@@ -1,10 +1,7 @@
 <template>
   <div class="editor-container">
     <Teleport to="#editor-primary-toolbar">
-      <v-toolbar
-        density="compact"
-        v-if="editor"
-      >
+      <v-toolbar density="compact" v-if="editor">
         <ToolbarButton
           v-if="formatting"
           data-testid="editor-bold-button"
@@ -83,7 +80,14 @@
           icon="las la-align-left"
           tooltip="Align Left"
           :is-active="editor.isActive('left')"
-          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('left').run()"
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setNodeSelection(1)
+              .setTextAlign('left')
+              .run()
+          "
         />
 
         <ToolbarButton
@@ -92,7 +96,14 @@
           icon="las la-align-center"
           tooltip="Align Right"
           :is-active="editor.isActive('center')"
-          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('center').run()"
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setNodeSelection(1)
+              .setTextAlign('center')
+              .run()
+          "
         />
 
         <ToolbarButton
@@ -101,7 +112,14 @@
           icon="las la-align-right"
           tooltip="Redo"
           :is-active="editor.isActive('right')"
-          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('right').run()"
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setNodeSelection(1)
+              .setTextAlign('right')
+              .run()
+          "
         />
 
         <ToolbarButton
@@ -110,7 +128,14 @@
           icon="las la-align-justify"
           tooltip="Redo"
           :is-active="editor.isActive('justify')"
-          @click="editor.chain().focus().setNodeSelection(1).setTextAlign('justify').run()"
+          @click="
+            editor
+              .chain()
+              .focus()
+              .setNodeSelection(1)
+              .setTextAlign('justify')
+              .run()
+          "
         />
       </v-toolbar>
     </Teleport>
@@ -119,26 +144,29 @@
 </template>
 
 <script setup lang="ts">
-import TextAlign from '@tiptap/extension-text-align';
-import {Color} from "@tiptap/extension-color";
-import {TextStyle} from "@tiptap/extension-text-style";
-import {type Extensions, Node} from '@tiptap/core';
-import StarterKit from '@tiptap/starter-kit';
+import TextAlign from "@tiptap/extension-text-align";
+import { Color } from "@tiptap/extension-color";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { type Extensions, Node } from "@tiptap/core";
+import StarterKit from "@tiptap/starter-kit";
 
 interface Props {
-  content: string,
+  content: string;
 
-  formatting?: boolean,
-  alignment?: boolean,
-  undoredo?: boolean,
-  text?: boolean,
-  customNode?: Node
+  formatting?: boolean;
+  alignment?: boolean;
+  undoredo?: boolean;
+  text?: boolean;
+  customNode?: Node;
 }
 
-
 const {
-  content, alignment = true, undoredo = true, formatting = true, text = true,
-  customNode
+  content,
+  alignment = true,
+  undoredo = true,
+  formatting = true,
+  text = true,
+  customNode = undefined,
 } = defineProps<Props>();
 
 function setColor(color: string) {
@@ -163,7 +191,6 @@ function getChain() {
   return editor.value?.chain();
 }
 
-
 function getCommands() {
   if (!editor.value) {
     return;
@@ -176,7 +203,7 @@ defineExpose({
   setColor,
   setAlignment,
   getCommands,
-  getChain
+  getChain,
 });
 
 const emit = defineEmits<{
@@ -190,8 +217,8 @@ const starterKitNoParaOrHeading = StarterKit.configure({
 const defaultExtensions: Extensions = [
   starterKitNoParaOrHeading,
   Color,
-  TextStyle.configure({mergeNestedSpanStyles: true}),
-  TextAlign.configure({types: ['dynamicParagraph', 'paragraph']}),
+  TextStyle.configure({ mergeNestedSpanStyles: true }),
+  TextAlign.configure({ types: ["dynamicParagraph", "paragraph"] }),
 ];
 
 if (customNode) {
@@ -202,13 +229,11 @@ const editor = useEditor({
   content,
   extensions: defaultExtensions,
 
-  onUpdate: ({editor}) => {
+  onUpdate: ({ editor }) => {
     emit("onTextChanged", editor.getHTML());
-  }
+  },
 });
-
 </script>
-
 
 <style lang="scss">
 .editor-container {
@@ -221,7 +246,6 @@ const editor = useEditor({
     flex-grow: 1;
   }
 }
-
 
 .tiptap {
   height: 100%;

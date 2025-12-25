@@ -4,16 +4,12 @@
     @on-text-changed="onTextChanged"
     v-if="props.element.selected"
   />
-  <div
-    v-else
-    v-html="text"
-    class="tiptap"
-  />
+  <div v-else v-html="text" class="tiptap" />
 </template>
 
 <script setup lang="ts">
-import type {EditorElementProperties} from "@trail/grid-editor/grid";
-import {TextElement} from "~/components/builder/elements/text/index";
+import type { EditorElementProperties } from "@trail/grid-editor/grid";
+import { TextElement } from "~/components/builder/elements/text/index";
 
 const text = computed(() => {
   if (!props.element.properties.content) {
@@ -30,6 +26,4 @@ function onTextChanged() {
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

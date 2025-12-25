@@ -1,8 +1,5 @@
 <template>
-  <v-responsive
-    :aspect-ratio
-    :class="['image-container']"
-  >
+  <v-responsive :aspect-ratio :class="['image-container']">
     <BuilderElementsImageDraggableContainer
       data-testid="element-img"
       :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"
@@ -20,13 +17,16 @@
 </template>
 
 <script setup lang="ts">
-import type {Point2D} from "~/types/point";
-import {ImagePosition, ImageSize} from "~/components/builder/elements/image/Properties";
-import {inject} from "vue";
-import {EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {ImageElement} from "~/components/builder/elements/image/index";
-import {UpdateElementAttribute} from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
-import type {EditorElementProperties} from "@trail/grid-editor/grid";
+import type { Point2D } from "~/types/point";
+import {
+  ImagePosition,
+  ImageSize,
+} from "~/components/builder/elements/image/Properties";
+import { inject } from "vue";
+import { EditorInjectionKey } from "@trail/grid-editor/editor";
+import type { ImageElement } from "~/components/builder/elements/image/index";
+import { UpdateElementAttribute } from "@trail/grid-editor/undoredo/actions/updateElementAttribute";
+import type { EditorElementProperties } from "@trail/grid-editor/grid";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -53,20 +53,46 @@ const aspectRatio = computed(() => {
 // ---------------------------------------------------------------------------------------------------------------------
 
 function onImageScaleChange(newScale: number, origin: Point2D) {
-  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "scale", {
-    origin,
-    value: newScale
-  }));
+  editor?.executeAction(
+    new UpdateElementAttribute<typeof ImageElement>(props.element, "scale", {
+      origin,
+      value: newScale,
+    }),
+  );
 }
 
 function onImagePositionChange(position: Point2D) {
-  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "positionType", ImagePosition.Free));
-  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "position", position));
+  editor?.executeAction(
+    new UpdateElementAttribute<typeof ImageElement>(
+      props.element,
+      "positionType",
+      ImagePosition.Free,
+    ),
+  );
+  editor?.executeAction(
+    new UpdateElementAttribute<typeof ImageElement>(
+      props.element,
+      "position",
+      position,
+    ),
+  );
 }
 
 function onImageSizeTypeChange(imageSizeType: ImageSize) {
-  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "positionType", ImagePosition.Centered));
-  editor?.executeAction(new UpdateElementAttribute<typeof ImageElement>(props.element, "sizeType", imageSizeType));
+  editor?.executeAction(
+    new UpdateElementAttribute<typeof ImageElement>(
+      props.element,
+      "positionType",
+      ImagePosition.Centered,
+    ),
+  );
+  editor?.executeAction(
+    new UpdateElementAttribute<typeof ImageElement>(
+      props.element,
+      "sizeType",
+      imageSizeType,
+    ),
+  );
 }
 </script>
 

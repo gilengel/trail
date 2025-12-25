@@ -6,9 +6,11 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
+  "transformIgnorePatterns": ["node_modules/(?!((jest-)?uuid|@prisma|pg)/)"],
   "collectCoverageFrom": ["src/**/*.{ts,jxs}"],
   "coverageReporters": ["text", "cobertura", "html"],
   "coveragePathIgnorePatterns": [
+    "jest-e2e.setup.ts",
     "e2e-spec",
     "main.ts",
     ".module.ts",

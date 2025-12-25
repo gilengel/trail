@@ -1,3 +1,3 @@
 export interface TextProperties {
-    text: string;
+  text: string;
 }

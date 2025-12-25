@@ -2,10 +2,7 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list
-          density="compact"
-          nav
-        >
+        <v-list density="compact" nav>
           <v-list-item
             color="primary"
             rounded="xl"
@@ -41,10 +38,7 @@
               </v-col>
             </v-row>
 
-            <v-row
-              v-for="singleRoute in routes"
-              :key="singleRoute.name"
-            >
+            <v-row v-for="singleRoute in routes" :key="singleRoute.name">
               <v-col cols="12">
                 <Tile>
                   <RouteEdit
@@ -63,8 +57,8 @@
 </template>
 
 <script setup lang="ts">
-import {useTripStore} from "~/stores/trip";
-import type {RouteDto, TripDto} from "~/types/dto";
+import { useTripStore } from "~/stores/trip";
+import type { RouteDto, TripDto } from "~/types/dto";
 
 const route = useRoute();
 const router = useRouter();
@@ -78,8 +72,7 @@ const routes: RouteDto[] | null = await routeStore.getByTripId(trip!.id);
 
 const changedRouteData: Ref<{
   name?: string;
-}> = ref({name: trip!.name});
-
+}> = ref({ name: trip!.name });
 
 /**
  *
@@ -88,20 +81,21 @@ function saveRoute() {
   $fetch(`/api/trips/${trip?.id}`, {
     method: "PATCH",
     body: changedRouteData.value,
-  }).then(() => {
-    router.push(`/trip/${route.params.id}/feed`);
-  }).catch((e) => {
-    console.log(e);
-  });
+  })
+    .then(() => {
+      router.push(`/trip/${route.params.id}/feed`);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 }
 
 function removeRoute(deletedRouteId: number) {
-  routes!.filter(route => route.id !== deletedRouteId);
+  routes!.filter((route) => route.id !== deletedRouteId);
 }
 
 const rules = {
-  required: (value: string) => !!value || 'Required.',
-  counter: (value: string) => value.length <= 20 || 'Max 20 characters',
+  required: (value: string) => !!value || "Required.",
+  counter: (value: string) => value.length <= 20 || "Max 20 characters",
 };
-
 </script>

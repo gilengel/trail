@@ -13,17 +13,10 @@
         />
       </v-list>
 
-
-      <h2
-        v-if="!networkError && trips.size === 0"
-        data-cy="error-empty-text"
-      >
+      <h2 v-if="!networkError && trips.size === 0" data-cy="error-empty-text">
         😞 Looks like you don't have any trips stored yet
       </h2>
-      <h2
-        v-if="networkError"
-        data-cy="error-network-text"
-      >
+      <h2 v-if="networkError" data-cy="error-network-text">
         😞 Looks like there was a network problem.
       </h2>
     </v-card-text>
@@ -31,8 +24,7 @@
 </template>
 
 <script setup lang="ts">
-
-import type {TripDto} from "~/types/dto";
+import type { TripDto } from "~/types/dto";
 
 const tripStore = useTripStore();
 
@@ -42,17 +34,15 @@ const emit = defineEmits<(e: "selectedTripChanged", id: number) => void>();
  * @param trip
  */
 function onTripClicked(trip: TripDto) {
-  emit('selectedTripChanged', trip.id);
+  emit("selectedTripChanged", trip.id);
 }
 
 const networkError = ref(false);
 
 const trips = await tripStore.all();
-
 </script>
 
 <style lang="scss" scoped>
-
 ul {
   list-style: none;
   padding: 0;

@@ -15,13 +15,13 @@ import {
 import { TripsService } from './trips.service';
 import * as DTO from '../dto';
 
-export const TRIPS_URI = "trips";
+export const TRIPS_URI = 'trips';
 
 @Controller(TRIPS_URI)
 export class TripsController {
   public static QUERY = {
-    ID: "id"
-  }
+    ID: 'id',
+  };
   private readonly logger = new Logger(TripsController.name);
 
   constructor(private tripsService: TripsService) {}
@@ -39,7 +39,9 @@ export class TripsController {
   }
 
   @Get(`:${TripsController.QUERY.ID}`)
-  async findOne(@Param(TripsController.QUERY.ID) id: number): Promise<DTO.Trip> {
+  async findOne(
+    @Param(TripsController.QUERY.ID) id: number,
+  ): Promise<DTO.Trip> {
     const trip = await this.tripsService.trip(id);
 
     if (!trip) {

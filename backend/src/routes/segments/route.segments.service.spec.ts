@@ -9,7 +9,7 @@ import {
   TooManyCoordinatesError,
 } from './route.segments.service';
 
-import { RouteSegment } from './dto/route.segment.dto';
+import { RouteSegment } from './dto';
 
 import * as routeSegmentTestData from './__data__';
 import * as routeTestData from '../routes/__data__';

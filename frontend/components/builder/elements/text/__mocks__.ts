@@ -1,25 +1,24 @@
-import type {EditorElementInstance} from "@trail/grid-editor/instances/instance";
-import type {TextElement} from "~/components/builder/elements/text/index";
+import type { EditorElementInstance } from "@trail/grid-editor/instances/instance";
+import type { TextElement } from "~/components/builder/elements/text/index";
 
 /**
  * Creates a mock text element to be used in unit tests.
  * @returns The mock instance.
  */
 export function createMockElement(): EditorElementInstance<typeof TextElement> {
-    const now = new Date();
-    return {
+  const now = new Date();
+  return {
+    instanceId: "0",
+    elementId: "TextElement",
 
-        instanceId: '0',
-        elementId: 'TextElement',
+    properties: {
+      content: "Default text",
+      fontSize: 16,
+      color: "#000000",
+      bold: false,
+    },
 
-        properties: {
-            content: 'Default text',
-            fontSize: 16,
-            color: '#000000',
-            bold: false,
-        },
-
-        /*
+    /*
         defaults: {
             properties: {
                 content: 'Default text',
@@ -32,23 +31,23 @@ export function createMockElement(): EditorElementInstance<typeof TextElement> {
         },
         */
 
-        connections: {
-            consumed: {
-                properties: {}
-            },
-            provided: {
-                properties: {
-                    "content": []
-                },
-                events: {
-                    listeners: {}
-                }
-            }
+    connections: {
+      consumed: {
+        properties: {},
+      },
+      provided: {
+        properties: {
+          content: [],
         },
+        events: {
+          listeners: {},
+        },
+      },
+    },
 
-        selected: true,
+    selected: true,
 
-        created: now,
-        modified: now
-    };
+    created: now,
+    modified: now,
+  };
 }

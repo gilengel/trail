@@ -1,22 +1,17 @@
-<template>
-  TextAlign
-</template>
+<template>TextAlign</template>
 
 <script setup lang="ts">
-
-import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
+import type { CustomPropertyConfig } from "@trail/grid-editor/properties/elementProperty";
 
 defineProps<{
-  config: CustomPropertyConfig
-  propertyKey: string
-  modelValue: string | number | null
+  config: CustomPropertyConfig;
+  propertyKey: string;
+  modelValue: string | number | null;
 }>();
 
 defineEmits<{
-  'update:modelValue': [value: string | null]
+  "update:modelValue": [value: string | null];
 }>();
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

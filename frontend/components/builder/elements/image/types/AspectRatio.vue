@@ -1,15 +1,11 @@
 <template>
   <div class="aspect-ratios pb-4">
-    <div
-        v-for="(ratio, i) in aspectRatios"
-        :key="i"
-        class="ratio-container"
-    >
+    <div v-for="(ratio, i) in aspectRatios" :key="i" class="ratio-container">
       <v-responsive
-          :aspect-ratio="ratio.value"
-          :class="['border', props.modelValue === ratio.value ? 'selected' : '']"
-          :data-testid="`ratio-${i}`"
-          @click="$emit('update:modelValue', ratio.value)"
+        :aspect-ratio="ratio.value"
+        :class="['border', props.modelValue === ratio.value ? 'selected' : '']"
+        :data-testid="`ratio-${i}`"
+        @click="$emit('update:modelValue', ratio.value)"
       >
         <div class="ratio-content">
           <strong>{{ ratio.label }}</strong>
@@ -20,29 +16,28 @@
 </template>
 
 <script setup lang="ts">
-
-import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
+import type { CustomPropertyConfig } from "@trail/grid-editor/properties/elementProperty";
 
 const props = defineProps<{
-  config: CustomPropertyConfig
-  propertyKey: string
-  modelValue: number
+  config: CustomPropertyConfig;
+  propertyKey: string;
+  modelValue: number;
 }>();
 
 defineEmits<{
-  'update:modelValue': [value: number]
+  "update:modelValue": [value: number];
 }>();
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 const aspectRatios = [
-  {label: '3:2', value: 3 / 2},
-  {label: '4:3', value: 4 / 3},
-  {label: '5:4', value: 5 / 4},
-  {label: '16:10', value: 16 / 10},
-  {label: '16:9', value: 16 / 9},
-  {label: '1:0.85', value: 1 / 0.85},
-  {label: '2.35:1', value: 2.35},
+  { label: "3:2", value: 3 / 2 },
+  { label: "4:3", value: 4 / 3 },
+  { label: "5:4", value: 5 / 4 },
+  { label: "16:10", value: 16 / 10 },
+  { label: "16:9", value: 16 / 9 },
+  { label: "1:0.85", value: 1 / 0.85 },
+  { label: "2.35:1", value: 2.35 },
 ];
 </script>
 

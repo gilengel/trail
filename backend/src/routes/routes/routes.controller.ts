@@ -7,8 +7,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   Param,
@@ -44,14 +43,14 @@ export class RoutesController {
   constructor(
     private routeService: RoutesService,
     private tripService: TripsService,
-  ) { }
+  ) {}
 
   @Get()
   async findAll(): Promise<RouteWithoutSegments[]> {
     try {
       return await this.routeService.routes();
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(e.message);
     }
   }
 
@@ -130,10 +129,7 @@ export class RoutesController {
     @Body() route: DTO.UpdateRoute,
   ): Promise<RouteWithoutSegments> {
     if (route.name === undefined && route.description === undefined) {
-      throw new HttpException(
-        'No fields to be updated were provided.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('No fields to be updated were provided.');
     }
 
     const result = await this.routeService.updateRoute(id, route);
@@ -179,4 +175,6 @@ export function ThrowHttpExceptionFromDomainError(e: Error) {
   } else if (e instanceof MixedCoordinatesError) {
     throw new BadRequestException(e.message);
   }
+
+  throw new InternalServerErrorException(e.message);
 }

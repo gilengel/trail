@@ -1,28 +1,27 @@
 /**
  * @file Contains functionality to parse gpx files into TypeScript objects.
  */
-import {XMLParser} from 'fast-xml-parser';
-import {Buffer} from 'buffer';
+import { XMLParser } from "fast-xml-parser";
+import { Buffer } from "buffer";
 
 // If the client tries to create/update routes with less then two coordinates
 export class NotEnoughCoordinatesError extends Error {
-    constructor() {
-        super(
-            'Minimum number of coordinates for a route is two which was not met.',
-        );
-    }
+  constructor() {
+    super(
+      "Minimum number of coordinates for a route is two which was not met.",
+    );
+  }
 }
 
 export interface GPXRoute {
-    name?: string;
-    segments: GPXRouteSegment[];
+  name?: string;
+  segments: GPXRouteSegment[];
 }
 
 export interface GPXRouteSegment {
-    name: string;
-    coordinates: Array<[number, number, number]>;
+  name: string;
+  coordinates: Array<[number, number, number]>;
 }
-
 
 /**
  * Extracts the geospatial coordinates from a string or file buffer.
@@ -31,47 +30,49 @@ export interface GPXRouteSegment {
  * @throws {NotEnoughCoordinatesError} If there are no coordinates within the gpx file.
  */
 export function extractCoordinatesFromGPX(data: string | Buffer): GPXRoute {
-    const parser = new XMLParser({
-        ignoreAttributes: false,
-    });
-    const obj = parser.parse(data);
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+  });
+  const obj = parser.parse(data);
 
-    let segments = obj.gpx.trk.trkseg;
-    if (!Array.isArray(segments) && !segments.trkpt) {
-        throw new NotEnoughCoordinatesError();
-    }
+  let segments = obj.gpx.trk.trkseg;
+  if (!Array.isArray(segments) && !segments.trkpt) {
+    throw new NotEnoughCoordinatesError();
+  }
 
-    if (!Array.isArray(segments)) {
-        segments = [segments];
-    }
+  if (!Array.isArray(segments)) {
+    segments = [segments];
+  }
 
-    let names = obj.gpx.trk.name;
-    if (!Array.isArray(names)) {
-        names = [obj.gpx.trk.name];
-    }
+  let names = obj.gpx.trk.name;
+  if (!Array.isArray(names)) {
+    names = [obj.gpx.trk.name];
+  }
 
-    interface Point {
-        ele?: string,
-        '@_lat': number,
-        '@_lon': number,
-    }
+  interface Point {
+    ele?: string;
+    "@_lat": number;
+    "@_lon": number;
+  }
 
-    const convertedSegments: GPXRouteSegment[] = segments.map((segment: { trkpt: Point[] }, i: number) => {
-        const name = names[i];
+  const convertedSegments: GPXRouteSegment[] = segments.map(
+    (segment: { trkpt: Point[] }, i: number) => {
+      const name = names[i];
 
-        const coordinates = segment.trkpt.map((point: Point): number[] => {
-            const elevation = point.ele ? `${point.ele}` : '0';
+      const coordinates = segment.trkpt.map((point: Point): number[] => {
+        const elevation = point.ele ? `${point.ele}` : "0";
 
-            return [point['@_lat'], point['@_lon'], parseFloat(elevation)];
-        });
+        return [point["@_lat"], point["@_lon"], parseFloat(elevation)];
+      });
 
-        return {
-            name,
-            coordinates,
-        };
-    });
+      return {
+        name,
+        coordinates,
+      };
+    },
+  );
 
-    return {
-        segments: convertedSegments,
-    };
+  return {
+    segments: convertedSegments,
+  };
 }

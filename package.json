@@ -24,7 +24,7 @@
     "test:frontend:unit:cov": "npm run -w @trail/frontend test:unit:cov",
     "test:frontend:components:cov": "npm run -w @trail/frontend test:unit:cov",
     "test:frontend:e2e:cov": "npm run -w @trail/frontend test:e2e:cov",
-    "ci": "start-server-and-test start:backend:prod 3000 start:frontend:prod http-get://localhost:8080 test:frontend:e2e:cov"
+    "ci": "npm run -w @trail/backend ci && npm run -w @trail/frontend ci"
   },
   "author": "",
   "license": "AGPL-3.0-or-later",

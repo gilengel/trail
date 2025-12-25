@@ -2,27 +2,20 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list
-          density="compact"
-          nav
-        >
+        <v-list density="compact" nav>
           <v-list-item
             color="primary"
             rounded="xl"
             prepend-icon="las la-arrow-left"
             @click="$router.push({ path: '/' })"
-            style="max-width: 200px; width: 100%;"
+            style="max-width: 200px; width: 100%"
           />
         </v-list>
       </template>
 
       <template #toolbar>
-        <v-list
-          density="compact"
-          nav
-        >
+        <v-list density="compact" nav>
           <v-list-item
-
             color="primary"
             rounded="xl"
             prepend-icon="las la-desktop"
@@ -38,17 +31,13 @@
 
           <v-list-item
             color="primary"
-
             rounded="xl"
             prepend-icon="las la-mobile"
             @click="$router.push({ path: 'edit/mobile' })"
           />
         </v-list>
         <v-divider class="mx-3 my-5" />
-        <v-list
-          density="compact"
-          nav
-        >
+        <v-list density="compact" nav>
           <v-list-item
             color="primary"
             rounded="xl"
@@ -57,10 +46,7 @@
           />
         </v-list>
         <v-divider class="mx-3 my-5" />
-        <v-list
-          density="compact"
-          nav
-        >
+        <v-list density="compact" nav>
           <v-list-item
             color="primary"
             rounded="xl"
@@ -70,17 +56,10 @@
         </v-list>
       </template>
 
-      <template
-        #content
-        v-if="trip"
-      />
+      <template #content v-if="trip" />
     </NuxtLayout>
 
-    <v-dialog
-      v-model="dialog"
-      width="auto"
-      persistent
-    >
+    <v-dialog v-model="dialog" width="auto" persistent>
       <v-card
         max-width="400"
         prepend-icon="las la-trash-alt"
@@ -88,9 +67,7 @@
         title="Confirm Delete Trip"
       >
         <template #actions>
-          <v-btn @click="dialog = false">
-            Cancel
-          </v-btn>
+          <v-btn @click="dialog = false"> Cancel </v-btn>
           <v-btn
             class="ms-auto"
             text="Permanently Delete"
@@ -103,8 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import {useRouter} from "vue-router";
-import {useTripStore} from "~/stores/trip";
+import { useRouter } from "vue-router";
+import { useTripStore } from "~/stores/trip";
 
 const router = useRouter();
 
@@ -114,11 +91,13 @@ const tripStore = useTripStore();
 const trip = await tripStore.get(Number(route.params.id));
 
 function deleteTrip() {
-  tripStore.remove(trip!).then(() => {
-    router.push('/');
-  }).catch((e) => console.error(e));
+  tripStore
+    .remove(trip!)
+    .then(() => {
+      router.push("/");
+    })
+    .catch((e) => console.error(e));
 }
 
 const dialog = ref(false);
 </script>
-

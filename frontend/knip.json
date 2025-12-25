@@ -1,0 +1,32 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": ["src/main.ts"],
+  "project": ["src/**/*.ts"],
+  "ignore": ["**/*.spec.ts", "**/*.test.ts"],
+  "ignoreBinaries": ["nuxt"],
+  "ignoreDependencies": [
+    "@testing-library/vue",
+    "@tiptap/extension-color",
+    "@tiptap/extension-text-align",
+    "@tiptap/extension-text-style",
+    "@trail/grid-editor",
+    "@turf/turf",
+    "@vitejs/plugin-vue",
+    "@vitest/coverage-istanbul",
+    "@vueuse/integrations",
+    "@yeger/vue-masonry-wall",
+    "change-case",
+    "chart.js",
+    "class-transformer",
+    "class-validator",
+    "line-awesome",
+    "maplibre-gl",
+    "nuxt",
+    "sortablejs",
+    "uuid",
+    "vue-chartjs",
+    "vue",
+    "h3",
+    "ufo"
+  ]
+}

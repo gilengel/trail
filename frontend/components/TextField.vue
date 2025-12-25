@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 const rules = {
-  required: (value: string) => !!value || 'Required.',
-  counter: (value: string) => value.length <= 20 || 'Max 20 characters',
+  required: (value: string) => !!value || "Required.",
+  counter: (value: string) => value.length <= 20 || "Max 20 characters",
 };
 
 interface Props {
@@ -24,7 +24,11 @@ interface Props {
   readonly?: boolean;
 }
 
-const {icon = "", label = "Text Field", readonly = false} = defineProps<Props>();
+const {
+  icon = "",
+  label = "Text Field",
+  readonly = false,
+} = defineProps<Props>();
 
 // Define emits
 const emit = defineEmits<{
@@ -32,6 +36,4 @@ const emit = defineEmits<{
 }>();
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

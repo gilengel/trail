@@ -7,24 +7,12 @@
       <v-list-item-title>
         <v-container>
           <v-row no-gutters>
-            <v-col
-              cols="4"
-              style="container-type: inline-size"
-            >
-              <Map
-                :trip="item.route"
-                :interactive="false"
-              />
+            <v-col cols="4" style="container-type: inline-size">
+              <Map :trip="item.route" :interactive="false" />
             </v-col>
 
-            <v-col
-              cols="8"
-              class="pl-4"
-            >
-              <v-row
-                no-gutters
-                justify="space-between"
-              >
+            <v-col cols="8" class="pl-4">
+              <v-row no-gutters justify="space-between">
                 <v-col cols="12">
                   <v-text-field
                     v-model="segmentName[index]"
@@ -56,15 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import {gpxRoute2MapLibreTrip} from "~/types/route";
-import {Buffer} from "buffer";
-import type {GPXFile} from "~/types/gpx";
-import {extractCoordinatesFromGPX} from "~/types/dto/convert";
+import { gpxRoute2MapLibreTrip } from "~/types/route";
+import { Buffer } from "buffer";
+import type { GPXFile } from "~/types/gpx";
+import { extractCoordinatesFromGPX } from "~/types/dto/convert";
 
 const emit = defineEmits<{
-  onFilesChanged: [files: GPXFile[]],
-  onSegmentNameChanged: [index: number, name: string],
-  onSegmentDescriptionChanged: [index: number, name: string]
+  onFilesChanged: [files: GPXFile[]];
+  onSegmentNameChanged: [index: number, name: string];
+  onSegmentDescriptionChanged: [index: number, name: string];
 }>();
 
 const segmentName = ref([]);
@@ -92,6 +80,4 @@ async function extractTrackFromFile(file: GPXFile) {
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

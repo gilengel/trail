@@ -1,12 +1,11 @@
 <template>
   <div :class="classes">
-    <slot/>
+    <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-
-const {isHighlighted} = defineProps<{
+const { isHighlighted } = defineProps<{
   isHighlighted: boolean;
 }>();
 
@@ -26,7 +25,6 @@ const classes = computed(() => {
   border-color: rgb(var(--v-theme-primary)) !important;
 }
 </style>
-
 
 <style lang="scss">
 canvas {

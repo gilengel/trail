@@ -1,67 +1,66 @@
 <template>
   <v-container fluid>
     <v-row
-        no-gutters
-        align="center"
-        class="layout-row"
-        :class="isDraggingColumnSize ? 'dragging' : ''"
-        @mouseenter="isHovering=true"
-        @mouseleave="isHovering=false"
+      no-gutters
+      align="center"
+      class="layout-row"
+      :class="isDraggingColumnSize ? 'dragging' : ''"
+      @mouseenter="isHovering = true"
+      @mouseleave="isHovering = false"
     >
       <v-col
-          v-if="props.activeMode === BuilderMode.Create"
-          cols="auto"
-          class="actions rounded-sm border"
+        v-if="props.activeMode === BuilderMode.Create"
+        cols="auto"
+        class="actions rounded-sm border"
       >
         <v-btn
-            :ripple="false"
-            rounded="0"
-            class="drag-handle"
-            icon="las la-arrows-alt"
+          :ripple="false"
+          rounded="0"
+          class="drag-handle"
+          icon="las la-arrows-alt"
         />
         <v-btn
-            flat
-            :ripple="false"
-            rounded="0"
-            data-testid="delete-row-button"
-            icon="las la-trash-alt"
-            @click="editor.executeAction(new DeleteRow(model, props.grid))"
+          flat
+          :ripple="false"
+          rounded="0"
+          data-testid="delete-row-button"
+          icon="las la-trash-alt"
+          @click="editor.executeAction(new DeleteRow(model, props.grid))"
         />
       </v-col>
-      <v-col
-          class="border"
-          style="align-self: stretch"
-      >
+      <v-col class="border" style="align-self: stretch">
         <v-row
-            no-gutters
-            ref="container"
-            class="fill-height"
-            data-testid="layout-row"
+          no-gutters
+          ref="container"
+          class="fill-height"
+          data-testid="layout-row"
         >
           <GridEditorColumn
-              data-key="itemId"
-              :data-testid="`grid-column-${col_index}-${rowIndex}`"
-              :column-index="col_index"
-              :row="model"
-              :model="column"
-              :active-mode
-              :grid
-              :class="colClass(col_index)"
-              :split-disabled="column.width <= 2"
-              :editable="!isDraggingColumnSize"
-              :selected-element-id="props.selectedElementId"
-              v-for="(column, col_index) in model.columns"
-              :key="col_index"
+            data-key="itemId"
+            :data-testid="`grid-column-${col_index}-${rowIndex}`"
+            :column-index="col_index"
+            :row="model"
+            :model="column"
+            :active-mode
+            :grid
+            :class="colClass(col_index)"
+            :split-disabled="column.width <= 2"
+            :editable="!isDraggingColumnSize"
+            :selected-element-id="props.selectedElementId"
+            v-for="(column, col_index) in model.columns"
+            :key="col_index"
           />
 
           <div
-              v-for="(e, i) in model.columns.length - 1"
-              :key="e"
-              data-testid="row-splitter"
-              class="splitter"
-              :class="isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'"
-              :style="splitterStyleFn(i)"
-              @mousedown="dragMouseDown($event, i)"
+            v-for="(e, i) in model.columns.length - 1"
+            :key="e"
+            data-testid="row-splitter"
+            class="splitter"
+            :class="
+              isDraggingColumnSize ? 'dragging-slider' : 'non-dragging-slider'
+            "
+            :style="splitterStyleFn(i)"
+            @mousedown="dragMouseDown($event, i)"
           />
         </v-row>
       </v-col>
@@ -70,13 +69,13 @@
 </template>
 
 <script setup lang="ts">
-import {inject, type PropType, type Ref, ref} from 'vue';
-import {columnValueValidator} from "~/composables/useColumValidator";
-import type {Grid, Row} from "@trail/grid-editor/grid";
-import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import {DeleteRow} from "@trail/grid-editor/undoredo/actions/deleteRow";
-import {UpdateColumnWidth} from "@trail/grid-editor/undoredo/actions/updateColumnWidth";
-import {GroupedUndoRedoAction} from "@trail/grid-editor/undoredo";
+import { inject, type PropType, type Ref, ref } from "vue";
+import { columnValueValidator } from "~/composables/useColumValidator";
+import type { Grid, Row } from "@trail/grid-editor/grid";
+import { BuilderMode, EditorInjectionKey } from "@trail/grid-editor/editor";
+import { DeleteRow } from "@trail/grid-editor/undoredo/actions/deleteRow";
+import { UpdateColumnWidth } from "@trail/grid-editor/undoredo/actions/updateColumnWidth";
+import { GroupedUndoRedoAction } from "@trail/grid-editor/undoredo";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -114,13 +113,13 @@ const props = defineProps({
   selectedElementId: {
     type: String,
     default: undefined,
-    required: false
+    required: false,
   },
 
   activeMode: {
     type: Number as PropType<BuilderMode>,
     required: true,
-  }
+  },
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -244,7 +243,6 @@ function restrictNewColumnSizes(newColumnSize: number): {
 } {
   const completeColumnSize = affectedColumnSizes().complete;
 
-
   if (newColumnSize < props.minColSize) {
     newColumnSize = props.minColSize;
   }
@@ -282,17 +280,16 @@ function restrictNewColumnSizes(newColumnSize: number): {
 function elementDrag(event: MouseEvent) {
   event.preventDefault();
 
-
   updatePositions(event);
 
-  const leftAbsolute = container.value!.$el.getBoundingClientRect().left + window.scrollX;
+  const leftAbsolute =
+    container.value!.$el.getBoundingClientRect().left + window.scrollX;
   const positionLeft = positions.clientX - leftAbsolute;
-
 
   const previousColSizes = previousColSize(selectedSplitterIndex.value);
   const flexSize =
-      Math.ceil((positionLeft / containerWidth()) * flexColumns) -
-      previousColSizes;
+    Math.ceil((positionLeft / containerWidth()) * flexColumns) -
+    previousColSizes;
 
   const newColumnSizes = restrictNewColumnSizes(flexSize);
 
@@ -303,32 +300,32 @@ function elementDrag(event: MouseEvent) {
 
   const rightColumn = props.model.columns[selectedSplitterIndex.value + 1];
 
-  editor?.executeAction(new GroupedUndoRedoAction([
-    new UpdateColumnWidth(leftColumn, newColumnSizes.left),
-    new UpdateColumnWidth(rightColumn, newColumnSizes.right),
-  ]));
+  editor?.executeAction(
+    new GroupedUndoRedoAction([
+      new UpdateColumnWidth(leftColumn, newColumnSizes.left),
+      new UpdateColumnWidth(rightColumn, newColumnSizes.right),
+    ]),
+  );
 }
 
 /**
  *
  */
 function closeDragElement() {
-
   document.onmouseup = null;
   document.onmousemove = null;
 
   const previousColSizes =
-      previousColSize(selectedSplitterIndex.value + 1) / flexColumns;
+    previousColSize(selectedSplitterIndex.value + 1) / flexColumns;
 
   selectedSplitter.value!.style.left = `${previousColSizes * containerWidth()}px`;
 
   isDraggingColumnSize.value = false;
-
 }
 </script>
 
 <style lang="scss" scoped>
-@use 'vuetify/settings';
+@use "vuetify/settings";
 
 $primary-color: rgb(var(--v-theme-primary));
 
@@ -405,15 +402,15 @@ $splitter-width: 1px;
   transform: translateX(-50%);
   height: 100%;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     position: absolute;
-    content: ' ';
+    content: " ";
     display: block;
 
     height: 100%;
     margin-left: calc($splitter-handle-width / 2 - $splitter-width / 2);
   }
-
 
   &::before {
     width: 8px;
@@ -433,5 +430,4 @@ $splitter-width: 1px;
 .fill-height {
   position: relative;
 }
-
 </style>

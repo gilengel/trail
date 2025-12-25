@@ -4,5 +4,5 @@
  * @returns True if 0 <= x <= 12, false otherwise.
  */
 export function columnValueValidator(x: number) {
-    return x >= 0 && x <= 12;
+  return x >= 0 && x <= 12;
 }

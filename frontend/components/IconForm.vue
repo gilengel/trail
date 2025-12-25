@@ -8,10 +8,7 @@
     <div class="v-input__control">
       <div class="v-field v-field--variant-outlined">
         <div class="v-field__overlay" />
-        <div
-          class="v-field__field"
-          data-no-activator=""
-        >
+        <div class="v-field__field" data-no-activator="">
           <slot />
 
           <!---->
@@ -22,26 +19,20 @@
           <div class="v-field__outline__end" />
         </div>
       </div>
-    </div><!---->
-    <div
-      class="v-input__details"
-      role="alert"
-      aria-live="polite"
-    >
+    </div>
+    <!---->
+    <div class="v-input__details" role="alert" aria-live="polite">
       <div class="v-messages" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 interface Props {
-  icon: string
+  icon: string;
 }
 
 defineProps<Props>();
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

@@ -1,4 +1,4 @@
 export interface CreateTripDto {
-    name: string;
-    layout: object;
+  name: string;
+  layout: object;
 }

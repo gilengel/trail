@@ -5,7 +5,7 @@
  * @returns - The response from the backend.
  */
 export async function useDelete<T>(url: string) {
-    return await $fetch(url, {
-        method: "DELETE",
-    }) as T;
+  return (await $fetch(url, {
+    method: "DELETE",
+  })) as T;
 }

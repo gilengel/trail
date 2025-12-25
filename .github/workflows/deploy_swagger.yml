@@ -3,15 +3,14 @@ name: Deploy Swagger to GitHub Pages
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
+
+env:
+  NODE_VERSION: "24.x"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [ "23.x" ]
 
     steps:
       - name: Checkout Repo
@@ -20,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '23'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies (global)
         run: npm install -- workspaces
@@ -28,10 +27,10 @@ jobs:
       # -----------------------------------------------------------------
       # backend
       # -----------------------------------------------------------------
-      - name: Set up Node.js ${{ matrix.node-version }} (backend)
+      - name: Set up Node.js ${{ env.NODE_VERSION }} (backend)
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Cache npm dependencies (backend)
@@ -46,13 +45,13 @@ jobs:
         uses: ./.github/actions/setup-backend
 
       - name: Generate Swagger JSON
-        run: npm run generate:swagger
+        run: npm run swagger:generate
         working-directory: ./backend
 
       - name: Create Swagger UI
         run: |
           mkdir -p docs
-          cp -r backend/node_modules/swagger-ui-dist/* docs/
+          cp -r node_modules/swagger-ui-dist/* docs/
           cp backend/swagger.json docs/
           # Patch the index.html to point to your swagger.json
           sed -i 's|https://petstore.swagger.io/v2/swagger.json|./swagger.json|' docs/index.html

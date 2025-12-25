@@ -1,0 +1,49 @@
+name: check-backend
+author: gil
+description: check-frontend
+
+inputs:
+  codecov-token:
+    description: 'Codecov token'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run format check (frontend)
+      run: npm run format:check
+      working-directory: ./frontend
+      shell: bash
+
+    - name: Run eslint (frontend)
+      run: npm run code:lint
+      working-directory: ./frontend
+      shell: bash
+
+    - name: Run duplicates check (frontend)
+      run: npm run code:duplicates
+      working-directory: ./frontend
+      shell: bash
+
+    - name: Run knip (frontend)
+      run: npm run code:knip
+      working-directory: ./frontend
+      shell: bash
+
+    - name: Run typecheck (frontend)
+      run: npm run code:typecheck
+      working-directory: ./frontend
+      shell: bash
+
+    - name: Run the unit tests (frontend)
+      run: npm run test:unit:cov
+      working-directory: ./backend
+      shell: bash
+
+    - name: Upload coverage reports to Codecov (frontend)
+      uses: codecov/codecov-action@v4.0.1
+      with:
+        token: ${{ inputs.CODECOV_TOKEN }}
+        slug: gilengel/trail
+        files: ./frontend/coverage/cobertura-coverage.xml
+        flags: frontend,unit

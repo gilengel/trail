@@ -2,27 +2,27 @@
  * @file Dto definitions for images, both api and database (internal).
  */
 export interface DbImageDto {
-    id: string;
+  id: string;
 
-    timestamp: Date;
+  timestamp: Date;
 
-    coordinates: string;
+  coordinates: string;
 
-    mime_type: string;
+  mime_type: string;
 }
 
 export interface ImageDto {
-    id: string;
+  id: string;
 
-    timestamp: Date;
+  timestamp: Date;
 
-    name: string;
+  name: string;
 
-    coordinates: Array<number>;
+  coordinates: Array<number>;
 
-    url: string;
+  url: string;
 }
 
 export interface CountDto {
-    count: string;
+  count: string;
 }

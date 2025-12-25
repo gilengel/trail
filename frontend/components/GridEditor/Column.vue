@@ -1,33 +1,22 @@
 <template>
-  <v-col
-      class="layout-col"
-      :cols="model.width"
-  >
+  <v-col class="layout-col" :cols="model.width">
     <div
-        v-if="props.activeMode === BuilderMode.Create && editable"
-        class="actions rounded-sm border-sm"
+      v-if="props.activeMode === BuilderMode.Create && editable"
+      class="actions rounded-sm border-sm"
     >
-      <v-btn
-          rounded="0"
-          flat
-          icon
-          data-testid="action-menu-btn"
-      >
+      <v-btn rounded="0" flat icon data-testid="action-menu-btn">
         <v-icon>las la-plus</v-icon>
-        <v-menu
-            activator="parent"
-            data-testid="action-menu"
-        >
+        <v-menu activator="parent" data-testid="action-menu">
           <v-list>
             <v-list-item
-                v-for="(definition, index) in editor.definitions.getAll()"
-                :key="definition.id"
-                data-testid="column-element"
-                :value="index"
-                @click="() => createElement(definition, props.model)"
+              v-for="(definition, index) in editor.definitions.getAll()"
+              :key="definition.id"
+              data-testid="column-element"
+              :value="index"
+              @click="() => createElement(definition, props.model)"
             >
               <template #prepend>
-                <v-icon :icon="definition.metadata?.icon"/>
+                <v-icon :icon="definition.metadata?.icon" />
               </template>
 
               <v-list-item-title>{{ definition.name }}</v-list-item-title>
@@ -36,46 +25,52 @@
         </v-menu>
       </v-btn>
       <v-btn
-          :disable="splitDisabled"
-          flat
-          rounded="0"
-          icon="las la-columns"
-          @click="editor.executeAction(new SplitColumn(row, columnIndex, props.grid))"
+        :disable="splitDisabled"
+        flat
+        rounded="0"
+        icon="las la-columns"
+        @click="
+          editor.executeAction(new SplitColumn(row, columnIndex, props.grid))
+        "
       />
       <v-btn
-          flat
-          rounded="0"
-          icon="las la-trash-alt"
-          :readonly="model.width === 12"
-          @click="editor.executeAction(new DeleteColumn(row, columnIndex))"
+        flat
+        rounded="0"
+        icon="las la-trash-alt"
+        :readonly="model.width === 12"
+        @click="editor.executeAction(new DeleteColumn(row, columnIndex))"
       />
     </div>
 
     <div
-        ref="dropContainer"
-        class="element-container"
-        :data-testid="`layout-column-element-container-${columnIndex}-${0}`"
+      ref="dropContainer"
+      class="element-container"
+      :data-testid="`layout-column-element-container-${columnIndex}-${0}`"
     >
       <component
-          :is="selectedComponent"
-          v-bind="selectedComponentProps!"
-          v-if="selectedComponent"
-          @click="() => editor.selectElement(model.element!)"
+        :is="selectedComponent"
+        v-bind="selectedComponentProps!"
+        v-if="selectedComponent"
+        @click="() => editor.selectElement(model.element!)"
       />
     </div>
   </v-col>
 </template>
 
 <script setup lang="ts">
-
-import {computed, inject, type PropType, ref} from 'vue';
-import {columnValueValidator} from "~/composables/useColumValidator";
-import {BuilderMode, EditorInjectionKey} from "@trail/grid-editor/editor";
-import type {EditorElementDefinition} from "@trail/grid-editor/definition/elementDefinition";
-import type {Column, EditorElementProperties, Grid, Row} from "@trail/grid-editor/grid";
-import {SetElement} from "@trail/grid-editor/undoredo/actions/setElement";
-import {DeleteColumn} from "@trail/grid-editor/undoredo/actions/deleteColumn";
-import {SplitColumn} from "@trail/grid-editor/undoredo/actions/splitColumn";
+import { computed, inject, type PropType, ref } from "vue";
+import { columnValueValidator } from "~/composables/useColumValidator";
+import { BuilderMode, EditorInjectionKey } from "@trail/grid-editor/editor";
+import type { EditorElementDefinition } from "@trail/grid-editor/definition/elementDefinition";
+import type {
+  Column,
+  EditorElementProperties,
+  Grid,
+  Row,
+} from "@trail/grid-editor/grid";
+import { SetElement } from "@trail/grid-editor/undoredo/actions/setElement";
+import { DeleteColumn } from "@trail/grid-editor/undoredo/actions/deleteColumn";
+import { SplitColumn } from "@trail/grid-editor/undoredo/actions/splitColumn";
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -130,13 +125,13 @@ const props = defineProps({
   selectedElementId: {
     type: String,
     default: undefined,
-    required: false
+    required: false,
   },
 
   activeMode: {
     type: Number as PropType<BuilderMode>,
     required: true,
-  }
+  },
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -176,7 +171,9 @@ const selectedComponent = computed(() => {
   return editor.definitions.getComponent(props.model.element.elementId);
 });
 
-const selectedComponentProps = computed<EditorElementProperties<any> | undefined>(() => {
+const selectedComponentProps = computed<
+  EditorElementProperties<any> | undefined
+>(() => {
   if (!props.model.element) {
     return undefined;
   }
@@ -187,19 +184,20 @@ const selectedComponentProps = computed<EditorElementProperties<any> | undefined
     definition: editor.definitions.get(props.model.element.elementId),
     selected: props.model.element.instanceId === props.selectedElementId,
 
-    changeable: true
+    changeable: true,
   } as EditorElementProperties<any>;
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 function createElement(definition: EditorElementDefinition, column: Column) {
-  editor!.executeAction<any>(new SetElement(column, editor!.instances.create(definition, {})!));
+  editor!.executeAction<any>(
+    new SetElement(column, editor!.instances.create(definition, {})!),
+  );
 }
 </script>
 
 <style lang="scss" scoped>
-
 $actions-size: 52px;
 
 .layout-col {
@@ -236,5 +234,4 @@ $actions-size: 52px;
   justify-content: center;
   align-items: center;
 }
-
 </style>

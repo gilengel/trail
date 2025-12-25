@@ -1,10 +1,5 @@
 <template>
-  <masonry-wall
-    :items="images"
-    :ssr-columns="1"
-    :column-width="300"
-    :gap="16"
-  >
+  <masonry-wall :items="images" :ssr-columns="1" :column-width="300" :gap="16">
     <template #default="{ item }">
       <div
         class="bg-surface-variant rounded-sm mx-auto"
@@ -22,20 +17,19 @@
 </template>
 
 <script setup lang="ts">
-import {columnValueValidator} from "~/composables/useColumValidator";
-import type {ImageDto} from "~/types/dto";
-
+import { columnValueValidator } from "~/composables/useColumValidator";
+import type { ImageDto } from "~/types/dto";
 
 defineProps({
   images: {
     type: Array<ImageDto>,
-    required: true
+    required: true,
   },
 
   cols: {
     type: Number,
     required: true,
-    validator: columnValueValidator
+    validator: columnValueValidator,
   },
 
   sm: {
@@ -56,24 +50,23 @@ defineProps({
     type: Number,
     required: false,
     default: 0,
-    validator: columnValueValidator
+    validator: columnValueValidator,
   },
 
   xl: {
     type: Number,
     required: false,
     default: 0,
-    validator: columnValueValidator
+    validator: columnValueValidator,
   },
 
   xxl: {
     type: Number,
     required: false,
     default: 0,
-    validator: columnValueValidator
-  }
+    validator: columnValueValidator,
+  },
 });
-
 </script>
 
 <style scoped></style>

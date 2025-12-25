@@ -52,7 +52,6 @@ describe('TripsController (e2e)', () => {
       });
   });
 
-
   it('/trips/ (GET)', () => {
     return request(app.getHttpServer()).get('/trips').expect(200);
   });
@@ -100,7 +99,6 @@ describe('TripsController (e2e)', () => {
         .expect(404);
     });
   });
-
 
   it('/trips/ (DELETE)', async () => {
     const tempTripId = await createTestTripWithoutRoutes(prisma);

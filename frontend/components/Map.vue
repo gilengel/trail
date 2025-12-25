@@ -1,25 +1,26 @@
 <template>
-  <div
-      ref="mapContainer"
-      data-cy="map-container"
-      class="map"
-  />
+  <div ref="mapContainer" data-cy="map-container" class="map" />
 </template>
 
 <script setup lang="ts">
-import type {MapLibreSegment, MapLibreRoute} from "~/types/route";
-import {LngLatBounds, type LngLatLike, Map as MapLibreMap, Marker} from "maplibre-gl";
-import {nearestPointOnLine, point} from "@turf/turf";
-import type {LineStyle} from "~/types/lineStyle";
+import type { MapLibreSegment, MapLibreRoute } from "~/types/route";
+import {
+  LngLatBounds,
+  type LngLatLike,
+  Map as MapLibreMap,
+  Marker,
+} from "maplibre-gl";
+import { nearestPointOnLine, point } from "@turf/turf";
+import type { LineStyle } from "~/types/lineStyle";
 
 interface Props {
-  trip?: MapLibreRoute | null
-  segments?: MapLibreSegment[] | null,
-  lineStyle?: LineStyle,
-  interactive?: boolean,
-  animated?: boolean,
+  trip?: MapLibreRoute | null;
+  segments?: MapLibreSegment[] | null;
+  lineStyle?: LineStyle;
+  interactive?: boolean;
+  animated?: boolean;
 
-  hoverOffset?: number
+  hoverOffset?: number;
 }
 
 const {
@@ -27,7 +28,7 @@ const {
   segments = null,
   lineStyle = {
     width: 4,
-    color: 'rgb(75, 192, 192)',
+    color: "rgb(75, 192, 192)",
     join: "round",
     cap: "round",
   },
@@ -46,11 +47,11 @@ defineExpose({
   fitBounds,
   addMarker,
   getMarker,
-  removeMarker
+  removeMarker,
 });
 
 const emit = defineEmits<{
-  'segment:hoveredOn': [id: string | null, point: LngLatLike]
+  "segment:hoveredOn": [id: string | null, point: LngLatLike];
 }>();
 
 let oldSegments: MapLibreSegment[] = [];
@@ -58,13 +59,12 @@ let oldSegments: MapLibreSegment[] = [];
 const markersById = new Map<number, Marker>();
 let linesById: string[] = [];
 
-
 /**
  *
  */
 function onSegmentsChanged() {
-  const removedSegments = oldSegments.filter(x => !segments!.includes(x));
-  const addedSegments = segments!.filter(x => !oldSegments.includes(x));
+  const removedSegments = oldSegments.filter((x) => !segments!.includes(x));
+  const addedSegments = segments!.filter((x) => !oldSegments.includes(x));
 
   for (const segment of removedSegments) {
     removeLine(segment.id);
@@ -78,14 +78,12 @@ function onSegmentsChanged() {
     bounds.extend(segment.bounds);
   }
 
-
   for (const segment of addedSegments) {
     addLine(
-        segment.id,
-        segment.coordinates.map((e) => e.toArray()),
-        lineStyle
+      segment.id,
+      segment.coordinates.map((e) => e.toArray()),
+      lineStyle,
     );
-
 
     bounds.extend(segment.bounds);
   }
@@ -95,29 +93,28 @@ function onSegmentsChanged() {
   oldSegments = segments!;
 }
 
-
 // We use watchers to refresh the map if either trip or segments have changed
 watch(
-    () => segments,
-    async () => {
-      if (!map.value || !map.value.isStyleLoaded()) {
-        await waitForStyleLoad();
-      }
-      onSegmentsChanged();
-    },
-    {deep: true}
+  () => segments,
+  async () => {
+    if (!map.value || !map.value.isStyleLoaded()) {
+      await waitForStyleLoad();
+    }
+    onSegmentsChanged();
+  },
+  { deep: true },
 );
 
 watch(
-    () => lineStyle,
-    () => {
-      for (let id of linesById) {
-        map.value!.setPaintProperty(id, "line-color", lineStyle.color)
-        map.value!.setPaintProperty(id, "line-width", lineStyle.width)
-      }
-    },
-    {deep: true}
-)
+  () => lineStyle,
+  () => {
+    for (const id of linesById) {
+      map.value!.setPaintProperty(id, "line-color", lineStyle.color);
+      map.value!.setPaintProperty(id, "line-width", lineStyle.width);
+    }
+  },
+  { deep: true },
+);
 
 function waitForStyleLoad(): Promise<void> {
   return new Promise((resolve) => {
@@ -136,10 +133,10 @@ function waitForStyleLoad(): Promise<void> {
 onMounted(() => {
   map.value = new MapLibreMap({
     container: mapContainer.value!,
-    style: new URL('@/assets/map_styles/terrain.json', import.meta.url).href,
+    style: new URL("@/assets/map_styles/terrain.json", import.meta.url).href,
     zoom: 16,
     attributionControl: false,
-    interactive
+    interactive,
   });
 
   map.value!.on("style.load", () => {
@@ -147,9 +144,9 @@ onMounted(() => {
       oldSegments = segments;
       for (const segment of segments) {
         addLine(
-            segment.id,
-            segment.coordinates.map((e) => e.toArray()),
-            lineStyle
+          segment.id,
+          segment.coordinates.map((e) => e.toArray()),
+          lineStyle,
         );
       }
 
@@ -160,9 +157,9 @@ onMounted(() => {
     if (trip) {
       for (const segment of trip.segments) {
         addLine(
-            segment.id,
-            segment.coordinates.map((e) => e.toArray()),
-            lineStyle
+          segment.id,
+          segment.coordinates.map((e) => e.toArray()),
+          lineStyle,
         );
       }
       zoomToTrip(trip, false);
@@ -183,7 +180,7 @@ function routeId(id: number) {
 function removeLine(id: number) {
   const _id = routeId(id);
 
-  linesById = linesById.filter(item => item !== _id)
+  linesById = linesById.filter((item) => item !== _id);
 
   map.value!.removeLayer(_id);
   map.value!.removeSource(_id);
@@ -228,14 +225,13 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
     },
   });
 
-
   map.value!.on("mousemove", (e) => {
     const features = map.value!.queryRenderedFeatures(
-        [
-          [e.point.x - hoverOffset, e.point.y - hoverOffset],
-          [e.point.x + hoverOffset, e.point.y + hoverOffset],
-        ],
-        {layers: [_id]}
+      [
+        [e.point.x - hoverOffset, e.point.y - hoverOffset],
+        [e.point.x + hoverOffset, e.point.y + hoverOffset],
+      ],
+      { layers: [_id] },
     );
 
     if (!features.length) return;
@@ -245,24 +241,20 @@ function addLine(id: number, coordinates: number[][], style: LineStyle) {
 
     const snapped = nearestPointOnLine(lineFeature as any, mousePoint);
 
-    emit(
-        "segment:hoveredOn",
-        _id,
-        {
-          lng: snapped.geometry.coordinates[0],
-          lat: snapped.geometry.coordinates[1],
-        }
-    );
+    emit("segment:hoveredOn", _id, {
+      lng: snapped.geometry.coordinates[0],
+      lat: snapped.geometry.coordinates[1],
+    });
   });
-
 }
 
 function addMarker(id: number) {
   const marker = new Marker({
     color: "#FFFFFF",
-    draggable: true
-  }).setLngLat([30.5, 50.5])
-      .addTo(map.value!);
+    draggable: true,
+  })
+    .setLngLat([30.5, 50.5])
+    .addTo(map.value!);
 
   markersById.set(id, marker);
   return marker;
@@ -279,7 +271,7 @@ function removeMarker(id: number) {
 }
 
 function getMarker(id: number) {
-  return markersById.get(id)
+  return markersById.get(id);
 }
 
 /**
@@ -330,7 +322,7 @@ function fitBounds(bounds: LngLatBounds, animate: boolean) {
   }
 
   map.value!.fitBounds(bounds, {
-    padding: {top: 10, bottom: 25, left: 15, right: 5},
+    padding: { top: 10, bottom: 25, left: 15, right: 5 },
     animate,
   });
 

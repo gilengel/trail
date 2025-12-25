@@ -2,39 +2,37 @@ name: Code Quality
 
 on: [ push, pull_request ]
 
+env:
+  NODE_VERSION: "24.x"
+
+  DB_NAME: "e2e-testing-db"
+  DB_USER: "user"
+  DB_PW: "password"
+  DB_HOST: "localhost"
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [ "24.x" ]
-        db-name: [ e2e-testing-db ]
-        db-user: [ user ]
-        db-password: [ password ]
-        db-host: [ localhost ]
-        db-port: [ 5432 ]
-        broken-db-port: [ 5433 ]
 
     services:
       postgis:
         image: postgis/postgis:18-3.6-alpine
         env:
-          POSTGRES_DB: ${{ matrix.db-name }}
-          POSTGRES_USER: ${{ matrix.db-user }}
-          POSTGRES_PASSWORD: ${{ matrix.db-password }}
+          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PW }}
         ports:
-          - ${{ matrix.db-port }}:${{ matrix.db-port }}
+          - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
       broken-postgis:
         image: postgis/postgis:18-3.6-alpine
         env:
-          POSTGRES_DB: ${{ matrix.db-name }}
-          POSTGRES_USER: ${{ matrix.db-user }}
-          POSTGRES_PASSWORD: ${{ matrix.db-password }}
+          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PW}}
         ports:
-          - ${{ matrix.broken-db-port }}:${{ matrix.db-port }}
+          - 5433:5433
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -44,10 +42,10 @@ jobs:
       # -----------------------------------------------------------------
       # global
       # -----------------------------------------------------------------
-      - name: Set up Node.js ${{ matrix.node-version }} (global)
+      - name: Set up Node.js ${{ env.NODE_VERSION }} (global)
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Cache npm dependencies (global)
@@ -88,7 +86,14 @@ jobs:
 
       - name: Check (backend)
         uses: ./.github/actions/check-backend
-
+        with:
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          db-user: ${{ env.DB_USER }}
+          db-password: ${{ env.DB_PW }}
+          db-host: ${{ env.DB_HOST }}
+          db-port: 5432
+          db-name: ${{ env.DB_NAME }}
+          broken-db-port: 5433
 
       # -----------------------------------------------------------------
       # editor
@@ -126,21 +131,10 @@ jobs:
       - name: Build (frontend)
         run: npm run build:frontend
 
-      - name: Run eslint (frontend)
-        run: npm run lint
-        working-directory: ./frontend
-
-      - name: Run the unit tests (frontend)
-        run: npm run test:unit:cov
-        working-directory: ./frontend
-
-      - name: Upload coverage reports to Codecov (frontend)
-        uses: codecov/codecov-action@v4.0.1
+      - name: Check (frontend)
+        uses: ./.github/actions/check-frontend
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: gilengel/trail
-          files: ./frontend/coverage/cobertura-coverage.xml
-          flags: frontend,unit
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
 
       # -----------------------------------------------------------------
       # release & changelog

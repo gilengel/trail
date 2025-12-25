@@ -26,8 +26,12 @@ import { IMAGES_URI, ImagesController } from './images.controller';
  * @param maxNumberOfImages - Optionally limiting the number of retrieved images.
  * @returns The correct URI pointing to the api endpoint to retrieve the images.
  */
-function getRouteSegmentUri(id: number, offset: number, maxNumberOfImages?: number) {
-  const url = `/${IMAGES_URI}/${ImagesController.ROUTE_SEGMENT_URI}/?${ImagesController.QUERY.ROUTE_SEGMENT_ID}=${id}&${ImagesController.QUERY.MAX_OFFSET}=${offset}`
+function getRouteSegmentUri(
+  id: number,
+  offset: number,
+  maxNumberOfImages?: number,
+) {
+  const url = `/${IMAGES_URI}/${ImagesController.ROUTE_SEGMENT_URI}/?${ImagesController.QUERY.ROUTE_SEGMENT_ID}=${id}&${ImagesController.QUERY.MAX_OFFSET}=${offset}`;
   if (maxNumberOfImages) {
     return `${url}&${ImagesController.QUERY.MAX_NUMBER_OF_IMAGES}=${maxNumberOfImages}`;
   }
@@ -42,7 +46,7 @@ function getRouteSegmentUri(id: number, offset: number, maxNumberOfImages?: numb
  * @returns The correct URI pointing to the api endpoint to retrieve the number of images.
  */
 function getRouteSegmentNumberUri(id: number, offset: number) {
-  return `/${IMAGES_URI}/${ImagesController.ROUTE_SEGMENT_NUMBER_URI}/?${ImagesController.QUERY.ROUTE_SEGMENT_ID}=${id}&${ImagesController.QUERY.MAX_OFFSET}=${offset}`
+  return `/${IMAGES_URI}/${ImagesController.ROUTE_SEGMENT_NUMBER_URI}/?${ImagesController.QUERY.ROUTE_SEGMENT_ID}=${id}&${ImagesController.QUERY.MAX_OFFSET}=${offset}`;
 }
 
 describe('ImagesController (e2e)', () => {
@@ -80,7 +84,6 @@ describe('ImagesController (e2e)', () => {
     await prisma.$queryRaw`TRUNCATE "Image"`;
   });
 
-
   const IMAGE_POINT_POST = `/${IMAGES_URI} (POST)`;
   describe(IMAGE_POINT_POST, () => {
     it.each([
@@ -99,7 +102,10 @@ describe('ImagesController (e2e)', () => {
       return request(app.getHttpServer())
         .post(`/images`)
         .set('Content-Type', 'multipart/form-data')
-        .attach('files', 'src/images/__test_files__/without_geo_information.jpg')
+        .attach(
+          'files',
+          'src/images/__test_files__/without_geo_information.jpg',
+        )
         .expect(400);
     });
 
@@ -140,7 +146,7 @@ describe('ImagesController (e2e)', () => {
         .get(`/images/point?lon=0&maxOffset=1`)
         .expect(400);
     });
-  })
+  });
 
   const IMAGE_ROUTE_SEGMENT_GET = `/${IMAGES_URI}/${ImagesController.ROUTE_SEGMENT_URI} (GET)`;
   describe(`${IMAGE_ROUTE_SEGMENT_GET}`, () => {
@@ -167,44 +173,24 @@ describe('ImagesController (e2e)', () => {
     });
 
     afterEach(async () => {
-      await prisma.routeSegment.deleteMany();
-      await prisma.route.deleteMany();
-      await prisma.trip.delete({
-        where: { id: tripId },
-      });
-    })
+      await prisma.routeSegment.delete({ where: { id: route.segments[0].id } });
+      await prisma.route.delete({ where: { id: route.id } });
+      await prisma.trip.delete({ where: { id: tripId } });
+    });
 
     describe('multiple images', () => {
       beforeEach(async () => {
         return request(app.getHttpServer())
           .post(`/images`)
           .set('Content-Type', 'multipart/form-data')
-          .attach(
-            'files',
-            `${__dirname}/__test_files__/20230909_102937.jpg`,
-          )
-          .attach(
-            'files',
-            `${__dirname}/__test_files__/20230909_102954.jpg`,
-          )
-          .attach(
-            'files',
-            `${__dirname}/__test_files__/20230909_105445.jpg`,
-          )
-          .attach(
-            'files',
-            `${__dirname}/__test_files__/20230909_105508.jpg`,
-          )
-          .attach(
-            'files',
-            `${__dirname}/__test_files__/20230909_105615.jpg`,
-          )
-          .attach(
-            'files',
-            `${__dirname}/__test_files__/20230909_110041.jpg`,
-          )
+          .attach('files', `${__dirname}/__test_files__/20230909_102937.jpg`)
+          .attach('files', `${__dirname}/__test_files__/20230909_102954.jpg`)
+          .attach('files', `${__dirname}/__test_files__/20230909_105445.jpg`)
+          .attach('files', `${__dirname}/__test_files__/20230909_105508.jpg`)
+          .attach('files', `${__dirname}/__test_files__/20230909_105615.jpg`)
+          .attach('files', `${__dirname}/__test_files__/20230909_110041.jpg`)
           .expect(201);
-      })
+      });
 
       it(`${IMAGE_ROUTE_SEGMENT_GET} returns list of images near a route segment`, () => {
         return request(app.getHttpServer())
@@ -213,7 +199,6 @@ describe('ImagesController (e2e)', () => {
           .expect((result) => {
             expect(result.body).toStrictEqual({ count: 6 });
           });
-
       });
 
       it(`${IMAGE_ROUTE_SEGMENT_GET} returns the number of images near a route segment`, () => {
@@ -241,14 +226,13 @@ describe('ImagesController (e2e)', () => {
           .get(getRouteSegmentUri(id, 500))
           .expect(400);
       });
-    })
+    });
 
     it(`${IMAGE_ROUTE_SEGMENT_GET} returns "400" for calling with an invalid (negative) offset`, () => {
       return request(app.getHttpServer())
         .get(getRouteSegmentUri(route.segments[0].id, -1))
         .expect(400);
     });
-
 
     it(`${IMAGE_ROUTE_SEGMENT_GET} returns "200" with an empty array if no images are saved for the route segment`, () => {
       return request(app.getHttpServer())
@@ -273,8 +257,7 @@ describe('ImagesController (e2e)', () => {
 
     it(`/number returns "200" and {count: 0} if no images are near a route segment`, () => {
       return request(app.getHttpServer())
-        .get(getRouteSegmentNumberUri(route.segments[0].id, 0)
-        )
+        .get(getRouteSegmentNumberUri(route.segments[0].id, 0))
         .expect(200)
         .expect((result) => {
           expect(result.body).toStrictEqual({ count: 0 });

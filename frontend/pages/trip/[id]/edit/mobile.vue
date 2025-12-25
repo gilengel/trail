@@ -1,11 +1,5 @@
-<template>
-  Mobile
-</template>
+<template>Mobile</template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

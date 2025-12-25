@@ -1,16 +1,15 @@
 /**
  * @file DTO specification for a trip.
  */
-import type {RouteDto} from "~/types/dto/route.dto";
-import {type Grid} from "@trail/grid-editor/grid";
+import type { RouteDto } from "~/types/dto/route.dto";
+import { type Grid } from "@trail/grid-editor/grid";
 
 export interface TripDto {
-    id: number;
+  id: number;
 
-    name: string;
+  name: string;
 
-    layout: Grid;
+  layout: Grid;
 
-    routes?: RouteDto[];
+  routes?: RouteDto[];
 }
-

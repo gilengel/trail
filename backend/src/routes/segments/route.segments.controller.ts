@@ -15,9 +15,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import {
-  RouteSegmentsService,
-} from './route.segments.service';
+import { RouteSegmentsService } from './route.segments.service';
 import { NoAttributesProvidedError } from '../routes/routes.database';
 import * as DTO from '../../dto';
 import { RoutesService } from '../routes/routes.service';

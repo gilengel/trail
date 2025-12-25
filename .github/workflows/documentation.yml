@@ -20,25 +20,24 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  NODE_VERSION: "24.x"
+  
 jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: ["20.x"]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         # v3 does not work with act, don't know why...
         uses: actions/setup-node@v4
 
         with:
           cache-dependency-path: "./backend/package-lock.json"
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
       - name: Setup Pages
         uses: actions/configure-pages@v4

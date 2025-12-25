@@ -2,9 +2,7 @@
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "types": [
-      "vuetify-nuxt-module",
-      "nuxt"
-    ]
-  }
+    "types": ["vuetify-nuxt-module", "nuxt"]
+  },
+  "exclude": ["**/*test.ts"]
 }

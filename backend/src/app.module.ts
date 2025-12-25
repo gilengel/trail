@@ -20,6 +20,7 @@ import { TripsModule } from './trips/trips.module';
     TripsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'images'),
+      serveRoot: '/images',
     }),
   ],
   controllers: [AppController],

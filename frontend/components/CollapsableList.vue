@@ -25,12 +25,12 @@
 
 <script setup lang="ts" generic="ItemType">
 interface Props {
-  items: ItemType[],
-  text: (item: ItemType) => string,
-  collapseNumber?: number
+  items: ItemType[];
+  text: (item: ItemType) => string;
+  collapseNumber?: number;
 }
 
-const {collapseNumber = 5} = defineProps<Props>();
+const { collapseNumber = 5 } = defineProps<Props>();
 
 const emit = defineEmits<(e: "onSelectionChanged", item: ItemType) => void>();
 
@@ -46,6 +46,4 @@ watch(selectedItem, (newItem) => {
 });
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

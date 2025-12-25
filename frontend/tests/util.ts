@@ -5,15 +5,17 @@
  * @returns - A mock File object.
  */
 export function mockFile(extension: string, size: number) {
-    // Generate a file name with the given extension
-    const fileName = `mock-file.${extension}`;
+  // Generate a file name with the given extension
+  const fileName = `mock-file.${extension}`;
 
-    // Create a blob with the specified size
-    const blob = new Blob([new ArrayBuffer(size)], {type: `application/${extension}`});
+  // Create a blob with the specified size
+  const blob = new Blob([new ArrayBuffer(size)], {
+    type: `application/${extension}`,
+  });
 
-    // Convert the blob to a File object
-    return new File([blob], fileName, {
-        type: blob.type,
-        lastModified: Date.now(),
-    });
+  // Convert the blob to a File object
+  return new File([blob], fileName, {
+    type: blob.type,
+    lastModified: Date.now(),
+  });
 }

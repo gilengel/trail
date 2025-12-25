@@ -1,11 +1,11 @@
-import {type Ref, onMounted, onUnmounted} from 'vue';
+import { type Ref, onMounted, onUnmounted } from "vue";
 
 /**
  * Simply prevents the browsers default handling of an event.
  * @param event - The drag event you want to manually handle and stop the browsers default behaviour.
  */
 function preventDefault(event: DragEvent) {
-    event.preventDefault();
+  event.preventDefault();
 }
 
 /**
@@ -18,9 +18,9 @@ function preventDefault(event: DragEvent) {
  * @returns The constructed object.
  */
 function recreateData(event: DragEvent) {
-    const data = event.dataTransfer?.getData('payload');
+  const data = event.dataTransfer?.getData("payload");
 
-    return JSON.parse(data!);
+  return JSON.parse(data!);
 }
 
 /**
@@ -31,18 +31,18 @@ function recreateData(event: DragEvent) {
  * @param callback - The callback that is called once a drop event occurred.
  */
 export function useDrop(element: Ref, callback: (data: object) => void) {
-    const dropCallback = (event: DragEvent) => callback(recreateData(event));
-    onMounted(() => {
-        element.value.addEventListener('dragover', preventDefault);
-        element.value.addEventListener('drop', dropCallback);
-    });
+  const dropCallback = (event: DragEvent) => callback(recreateData(event));
+  onMounted(() => {
+    element.value.addEventListener("dragover", preventDefault);
+    element.value.addEventListener("drop", dropCallback);
+  });
 
-    onUnmounted(() => {
-        if (element.value === null || element.value === undefined) {
-            return;
-        }
+  onUnmounted(() => {
+    if (element.value === null || element.value === undefined) {
+      return;
+    }
 
-        element.value.removeEventListener('dragover', preventDefault);
-        element.value.removeEventListener('drop', dropCallback);
-    });
+    element.value.removeEventListener("dragover", preventDefault);
+    element.value.removeEventListener("drop", dropCallback);
+  });
 }

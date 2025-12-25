@@ -11,20 +11,19 @@ export const updatedRouteDescription = 'updated_test_route_description';
 export const updatedRouteName = 'updated_test_route';
 
 import { Route as PrismaRoute } from '@prisma/client';
- 
 
 const TestRoute = {
-    id: 0,
-    tripId: 0,
-    name: routeName,
-    description: routeDescription
-  };
+  id: 0,
+  tripId: 0,
+  name: routeName,
+  description: routeDescription,
+};
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DB {
   export const Route = {
     segments: [Data.DB.RouteSegmentWithUpdatedCoordinates],
-    ...TestRoute
+    ...TestRoute,
   };
 
   export const RouteWithUpdatedName: PrismaRoute = {
@@ -71,33 +70,33 @@ export namespace DB {
 export namespace Entities {
   export const Route = {
     segments: [Data.Entities.RouteSegmentWithUpdatedCoordinates],
-    ...TestRoute
+    ...TestRoute,
   };
 
   export const RouteWithUpdatedName: PrismaRoute = {
     name: updatedRouteName,
     description: routeDescription,
-    ...TestRoute
+    ...TestRoute,
   };
 
   export const RouteWithUpdatedDescription: PrismaRoute = {
     description: updatedRouteDescription,
-    ...TestRoute
+    ...TestRoute,
   };
 
   export const RouteWithUpdatedNameAndDescription: PrismaRoute = {
     description: updatedRouteDescription,
-    ...RouteWithUpdatedDescription
+    ...RouteWithUpdatedDescription,
   };
 
   export const RouteWithUpdatedCoordinates = {
     segments: [Data.DB.RouteSegmentWithUpdatedCoordinates],
-    ...TestRoute
+    ...TestRoute,
   };
 
   export const RouteWithUpdatedNameAndCoordinates = {
     segments: [Data.DB.RouteSegmentWithUpdatedCoordinates],
-    ...RouteWithUpdatedDescription
+    ...RouteWithUpdatedDescription,
   };
 
   export const Routes: PrismaRoute[] = [DB.Route];

@@ -5,8 +5,6 @@ import {
   BadRequestException,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Logger,
   Post,
   Query,
@@ -26,17 +24,17 @@ export class NoOrWrongGeoInformationError extends Error {
   }
 }
 
-export const IMAGES_URI = "images";
+export const IMAGES_URI = 'images';
 
 @Controller(IMAGES_URI)
 export class ImagesController {
   public static QUERY = {
-    LONGITUDE: "lon",
-    LATITUDE: "lat",
-    MAX_OFFSET: "maxOffset",
-    MAX_NUMBER_OF_IMAGES: "maxNumberOfImages",
-    ROUTE_SEGMENT_ID: "routeSegmentId"
-  }
+    LONGITUDE: 'lon',
+    LATITUDE: 'lat',
+    MAX_OFFSET: 'maxOffset',
+    MAX_NUMBER_OF_IMAGES: 'maxNumberOfImages',
+    ROUTE_SEGMENT_ID: 'routeSegmentId',
+  };
 
   private readonly logger = new Logger(ImagesService.name);
 
@@ -55,11 +53,11 @@ export class ImagesController {
       const images = await this.imagesService.saveImages(createImageDtos);
       return Promise.resolve(images);
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(e.message);
     }
   }
 
-  public static POINT_URI = "point";
+  public static POINT_URI = 'point';
   @Get(ImagesController.POINT_URI)
   async getImagesNearPoint(
     @Query(ImagesController.QUERY.LONGITUDE) longitude: number,
@@ -82,12 +80,13 @@ export class ImagesController {
     return Promise.resolve(images);
   }
 
-  public static ROUTE_SEGMENT_URI = "route_segment";
+  public static ROUTE_SEGMENT_URI = 'route_segment';
   @Get(ImagesController.ROUTE_SEGMENT_URI)
   async getImagesNearRouteSegment(
     @Query(ImagesController.QUERY.ROUTE_SEGMENT_ID) routeSegmentId: number,
     @Query(ImagesController.QUERY.MAX_OFFSET) offset: number,
-    @Query(ImagesController.QUERY.MAX_NUMBER_OF_IMAGES) maxNumberOfImages?: number,
+    @Query(ImagesController.QUERY.MAX_NUMBER_OF_IMAGES)
+    maxNumberOfImages?: number,
   ): Promise<DTO.Image[]> {
     this.validateImageParameters(offset, routeSegmentId);
 
@@ -106,7 +105,7 @@ export class ImagesController {
     return Promise.resolve(images);
   }
 
-  public static ROUTE_SEGMENT_NUMBER_URI = `${ImagesController.ROUTE_SEGMENT_URI}/number`
+  public static ROUTE_SEGMENT_NUMBER_URI = `${ImagesController.ROUTE_SEGMENT_URI}/number`;
   @Get(ImagesController.ROUTE_SEGMENT_NUMBER_URI)
   async getNumberOfImagesNearRouteSegment(
     @Query(ImagesController.QUERY.ROUTE_SEGMENT_ID) routeSegmentId: number,

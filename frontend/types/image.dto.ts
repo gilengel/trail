@@ -1,11 +1,11 @@
 export type ImageDto = {
-    id: string
+  id: string;
 
-    timestamp: Date
+  timestamp: Date;
 
-    name: string
+  name: string;
 
-    coordinates: Array<number>
+  coordinates: Array<number>;
 
-    url: string
-}
+  url: string;
+};

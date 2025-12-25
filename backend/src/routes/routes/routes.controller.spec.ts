@@ -8,6 +8,7 @@ import { RoutesController } from './routes.controller';
 import { RoutesService } from './routes.service';
 import {
   BadRequestException,
+  InternalServerErrorException,
   UnprocessableEntityException,
   Logger,
   NotFoundException,
@@ -255,6 +256,33 @@ describe('RoutesController', () => {
     );
   });
 
+  it('should throw "500" if the backend produces an internal error', async () => {
+    jest
+      .spyOn(tripService, 'trip')
+      .mockReturnValue(Promise.resolve(tripTestData.trip));
+
+    jest.spyOn(service, 'createRoute').mockImplementation(() => {
+      throw new Error('Something internally got wrong :(');
+    });
+
+    const result = controller.create({
+      name: 'invalid_route',
+      tripId: 0,
+      description: '',
+      segments: [
+        {
+          name: 'invalid_segment',
+          coordinates: [],
+        },
+      ],
+    });
+    await expect(result).rejects.toThrow(
+      new InternalServerErrorException(
+        new Error('Something internally got wrong :('),
+      ),
+    );
+  });
+
   it('should update a route and return its dto', async () => {
     const result: Route = {
       id: 0,
@@ -270,7 +298,7 @@ describe('RoutesController', () => {
     ).toStrictEqual(result);
   });
 
-  it('should throw "BadRequest" if no attributes to be changed are provided', async () => {
+  it('should throw "400" if no attributes to be changed are provided', async () => {
     jest.spyOn(service, 'updateRoute').mockImplementation(() => {
       throw new NoAttributesProvidedError();
     });

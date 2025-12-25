@@ -1,11 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card
-        title="Add Route"
-        class="rounded-sm"
-        variant="flat"
-      >
+      <v-card title="Add Route" class="rounded-sm" variant="flat">
         <v-card-text>
           <v-text-field
             v-model="routeName"
@@ -21,10 +17,7 @@
             @on-segment-name-changed="onNameChanged"
             @on-segment-description-changed="onDescriptionChanged"
           />
-          <span
-            v-if="status"
-            data-cy="status-msg"
-          >{{ status }}</span>
+          <span v-if="status" data-cy="status-msg">{{ status }}</span>
         </v-card-text>
       </v-card>
     </v-col>
@@ -32,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import {useUpload} from "~/composables/useUpload";
-import {usePatch} from "~/composables/usePatch";
-import type {GPXFile} from "~/types/gpx";
-import type {RouteDto, RouteSegmentDto} from "~/types/dto";
+import { useUpload } from "~/composables/useUpload";
+import { usePatch } from "~/composables/usePatch";
+import type { GPXFile } from "~/types/gpx";
+import type { RouteDto, RouteSegmentDto } from "~/types/dto";
 
 const status: Ref<string> = ref("");
 
@@ -54,8 +47,8 @@ const emptyRoute: Ref<RouteDto | null> = ref(null);
 const addedSegments: Ref<RouteSegmentDto[]> = ref([]);
 
 async function createEmptyRoute(): Promise<RouteDto> {
-  return await useUpload<RouteDto>('/api/routes', {
-    tripId: props.tripId
+  return await useUpload<RouteDto>("/api/routes", {
+    tripId: props.tripId,
   });
 }
 
@@ -70,11 +63,14 @@ async function onFilesChanged(trips: GPXFile[]): Promise<void> {
   for (const trip of trips) {
     const route = trip.routeDto;
     for (const segment of route!.segments) {
-      const newRouteSegment = await useUpload<RouteSegmentDto>('/api/routes/segment', {
-        name: segment.name,
-        coordinates: segment.coordinates,
-        routeId: emptyRoute.value.id
-      });
+      const newRouteSegment = await useUpload<RouteSegmentDto>(
+        "/api/routes/segment",
+        {
+          name: segment.name,
+          coordinates: segment.coordinates,
+          routeId: emptyRoute.value.id,
+        },
+      );
 
       addedSegments.value.push(newRouteSegment);
     }
@@ -85,13 +81,16 @@ async function onFilesChanged(trips: GPXFile[]): Promise<void> {
 
 async function onNameChanged(index: number, name: string): Promise<void> {
   await usePatch(`/api/routes/segment/${addedSegments.value[index].id}`, {
-    name
+    name,
   });
 }
 
-async function onDescriptionChanged(index: number, description: string): Promise<void> {
+async function onDescriptionChanged(
+  index: number,
+  description: string,
+): Promise<void> {
   await usePatch(`/api/routes/segment/${addedSegments.value[index].id}`, {
-    description
+    description,
   });
 }
 
@@ -101,6 +100,8 @@ async function routeNameChanged() {
   }
 
   emptyRoute.value.name = routeName.value;
-  await usePatch(`/api/routes/${emptyRoute.value.id}`, {name: routeName.value});
+  await usePatch(`/api/routes/${emptyRoute.value.id}`, {
+    name: routeName.value,
+  });
 }
 </script>

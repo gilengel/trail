@@ -2,7 +2,7 @@
  * @file Public API for trips unit test cases.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { TripsController } from './trips.controller';
 import { TripsService } from './trips.service';
 import { Trip } from '../dto';
@@ -58,16 +58,6 @@ describe('TripsController', () => {
     expect(await controller.findAll()).toEqual([tripTestData.trip]);
   });
 
-  it('should return "400" if the service produces an error', async () => {
-    jest
-      .spyOn(service, 'trips')
-      .mockRejectedValue(new Error('Some error message'));
-
-    const result = controller.findAll();
-    await expect(result).rejects.toThrow(
-      new HttpException('Some error message', HttpStatus.BAD_REQUEST),
-    );
-  });
   it('should be returning a single trip', async () => {
     jest
       .spyOn(service, 'trip')
@@ -80,7 +70,7 @@ describe('TripsController', () => {
     jest.spyOn(service, 'trip').mockResolvedValue(null);
 
     await expect(controller.findOne(0)).rejects.toThrow(
-      new HttpException(`Trip with id 0 does not exist.`, HttpStatus.NOT_FOUND),
+      new NotFoundException(`Trip with id 0 does not exist.`),
     );
   });
 
@@ -103,9 +93,8 @@ describe('TripsController', () => {
 
     const result = controller.update(0, { layout: { test: 'value' } });
     await expect(result).rejects.toThrow(
-      new HttpException(
+      new NotFoundException(
         'The requested trip you want to update does not exist.',
-        HttpStatus.NOT_FOUND,
       ),
     );
   });

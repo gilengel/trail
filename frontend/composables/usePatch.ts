@@ -5,9 +5,8 @@
  * @returns - The response from the backend, which is the changed element.
  */
 export async function usePatch(url: string, body: Record<string, unknown>) {
-    return await $fetch(url, {
-        method: "PATCH",
-        body,
-    });
+  return await $fetch(url, {
+    method: "PATCH",
+    body,
+  });
 }
-

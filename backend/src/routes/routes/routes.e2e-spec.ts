@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { RoutesModule } from '../routes.module';
+import { RoutesService } from './routes.service';
 import { PrismaService } from '../../prisma.service';
 import { json } from 'express';
 import { env } from 'node:process';
@@ -99,11 +100,53 @@ describe('RoutesController (e2e)', () => {
     });
   });
 
+  describe('with working database, with mocks to simulate internal errors', () => {
+    beforeAll(async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        imports: [RoutesModule],
+      })
+        .overrideProvider(RoutesService)
+        .useValue({
+          createRoute: jest.fn().mockImplementation(() => {
+            throw new Error('unknown error');
+          }),
+        })
+        .compile();
+      app = module.createNestApplication();
+      app.use(json({ limit: '50mb' }));
+      await app.init();
+
+      prisma = module.get<PrismaService>(PrismaService);
+    });
+
+    beforeEach(async () => {
+      const data = await createTestTripWithSingleRoute(prisma);
+      tripId = data.tripId;
+      routeId = data.routeId;
+    });
+
+    it('/routes/ (POST) returns a "500" if an internal error occured', () => {
+      return request(app.getHttpServer())
+        .post(`/routes`)
+        .send({
+          tripId,
+          name: 'test',
+        })
+        .expect(500);
+    });
+
+    afterEach(async () => {
+      await prisma.trip.delete({
+        where: { id: tripId },
+      });
+    });
+  });
+
   describe('with working database', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
-    imports: [RoutesModule],
-  }).compile();
+        imports: [RoutesModule],
+      }).compile();
       app = module.createNestApplication();
       app.use(json({ limit: '50mb' }));
       await app.init();
@@ -121,8 +164,6 @@ describe('RoutesController (e2e)', () => {
       await prisma.trip.delete({
         where: { id: tripId },
       });
-
-      await prisma.routeSegment.deleteMany();
     });
 
     it('/routes/ (GET)', () => {
@@ -245,16 +286,18 @@ describe('RoutesController (e2e)', () => {
         .expect(422);
     });
 
-    const ROUTES_GPX_POST = '/routes/gpx (POST)'
+    const ROUTES_GPX_POST = '/routes/gpx (POST)';
     describe(ROUTES_GPX_POST, () => {
-
       it(`${ROUTES_GPX_POST}  succeeds with a single segment track without elevation`, () => {
         return request(app.getHttpServer())
           .post(`/routes/gpx`)
           .set('Content-Type', 'multipart/form-data')
           .field('name', 'Ehrwald Hiking')
           .field('tripId', tripId)
-          .attach('files', join(__dirname, '__test_files__', 'no_elevation.gpx'))
+          .attach(
+            'files',
+            join(__dirname, '__test_files__', 'no_elevation.gpx'),
+          )
           .expect(201)
           .expect(async (res) => {
             expect(res.body).toHaveProperty('name', 'Ehrwald Hiking');
@@ -267,7 +310,10 @@ describe('RoutesController (e2e)', () => {
         return request(app.getHttpServer())
           .post(`/routes/gpx`)
           .set('Content-Type', 'multipart/form-data')
-          .field('name', 'Stage 1: Arctic Ocean to Väylä — European Divide Trail')
+          .field(
+            'name',
+            'Stage 1: Arctic Ocean to Väylä — European Divide Trail',
+          )
           .field('tripId', tripId)
           .attach('files', join(__dirname, '__test_files__', 'long.gpx'))
           .expect(201)
@@ -299,7 +345,7 @@ describe('RoutesController (e2e)', () => {
           .attach('files', join(__dirname, '__test_files__', 'short.gpx'))
           .expect(422);
       });
-    })
+    });
 
     it('/routes (PATCH) succeeds changing only the name', () => {
       return request(app.getHttpServer())

@@ -10,10 +10,10 @@
  * @returns Object of type T.
  */
 export async function useUpload<T>(url: string, body: object): Promise<T> {
-    return await $fetch(url, {
-        method: "POST",
-        body,
-    });
+  return await $fetch(url, {
+    method: "POST",
+    body,
+  });
 }
 
 /**
@@ -22,15 +22,19 @@ export async function useUpload<T>(url: string, body: object): Promise<T> {
  * @param files - The gps files for the route. Mandatory is at least one.
  * @param description - Optional description for the trip.
  */
-export async function useRouteUpload(name: string, files: File[], description?: string) {
-    const formData = useFileFormData(files);
-    formData.append("name", name);
+export async function useRouteUpload(
+  name: string,
+  files: File[],
+  description?: string,
+) {
+  const formData = useFileFormData(files);
+  formData.append("name", name);
 
-    if (description) {
-        formData.append("description", description);
-    }
+  if (description) {
+    formData.append("description", description);
+  }
 
-    await useUpload("api/routes/gpx", formData);
+  await useUpload("api/routes/gpx", formData);
 }
 
 /**
@@ -38,14 +42,12 @@ export async function useRouteUpload(name: string, files: File[], description?: 
  * @param files - The files that are appended to the form data.
  * @returns An object in form of a FormData containing all the files.
  */
-export function useFileFormData(
-    files: File[]
-): FormData {
-    const formData = new FormData();
+export function useFileFormData(files: File[]): FormData {
+  const formData = new FormData();
 
-    for (const file of files) {
-        formData.append("files", file);
-    }
+  for (const file of files) {
+    formData.append("files", file);
+  }
 
-    return formData;
+  return formData;
 }

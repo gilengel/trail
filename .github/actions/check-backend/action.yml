@@ -1,50 +1,82 @@
 name: check-backend
 author: gil
 description: check-backend
+
+inputs:
+  codecov-token:
+    description: 'Codecov token'
+    required: true
+  db-user:
+    description: 'Database user'
+    required: true
+  db-password:
+    description: 'Database password'
+    required: true
+  db-host:
+    description: 'Database host'
+    required: true
+  db-port:
+    description: 'Database port'
+    required: true
+  db-name:
+    description: 'Database name'
+    required: true
+  broken-db-port:
+    description: 'Broken database port for e2e tests'
+    required: true
+
 runs:
   using: "composite"
   steps:
     - name: Run format check (backend)
       run: npm run format:check
       working-directory: ./backend
+      shell: bash
 
     - name: Run eslint (backend)
       run: npm run code:lint
       working-directory: ./backend
+      shell: bash
 
     - name: Run duplicates check (backend)
       run: npm run code:duplicates
       working-directory: ./backend
+      shell: bash
 
     - name: Run knip (backend)
       run: npm run code:knip
       working-directory: ./backend
+      shell: bash
 
     - name: Run typecheck (backend)
       run: npm run code:typecheck
       working-directory: ./backend
+      shell: bash
 
     - name: Run the unit tests (backend)
       run: npm run test:unit:cov
       working-directory: ./backend
+      shell: bash
 
     - name: Prepare database schema for e2e test (backend)
       run: npx prisma migrate deploy
       working-directory: ./backend
       env:
-        DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
+        DATABASE_URL: postgresql://${{ inputs.db-user }}:${{ inputs.db-password }}@${{ inputs.db-host }}:${{ inputs.db-port }}/${{ inputs.db-name }}?schema=public
+      shell: bash
 
     - name: Run the e2e tests (backend)
       run: npm run test:e2e:cov
       working-directory: ./backend
       env:
-        DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.db-port }}/${{ matrix.db-name }}?schema=public
-        BROKEN_DATABASE_URL: postgresql://${{ matrix.db-user }}:${{ matrix.db-password }}@${{ matrix.db-host }}:${{ matrix.broken-db-port }}/${{ matrix.db-name }}?schema=public
+        DATABASE_URL: postgresql://${{ inputs.db-user }}:${{ inputs.db-password }}@${{ inputs.db-host }}:${{ inputs.db-port }}/${{ inputs.db-name }}?schema=public
+        BROKEN_DATABASE_URL: postgresql://${{ inputs.db-user }}:${{ inputs.db-password }}@${{ inputs.db-host }}:${{ inputs.broken-db-port }}/${{ inputs.db-name }}?schema=public
+      shell: bash
 
     - name: Upload coverage reports to Codecov (backend)
       uses: codecov/codecov-action@v4.0.1
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${{ inputs.CODECOV_TOKEN }}
         slug: gilengel/trail
         files: ./backend/coverage-unit/cobertura-coverage.xml
         flags: backend,unit
@@ -52,7 +84,7 @@ runs:
     - name: Upload coverage reports to Codecov (e2e)
       uses: codecov/codecov-action@v4.0.1
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${{ inputs.CODECOV_TOKEN }}
         slug: gilengel/trail
         files: ./backend/coverage-e2e/cobertura-coverage.xml
         flags: backend,e2e

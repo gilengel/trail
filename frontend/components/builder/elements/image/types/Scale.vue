@@ -2,23 +2,20 @@
   <div>
     <v-row>
       <v-col>
-        <v-row
-            no-gutters
-            align="center"
-        >
+        <v-row no-gutters align="center">
           <v-col cols="8">
             <v-slider
-                data-testid="editor-scale-slider"
-                v-model="scaleValue"
-                min="0.125"
-                max="2"
+              data-testid="editor-scale-slider"
+              v-model="scaleValue"
+              min="0.125"
+              max="2"
             />
           </v-col>
           <v-col cols="4">
             <v-number-input
-                control-variant="stacked"
-                v-model="scaleValue"
-                :precision="2"
+              control-variant="stacked"
+              v-model="scaleValue"
+              :precision="2"
             />
           </v-col>
         </v-row>
@@ -28,18 +25,20 @@
 </template>
 
 <script setup lang="ts">
-
-import type {CustomPropertyConfig} from "@trail/grid-editor/properties/elementProperty";
-import {DefaultImageScale, type ImageScaleType} from "~/components/builder/elements/image/Properties";
+import type { CustomPropertyConfig } from "@trail/grid-editor/properties/elementProperty";
+import {
+  DefaultImageScale,
+  type ImageScaleType,
+} from "~/components/builder/elements/image/Properties";
 
 const props = defineProps<{
-  config: CustomPropertyConfig
-  propertyKey: string
-  modelValue: ImageScaleType | undefined
+  config: CustomPropertyConfig;
+  propertyKey: string;
+  modelValue: ImageScaleType | undefined;
 }>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: ImageScaleType]
+  "update:modelValue": [value: ImageScaleType];
 }>();
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -61,6 +60,6 @@ const scaleValue = computed({
     }
 
     emit("update:modelValue", scale);
-  }
+  },
 });
 </script>

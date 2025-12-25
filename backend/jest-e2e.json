@@ -6,8 +6,16 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
+  "transformIgnorePatterns": [
+    "node_modules/(?!(uuid)/)"
+  ],
   "coverageDirectory": "./coverage-e2e",
-  "coveragePathIgnorePatterns": ["test.helper.ts", "dto/*", "__data__.ts", "__test.helper__.ts"],
+  "coveragePathIgnorePatterns": [
+    "test.helper.ts",
+    "dto/*",
+    "__data__.ts",
+    "__test.helper__.ts"
+  ],
   "coverageReporters": ["text", "cobertura", "html"],
   "coverageThreshold": {
     "global": {

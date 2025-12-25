@@ -16,34 +16,20 @@
         type="file"
         multiple
         name="file"
-      >
+      />
 
-      <label
-        v-if="isDragging"
-        for="fileInput"
-        data-cy="release-msg"
-      >
+      <label v-if="isDragging" for="fileInput" data-cy="release-msg">
         Release to drop files here.
       </label>
-      <label
-        v-else
-        for="fileInput"
-        data-cy="release-msg"
-      >
+      <label v-else for="fileInput" data-cy="release-msg">
         Drop files here or <u>click here</u> to upload.
       </label>
 
-      <label
-        v-if="isWrongFileType"
-        data-cy="wrong-file-extension"
-      >
+      <label v-if="isWrongFileType" data-cy="wrong-file-extension">
         File has wrong type.
       </label>
 
-      <v-list
-        v-if="processedFiles.length > 0"
-        data-cy="preview-container"
-      >
+      <v-list v-if="processedFiles.length > 0" data-cy="preview-container">
         <v-list-item
           v-for="(file, index) in processedFiles"
           :key="file.name"
@@ -51,11 +37,7 @@
           color="primary"
           rounded="xl"
         >
-          <slot
-            name="item"
-            :item="file"
-            :index="index"
-          >
+          <slot name="item" :item="file" :index="index">
             {{ file }}
           </slot>
         </v-list-item>
@@ -65,7 +47,6 @@
 </template>
 
 <script setup lang="ts" generic="CustomFile extends File">
-
 interface Props {
   allowedFileExtensions?: string[];
   supportText?: string;
@@ -73,13 +54,16 @@ interface Props {
   processor?: (file: CustomFile) => Promise<void>;
 }
 
-const {allowedFileExtensions = [], supportText = "Support Text", processor = (file) => file} = defineProps<Props>();
+const {
+  allowedFileExtensions = [],
+  supportText = "Support Text",
+  processor = (file) => file,
+} = defineProps<Props>();
 
 const emit = defineEmits<(e: "onFilesChanged", files: CustomFile[]) => void>();
 
 const isDragging: Ref<boolean> = ref(false);
 const isWrongFileType: Ref<boolean> = ref(false);
-
 
 const files: Ref<CustomFile[]> = ref([]);
 
@@ -87,7 +71,6 @@ const processedFiles = computed(() => {
   files.value.forEach((file: CustomFile) => {
     processor(file);
   });
-
 
   return files.value;
 });
@@ -120,7 +103,7 @@ async function drop(e: DragEvent) {
   const droppedFiles = Array.from(e.dataTransfer.files) as CustomFile[];
   for (const file of droppedFiles) {
     const found = allowedFileExtensions.find((extension) =>
-        file.name.endsWith(`.${extension}`)
+      file.name.endsWith(`.${extension}`),
     );
 
     isDragging.value = false;
@@ -141,7 +124,6 @@ async function drop(e: DragEvent) {
 
   emit("onFilesChanged", files.value);
 }
-
 </script>
 <style scoped lang="scss">
 .v-input-collapse {
@@ -155,7 +137,6 @@ async function drop(e: DragEvent) {
 }
 
 label {
-
   line-height: 2em;
 }
 </style>
