@@ -22,14 +22,19 @@
       >
         <template #prepend="{ isSelected }">
           <v-list-item-action start>
-            <v-checkbox-btn color="primary" :model-value="isSelected" />
+            <v-checkbox-btn
+              color="primary"
+              :model-value="isSelected"
+            />
           </v-list-item-action>
         </template>
       </v-list-item>
     </v-list>
   </div>
 
-  <v-btn @click="overlay = !overlay"> Edit Routes </v-btn>
+  <v-btn @click="overlay = !overlay">
+    Edit Routes
+  </v-btn>
 
   <v-overlay
     v-model="overlay"
@@ -85,7 +90,10 @@
         </v-list>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="orange-lighten-2" text="Explore" />
+        <v-btn
+          color="orange-lighten-2"
+          text="Explore"
+        />
       </v-card-actions>
     </v-card>
   </v-overlay>

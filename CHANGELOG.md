@@ -1,15 +1,18 @@
-# [0.4.0](https://github.com/gilengel/trail/compare/v0.3.0...v0.4.0) (2025-10-03)
+# [0.5.0](https://github.com/gilengel/trail/compare/v0.3.0...v0.5.0) (2025-12-26)
 
 
 ### Bug Fixes
 
-* propagate property changes now works for any property ([9c584f7](https://github.com/gilengel/trail/commit/9c584f78092f4baed4e1fa66617702b3adef10c9))
+* highlighting of elements ([262e6a8](https://github.com/gilengel/trail/commit/262e6a8d8a15ee243bc31d44dcee794ad77b98b4))
 * reverts to removing the map and icon form files that are still needed. ([a77c36b](https://github.com/gilengel/trail/commit/a77c36b3806bc36766525d1398b2e212cfe939cf))
 
 
 ### Features
 
-* add consumed/provided properties for elements and highlight connectable elements ([e10a760](https://github.com/gilengel/trail/commit/e10a760e20f80af9e2e6623ed8d13e8f37d8e8fc))
+* add connection treeview component for events ([fc5cccc](https://github.com/gilengel/trail/commit/fc5cccc39200d3229c1993531fd9da9139e940eb))
+* add dynamic marker for maps to demonstrate the callback of events ([312b206](https://github.com/gilengel/trail/commit/312b20670ef73e6a0f1c27416139ce4040577868))
+* add update marker location of line chart on event callback ([a271873](https://github.com/gilengel/trail/commit/a271873379832914b7f8b38a6c736db20ce6b078))
+* move property connection handling into single actions ([ba5ef84](https://github.com/gilengel/trail/commit/ba5ef8466d859f0694ef6e26b613d322c5987b76))
 
 
 

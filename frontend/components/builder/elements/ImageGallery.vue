@@ -1,5 +1,10 @@
 <template>
-  <masonry-wall :items="images" :ssr-columns="1" :column-width="300" :gap="16">
+  <masonry-wall
+    :items="images"
+    :ssr-columns="1"
+    :column-width="300"
+    :gap="16"
+  >
     <template #default="{ item }">
       <div
         class="bg-surface-variant rounded-sm mx-auto"

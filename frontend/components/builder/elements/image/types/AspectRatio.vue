@@ -1,6 +1,10 @@
 <template>
   <div class="aspect-ratios pb-4">
-    <div v-for="(ratio, i) in aspectRatios" :key="i" class="ratio-container">
+    <div
+      v-for="(ratio, i) in aspectRatios"
+      :key="i"
+      class="ratio-container"
+    >
       <v-responsive
         :aspect-ratio="ratio.value"
         :class="['border', props.modelValue === ratio.value ? 'selected' : '']"

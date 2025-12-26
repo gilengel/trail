@@ -13,10 +13,16 @@
         />
       </v-list>
 
-      <h2 v-if="!networkError && trips.size === 0" data-cy="error-empty-text">
+      <h2
+        v-if="!networkError && trips.size === 0"
+        data-cy="error-empty-text"
+      >
         😞 Looks like you don't have any trips stored yet
       </h2>
-      <h2 v-if="networkError" data-cy="error-network-text">
+      <h2
+        v-if="networkError"
+        data-cy="error-network-text"
+      >
         😞 Looks like there was a network problem.
       </h2>
     </v-card-text>

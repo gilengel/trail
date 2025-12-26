@@ -7,7 +7,10 @@
     <template #title />
 
     <template #properties>
-      <v-dialog max-width="500" v-model="dialog">
+      <v-dialog
+        max-width="500"
+        v-model="dialog"
+      >
         <GridEditorEventConnections
           :element="props.element"
           :editor
@@ -17,9 +20,16 @@
         />
       </v-dialog>
 
-      <v-row align="center" justify="center">
+      <v-row
+        align="center"
+        justify="center"
+      >
         <v-col cols="auto">
-          <v-btn variant="flat" icon="las la-link" @click="dialog = true" />
+          <v-btn
+            variant="flat"
+            icon="las la-link"
+            @click="dialog = true"
+          />
         </v-col>
       </v-row>
       <v-expansion-panels

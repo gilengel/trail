@@ -5,7 +5,7 @@
         <img
           src="https://randomuser.me/api/portraits/women/51.jpg"
           alt="avatar"
-        />
+        >
 
         <div>
           <span>Anne Traveler</span>

@@ -16,20 +16,34 @@
         type="file"
         multiple
         name="file"
-      />
+      >
 
-      <label v-if="isDragging" for="fileInput" data-cy="release-msg">
+      <label
+        v-if="isDragging"
+        for="fileInput"
+        data-cy="release-msg"
+      >
         Release to drop files here.
       </label>
-      <label v-else for="fileInput" data-cy="release-msg">
+      <label
+        v-else
+        for="fileInput"
+        data-cy="release-msg"
+      >
         Drop files here or <u>click here</u> to upload.
       </label>
 
-      <label v-if="isWrongFileType" data-cy="wrong-file-extension">
+      <label
+        v-if="isWrongFileType"
+        data-cy="wrong-file-extension"
+      >
         File has wrong type.
       </label>
 
-      <v-list v-if="processedFiles.length > 0" data-cy="preview-container">
+      <v-list
+        v-if="processedFiles.length > 0"
+        data-cy="preview-container"
+      >
         <v-list-item
           v-for="(file, index) in processedFiles"
           :key="file.name"
@@ -37,7 +51,11 @@
           color="primary"
           rounded="xl"
         >
-          <slot name="item" :item="file" :index="index">
+          <slot
+            name="item"
+            :item="file"
+            :index="index"
+          >
             {{ file }}
           </slot>
         </v-list-item>

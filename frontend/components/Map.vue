@@ -1,5 +1,9 @@
 <template>
-  <div ref="mapContainer" data-cy="map-container" class="map" />
+  <div
+    ref="mapContainer"
+    data-cy="map-container"
+    class="map"
+  />
 </template>
 
 <script setup lang="ts">

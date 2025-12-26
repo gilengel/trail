@@ -1,5 +1,8 @@
 <template>
-  <v-btn-toggle v-model="alignment" mandatory>
+  <v-btn-toggle
+    v-model="alignment"
+    mandatory
+  >
     <v-btn
       data-testid="editor-align-left-btn"
       icon="las la-align-left"

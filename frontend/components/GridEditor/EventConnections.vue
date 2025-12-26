@@ -32,7 +32,10 @@
         >
           <v-list-item-title>
             {{ definition.propertySchema![item]!.label }}
-            <v-tooltip activator="parent" location="top">
+            <v-tooltip
+              activator="parent"
+              location="top"
+            >
               {{ definition.propertySchema![item]!.description }}
             </v-tooltip>
           </v-list-item-title>

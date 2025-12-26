@@ -8,7 +8,10 @@
   >
     <v-icon>{{ icon }}</v-icon>
   </v-btn>
-  <v-tooltip :text="tooltip" location="bottom">
+  <v-tooltip
+    :text="tooltip"
+    location="bottom"
+  >
     <template />
   </v-tooltip>
 </template>

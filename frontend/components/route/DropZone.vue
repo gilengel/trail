@@ -7,12 +7,24 @@
       <v-list-item-title>
         <v-container>
           <v-row no-gutters>
-            <v-col cols="4" style="container-type: inline-size">
-              <Map :trip="item.route" :interactive="false" />
+            <v-col
+              cols="4"
+              style="container-type: inline-size"
+            >
+              <Map
+                :trip="item.route"
+                :interactive="false"
+              />
             </v-col>
 
-            <v-col cols="8" class="pl-4">
-              <v-row no-gutters justify="space-between">
+            <v-col
+              cols="8"
+              class="pl-4"
+            >
+              <v-row
+                no-gutters
+                justify="space-between"
+              >
                 <v-col cols="12">
                   <v-text-field
                     v-model="segmentName[index]"

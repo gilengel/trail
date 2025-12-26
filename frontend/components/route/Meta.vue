@@ -31,7 +31,11 @@
       </v-col>
     </v-row>
 
-    <v-dialog v-model="confirmDeletion" width="auto" persistent>
+    <v-dialog
+      v-model="confirmDeletion"
+      width="auto"
+      persistent
+    >
       <v-card
         max-width="400"
         prepend-icon="las la-trash-alt"
@@ -39,7 +43,9 @@
         title="Confirm Delete Trip"
       >
         <template #actions>
-          <v-btn @click="confirmDeletion = false"> Cancel </v-btn>
+          <v-btn @click="confirmDeletion = false">
+            Cancel
+          </v-btn>
           <v-btn
             class="ms-auto"
             text="Permanently Delete"

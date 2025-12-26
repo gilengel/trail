@@ -1,12 +1,23 @@
 <template>
-  <v-col class="layout-col" :cols="model.width">
+  <v-col
+    class="layout-col"
+    :cols="model.width"
+  >
     <div
       v-if="props.activeMode === BuilderMode.Create && editable"
       class="actions rounded-sm border-sm"
     >
-      <v-btn rounded="0" flat icon data-testid="action-menu-btn">
+      <v-btn
+        rounded="0"
+        flat
+        icon
+        data-testid="action-menu-btn"
+      >
         <v-icon>las la-plus</v-icon>
-        <v-menu activator="parent" data-testid="action-menu">
+        <v-menu
+          activator="parent"
+          data-testid="action-menu"
+        >
           <v-list>
             <v-list-item
               v-for="(definition, index) in editor.definitions.getAll()"

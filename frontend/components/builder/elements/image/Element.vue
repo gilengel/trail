@@ -1,5 +1,8 @@
 <template>
-  <v-responsive :aspect-ratio :class="['image-container']">
+  <v-responsive
+    :aspect-ratio
+    :class="['image-container']"
+  >
     <BuilderElementsImageDraggableContainer
       data-testid="element-img"
       :source="`https://fastly.picsum.photos/id/29/4000/2670.jpg?hmac=rCbRAl24FzrSzwlR5tL-Aqzyu5tX_PA95VJtnUXegGU`"

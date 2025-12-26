@@ -9,7 +9,10 @@
     collapse-icon="las la-angle-up"
   >
     <template #prepend="{ item, depth }">
-      <v-icon v-if="depth" :icon="item.definition!.metadata!.icon!" />
+      <v-icon
+        v-if="depth"
+        :icon="item.definition!.metadata!.icon!"
+      />
     </template>
     <template #append="{ item, depth }">
       <v-icon-btn

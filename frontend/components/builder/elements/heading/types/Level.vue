@@ -1,12 +1,23 @@
 <template>
-  <v-btn-toggle v-model="level" mandatory>
-    <v-btn data-testid="editor-level-h1-btn"> H1 </v-btn>
+  <v-btn-toggle
+    v-model="level"
+    mandatory
+  >
+    <v-btn data-testid="editor-level-h1-btn">
+      H1
+    </v-btn>
 
-    <v-btn data-testid="editor-level-h2-btn"> H2 </v-btn>
+    <v-btn data-testid="editor-level-h2-btn">
+      H2
+    </v-btn>
 
-    <v-btn data-testid="editor-level-h3-btn"> H3 </v-btn>
+    <v-btn data-testid="editor-level-h3-btn">
+      H3
+    </v-btn>
 
-    <v-btn data-testid="editor-level-h4-btn"> H4 </v-btn>
+    <v-btn data-testid="editor-level-h4-btn">
+      H4
+    </v-btn>
   </v-btn-toggle>
 </template>
 

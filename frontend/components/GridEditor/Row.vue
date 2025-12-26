@@ -28,7 +28,10 @@
           @click="editor.executeAction(new DeleteRow(model, props.grid))"
         />
       </v-col>
-      <v-col class="border" style="align-self: stretch">
+      <v-col
+        class="border"
+        style="align-self: stretch"
+      >
         <v-row
           no-gutters
           ref="container"

@@ -1,6 +1,9 @@
 <template>
   <div class="pa-5">
-    <v-card class="rounded-sm" variant="flat">
+    <v-card
+      class="rounded-sm"
+      variant="flat"
+    >
       <v-card-title>
         <slot name="title" />
       </v-card-title>
@@ -8,9 +11,7 @@
         <slot name="properties" />
 
         <v-divider />
-        <span class="v-expansion-panel-title v-expansion-panel-title--static"
-          >Provided</span
-        >
+        <span class="v-expansion-panel-title v-expansion-panel-title--static">Provided</span>
         <v-list>
           <v-list-item
             v-for="(item, i) in provided"
@@ -33,12 +34,14 @@
         </v-list>
 
         <v-divider />
-        <span class="v-expansion-panel-title v-expansion-panel-title--static"
-          >Consumed</span
-        >
+        <span class="v-expansion-panel-title v-expansion-panel-title--static">Consumed</span>
 
         <v-list>
-          <v-list-item v-for="(item, i) in consumed" :key="i" :value="item">
+          <v-list-item
+            v-for="(item, i) in consumed"
+            :key="i"
+            :value="item"
+          >
             <template #prepend>
               <v-icon
                 icon="las la-arrow-circle-left"
@@ -50,7 +53,10 @@
               {{ item.property }}
             </v-list-item-title>
 
-            <template #append v-if="item.connected">
+            <template
+              #append
+              v-if="item.connected"
+            >
               <v-btn
                 color="warning"
                 icon="las la-trash-alt"

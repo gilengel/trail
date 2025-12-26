@@ -8,7 +8,10 @@
     <div class="v-input__control">
       <div class="v-field v-field--variant-outlined">
         <div class="v-field__overlay" />
-        <div class="v-field__field" data-no-activator="">
+        <div
+          class="v-field__field"
+          data-no-activator=""
+        >
           <slot />
 
           <!---->
@@ -21,7 +24,11 @@
       </div>
     </div>
     <!---->
-    <div class="v-input__details" role="alert" aria-live="polite">
+    <div
+      class="v-input__details"
+      role="alert"
+      aria-live="polite"
+    >
       <div class="v-messages" />
     </div>
   </div>

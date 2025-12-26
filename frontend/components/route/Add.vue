@@ -1,7 +1,11 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card title="Add Route" class="rounded-sm" variant="flat">
+      <v-card
+        title="Add Route"
+        class="rounded-sm"
+        variant="flat"
+      >
         <v-card-text>
           <v-text-field
             v-model="routeName"
@@ -17,7 +21,10 @@
             @on-segment-name-changed="onNameChanged"
             @on-segment-description-changed="onDescriptionChanged"
           />
-          <span v-if="status" data-cy="status-msg">{{ status }}</span>
+          <span
+            v-if="status"
+            data-cy="status-msg"
+          >{{ status }}</span>
         </v-card-text>
       </v-card>
     </v-col>

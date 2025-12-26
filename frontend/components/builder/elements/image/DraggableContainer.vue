@@ -15,7 +15,7 @@
       :src="source"
       draggable="false"
       alt="image"
-    />
+    >
   </div>
 </template>
 

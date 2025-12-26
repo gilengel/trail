@@ -2,7 +2,10 @@
   <div>
     <v-row>
       <v-col>
-        <v-row no-gutters align="center">
+        <v-row
+          no-gutters
+          align="center"
+        >
           <v-col cols="8">
             <v-slider
               data-testid="editor-scale-slider"

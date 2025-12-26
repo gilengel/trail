@@ -2,7 +2,10 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -14,7 +17,10 @@
       </template>
 
       <template #toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -37,7 +43,10 @@
           />
         </v-list>
         <v-divider class="mx-3 my-5" />
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -46,7 +55,10 @@
           />
         </v-list>
         <v-divider class="mx-3 my-5" />
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -56,10 +68,17 @@
         </v-list>
       </template>
 
-      <template #content v-if="trip" />
+      <template
+        #content
+        v-if="trip"
+      />
     </NuxtLayout>
 
-    <v-dialog v-model="dialog" width="auto" persistent>
+    <v-dialog
+      v-model="dialog"
+      width="auto"
+      persistent
+    >
       <v-card
         max-width="400"
         prepend-icon="las la-trash-alt"
@@ -67,7 +86,9 @@
         title="Confirm Delete Trip"
       >
         <template #actions>
-          <v-btn @click="dialog = false"> Cancel </v-btn>
+          <v-btn @click="dialog = false">
+            Cancel
+          </v-btn>
           <v-btn
             class="ms-auto"
             text="Permanently Delete"

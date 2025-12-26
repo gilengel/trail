@@ -2,7 +2,10 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -38,7 +41,10 @@
               </v-col>
             </v-row>
 
-            <v-row v-for="singleRoute in routes" :key="singleRoute.name">
+            <v-row
+              v-for="singleRoute in routes"
+              :key="singleRoute.name"
+            >
               <v-col cols="12">
                 <Tile>
                   <RouteEdit

@@ -1,5 +1,9 @@
 <template>
-  <v-col class="py-2" cols="12" sm="6">
+  <v-col
+    class="py-2"
+    cols="12"
+    sm="6"
+  >
     <v-btn-toggle v-model="imageSizeType">
       <v-btn
         data-testid="editor-image-size-h-btn"
@@ -15,7 +19,10 @@
         <v-icon>las la-arrows-alt-v</v-icon>
       </v-btn>
 
-      <v-btn data-testid="editor-image-size-free-btn" :value="ImageSize.Free">
+      <v-btn
+        data-testid="editor-image-size-free-btn"
+        :value="ImageSize.Free"
+      >
         <v-icon>las la-vector-square</v-icon>
       </v-btn>
     </v-btn-toggle>

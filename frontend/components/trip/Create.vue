@@ -1,8 +1,17 @@
 <template>
-  <v-card title="Create new trip" variant="flat">
+  <v-card
+    title="Create new trip"
+    variant="flat"
+  >
     <v-card-text>
-      <TextField v-model="routeName" label="Trip Name" />
-      <span v-if="status" data-cy="status-msg">{{ status }}</span>
+      <TextField
+        v-model="routeName"
+        label="Trip Name"
+      />
+      <span
+        v-if="status"
+        data-cy="status-msg"
+      >{{ status }}</span>
     </v-card-text>
     <v-card-actions>
       <v-spacer />

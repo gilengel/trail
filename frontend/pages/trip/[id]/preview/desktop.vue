@@ -2,7 +2,10 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -13,8 +16,15 @@
       </template>
 
       <template #content>
-        <v-row v-for="row in (trip?.layout as Grid).rows" :key="row.id">
-          <v-col v-for="col in row.columns" :key="col.id" :cols="col.width">
+        <v-row
+          v-for="row in (trip?.layout as Grid).rows"
+          :key="row.id"
+        >
+          <v-col
+            v-for="col in row.columns"
+            :key="col.id"
+            :cols="col.width"
+          >
             <component
               :is="editor.definitions.getComponent(col.element?.elementId)"
               v-bind="

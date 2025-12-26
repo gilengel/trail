@@ -1,7 +1,10 @@
 <template>
   <div class="editor-container">
     <Teleport to="#editor-primary-toolbar">
-      <v-toolbar density="compact" v-if="editor">
+      <v-toolbar
+        density="compact"
+        v-if="editor"
+      >
         <ToolbarButton
           v-if="formatting"
           data-testid="editor-bold-button"

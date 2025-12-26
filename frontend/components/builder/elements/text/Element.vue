@@ -4,7 +4,11 @@
     @on-text-changed="onTextChanged"
     v-if="props.element.selected"
   />
-  <div v-else v-html="text" class="tiptap" />
+  <div
+    v-else
+    v-html="text"
+    class="tiptap"
+  />
 </template>
 
 <script setup lang="ts">

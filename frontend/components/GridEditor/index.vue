@@ -2,8 +2,15 @@
 <template>
   <div id="editor-primary-toolbar" />
 
-  <v-row no-gutters class="grid-editor-container">
-    <v-col class="preview_container" sm="9" no-gutters>
+  <v-row
+    no-gutters
+    class="grid-editor-container"
+  >
+    <v-col
+      class="preview_container"
+      sm="9"
+      no-gutters
+    >
       <div ref="el">
         <GridEditorRow
           v-for="(element, index) in grid.rows"
@@ -18,7 +25,10 @@
           :active-mode="editor.activeMode"
         />
       </div>
-      <v-row no-gutters style="margin-top: 24px; margin-right: 16px">
+      <v-row
+        no-gutters
+        style="margin-top: 24px; margin-right: 16px"
+      >
         <v-spacer />
         <v-btn
           data-testid="grid-editor-add-row-btn"
@@ -31,12 +41,22 @@
         </v-btn>
       </v-row>
     </v-col>
-    <v-col ref="options_container" sm="3" class="options-container">
-      <Properties v-bind="selectedProps!" v-if="selectedProps" />
+    <v-col
+      ref="options_container"
+      sm="3"
+      class="options-container"
+    >
+      <Properties
+        v-bind="selectedProps!"
+        v-if="selectedProps"
+      />
     </v-col>
   </v-row>
 
-  <v-snackbar-queue v-model="messages" color="warning" />
+  <v-snackbar-queue
+    v-model="messages"
+    color="warning"
+  />
 </template>
 
 <script setup lang="ts" generic="T">

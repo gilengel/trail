@@ -1,14 +1,24 @@
 <template>
   <BuilderHighlightableElement :is-highlighted="highlighted">
-    <v-alert v-if="invalid" type="warning" variant="outlined" prominent>
+    <v-alert
+      v-if="invalid"
+      type="warning"
+      variant="outlined"
+      prominent
+    >
       No segment is selected for this elevation. Please do so in the property
       panel on the right side.
-      <hr />
+      <hr>
       {{ element.instanceId }}
       {{ highlighted }}
     </v-alert>
 
-    <Line ref="lineChart" v-else-if="data" :data :options="chartOptions" />
+    <Line
+      ref="lineChart"
+      v-else-if="data"
+      :data
+      :options="chartOptions"
+    />
   </BuilderHighlightableElement>
 </template>
 

@@ -2,7 +2,10 @@
   <main>
     <NuxtLayout name="page">
       <template #primary-toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
@@ -13,7 +16,10 @@
       </template>
 
       <template #toolbar>
-        <v-list density="compact" nav>
+        <v-list
+          density="compact"
+          nav
+        >
           <v-list-item
             color="primary"
             rounded="xl"
