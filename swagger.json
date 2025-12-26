@@ -36,7 +36,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRouteDto"
+                "$ref": "#/components/schemas/CreateRoutePublic"
               }
             }
           }
@@ -99,6 +99,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoute"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -139,7 +149,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/RouteWithMultipleFilesDTO"
+                "$ref": "#/components/schemas/RouteWithMultipleFiles"
               }
             }
           }
@@ -163,7 +173,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRouteSegmentDto"
+                "$ref": "#/components/schemas/CreateRouteSegmentPublic"
               }
             }
           }
@@ -217,7 +227,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRouteSegmentDto"
+                "$ref": "#/components/schemas/UpdateRouteSegment"
               }
             }
           }
@@ -266,6 +276,117 @@
         },
         "tags": [
           "RoutesSegments"
+        ]
+      }
+    },
+    "/trips": {
+      "post": {
+        "operationId": "TripsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrip"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Trips"
+        ]
+      },
+      "get": {
+        "operationId": "TripsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Trips"
+        ]
+      }
+    },
+    "/trips/{id}": {
+      "get": {
+        "operationId": "TripsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Trips"
+        ]
+      },
+      "patch": {
+        "operationId": "TripsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTrip"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Trips"
+        ]
+      },
+      "delete": {
+        "operationId": "TripsController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Trips"
         ]
       }
     },
@@ -391,107 +512,6 @@
           "Images"
         ]
       }
-    },
-    "/trips": {
-      "post": {
-        "operationId": "TripsController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTripDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Trips"
-        ]
-      },
-      "get": {
-        "operationId": "TripsController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Trips"
-        ]
-      }
-    },
-    "/trips/{id}": {
-      "get": {
-        "operationId": "TripsController_findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Trips"
-        ]
-      },
-      "patch": {
-        "operationId": "TripsController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Trips"
-        ]
-      },
-      "delete": {
-        "operationId": "TripsController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Trips"
-        ]
-      }
     }
   },
   "info": {
@@ -509,7 +529,7 @@
   "servers": [],
   "components": {
     "schemas": {
-      "CreateRouteSegment": {
+      "CreateRouteSegmentPrivate": {
         "type": "object",
         "properties": {
           "name": {
@@ -527,12 +547,9 @@
               }
             }
           }
-        },
-        "required": [
-          "coordinates"
-        ]
+        }
       },
-      "CreateRouteDto": {
+      "CreateRoutePublic": {
         "type": "object",
         "properties": {
           "name": {
@@ -541,20 +558,27 @@
           "description": {
             "type": "string"
           },
+          "tripId": {
+            "type": "number"
+          },
           "segments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CreateRouteSegment"
+              "$ref": "#/components/schemas/CreateRouteSegmentPrivate"
             }
-          },
-          "tripId": {
-            "type": "string"
           }
-        }
+        },
+        "required": [
+          "name",
+          "tripId"
+        ]
       },
-      "RouteWithMultipleFilesDTO": {
+      "RouteWithMultipleFiles": {
         "type": "object",
         "properties": {
+          "tripId": {
+            "type": "number"
+          },
           "files": {
             "type": "array",
             "description": "Route segments",
@@ -568,10 +592,57 @@
           }
         },
         "required": [
+          "tripId",
           "files"
         ]
       },
-      "CreateRouteSegmentDto": {
+      "UpdateRoute": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tripId": {
+            "type": "number"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateRouteSegmentPrivate"
+            }
+          }
+        }
+      },
+      "CreateRouteSegmentPublic": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "routeId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "routeId"
+        ]
+      },
+      "UpdateRouteSegment": {
         "type": "object",
         "properties": {
           "name": {
@@ -589,16 +660,9 @@
               }
             }
           }
-        },
-        "required": [
-          "coordinates"
-        ]
+        }
       },
-      "UpdateRouteSegmentDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "CreateTripDto": {
+      "CreateTrip": {
         "type": "object",
         "properties": {
           "name": {
@@ -618,6 +682,23 @@
           "name",
           "layout"
         ]
+      },
+      "UpdateTrip": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "My Awesome Trip",
+            "description": "The name of the trip"
+          },
+          "layout": {
+            "type": "object",
+            "example": {
+              "key": "value"
+            },
+            "description": "Trip layout as JSON"
+          }
+        }
       }
     }
   }
